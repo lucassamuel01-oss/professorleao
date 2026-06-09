@@ -143,5 +143,58 @@ function markWatched(videoId) {
   localStorage.setItem(key, JSON.stringify(prog));
 }
 
+/* ---------- Progress v2 (por curso/aula/atividade) ---------- */
+const PL_PROG2_KEY  = 'pl_progress_v2_';
+const PL_LASTV_KEY  = 'pl_lastvisited_';
+
+function getProgressV2() {
+  const s = getSession();
+  if (!s) return {};
+  try { return JSON.parse(localStorage.getItem(PL_PROG2_KEY + s.id) || '{}'); } catch { return {}; }
+}
+
+function _saveProgressV2(data) {
+  const s = getSession();
+  if (!s) return;
+  localStorage.setItem(PL_PROG2_KEY + s.id, JSON.stringify(data));
+}
+
+function toggleAtividade(cursoId, aulaId, atKey, force) {
+  const prog = getProgressV2();
+  if (!prog[cursoId])          prog[cursoId] = {};
+  if (!prog[cursoId][aulaId])  prog[cursoId][aulaId] = {};
+  const cur = prog[cursoId][aulaId][atKey];
+  prog[cursoId][aulaId][atKey] = (force !== undefined) ? force : !cur;
+  _saveProgressV2(prog);
+  return prog;
+}
+
+function marcarAulaConcluida(cursoId, aulaId) {
+  const prog = getProgressV2();
+  if (!prog[cursoId])         prog[cursoId] = {};
+  if (!prog[cursoId][aulaId]) prog[cursoId][aulaId] = {};
+  prog[cursoId][aulaId].concluida   = true;
+  prog[cursoId][aulaId].concluidaEm = new Date().toISOString();
+  _saveProgressV2(prog);
+}
+
+function getLastVisited() {
+  const s = getSession();
+  if (!s) return null;
+  try { return JSON.parse(localStorage.getItem(PL_LASTV_KEY + s.id) || 'null'); } catch { return null; }
+}
+
+function setLastVisited(cursoId, aulaId, aulaNumero, aulaTitulo, cursoNome) {
+  const s = getSession();
+  if (!s) return;
+  localStorage.setItem(PL_LASTV_KEY + s.id, JSON.stringify({ cursoId, aulaId, aulaNumero, aulaTitulo, cursoNome, visitedAt: new Date().toISOString() }));
+}
+
 /* ---------- Expose ---------- */
-window.plAuth = { getUsers, createUser, updateUser, deleteUser, getSession, requireAuth, login, logout, clearSession, getProgress, markWatched };
+window.plAuth = {
+  getUsers, createUser, updateUser, deleteUser,
+  getSession, requireAuth, login, logout, clearSession,
+  getProgress, markWatched,
+  getProgressV2, toggleAtividade, marcarAulaConcluida,
+  getLastVisited, setLastVisited
+};

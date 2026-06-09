@@ -7,1517 +7,385 @@
   <link rel="icon" type="image/png" href="assets/img/logo-branca.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Variables ── */
     :root {
-      --navy:        #0A1628;
-      --navy-2:      #0F1E38;
-      --navy-3:      #152545;
-      --navy-4:      #1B2E6B;
-      --navy-mid:    #243580;
-      --accent:      #4A6CF7;
-      --accent-light:#6B89FF;
-      --accent-dark: #3356E0;
-      --silver:      #8892B4;
-      --white:       #FFFFFF;
-      --gray-mid:    #64748B;
-      --gray-dark:   #334155;
-      --success:     #22c55e;
-      --danger:      #ef4444;
-      --font-h:      'Montserrat', sans-serif;
-      --font-b:      'Open Sans', sans-serif;
-      --radius:      12px;
-      --transition:  0.3s ease;
-      --shadow:      0 8px 40px rgba(0,0,0,0.45);
+      --navy:   #0A1628; --navy-2: #0F1E38; --navy-3: #152545; --navy-4: #1B2E6B;
+      --accent: #4A6CF7; --accent-light: #6B89FF;
+      --silver: #8892B4; --white: #FFFFFF;
+      --success: #22c55e; --warn: #f59e0b; --danger: #ef4444;
+      --font-h: 'Montserrat', sans-serif; --font-b: 'Open Sans', sans-serif;
+      --radius: 14px; --radius-sm: 8px; --shadow: 0 8px 32px rgba(0,0,0,0.45);
+      --tr: 0.25s ease;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-b);
-      background: var(--navy);
-      color: var(--white);
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
+    body { font-family: var(--font-b); background: var(--navy); color: var(--white); min-height: 100vh; overflow-x: hidden; }
     img { max-width: 100%; display: block; }
     a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
-    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+    button { cursor: pointer; font-family: inherit; border: none; }
 
     /* ── Topbar ── */
     .topbar {
       position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; padding: 12px 28px;
-      background: rgba(10,22,40,0.97); backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(74,108,247,0.12);
+      background: rgba(10,22,40,0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(74,108,247,0.2);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .topbar__brand {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .topbar__brand img { width: 36px; height: 36px; object-fit: contain; }
-    .topbar__brand-text strong {
-      display: block; font-family: var(--font-h); font-size: 14px;
-      font-weight: 900; color: var(--white);
-    }
-    .topbar__brand-text small {
-      font-size: 9px; letter-spacing: 2px; color: var(--accent-light);
-      text-transform: uppercase;
-    }
-    .topbar__nav {
-      display: flex; align-items: center; gap: 4px;
-    }
-    .topbar__nav a, .topbar__nav button {
-      padding: 8px 14px; border-radius: 8px;
-      font-family: var(--font-h); font-size: 12.5px; font-weight: 600;
-      color: rgba(255,255,255,0.65); transition: var(--transition);
-    }
-    .topbar__nav a:hover, .topbar__nav button:hover { color: var(--accent-light); background: rgba(74,108,247,0.08); }
-    .topbar__nav a.active { color: var(--accent-light); background: rgba(74,108,247,0.12); }
-    .topbar__nav .logout-btn { color: rgba(255,255,255,0.4); }
-    .topbar__nav .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
-    .topbar__hamburger {
-      display: none; flex-direction: column; gap: 5px; padding: 8px;
-    }
-    .topbar__hamburger span { width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: var(--transition); display: block; }
+    .topbar__logo { display: flex; align-items: center; gap: 10px; }
+    .topbar__logo img { height: 30px; }
+    .topbar__logo-text { font-family: var(--font-h); font-weight: 800; font-size: 15px; letter-spacing: 1px; }
+    .topbar__logo-text span { color: var(--accent-light); }
+    .topbar__right { display: flex; align-items: center; gap: 12px; }
+    .topbar__user { font-size: 13px; color: var(--silver); display: flex; align-items: center; gap: 6px; }
+    .topbar__user svg { opacity: .7; }
+    .topbar__btn { padding: 7px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; background: rgba(74,108,247,0.15); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.3); transition: var(--tr); }
+    .topbar__btn:hover { background: var(--accent); color: #fff; }
+    .topbar__home { padding: 7px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; background: transparent; color: var(--silver); border: 1px solid rgba(255,255,255,0.1); transition: var(--tr); }
+    .topbar__home:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
 
-    /* ── Drawer mobile ── */
-    .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; }
-    .drawer-overlay.show { display: block; }
-    .drawer {
-      position: fixed; top: 0; right: -100%; bottom: 0; width: 280px;
-      background: rgba(10,22,40,0.99); backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(74,108,247,0.15);
-      z-index: 201; transition: right 0.3s ease;
-      display: flex; flex-direction: column; padding: 24px;
-    }
-    .drawer.open { right: 0; }
-    .drawer__header { display: flex; justify-content: flex-end; margin-bottom: 32px; }
-    .drawer__close { color: var(--white); font-size: 20px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .drawer a, .drawer button {
-      display: block; padding: 13px 16px; font-family: var(--font-h); font-size: 15px;
-      font-weight: 600; color: rgba(255,255,255,0.75); border-radius: 8px; transition: var(--transition);
-    }
-    .drawer a:hover, .drawer button:hover { color: var(--accent-light); background: rgba(74,108,247,0.1); }
+    /* ── Container ── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
 
-    /* ── Wrapper ── */
-    .area-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+    /* ── Hero ── */
+    .hero-bar {
+      background: linear-gradient(135deg, var(--navy-3) 0%, #1a3a7a 100%);
+      border: 1px solid rgba(74,108,247,0.2);
+      border-radius: var(--radius); padding: 32px 36px;
+      display: flex; justify-content: space-between; align-items: center; gap: 24px;
+      margin-bottom: 32px;
+    }
+    .hero-bar__text h1 { font-family: var(--font-h); font-size: clamp(20px,3vw,26px); font-weight: 800; margin-bottom: 8px; }
+    .hero-bar__text h1 span { color: var(--accent-light); }
+    .hero-bar__text p { color: var(--silver); font-size: 14px; }
+    .hero-bar__stats { display: flex; gap: 24px; flex-shrink: 0; }
+    .stat-chip { text-align: center; }
+    .stat-chip__val { font-family: var(--font-h); font-size: 28px; font-weight: 800; color: var(--accent-light); line-height: 1; }
+    .stat-chip__lbl { font-size: 11px; color: var(--silver); margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
 
-    /* ── Greeting ── */
-    .greeting {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 20px; flex-wrap: wrap; margin-bottom: 40px;
+    /* ── Continue banner ── */
+    .continue-banner {
+      background: linear-gradient(90deg, rgba(74,108,247,0.15), rgba(107,137,255,0.08));
+      border: 1px solid rgba(74,108,247,0.3); border-radius: var(--radius);
+      padding: 16px 24px; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 16px;
     }
-    .greeting-text .eyebrow {
-      font-family: var(--font-h); font-size: 11px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase; color: var(--accent-light);
-      margin-bottom: 8px;
+    .continue-banner__icon { font-size: 28px; flex-shrink: 0; }
+    .continue-banner__text { flex: 1; }
+    .continue-banner__text small { font-size: 11px; color: var(--silver); text-transform: uppercase; letter-spacing: .5px; }
+    .continue-banner__text strong { font-family: var(--font-h); font-size: 14px; display: block; margin-top: 2px; }
+    .continue-banner__text span { font-size: 13px; color: var(--silver); }
+    .btn-continue { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; background: var(--accent); color: #fff; flex-shrink: 0; transition: var(--tr); font-family: var(--font-h); }
+    .btn-continue:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+    /* ── Plano card ── */
+    .plano-card {
+      background: var(--navy-2); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px;
+      display: flex; align-items: center; gap: 24px;
     }
-    .greeting-text h1 {
-      font-family: var(--font-h); font-size: clamp(24px, 4vw, 38px);
-      font-weight: 900; color: var(--white); margin-bottom: 8px; line-height: 1.2;
-    }
-    .greeting-text h1 span { color: var(--accent-light); }
-    .greeting-text p { color: var(--gray-mid); font-size: 15px; }
-    .access-badge {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      padding: 18px 24px; border: 1px solid rgba(74,108,247,0.3);
-      border-radius: 14px; background: rgba(74,108,247,0.06); text-align: center;
-      min-width: 160px;
-    }
-    .access-badge .eyebrow { margin-bottom: 2px; }
-    .access-badge strong { font-family: var(--font-h); font-size: 14px; color: var(--accent-light); }
-    .status-dot {
-      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--success); box-shadow: 0 0 8px var(--success); margin-right: 5px;
-    }
-    .access-expiry { font-size: 12px; color: var(--gray-mid); }
+    .plano-card__icon { font-size: 36px; flex-shrink: 0; }
+    .plano-card__info { flex: 1; }
+    .plano-card__info h3 { font-family: var(--font-h); font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .plano-card__info p { font-size: 13px; color: var(--silver); }
+    .plano-card__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .plano-chip { background: rgba(74,108,247,0.15); border: 1px solid rgba(74,108,247,0.25); border-radius: 20px; padding: 3px 10px; font-size: 12px; color: var(--accent-light); }
+    .btn-plano { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; background: rgba(74,108,247,0.15); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.3); flex-shrink: 0; transition: var(--tr); font-family: var(--font-h); }
+    .btn-plano:hover { background: var(--accent); color: #fff; }
 
     /* ── Section header ── */
-    .sh { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
-    .sh h2 {
-      font-family: var(--font-h); font-size: 22px; font-weight: 900; color: var(--white);
-    }
-    .sh span { font-size: 12px; color: var(--gray-mid); letter-spacing: 0.06em; text-transform: uppercase; }
+    .sec-header { margin-bottom: 20px; }
+    .sec-header h2 { font-family: var(--font-h); font-size: 18px; font-weight: 800; }
+    .sec-header p { font-size: 13px; color: var(--silver); margin-top: 4px; }
 
-    /* ── Quick actions ── */
-    .quick-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px; margin-bottom: 52px;
+    /* ── Course cards grid ── */
+    .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 20px; margin-bottom: 16px; }
+    .course-card {
+      background: var(--navy-2); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius); padding: 24px; cursor: pointer;
+      transition: var(--tr); position: relative; overflow: hidden;
+      display: flex; flex-direction: column; gap: 16px;
     }
-    .quick-card {
-      padding: 20px 18px; border: 1px solid rgba(74,108,247,0.12);
-      border-radius: var(--radius); background: var(--navy-2);
-      display: flex; align-items: center; gap: 14px;
-      transition: var(--transition); cursor: pointer;
-    }
-    .quick-card:hover { border-color: rgba(74,108,247,0.4); transform: translateY(-3px); box-shadow: var(--shadow); background: rgba(74,108,247,0.08); }
-    .quick-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
-    .quick-card b { display: block; color: var(--white); font-size: 13.5px; margin-bottom: 3px; font-family: var(--font-h); }
-    .quick-card small { color: var(--gray-mid); font-size: 12px; }
+    .course-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-color, var(--accent)); }
+    .course-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); box-shadow: var(--shadow); }
+    .course-card__top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .course-card__icon { font-size: 36px; line-height: 1; }
+    .course-card__badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; color: #fff; background: rgba(255,255,255,0.1); }
+    .course-card__badge--done   { background: rgba(34,197,94,0.2); color: #4ade80; }
+    .course-card__badge--active { background: rgba(74,108,247,0.2); color: var(--accent-light); }
+    .course-card__badge--new    { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    .course-card__name { font-family: var(--font-h); font-size: 17px; font-weight: 800; }
+    .course-card__sub { font-size: 12px; color: var(--silver); margin-top: 2px; }
+    .course-card__progress { }
+    .prog-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--silver); margin-bottom: 6px; }
+    .prog-label strong { color: var(--white); }
+    .prog-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; }
+    .prog-bar__fill { height: 100%; border-radius: 99px; background: var(--card-color, var(--accent)); transition: width .6s ease; }
+    .course-card__cta { display: block; text-align: center; padding: 10px; border-radius: var(--radius-sm); font-family: var(--font-h); font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); transition: var(--tr); }
+    .course-card:hover .course-card__cta { background: var(--card-color, var(--accent)); color: #fff; border-color: transparent; }
 
-    /* ── Progress stats ── */
-    .stats-strip {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-      border: 1px solid rgba(74,108,247,0.1); border-radius: var(--radius);
-      background: var(--navy-2); margin-bottom: 52px; overflow: hidden;
-    }
-    .stat-item {
-      padding: 22px; text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.06);
-    }
-    .stat-item:last-child { border-right: none; }
-    .stat-item .num {
-      font-family: var(--font-h); font-size: 32px; font-weight: 900;
-      color: var(--accent-light); line-height: 1; margin-bottom: 6px;
-    }
-    .stat-item .lbl { font-size: 12px; color: var(--gray-mid); font-family: var(--font-h); font-weight: 600; }
-
-    /* ── Module tabs ── */
-    .module-tabs {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
-    }
-    .module-tab {
-      padding: 8px 18px; border-radius: 999px; font-family: var(--font-h);
-      font-size: 12.5px; font-weight: 700; color: var(--gray-mid);
-      border: 1px solid rgba(255,255,255,0.1); transition: var(--transition);
-      cursor: pointer; background: transparent;
-    }
-    .module-tab:hover, .module-tab.active {
-      background: rgba(74,108,247,0.15); border-color: rgba(74,108,247,0.4); color: var(--accent-light);
-    }
-
-    /* ── Video grid ── */
-    .video-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px; margin-bottom: 56px;
-    }
-    .video-card {
-      background: var(--navy-3); border: 1px solid rgba(74,108,247,0.1);
-      border-radius: var(--radius); overflow: hidden;
-      transition: var(--transition); position: relative;
-    }
-    .video-card:hover { border-color: rgba(74,108,247,0.4); transform: translateY(-4px); box-shadow: var(--shadow); }
-    .video-card.watched { border-color: rgba(34,197,94,0.25); }
-    .video-thumb {
-      position: relative; height: 156px; background: linear-gradient(145deg, var(--navy-4), var(--navy-mid));
-      display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden;
-    }
-    .video-thumb::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(145deg, rgba(74,108,247,0.12) 0%, transparent 60%);
-    }
-    .video-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
-    .video-play-btn {
-      position: absolute; width: 54px; height: 54px; border-radius: 50%;
-      background: rgba(74,108,247,0.9); border: 2px solid rgba(255,255,255,0.2);
-      display: flex; align-items: center; justify-content: center;
-      transition: var(--transition); box-shadow: 0 4px 20px rgba(74,108,247,0.5);
-      z-index: 1;
-    }
-    .video-play-btn:hover { background: var(--accent); transform: scale(1.1); }
-    .video-play-btn svg { margin-left: 3px; }
-    .video-watched-badge {
-      position: absolute; top: 10px; right: 10px;
-      padding: 3px 10px; border-radius: 999px;
-      background: rgba(34,197,94,0.9); color: #fff;
-      font-family: var(--font-h); font-size: 10px; font-weight: 800;
-      z-index: 2;
-    }
-    .video-num {
-      position: absolute; bottom: 10px; left: 10px;
-      padding: 3px 10px; border-radius: 999px;
-      background: rgba(10,22,40,0.85); color: rgba(255,255,255,0.7);
-      font-family: var(--font-h); font-size: 10px; font-weight: 700;
-      z-index: 2;
-    }
-    .video-duration {
-      position: absolute; bottom: 10px; right: 10px;
-      padding: 3px 10px; border-radius: 999px;
-      background: rgba(10,22,40,0.85); color: rgba(255,255,255,0.7);
-      font-family: var(--font-h); font-size: 10px;
-      z-index: 2;
-    }
-    .video-body { padding: 18px; }
-    .video-tag {
-      display: inline-block; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
-      font-family: var(--font-h); font-size: 10px; font-weight: 700;
-      letter-spacing: 0.5px; text-transform: uppercase;
-    }
-    .tag-aritm { background: rgba(74,108,247,0.15); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.3); }
-    .tag-algebra { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
-    .tag-geom { background: rgba(52,211,153,0.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.3); }
-    .tag-cfo { background: rgba(251,191,36,0.15); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
-    .tag-logica { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
-    .tag-financ { background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
-    .video-body h3 {
-      font-family: var(--font-h); font-size: 15px; font-weight: 700;
-      color: var(--white); line-height: 1.3; margin-bottom: 8px;
-    }
-    .video-body p { color: var(--gray-mid); font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
-    .video-actions { display: flex; gap: 8px; }
-    .btn-watch {
-      flex: 1; padding: 10px 14px; border-radius: 8px; border: none;
-      background: linear-gradient(135deg, var(--navy-mid), var(--accent));
-      color: var(--white); font-family: var(--font-h); font-size: 12.5px; font-weight: 700;
-      cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px;
-    }
-    .btn-watch:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    .btn-watched {
-      padding: 10px 14px; border-radius: 8px;
-      border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
-      color: #86efac; font-family: var(--font-h); font-size: 12.5px; font-weight: 700;
-      cursor: pointer; transition: var(--transition);
-    }
-    .btn-watched:hover { background: rgba(34,197,94,0.15); }
-
-    /* ── PDF grid ── */
-    .pdf-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px; margin-bottom: 56px;
-    }
-    .pdf-card {
-      position: relative; display: flex; flex-direction: column; gap: 14px;
-      padding: 24px; border: 1px solid rgba(74,108,247,0.1);
-      border-radius: var(--radius); background: var(--navy-3);
-      transition: var(--transition); overflow: hidden;
-    }
-    .pdf-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: var(--radius) var(--radius) 0 0;
-    }
-    .pdf-card.cat-a::before { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
-    .pdf-card.cat-b::before { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
-    .pdf-card.cat-c::before { background: linear-gradient(90deg, #34d399, #059669); }
-    .pdf-card.cat-d::before { background: linear-gradient(90deg, #fbbf24, #d97706); }
-    .pdf-card:hover { border-color: rgba(74,108,247,0.4); transform: translateY(-3px); box-shadow: var(--shadow); }
-    .pdf-tag {
-      display: inline-flex; align-items: center; gap: 6px; width: max-content;
-      padding: 4px 10px; border-radius: 999px;
-      font-family: var(--font-h); font-size: 10.5px; font-weight: 800;
-      letter-spacing: 0.5px; text-transform: uppercase;
-    }
-    .pdf-card.cat-a .pdf-tag { background: rgba(74,108,247,0.15); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.3); }
-    .pdf-card.cat-b .pdf-tag { background: rgba(167,139,250,0.15); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.3); }
-    .pdf-card.cat-c .pdf-tag { background: rgba(52,211,153,0.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.3); }
-    .pdf-card.cat-d .pdf-tag { background: rgba(251,191,36,0.15); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
-    .pdf-card h3 { font-family: var(--font-h); font-size: 17px; color: var(--white); line-height: 1.25; margin: 0; }
-    .pdf-card p { flex: 1; color: var(--gray-mid); font-size: 13.5px; line-height: 1.65; margin: 0; }
-    .pdf-highlights { display: flex; flex-direction: column; gap: 5px; }
-    .pdf-highlights li {
-      display: flex; align-items: flex-start; gap: 7px;
-      color: var(--gray-mid); font-size: 12.5px; line-height: 1.4;
-    }
-    .pdf-highlights li::before { content: "✓"; color: var(--accent-light); font-weight: 900; flex-shrink: 0; }
-    .pdf-actions { display: flex; gap: 8px; }
-    .pdf-btn-p {
-      flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-      padding: 11px 14px; border-radius: 8px; border: none;
-      background: linear-gradient(135deg, var(--navy-mid), var(--accent));
-      color: var(--white); font-family: var(--font-h); font-weight: 800; font-size: 12.5px;
-      cursor: pointer; transition: var(--transition); text-decoration: none;
-    }
-    .pdf-btn-p:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    .pdf-btn-g {
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 11px 14px; border-radius: 8px; border: 1px solid rgba(74,108,247,0.25);
-      background: transparent; color: var(--accent-light); font-weight: 800; font-size: 12.5px;
-      cursor: pointer; transition: var(--transition); text-decoration: none;
-    }
-    .pdf-btn-g:hover { border-color: rgba(74,108,247,0.5); background: rgba(74,108,247,0.08); }
-
-    /* ── Study Plan ── */
-    .planner-section {
-      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.12);
-      border-radius: 20px; padding: 40px; margin-bottom: 56px;
-    }
-    .planner-section .section-badge {
-      display: inline-block; padding: 5px 14px; border-radius: 999px;
-      background: rgba(74,108,247,0.12); border: 1px solid rgba(74,108,247,0.3);
-      color: var(--accent-light); font-family: var(--font-h); font-size: 10.5px;
-      font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
-    }
-    .planner-section h2 {
-      font-family: var(--font-h); font-size: clamp(22px, 3vw, 30px); font-weight: 900; color: var(--white); margin-bottom: 8px;
-    }
-    .planner-section > p { color: var(--gray-mid); font-size: 15px; margin-bottom: 32px; }
-    .plan-form { display: flex; flex-direction: column; gap: 20px; }
-    .plan-form fieldset {
-      border: 1px solid rgba(74,108,247,0.12); border-radius: var(--radius);
-      padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-    }
-    .plan-form legend {
-      font-family: var(--font-h); font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: var(--accent-light); padding: 0 8px;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group.full { grid-column: 1 / -1; }
-    .form-group label {
-      font-family: var(--font-h); font-size: 11.5px; font-weight: 700;
-      color: rgba(255,255,255,0.5); letter-spacing: 0.3px;
-    }
-    .form-group input, .form-group select, .form-group textarea {
-      padding: 11px 14px; background: var(--navy-3);
-      border: 1px solid rgba(74,108,247,0.15); border-radius: 8px;
-      color: var(--white); font-family: var(--font-b); font-size: 14.5px;
-      transition: var(--transition); outline: none; width: 100%; -webkit-appearance: none;
-    }
-    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.2); }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(74,108,247,0.12);
-    }
-    .form-group select option { background: var(--navy-3); }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .switch-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .switch-btn {
-      padding: 8px 18px; border-radius: 999px; border: 1px solid rgba(74,108,247,0.2);
-      background: transparent; color: var(--gray-mid); font-family: var(--font-h);
-      font-size: 12.5px; font-weight: 700; cursor: pointer; transition: var(--transition);
-    }
-    .switch-btn.active { background: rgba(74,108,247,0.15); border-color: rgba(74,108,247,0.4); color: var(--accent-light); }
-    .checkbox-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 8px; grid-column: 1 / -1; margin-top: 4px;
-    }
-    .cb-label {
-      display: flex; align-items: center; gap: 8px;
-      padding: 9px 12px; border-radius: 8px;
-      border: 1px solid rgba(74,108,247,0.15);
-      background: var(--navy-3); cursor: pointer; transition: var(--transition);
-      font-size: 13px; color: rgba(255,255,255,0.7);
-    }
-    .cb-label:hover { border-color: rgba(74,108,247,0.35); color: var(--white); }
-    .cb-label input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
-    .mission-preview {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
-      background: var(--navy-3); border: 1px solid rgba(74,108,247,0.12); border-radius: var(--radius);
-      overflow: hidden; grid-column: 1 / -1;
-    }
-    .mission-preview > div {
-      padding: 18px; text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.06);
-    }
-    .mission-preview > div:last-child { border-right: none; }
-    .mission-preview span {
-      display: block; font-family: var(--font-h); font-size: 28px; font-weight: 900;
-      color: var(--accent-light); line-height: 1; margin-bottom: 5px;
-    }
-    .mission-preview small { font-size: 11px; color: var(--gray-mid); font-family: var(--font-h); font-weight: 600; }
-    .pomodoro-preview {
-      padding: 14px 18px; background: rgba(74,108,247,0.06);
-      border: 1px solid rgba(74,108,247,0.15); border-radius: 8px;
-      font-size: 13.5px; grid-column: 1 / -1;
-    }
-    .pomodoro-preview strong { color: var(--accent-light); margin-right: 6px; }
-    .gen-btn {
-      padding: 16px; border-radius: var(--radius); border: none;
-      background: linear-gradient(135deg, var(--navy-mid), var(--accent));
-      color: var(--white); font-family: var(--font-h); font-size: 16px; font-weight: 800;
-      cursor: pointer; transition: var(--transition); grid-column: 1 / -1;
-      box-shadow: 0 4px 20px rgba(74,108,247,0.3); letter-spacing: 0.5px;
-    }
-    .gen-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(74,108,247,0.4); }
-    /* Result */
-    .plan-result {
-      display: none; padding: 28px; background: var(--navy-3);
-      border: 1px solid rgba(74,108,247,0.15); border-radius: var(--radius); margin-top: 20px;
-    }
-    .plan-result.show { display: block; }
-    .plan-result h3 { font-family: var(--font-h); font-size: 18px; color: var(--accent-light); margin-bottom: 16px; }
-    .plan-result .day-block {
-      margin-bottom: 16px; padding: 16px; background: var(--navy-4);
-      border-radius: 8px; border-left: 3px solid var(--accent);
-    }
-    .plan-result .day-title { font-family: var(--font-h); font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 8px; }
-    .plan-result .sessions { display: flex; flex-direction: column; gap: 5px; }
-    .plan-result .session { font-size: 13px; color: rgba(255,255,255,0.65); }
-    .plan-result .session strong { color: var(--accent-light); }
-
-    /* ── Dicas section ── */
-    .tips-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 56px;
-    }
-    .tip-card {
-      padding: 22px; background: var(--navy-2); border: 1px solid rgba(74,108,247,0.1);
-      border-radius: var(--radius); transition: var(--transition);
-    }
-    .tip-card:hover { border-color: rgba(74,108,247,0.3); transform: translateY(-3px); }
-    .tip-badge {
-      display: inline-block; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
-      font-family: var(--font-h); font-size: 10px; font-weight: 800;
-      background: rgba(74,108,247,0.12); border: 1px solid rgba(74,108,247,0.25); color: var(--accent-light);
-    }
-    .tip-card h3 { font-family: var(--font-h); font-size: 15px; color: var(--white); margin-bottom: 8px; }
-    .tip-card p { color: var(--gray-mid); font-size: 13.5px; line-height: 1.6; }
-
-    /* ── Video modal ── */
+    /* ── Modals / plano popup ── */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      z-index: 500; place-items: center; backdrop-filter: blur(6px);
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px); z-index: 500; align-items: center; justify-content: center; padding: 20px;
     }
-    .modal-overlay.show { display: grid; }
-    .modal {
-      width: min(520px, 95vw); background: var(--navy-2);
-      border: 1px solid rgba(74,108,247,0.2); border-radius: 20px;
-      padding: 36px; text-align: center; position: relative;
-      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--navy-3); border: 1px solid rgba(74,108,247,0.3); border-radius: var(--radius);
+      max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px;
+      position: relative;
     }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px;
-      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.07);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--silver); font-size: 16px; cursor: pointer;
-    }
-    .modal-close:hover { background: rgba(255,255,255,0.12); color: var(--white); }
-    .modal-icon { font-size: 48px; margin-bottom: 16px; }
-    .modal h3 { font-family: var(--font-h); font-size: 20px; color: var(--white); margin-bottom: 10px; }
-    .modal p { color: var(--gray-mid); font-size: 14px; line-height: 1.7; margin-bottom: 24px; }
-    .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .modal-btn-p {
-      padding: 12px 24px; border-radius: 10px; border: none;
-      background: linear-gradient(135deg, var(--navy-mid), var(--accent));
-      color: var(--white); font-family: var(--font-h); font-weight: 800; font-size: 14px;
-      cursor: pointer; transition: var(--transition); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .modal-btn-p:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    .modal-btn-g {
-      padding: 12px 24px; border-radius: 10px; border: 1px solid rgba(74,108,247,0.25);
-      background: transparent; color: var(--accent-light); font-family: var(--font-h);
-      font-weight: 800; font-size: 14px; cursor: pointer; transition: var(--transition);
-    }
-    .modal-btn-g:hover { background: rgba(74,108,247,0.1); }
-
-    /* ── Toast ── */
-    .toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 999;
-      padding: 14px 22px; border-radius: 12px; font-size: 14px; font-weight: 600;
-      font-family: var(--font-h); opacity: 0; transform: translateY(8px);
-      transition: opacity 0.3s, transform 0.3s; pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: none; }
-    .toast.ok { background: #14532d; color: #bbf7d0; border: 1px solid #22c55e; }
-    .toast.info { background: var(--navy-4); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.4); }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.08); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 16px; color: var(--silver); cursor: pointer; transition: var(--tr); }
+    .modal-close:hover { background: rgba(239,68,68,0.2); color: #f87171; }
+    .modal-title { font-family: var(--font-h); font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    .plano-html { font-size: 13px; line-height: 1.7; }
+    .plano-html h4 { font-family: var(--font-h); font-size: 14px; color: var(--accent-light); margin: 16px 0 6px; }
+    .plano-html .dia-bloco { background: rgba(74,108,247,0.1); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 8px; }
+    .plano-html .dia-bloco strong { display: block; color: var(--accent-light); margin-bottom: 4px; font-size: 13px; }
+    .plano-html .session-row { font-size: 12px; color: var(--silver); padding: 3px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+    .plano-html .meta-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .plano-html .meta-pill { background: rgba(74,108,247,0.15); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--accent-light); border: 1px solid rgba(74,108,247,0.25); }
 
     /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .stats-strip { grid-template-columns: repeat(2, 1fr); }
-      .stat-item:nth-child(2) { border-right: none; }
-      .stat-item:nth-child(3) { border-right: none; }
-      .tips-grid { grid-template-columns: 1fr 1fr; }
-      .topbar__nav { display: none; }
-      .topbar__hamburger { display: flex; }
-    }
     @media (max-width: 640px) {
-      .area-wrap { padding: 24px 16px 60px; }
-      .greeting { flex-direction: column; }
-      .access-badge { flex-direction: row; justify-content: space-between; width: 100%; }
-      .plan-form fieldset { grid-template-columns: 1fr; }
-      .mission-preview { grid-template-columns: 1fr 1fr; }
-      .tips-grid { grid-template-columns: 1fr; }
-      .video-grid { grid-template-columns: 1fr; }
-      .pdf-grid { grid-template-columns: 1fr; }
-      .quick-grid { grid-template-columns: 1fr 1fr; }
+      .page { padding: 24px 16px 60px; }
+      .hero-bar { flex-direction: column; align-items: flex-start; padding: 24px 20px; }
+      .hero-bar__stats { gap: 16px; }
+      .plano-card { flex-direction: column; align-items: flex-start; }
+      .continue-banner { flex-wrap: wrap; }
+      .btn-continue { width: 100%; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── Topbar ── -->
-  <header class="topbar">
-    <a href="index.html" class="topbar__brand">
-      <img src="assets/img/logo-branca.png" alt="Professor Leão" />
-      <div class="topbar__brand-text">
-        <strong>PROFESSOR LEÃO</strong>
-        <small>Área do Aluno</small>
-      </div>
-    </a>
-    <nav class="topbar__nav" id="topNav">
-      <a href="#aulas" class="active">Aulas</a>
-      <a href="#materiais">Materiais</a>
-      <a href="#plano">Plano</a>
-      <a href="#dicas">Dicas</a>
-      <a href="index.html#jogos">Jogos</a>
-      <span id="adminNavLink" style="display:none"><a href="admin.html">Admin</a></span>
-      <button class="logout-btn" id="logoutBtn">Sair</button>
-    </nav>
-    <button class="topbar__hamburger" id="hamburgerBtn">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
+<!-- Topbar -->
+<header class="topbar">
+  <a href="index.html" class="topbar__logo">
+    <img src="assets/img/logo-branca.png" alt="Professor Leão" />
+    <div class="topbar__logo-text">PROFESSOR <span>LEÃO</span></div>
+  </a>
+  <div class="topbar__right">
+    <span class="topbar__user">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span id="userName">…</span>
+    </span>
+    <a href="index.html" class="topbar__home">← Site</a>
+    <button class="topbar__btn" onclick="plAuth.logout()">Sair</button>
+  </div>
+</header>
 
-  <!-- Mobile drawer -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-  <nav class="drawer" id="drawer">
-    <div class="drawer__header">
-      <button class="drawer__close" id="drawerClose">✕</button>
+<main class="page">
+
+  <!-- Hero -->
+  <div class="hero-bar">
+    <div class="hero-bar__text">
+      <h1>Olá, <span id="heroName">…</span>! 🦁</h1>
+      <p>Bem-vindo à sua área de estudos. Escolha um curso e continue sua missão rumo à aprovação.</p>
     </div>
-    <a href="#aulas">🎥 Aulas</a>
-    <a href="#materiais">📄 Materiais</a>
-    <a href="#plano">🎯 Plano de Estudos</a>
-    <a href="#dicas">💡 Dicas</a>
-    <a href="index.html#jogos">🎮 Jogos</a>
-    <span id="adminDrawerLink" style="display:none"><a href="admin.html">⚙️ Admin</a></span>
-    <button id="drawerLogout" style="color:rgba(239,68,68,0.8);margin-top:auto;">Sair da conta</button>
-  </nav>
-
-  <main class="area-wrap">
-
-    <!-- ── Greeting ── -->
-    <div class="greeting">
-      <div class="greeting-text">
-        <p class="eyebrow">Bem-vindo de volta</p>
-        <h1 id="greetingName">Olá! <span>Carregando...</span></h1>
-        <p>Aqui estão suas aulas, materiais e ferramentas de estudo.</p>
+    <div class="hero-bar__stats">
+      <div class="stat-chip">
+        <div class="stat-chip__val" id="statAulas">0</div>
+        <div class="stat-chip__lbl">Aulas concluídas</div>
       </div>
-      <div class="access-badge">
-        <p class="eyebrow">Seu acesso</p>
-        <strong><span class="status-dot"></span>Ativo</strong>
-        <p class="access-expiry" id="accessExpiry">—</p>
-      </div>
-    </div>
-
-    <!-- ── Quick actions ── -->
-    <div class="quick-grid">
-      <a href="#aulas" class="quick-card">
-        <span class="quick-icon">🎥</span>
-        <div><b>Aulas Gravadas</b><small>Continue de onde parou</small></div>
-      </a>
-      <a href="#materiais" class="quick-card">
-        <span class="quick-icon">📄</span>
-        <div><b>Apostilas PDF</b><small>Baixe e estude offline</small></div>
-      </a>
-      <a href="#plano" class="quick-card">
-        <span class="quick-icon">🚀</span>
-        <div><b>Gerar Plano</b><small>Cronograma Pomodoro</small></div>
-      </a>
-      <a href="index.html#jogos" class="quick-card" target="_blank">
-        <span class="quick-icon">🎮</span>
-        <div><b>Jogos Educativos</b><small>Pratique de forma lúdica</small></div>
-      </a>
-      <a href="https://wa.me/5577999229281" target="_blank" class="quick-card">
-        <span class="quick-icon">💬</span>
-        <div><b>Tirar Dúvidas</b><small>WhatsApp do Professor</small></div>
-      </a>
-      <a href="#dicas" class="quick-card">
-        <span class="quick-icon">💡</span>
-        <div><b>Dicas do Edital</b><small>Estratégia por concurso</small></div>
-      </a>
-    </div>
-
-    <!-- ── Stats ── -->
-    <div class="stats-strip" id="statsStrip">
-      <div class="stat-item">
-        <div class="num" id="watchedCount">0</div>
-        <div class="lbl">Aulas Assistidas</div>
-      </div>
-      <div class="stat-item">
-        <div class="num" id="totalLessons">0</div>
-        <div class="lbl">Total de Aulas</div>
-      </div>
-      <div class="stat-item">
-        <div class="num" id="progressPct">0%</div>
-        <div class="lbl">Progresso</div>
-      </div>
-      <div class="stat-item">
-        <div class="num" id="materialsCount">26</div>
-        <div class="lbl">Materiais Disponíveis</div>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════
-         AULAS GRAVADAS
-    ════════════════════════════════ -->
-    <section id="aulas">
-      <div class="sh">
-        <h2>Aulas Gravadas</h2>
-        <span id="aulas-count">0 aulas</span>
-      </div>
-
-      <!-- Module filter tabs -->
-      <div class="module-tabs" id="moduleTabs">
-        <button class="module-tab active" data-mod="all">Todas</button>
-        <button class="module-tab" data-mod="basica">Mat. Básica</button>
-        <button class="module-tab" data-mod="sd-pmba">SD PMBA</button>
-        <button class="module-tab" data-mod="cfo-pmba">CFO PMBA</button>
-        <button class="module-tab" data-mod="correios">Correios</button>
-      </div>
-
-      <div class="video-grid" id="videoGrid">
-        <!-- Populated by JS -->
-      </div>
-    </section>
-
-    <!-- ════════════════════════════════
-         MATERIAIS PREMIUM
-    ════════════════════════════════ -->
-    <section id="materiais">
-      <div class="sh">
-        <h2>Materiais Premium</h2>
-        <span>5 apostilas e guias</span>
-      </div>
-      <div class="pdf-grid">
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">📘 Apostila</div>
-          <h3>Matemática Básica para Concursos</h3>
-          <p>Fundamentos completos de aritmética, álgebra e geometria com exercícios comentados.</p>
-          <ul class="pdf-highlights">
-            <li>Aritmética e operações básicas</li>
-            <li>Frações, porcentagem, regra de três</li>
-            <li>Questões de concursos resolvidas</li>
-            <li>Exercícios para fixação</li>
-          </ul>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/apostila-basica.pdf" target="_blank">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Abrir PDF
-            </a>
-            <a class="pdf-btn-g" href="assets/apostila-basica.pdf" download title="Baixar">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-d">
-          <div class="pdf-tag">⭐ CFO PMBA</div>
-          <h3>Apostila CFO PMBA – Matemática</h3>
-          <p>Apostila exclusiva com todo o conteúdo cobrado no CFO PMBA pela Banca UNEB.</p>
-          <ul class="pdf-highlights">
-            <li>Conteúdo programático completo UNEB</li>
-            <li>Questões de edições anteriores</li>
-            <li>Estatística e probabilidade</li>
-            <li>Matemática financeira</li>
-          </ul>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/apostila-cfo.pdf" target="_blank">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Abrir PDF
-            </a>
-            <a class="pdf-btn-g" href="assets/apostila-cfo.pdf" download title="Baixar">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">📋 Conteúdo</div>
-          <h3>Conteúdo Programático CFO / SD</h3>
-          <p>Mapa completo dos tópicos cobrados nas provas de SD e CFO da Polícia Militar.</p>
-          <ul class="pdf-highlights">
-            <li>Lista completa por disciplina</li>
-            <li>Pesos e frequência de cobrança</li>
-            <li>Estratégia de estudo por edital</li>
-          </ul>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/conteudo-cfo.pdf" target="_blank">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Abrir PDF
-            </a>
-            <a class="pdf-btn-g" href="assets/conteudo-cfo.pdf" download>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-c">
-          <div class="pdf-tag">📬 Correios</div>
-          <h3>Apostila Correios – Matemática</h3>
-          <p>Conteúdo programático completo de Matemática para os Correios 2024.</p>
-          <ul class="pdf-highlights">
-            <li>Raciocínio lógico e quantitativo</li>
-            <li>Grandezas e medidas</li>
-            <li>Questões comentadas</li>
-          </ul>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/apostila-correios.pdf" target="_blank">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Abrir PDF
-            </a>
-            <a class="pdf-btn-g" href="assets/apostila-correios.pdf" download>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">📋 Conteúdo</div>
-          <h3>Conteúdo Programático Correios</h3>
-          <p>Mapa detalhado dos temas exigidos no concurso dos Correios 2024.</p>
-          <ul class="pdf-highlights">
-            <li>Raciocínio lógico e matemático</li>
-            <li>Porcentagem e juros</li>
-            <li>Probabilidade e estatística</li>
-          </ul>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/conteudo-correios.pdf" target="_blank">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Abrir PDF
-            </a>
-            <a class="pdf-btn-g" href="assets/conteudo-correios.pdf" download>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ════════════════════════════════
-         AULAS EM PDF
-    ════════════════════════════════ -->
-    <section id="aulas-pdf" style="margin-bottom:52px;">
-      <div class="sh">
-        <h2>Aulas em PDF</h2>
-        <span>Material de apoio das aulas gravadas</span>
-      </div>
-
-      <p style="color:var(--gray-mid);font-size:14px;margin-bottom:24px;">
-        PDFs das aulas para acompanhar e estudar offline. Organizados por módulo.
-      </p>
-
-      <!-- CFO / SD PMBA -->
-      <h3 style="font-family:var(--font-h);font-size:15px;color:var(--accent-light);margin-bottom:14px;letter-spacing:0.5px;">📘 CFO / SD PMBA</h3>
-      <div class="pdf-grid" style="margin-bottom:32px;">
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 01</div>
-          <h3>Conjuntos Numéricos</h3>
-          <p>Naturais, inteiros, racionais, irracionais e reais.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 02</div>
-          <h3>Números Racionais</h3>
-          <p>Frações, decimais, simplificação e operações.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-02-numeros-racionais.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-02-numeros-racionais.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 03</div>
-          <h3>Dízimas, Potenciação e Radiciação</h3>
-          <p>Dízimas periódicas, propriedades de potências e raízes.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-03-dizimas-potenciacao.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-03-dizimas-potenciacao.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 04</div>
-          <h3>Números Primos, MMC e MDC</h3>
-          <p>Critérios de divisibilidade, fatoração e algoritmos.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 05</div>
-          <h3>Números Irracionais, Reais e Complexos</h3>
-          <p>Raízes irracionais, representação e operações.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-05-irracionais-complexos.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-05-irracionais-complexos.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 06</div>
-          <h3>Sequências Numéricas — PA</h3>
-          <p>Progressão Aritmética: termos, soma e aplicações.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-06-pa.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-06-pa.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-a">
-          <div class="pdf-tag">Aula 07</div>
-          <h3>Progressão Geométrica (PG)</h3>
-          <p>Progressão Geométrica, razão, termos e soma.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/cfo-sd/aula-07-pg.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/cfo-sd/aula-07-pg.pdf" download>↓</a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Correios -->
-      <h3 style="font-family:var(--font-h);font-size:15px;color:var(--accent-light);margin-bottom:14px;letter-spacing:0.5px;">📬 Correios</h3>
-      <div class="pdf-grid" style="margin-bottom:32px;">
-
-        <div class="pdf-card cat-c">
-          <div class="pdf-tag">Aula 01</div>
-          <h3>Inteiros, Múltiplos e Divisores</h3>
-          <p>Fundamentos de aritmética para o concurso dos Correios.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/correios/aula-01-inteiros-multiplos.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/correios/aula-01-inteiros-multiplos.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-c">
-          <div class="pdf-tag">Aula 02</div>
-          <h3>Números Racionais</h3>
-          <p>Frações e decimais aplicados às questões dos Correios.</p>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/aulas/correios/aula-02-numeros-racionais.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/aulas/correios/aula-02-numeros-racionais.pdf" download>↓</a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Listas de Exercícios -->
-      <h3 style="font-family:var(--font-h);font-size:15px;color:var(--accent-light);margin-bottom:14px;letter-spacing:0.5px;">📝 Listas de Exercícios — CFO / SD PMBA</h3>
-      <div class="pdf-grid">
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Conjuntos Numéricos</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-conjuntos-numericos.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-conjuntos-numericos.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Números Racionais</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-numeros-racionais.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-numeros-racionais.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Matemática Básica</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-matematica-basica.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-matematica-basica.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Teoria dos Conjuntos</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-teoria-conjuntos.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-teoria-conjuntos.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Razão, Proporção e Porcentagem</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-razao-proporcao-porcentagem.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-razao-proporcao-porcentagem.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Juros Simples, PA e PG</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-juros-pa-pg.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-juros-pa-pg.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Funções, Exponencial e Logaritmo</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-funcoes-exp-log.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-funcoes-exp-log.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Análise Combinatória e Probabilidade</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-combinatoria-probabilidade.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-combinatoria-probabilidade.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Geometria Plana</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-geometria-plana.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-geometria-plana.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Geometria Espacial</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-geometria-espacial.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-geometria-espacial.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Geometria Analítica</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-geometria-analitica.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-geometria-analitica.pdf" download>↓</a>
-          </div>
-        </div>
-
-        <div class="pdf-card cat-b">
-          <div class="pdf-tag">Lista</div>
-          <h3>Razão e Proporção</h3>
-          <div class="pdf-actions">
-            <a class="pdf-btn-p" href="assets/listas/cfo-sd/lista-razao-proporcao.pdf" target="_blank">Abrir PDF</a>
-            <a class="pdf-btn-g" href="assets/listas/cfo-sd/lista-razao-proporcao.pdf" download>↓</a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ════════════════════════════════
-         PLANO DE ESTUDOS
-    ════════════════════════════════ -->
-    <section class="planner-section" id="plano">
-      <span class="section-badge">🎯 Personalizado</span>
-      <h2>Gerar Plano de Estudos Pomodoro</h2>
-      <p>Preencha os dados para criar um cronograma personalizado para o seu concurso.</p>
-
-      <form class="plan-form" id="planForm" autocomplete="on">
-        <fieldset>
-          <legend>Dados do concurso</legend>
-
-          <div class="form-group full">
-            <label for="pConcurso">Qual concurso você irá fazer?</label>
-            <select id="pConcurso" name="concurso" required>
-              <option value="">Selecione o concurso...</option>
-              <option value="CFO PMBA">CFO PMBA</option>
-              <option value="SD PMBA">Soldado (SD) PMBA</option>
-              <option value="Matemática Básica">Matemática Básica</option>
-              <option value="Correios">Correios</option>
-            </select>
-            <div class="switch-row" style="margin-top:8px;">
-              <button type="button" class="switch-btn" data-val="CFO PMBA">CFO PMBA</button>
-              <button type="button" class="switch-btn" data-val="SD PMBA">SD PMBA</button>
-              <button type="button" class="switch-btn" data-val="Correios">Correios</button>
-              <button type="button" class="switch-btn" data-val="Matemática Básica">Mat. Básica</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="pDataProva">Data da prova</label>
-            <input type="date" id="pDataProva" name="dataProva" required />
-          </div>
-          <div class="form-group">
-            <label for="pHorasDia">Horas por dia</label>
-            <input type="number" id="pHorasDia" name="horasDia" min="1" max="16" placeholder="Ex: 3" inputmode="numeric" required />
-          </div>
-          <div class="form-group">
-            <label for="pDiasSemana">Dias por semana</label>
-            <input type="number" id="pDiasSemana" name="diasSemana" min="1" max="7" placeholder="Ex: 5" inputmode="numeric" required />
-          </div>
-          <div class="form-group">
-            <label for="pNivel">Nível atual</label>
-            <select id="pNivel" name="nivel" required>
-              <option value="">Selecione...</option>
-              <option value="iniciante">Iniciante</option>
-              <option value="intermediario">Intermediário</option>
-              <option value="avancado">Avançado</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="pTrabalha">Trabalha atualmente?</label>
-            <select id="pTrabalha" name="trabalha">
-              <option value="">Selecione...</option>
-              <option value="Não">Não</option>
-              <option value="Sim">Sim</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="pEstudouAntes">Já estudou para este concurso antes?</label>
-            <select id="pEstudouAntes" name="estudouAntes">
-              <option value="">Selecione...</option>
-              <option value="Sim">Sim</option>
-              <option value="Não">Não</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="pNotaAlvo">Nota alvo (pontos)</label>
-            <input type="number" id="pNotaAlvo" name="notaAlvo" min="0" max="100" placeholder="Ex: 70" inputmode="numeric" />
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Matérias com mais dificuldade</legend>
-          <div class="checkbox-grid" id="dificuldadesBox"></div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Matérias com mais facilidade</legend>
-          <div class="checkbox-grid" id="facilidadesBox"></div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Observações</legend>
-          <div class="form-group full">
-            <textarea id="pObservacoes" name="observacoes" rows="3" placeholder="Conte algo sobre sua rotina, dificuldades, trabalho ou objetivo..."></textarea>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Prévia da missão</legend>
-          <div class="mission-preview">
-            <div><span id="pDaysLeft">--</span><small>dias até a prova</small></div>
-            <div><span id="pWeeklyLoad">--</span><small>horas/semana</small></div>
-            <div><span id="pMode">--</span><small>intensidade</small></div>
-          </div>
-          <div class="pomodoro-preview full" style="grid-column:1/-1;margin-top:12px;">
-            <strong>Estratégia Pomodoro:</strong>
-            <span id="pPomodoroText">Preencha os dados acima para ver a estratégia.</span>
-          </div>
-          <button type="submit" class="gen-btn">🚀 Gerar meu plano de estudos</button>
-        </fieldset>
-      </form>
-
-      <div class="plan-result" id="planResult"></div>
-    </section>
-
-    <!-- ════════════════════════════════
-         DICAS DO EDITAL
-    ════════════════════════════════ -->
-    <section id="dicas">
-      <div class="sh">
-        <h2>Dicas do Edital</h2>
-        <span>Estratégia real por concurso</span>
-      </div>
-      <div class="tips-grid">
-        <div class="tip-card">
-          <span class="tip-badge">CFO PMBA</span>
-          <h3>Matemática vale muito — não zere!</h3>
-          <p>No CFO PMBA (UNEB), Matemática costuma ter peso alto. Domine aritmética, álgebra e as questões de padrão UNEB antes de qualquer outra área.</p>
-        </div>
-        <div class="tip-card">
-          <span class="tip-badge">CFO PMBA</span>
-          <h3>Aproveite questões antigas da UNEB</h3>
-          <p>A banca UNEB tem padrão bem definido. Resolva todas as provas antigas disponíveis — o padrão de questões se repete com variações previsíveis.</p>
-        </div>
-        <div class="tip-card">
-          <span class="tip-badge">SD PMBA</span>
-          <h3>Regra de Três e Porcentagem são rei</h3>
-          <p>Para SD PMBA, os temas mais cobrados em Matemática são Regra de Três, Porcentagem e Razão/Proporção. Dominá-los já garante boa pontuação.</p>
-        </div>
-        <div class="tip-card">
-          <span class="tip-badge">Método</span>
-          <h3>Questões desde a 1ª semana</h3>
-          <p>Não espere "terminar a teoria" para fazer questões. Resolva questões sobre cada tópico logo após estudar — isso acelera a fixação em até 60%.</p>
-        </div>
-        <div class="tip-card">
-          <span class="tip-badge">Pomodoro</span>
-          <h3>25min foco · 5min pausa</h3>
-          <p>O método Pomodoro é scientificamente comprovado para aumentar retenção. Use 25min de estudo intenso + 5min de pausa ativa. Após 4 ciclos, descanse 20min.</p>
-        </div>
-        <div class="tip-card">
-          <span class="tip-badge">Revisão</span>
-          <h3>Revise o que errou, não o que sabe</h3>
-          <p>Crie um caderno de erros. Anote cada questão errada com a explicação. Revise esses erros toda semana — é o atalho mais eficiente para a aprovação.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ════════════════════════════════
-         CTA FINAL — PLANO + WHATSAPP
-    ════════════════════════════════ -->
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:32px 36px;border:1px solid rgba(74,108,247,0.25);border-radius:20px;background:linear-gradient(135deg,rgba(74,108,247,0.08),rgba(27,46,107,0.25));margin-bottom:40px;">
-      <div>
-        <p style="font-family:var(--font-h);font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:8px;">Missão Ativa</p>
-        <h3 style="font-family:var(--font-h);font-size:clamp(18px,2.5vw,24px);font-weight:900;color:var(--white);margin-bottom:8px;">Pronto para gerar seu plano de estudos?</h3>
-        <p style="color:var(--gray-mid);font-size:14px;line-height:1.6;max-width:520px;margin:0;">Combine as apostilas e aulas gravadas com um cronograma Pomodoro personalizado por edital, assunto e suas dificuldades reais.</p>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <a href="#plano" class="btn-watch" style="padding:14px 22px;border-radius:10px;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-          🚀 Gerar Plano Pomodoro
-        </a>
-        <a href="https://wa.me/5577999229281?text=Olá%20Professor%20Leão!%20Sou%20aluno%20e%20quero%20tirar%20uma%20dúvida." target="_blank" style="padding:14px 22px;border-radius:10px;font-family:var(--font-h);font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(74,108,247,0.3);color:var(--accent-light);transition:var(--transition);">
-          💬 Falar com o Professor
-        </a>
-      </div>
-    </div>
-
-  </main>
-
-  <footer style="text-align:center;padding:28px;border-top:1px solid rgba(74,108,247,0.1);background:var(--navy-2);">
-    <p style="font-family:var(--font-h);font-size:12px;color:var(--gray-mid);">
-      © 2026 Professor Leão (Lucas Samuel Leão) · Vitória da Conquista – BA · <a href="index.html" style="color:var(--accent-light);">Voltar ao site</a>
-    </p>
-  </footer>
-
-  <!-- ── Video modal ── -->
-  <div class="modal-overlay" id="videoModal">
-    <div class="modal">
-      <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-icon">🎥</div>
-      <h3 id="modalTitle">Aula</h3>
-      <p id="modalDesc">Para assistir a esta aula, acesse o link do Professor Leão no WhatsApp.</p>
-      <div class="modal-actions">
-        <a class="modal-btn-p" href="https://wa.me/5577999229281?text=Olá!%20Quero%20assistir%20a%20aula:" target="_blank" id="modalWhatsapp">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          Solicitar no WhatsApp
-        </a>
-        <button class="modal-btn-g" id="markWatchedBtn">✓ Marcar como assistida</button>
+      <div class="stat-chip">
+        <div class="stat-chip__val" id="statCursos">0</div>
+        <div class="stat-chip__lbl">Cursos em andamento</div>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <!-- Continue de onde parou -->
+  <div class="continue-banner" id="continueBanner" style="display:none">
+    <div class="continue-banner__icon" id="continueIcon">📖</div>
+    <div class="continue-banner__text">
+      <small>Continue de onde parou</small>
+      <strong id="continueAula">Aula 1 – …</strong>
+      <span id="continueCurso">…</span>
+    </div>
+    <a class="btn-continue" id="continueLink" href="#">Continuar ▶</a>
+  </div>
 
-  <script src="auth.js"></script>
-  <script>
-  /* ── Auth check ── */
-  const session = window.plAuth.requireAuth();
-  if (!session) { /* redirected */ }
+  <!-- Plano de Estudos -->
+  <div class="plano-card" id="planoCard">
+    <div class="plano-card__icon">🗓️</div>
+    <div class="plano-card__info">
+      <h3 id="planoTitle">Plano de Estudos</h3>
+      <p id="planoDesc">Você ainda não gerou um plano. Acesse a página inicial e preencha o formulário.</p>
+      <div class="plano-card__chips" id="planoChips" style="display:none"></div>
+    </div>
+    <button class="btn-plano" id="planoBtnVer" style="display:none" onclick="abrirModalPlano()">Ver Plano 📋</button>
+    <a class="btn-plano" href="index.html#plano" id="planoBtnGerar">Gerar Plano 🚀</a>
+  </div>
 
-  /* ── Greet user ── */
-  if (session) {
-    const fn = session.name ? session.name.split(' ')[0] : 'Aluno';
-    document.getElementById('greetingName').innerHTML = `Olá, ${fn}! <span>Missão ativa.</span>`;
-    if (session.expiresAt) {
-      document.getElementById('accessExpiry').textContent = 'Expira ' + new Date(session.expiresAt).toLocaleDateString('pt-BR');
-    } else {
-      document.getElementById('accessExpiry').textContent = 'Acesso vitalício';
-    }
-    if (session.role === 'admin') {
-      document.getElementById('adminNavLink').style.display = 'inline';
-      document.getElementById('adminDrawerLink').style.display = 'block';
-    }
-  }
+  <!-- Cursos -->
+  <div class="sec-header">
+    <h2>📚 Seus Cursos</h2>
+    <p>Escolha um curso para ver as aulas disponíveis</p>
+  </div>
+  <div class="courses-grid" id="coursesGrid">
+    <!-- JS-generated -->
+  </div>
 
-  /* ── Mobile menu ── */
-  const hamburger  = document.getElementById('hamburgerBtn');
-  const drawer     = document.getElementById('drawer');
-  const overlay    = document.getElementById('drawerOverlay');
-  const drawerClose = document.getElementById('drawerClose');
-  const openD = () => { drawer.classList.add('open'); overlay.classList.add('show'); };
-  const closeD = () => { drawer.classList.remove('open'); overlay.classList.remove('show'); };
-  hamburger.addEventListener('click', openD);
-  drawerClose.addEventListener('click', closeD);
-  overlay.addEventListener('click', closeD);
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeD));
+</main>
 
-  /* ── Logout ── */
-  document.getElementById('logoutBtn').addEventListener('click', () => window.plAuth.logout());
-  document.getElementById('drawerLogout').addEventListener('click', () => window.plAuth.logout());
+<!-- Modal plano -->
+<div class="modal-overlay" id="modalPlano">
+  <div class="modal-box">
+    <button class="modal-close" onclick="fecharModalPlano()">✕</button>
+    <div class="modal-title" id="modalPlanoTitle">Meu Plano de Estudos</div>
+    <div class="plano-html" id="modalPlanoBody"></div>
+  </div>
+</div>
 
-  /* ── VIDEO DATA ──
-     Módulos: basica | sd-pmba | cfo-pmba | correios
-     Aulas gravadas compartilhadas (CFO/SD) e específicas (CFO PMBA).
-     Correios: em breve.
-  ── */
-  const VIDEOS = [
-    // ── Módulo: Matemática Básica (fundamentos para todos os concursos)
-    { id:'b01', mod:'basica',   tag:'tag-aritm',  tagLabel:'Mat. Básica',  num:'Aula 01', title:'Conjuntos Numéricos',                     desc:'Naturais, inteiros, racionais, irracionais e reais. Representação na reta numérica e comparação.', dur:'~45min' },
-    { id:'b02', mod:'basica',   tag:'tag-aritm',  tagLabel:'Mat. Básica',  num:'Aula 02', title:'Números Primos, MMC e MDC',                desc:'Critérios de divisibilidade, fatoração, MMC e MDC. Algoritmo de Euclides e aplicações.', dur:'~45min' },
-    { id:'b03', mod:'basica',   tag:'tag-aritm',  tagLabel:'Mat. Básica',  num:'Aula 03', title:'Dízimas Periódicas, Potenciação e Radiciação', desc:'Conversão de dízimas, propriedades de potências e raízes. Exercícios práticos.', dur:'~45min' },
-    { id:'b04', mod:'basica',   tag:'tag-aritm',  tagLabel:'Mat. Básica',  num:'Aula 04', title:'Números Racionais: Frações e Decimais',     desc:'Operações com frações, simplificação, comparação e conversões. Questões de concursos.', dur:'~45min' },
-    { id:'b05', mod:'basica',   tag:'tag-aritm',  tagLabel:'Mat. Básica',  num:'Aula 05', title:'Teoria dos Conjuntos',                     desc:'União, interseção, complemento e diferença. Problemas clássicos de conjuntos em provas.', dur:'~45min' },
-    { id:'b06', mod:'basica',   tag:'tag-financ', tagLabel:'Mat. Básica',  num:'Aula 06', title:'Juros Simples, PA e PG',                   desc:'Progressão Aritmética, Progressão Geométrica e Juros Simples. Fórmulas e resolução de questões.', dur:'~45min' },
-    // ── Módulo: SD PMBA (aulas compartilhadas SD/CFO — foco SD)
-    { id:'s01', mod:'sd-pmba',  tag:'tag-cfo',    tagLabel:'SD PMBA',      num:'Aula 01', title:'Conjuntos Numéricos',                     desc:'Base de Matemática para o SD PMBA. Naturais, inteiros, racionais — cobrados todo concurso.', dur:'~45min' },
-    { id:'s02', mod:'sd-pmba',  tag:'tag-cfo',    tagLabel:'SD PMBA',      num:'Aula 02', title:'MMC, MDC e Números Primos',               desc:'Critérios de divisibilidade e fatoração. Essencial para provas de SD PMBA pela UNEB.', dur:'~45min' },
-    { id:'s03', mod:'sd-pmba',  tag:'tag-cfo',    tagLabel:'SD PMBA',      num:'Aula 09', title:'Regra de Três Composta',                  desc:'Grandezas diretamente e inversamente proporcionais. Tema muito cobrado no SD PMBA.', dur:'~45min' },
-    { id:'s04', mod:'sd-pmba',  tag:'tag-cfo',    tagLabel:'SD PMBA',      num:'Aula 10', title:'Porcentagem',                             desc:'Cálculo de porcentagem, aumentos, descontos e sucessivos. Questões reais da UNEB.', dur:'~45min' },
-    { id:'s05', mod:'sd-pmba',  tag:'tag-cfo',    tagLabel:'SD PMBA',      num:'Aula 12', title:'Sistemas de Medidas',                     desc:'Comprimento, massa, volume, capacidade, área e tempo. Conversões nas provas SD PMBA.', dur:'~45min' },
-    { id:'s06', mod:'sd-pmba',  tag:'tag-geom',   tagLabel:'SD PMBA',      num:'Aula 13', title:'Geometria Plana',                         desc:'Áreas e perímetros de figuras planas. Um dos temas mais cobrados no SD PMBA.', dur:'~45min' },
-    // ── Módulo: CFO PMBA (aulas avançadas)
-    { id:'c01', mod:'cfo-pmba', tag:'tag-cfo',    tagLabel:'CFO PMBA',     num:'Aula 01', title:'Conjuntos Numéricos — Revisão CFO',       desc:'Revisão completa e aprofundada para o nível CFO PMBA. Banca UNEB.', dur:'~45min' },
-    { id:'c02', mod:'cfo-pmba', tag:'tag-cfo',    tagLabel:'CFO PMBA',     num:'Aula 07', title:'Funções do 1° e 2° Graus',               desc:'Função linear, quadrática, vértice, raízes e gráficos. Essencial no CFO PMBA.', dur:'~45min' },
-    { id:'c03', mod:'cfo-pmba', tag:'tag-cfo',    tagLabel:'CFO PMBA',     num:'Aula 08', title:'Análise Combinatória e Probabilidade',    desc:'Princípio fundamental, permutação, arranjo, combinação e probabilidade. Questões UNEB.', dur:'~45min' },
-    { id:'c04', mod:'cfo-pmba', tag:'tag-geom',   tagLabel:'CFO PMBA',     num:'Aula 13', title:'Geometria Plana',                         desc:'Figuras planas, áreas, perímetros e relações métricas. Foco total no padrão CFO PMBA.', dur:'~45min' },
-    { id:'c05', mod:'cfo-pmba', tag:'tag-geom',   tagLabel:'CFO PMBA',     num:'Aula 14', title:'Geometria Espacial',                      desc:'Sólidos geométricos, volumes e áreas. Questões de provas anteriores CFO PMBA.', dur:'~45min' },
-    { id:'c06', mod:'cfo-pmba', tag:'tag-cfo',    tagLabel:'CFO PMBA',     num:'Aula 15', title:'Estatística',                             desc:'Média, mediana, moda, desvio padrão. Gráficos e tabelas. Padrão UNEB CFO.', dur:'~45min' },
-    { id:'c07', mod:'cfo-pmba', tag:'tag-geom',   tagLabel:'CFO PMBA',     num:'Aula 16', title:'Geometria Analítica e Trigonometria',     desc:'Ponto, reta, distâncias e seno/cosseno. Questões avançadas CFO PMBA.', dur:'~45min' },
-    { id:'c08', mod:'cfo-pmba', tag:'tag-algebra', tagLabel:'CFO PMBA',    num:'Aula 17', title:'Sistemas Lineares e Matrizes',             desc:'Matrizes, determinantes e sistemas. Nível avançado para CFO PMBA.', dur:'~45min' },
-    { id:'c09', mod:'cfo-pmba', tag:'tag-algebra', tagLabel:'CFO PMBA',    num:'Aula 18', title:'Álgebra Avançada',                        desc:'Polinômios, equações de alto grau e outras estruturas algébricas. CFO PMBA.', dur:'~45min' },
-    // ── Módulo: Correios (em breve)
-    { id:'cr01', mod:'correios', tag:'tag-aritm', tagLabel:'Correios',      num:'Em breve', title:'Matemática para Correios – Em Breve',   desc:'As aulas de Matemática para o concurso dos Correios estão sendo preparadas. Solicite no WhatsApp!', dur:'—' },
-  ];
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script>
+/* ── Auth check ── */
+const _session = plAuth.requireAuth();
+if (!_session) throw new Error('redirect');
 
-  /* ── Render videos ── */
-  let currentMod = 'all';
-  const progress = window.plAuth.getProgress();
+/* ── Populate user info ── */
+document.getElementById('userName').textContent = _session.name.split(' ')[0];
+document.getElementById('heroName').textContent = _session.name.split(' ')[0];
 
-  function renderVideos() {
-    const grid = document.getElementById('videoGrid');
-    const filtered = currentMod === 'all' ? VIDEOS : VIDEOS.filter(v => v.mod === currentMod);
-    document.getElementById('aulas-count').textContent = VIDEOS.length + ' aulas';
+/* ── Load progress ── */
+const _prog = plAuth.getProgressV2();
 
-    grid.innerHTML = filtered.map(v => {
-      const watched = !!progress[v.id];
-      return `
-        <div class="video-card${watched ? ' watched' : ''}" data-id="${v.id}">
-          <div class="video-thumb" onclick="openVideoModal('${v.id}')">
-            <button class="video-play-btn" aria-label="Assistir ${v.title}">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </button>
-            ${watched ? '<span class="video-watched-badge">✓ Assistida</span>' : ''}
-            <span class="video-num">${v.num}</span>
-            <span class="video-duration">${v.dur}</span>
-          </div>
-          <div class="video-body">
-            <span class="video-tag ${v.tag}">${v.tagLabel}</span>
-            <h3>${v.title}</h3>
-            <p>${v.desc}</p>
-            <div class="video-actions">
-              <button class="btn-watch" onclick="openVideoModal('${v.id}')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                Assistir
-              </button>
-              <button class="btn-watched" onclick="toggleWatched('${v.id}')" title="${watched ? 'Desmarcar' : 'Marcar como assistida'}">
-                ${watched ? '✓ Assistida' : '○ Marcar'}
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-    updateStats();
-  }
-
-  /* ── Stats ── */
-  function updateStats() {
-    const prog = window.plAuth.getProgress();
-    const watched = Object.keys(prog).length;
-    const total = VIDEOS.length;
-    document.getElementById('watchedCount').textContent = watched;
-    document.getElementById('totalLessons').textContent = total;
-    document.getElementById('progressPct').textContent = total ? Math.round(watched/total*100) + '%' : '0%';
-  }
-
-  /* ── Module tabs ── */
-  document.querySelectorAll('.module-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.module-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentMod = btn.dataset.mod;
-      renderVideos();
-    });
+/* ── Stats ── */
+let totalConcluidas = 0, cursosAtivos = 0;
+Object.values(PL_CATALOG.cursos).forEach(c => {
+  let aulasFeitas = 0;
+  c.aulas.forEach(a => {
+    const pa = (_prog[c.id] || {})[a.id] || {};
+    if (PL_CATALOG.aulaCompleta(a.materiais, pa)) aulasFeitas++;
   });
+  totalConcluidas += aulasFeitas;
+  if (aulasFeitas > 0) cursosAtivos++;
+});
+document.getElementById('statAulas').textContent  = totalConcluidas;
+document.getElementById('statCursos').textContent = cursosAtivos;
 
-  /* ── Toggle watched ── */
-  function toggleWatched(id) {
-    const prog = window.plAuth.getProgress();
-    if (prog[id]) {
-      // unmark
-      const s = window.plAuth.getSession();
-      if (!s) return;
-      const key = 'pl_progress_' + s.id;
-      const p = window.plAuth.getProgress();
-      delete p[id];
-      localStorage.setItem(key, JSON.stringify(p));
-    } else {
-      window.plAuth.markWatched(id);
-    }
-    renderVideos();
-    showToast('Progresso atualizado!', 'ok');
+/* ── Continue banner ── */
+const lv = plAuth.getLastVisited();
+if (lv) {
+  const c = PL_CATALOG.getCurso(lv.cursoId);
+  if (c) {
+    document.getElementById('continueBanner').style.display = 'flex';
+    document.getElementById('continueIcon').textContent   = c.icon;
+    document.getElementById('continueAula').textContent   = `Aula ${lv.aulaNumero} – ${lv.aulaTitulo}`;
+    document.getElementById('continueCurso').textContent  = c.nome;
+    document.getElementById('continueLink').href          = `aula.html?curso=${lv.cursoId}&aula=${lv.aulaId}`;
   }
+}
 
-  /* ── Video modal ── */
-  let currentVideoId = null;
-  function openVideoModal(id) {
-    const v = VIDEOS.find(x => x.id === id);
-    if (!v) return;
-    currentVideoId = id;
-    document.getElementById('modalTitle').textContent = v.title;
-    document.getElementById('modalDesc').textContent = v.desc + '\n\nPara assistir, solicite o link no WhatsApp do Professor Leão ou acesse a plataforma de vídeos.';
-    document.getElementById('modalWhatsapp').href = `https://wa.me/5577999229281?text=Olá%20Professor%20Leão!%20Quero%20assistir%20a%20aula:%20${encodeURIComponent(v.title)}`;
-    document.getElementById('videoModal').classList.add('show');
-  }
-  document.getElementById('modalClose').addEventListener('click', () => {
-    document.getElementById('videoModal').classList.remove('show');
-  });
-  document.getElementById('videoModal').addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) e.currentTarget.classList.remove('show');
-  });
-  document.getElementById('markWatchedBtn').addEventListener('click', () => {
-    if (currentVideoId) {
-      window.plAuth.markWatched(currentVideoId);
-      renderVideos();
-      showToast('✓ Aula marcada como assistida!', 'ok');
-      document.getElementById('videoModal').classList.remove('show');
-    }
-  });
+/* ── Study plan from leads ── */
+(function loadPlano() {
+  const leads = JSON.parse(localStorage.getItem('pl_leads') || '[]');
+  const lead = [...leads].reverse().find(l => l.email && l.email.toLowerCase() === _session.email.toLowerCase());
+  if (!lead) return;
 
-  /* ── Plano de estudos (Pomodoro) — dados baseados nos editais reais ── */
-  const MATERIAS_PLAN = {
-    'CFO PMBA': [
-      'Língua Portuguesa','Direito Constitucional','Direito Administrativo',
-      'Direito Penal','Legislação PM','Ciências Humanas',
-      'Matemática / RLM','Informática','Língua Inglesa'
-    ],
-    'SD PMBA': [
-      'Língua Portuguesa','Matemática','Atualidades','Informática',
-      'História do Brasil','Geografia do Brasil','Direito Constitucional',
-      'Direitos Humanos','Direito Administrativo','Direito Penal',
-      'Direito Penal Militar','Igualdade Racial e de Gênero'
-    ],
-    'Matemática Básica': [
-      'Conjuntos Numéricos','MMC e MDC','Frações e Números Decimais',
-      'Potenciação e Radiciação','Porcentagem e Juros','Regra de Três',
-      'Razão e Proporção','PA e PG','Funções do 1° e 2° Graus',
-      'Equações e Sistemas','Geometria Plana','Geometria Espacial','Estatística'
-    ],
-    'Correios': [
-      'Matemática','Língua Portuguesa','Raciocínio Lógico',
-      'Informática','Atualidades','Conhecimentos Específicos da Área'
-    ]
-  };
+  const daysLeft = lead.dataProva ? Math.max(0, Math.round((new Date(lead.dataProva) - Date.now()) / 86400000)) : null;
 
-  function criarCbsPlan(containerId, name, lista) {
-    const box = document.getElementById(containerId);
-    if (!box) return;
-    box.innerHTML = lista.map((s, i) => `
-      <label class="cb-label" for="${name}-${i}">
-        <input type="checkbox" id="${name}-${i}" name="${name}" value="${s}" /> ${s}
-      </label>
-    `).join('');
-  }
+  document.getElementById('planoTitle').textContent = `Plano — ${lead.concurso}`;
+  document.getElementById('planoDesc').textContent  = daysLeft !== null
+    ? `${daysLeft} dias até sua prova · ${lead.horasDia}h/dia · ${lead.diasSemana} dias/semana`
+    : `Plano gerado para ${lead.concurso} · ${lead.horasDia}h/dia`;
 
-  function preencherMateriasPlan(concurso) {
-    const lista = MATERIAS_PLAN[concurso] || MATERIAS_PLAN['SD PMBA'];
-    criarCbsPlan('dificuldadesBox', 'dificuldade', lista);
-    criarCbsPlan('facilidadesBox',  'facilidade',  lista);
-    document.querySelectorAll('.switch-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.val === concurso)
-    );
-  }
-
-  document.getElementById('pConcurso').addEventListener('change', (e) => {
-    if (e.target.value) preencherMateriasPlan(e.target.value);
-    updatePreview();
-  });
-
-  document.querySelectorAll('.switch-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const val = btn.dataset.val;
-      document.getElementById('pConcurso').value = val;
-      preencherMateriasPlan(val);
-      updatePreview();
-    });
-  });
-
-  document.getElementById('pDataProva').addEventListener('change', updatePreview);
-  document.getElementById('pHorasDia').addEventListener('input', updatePreview);
-  document.getElementById('pDiasSemana').addEventListener('input', updatePreview);
-
-  function updatePreview() {
-    const dateVal = document.getElementById('pDataProva').value;
-    const horas   = parseInt(document.getElementById('pHorasDia').value) || 0;
-    const dias    = parseInt(document.getElementById('pDiasSemana').value) || 0;
-
-    if (dateVal) {
-      const hoje = new Date(); hoje.setHours(0,0,0,0);
-      const diff = Math.max(0, Math.ceil((new Date(dateVal + 'T00:00:00') - hoje) / 86400000));
-      document.getElementById('pDaysLeft').textContent = diff;
-      if (diff <= 15)      document.getElementById('pMode').textContent = '🔥 Sprint final';
-      else if (diff <= 30) document.getElementById('pMode').textContent = '⚡ Reta final';
-      else if (diff <= 90) document.getElementById('pMode').textContent = '⚡ Intensivo';
-      else                 document.getElementById('pMode').textContent = '📅 Base';
-    }
-    const weekly = horas * dias;
-    document.getElementById('pWeeklyLoad').textContent = weekly ? weekly + 'h' : '--';
-    if (horas && dias) {
-      const ciclos = Math.floor((horas * 60) / 30);
-      document.getElementById('pPomodoroText').textContent =
-        `Treino com ${horas}h por dia, ${dias} dias por semana — ${weekly}h semanais. ${ciclos} ciclos Pomodoro/dia (25min foco + 5min pausa). A cada 4 ciclos, pausa longa de 20min.`;
-    }
-  }
-
-  // Inicializar plano com CFO PMBA
-  preencherMateriasPlan('CFO PMBA');
-
-  document.getElementById('planForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const concurso  = document.getElementById('pConcurso').value;
-    const dataProva = document.getElementById('pDataProva').value;
-    const horas     = parseInt(document.getElementById('pHorasDia').value) || 2;
-    const dias      = parseInt(document.getElementById('pDiasSemana').value) || 5;
-    const nivel     = document.getElementById('pNivel').value;
-    const diffs     = [...document.querySelectorAll('[name=dificuldade]:checked')].map(c => c.value);
-    const facs      = [...document.querySelectorAll('[name=facilidade]:checked')].map(c => c.value);
-    const subs      = MATERIAS_PLAN[concurso] || MATERIAS_PLAN['SD PMBA'];
-    const prioritized = diffs.length ? diffs : subs.filter(s => !facs.includes(s));
-
-    const hoje = new Date(); hoje.setHours(0,0,0,0);
-    const daysLeft = dataProva
-      ? Math.max(1, Math.ceil((new Date(dataProva + 'T00:00:00') - hoje) / 86400000))
-      : 60;
-
-    // Generate weekly plan
-    const weekDays = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].slice(0, dias);
-    const resultado = document.getElementById('planResult');
-
-    let html = `<h3>📋 Plano Pomodoro — ${concurso} · ${daysLeft} dias restantes</h3>`;
-    html += `<p style="color:var(--gray-mid);margin-bottom:20px;font-size:13.5px;">
-      <strong style="color:var(--accent-light)">${horas}h/dia × ${dias} dias/semana</strong> = <strong style="color:var(--white)">${horas*dias}h por semana</strong>.
-      ${nivel ? `Nível: <strong style="color:var(--white)">${nivel}</strong>.` : ''}
-      ${diffs.length ? `Prioridades: <strong style="color:var(--white)">${diffs.slice(0,3).join(', ')}</strong>.` : ''}
-    </p>`;
-
-    const sessionsPerDay = Math.max(1, Math.floor(horas * 60 / 55)); // ~55min por sessão temática
-    weekDays.forEach((day, i) => {
-      html += `<div class="day-block"><div class="day-title">📅 ${day}</div><div class="sessions">`;
-      for (let s = 0; s < sessionsPerDay; s++) {
-        const sub = prioritized[(i * sessionsPerDay + s) % prioritized.length];
-        const isRevisao = s === sessionsPerDay - 1 && sessionsPerDay > 2;
-        const label = isRevisao ? 'Revisão' : (s === 0 ? 'Teoria' : 'Questões');
-        html += `<div class="session">⏱ Sessão ${s+1} (25min): <strong>${sub}</strong> — ${label}</div>`;
-      }
-      html += `</div></div>`;
+  const chips = document.getElementById('planoChips');
+  chips.style.display = 'flex';
+  [lead.concurso, `${lead.horasDia}h/dia`, `${lead.diasSemana}x/semana`, lead.nivel || '']
+    .filter(Boolean).forEach(txt => {
+      const span = document.createElement('span');
+      span.className = 'plano-chip';
+      span.textContent = txt;
+      chips.appendChild(span);
     });
 
-    html += `
-      <div style="margin-top:20px;padding:16px;background:rgba(74,108,247,0.08);border:1px solid rgba(74,108,247,0.2);border-radius:8px;font-size:13.5px;color:var(--gray-mid);">
-        💡 <strong style="color:var(--accent-light)">Dica do Professor Leão:</strong>
-        Imprima este plano e cole na parede. A execução consistente supera qualquer estratégia perfeita. Foco e disciplina!
-        <br><br>
-        <a href="https://wa.me/5577999229281?text=Quero%20meu%20plano%20de%20estudos%20detalhado%20para%20${encodeURIComponent(concurso)}" target="_blank" style="color:var(--accent-light);font-weight:700;">
-          Receber plano personalizado pelo WhatsApp →
-        </a>
-      </div>
-    `;
+  document.getElementById('planoBtnVer').style.display  = 'block';
+  document.getElementById('planoBtnGerar').style.display = 'none';
 
-    resultado.innerHTML = html;
-    resultado.classList.add('show');
-    resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('🎯 Plano gerado com sucesso!', 'ok');
+  /* store for modal */
+  window._currentLead = lead;
+})();
+
+/* ── Build course cards ── */
+const grid = document.getElementById('coursesGrid');
+Object.values(PL_CATALOG.cursos).forEach(c => {
+  const prog   = _prog[c.id] || {};
+  const total  = c.aulas.length;
+  let done = 0;
+  c.aulas.forEach(a => {
+    if (PL_CATALOG.aulaCompleta(a.materiais, prog[a.id] || {})) done++;
   });
+  const pct    = total ? Math.round((done / total) * 100) : 0;
+  const status = done === 0 ? 'new' : done === total ? 'done' : 'active';
+  const labels = { new: 'Novo', done: 'Completo ✓', active: 'Em andamento' };
 
-  /* ── Toast ── */
-  function showToast(msg, type = 'ok') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `toast ${type} show`;
-    setTimeout(() => t.className = 'toast', 3000);
+  const card = document.createElement('div');
+  card.className = 'course-card';
+  card.style.setProperty('--card-color', c.cor);
+  card.innerHTML = `
+    <div class="course-card__top">
+      <div class="course-card__icon">${c.icon}</div>
+      <span class="course-card__badge course-card__badge--${status}">${labels[status]}</span>
+    </div>
+    <div>
+      <div class="course-card__name">${c.nome}</div>
+      <div class="course-card__sub">${c.subtitulo}</div>
+    </div>
+    <div class="course-card__progress">
+      <div class="prog-label"><span><strong>${done}</strong>/${total} aulas</span><strong>${pct}%</strong></div>
+      <div class="prog-bar"><div class="prog-bar__fill" style="width:${pct}%"></div></div>
+    </div>
+    <a class="course-card__cta" href="curso.html?curso=${c.id}">
+      ${done === 0 ? 'Iniciar curso →' : done === total ? 'Revisar curso →' : 'Continuar →'}
+    </a>
+  `;
+  grid.appendChild(card);
+});
+
+/* ── Plano modal ── */
+function abrirModalPlano() {
+  const lead = window._currentLead;
+  if (!lead) return;
+  document.getElementById('modalPlanoTitle').textContent = `Plano de Estudos — ${lead.concurso}`;
+
+  const daysLeft = lead.dataProva ? Math.max(0, Math.round((new Date(lead.dataProva) - Date.now()) / 86400000)) : '?';
+  const weeklyH  = (lead.horasDia || 2) * (lead.diasSemana || 5);
+  let modeLabel  = 'Base';
+  if (daysLeft <= 30)  modeLabel = 'Sprint Final 🚨';
+  else if (daysLeft <= 60)  modeLabel = 'Reta Final ⚡';
+  else if (daysLeft <= 90)  modeLabel = 'Intensivo 🔥';
+  else if (daysLeft <= 180) modeLabel = 'Acelerado 💪';
+
+  let html = `<div class="meta-strip">
+    <span class="meta-pill">📅 ${daysLeft} dias restantes</span>
+    <span class="meta-pill">⏱ ${lead.horasDia}h/dia</span>
+    <span class="meta-pill">📆 ${lead.diasSemana}x/semana</span>
+    <span class="meta-pill">⚡ ${weeklyH}h/semana</span>
+    <span class="meta-pill">🎯 Modo: ${modeLabel}</span>
+  </div>`;
+
+  if (lead.diffs && lead.diffs.length) {
+    html += `<h4>🎯 Prioridade alta (suas dificuldades)</h4>`;
+    lead.diffs.forEach(d => { html += `<div class="dia-bloco"><strong>⚠️ ${d}</strong><span class="session-row">Estude com atenção redobrada</span></div>`; });
   }
+  if (lead.facs && lead.facs.length) {
+    html += `<h4>✅ Revisão rápida (seus pontos fortes)</h4>`;
+    lead.facs.forEach(f => { html += `<div class="dia-bloco"><strong>✓ ${f}</strong><span class="session-row">Revisar 1x/semana para manter</span></div>`; });
+  }
+  if (lead.obs) {
+    html += `<h4>📝 Observações</h4><div class="dia-bloco">${lead.obs}</div>`;
+  }
+  html += `<p style="margin-top:20px;font-size:12px;color:var(--silver)">Para um plano detalhado semana a semana, acesse o <a href="index.html#plano" style="color:var(--accent-light)">formulário completo</a> na página inicial.</p>`;
 
-  /* ── Init ── */
-  renderVideos();
-  </script>
+  document.getElementById('modalPlanoBody').innerHTML = html;
+  document.getElementById('modalPlano').classList.add('open');
+}
+function fecharModalPlano() { document.getElementById('modalPlano').classList.remove('open'); }
+document.getElementById('modalPlano').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModalPlano(); });
+</script>
 </body>
 </html>

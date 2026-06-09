@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula – Professor Leão</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-branca.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:  #0A1628; --navy-2: #0F1E38; --navy-3: #152545;
+      --accent: #4A6CF7; --accent-light: #6B89FF;
+      --silver: #8892B4; --white: #FFFFFF;
+      --success: #22c55e; --success-bg: rgba(34,197,94,0.12);
+      --font-h: 'Montserrat', sans-serif; --font-b: 'Open Sans', sans-serif;
+      --radius: 14px; --radius-sm: 8px;
+      --tr: 0.22s ease;
+      --course-color: #4A6CF7;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-b); background: var(--navy); color: var(--white); min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+    /* ── Topbar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,22,40,0.96); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(74,108,247,0.2);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .topbar__left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .topbar__logo { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+    .topbar__logo img { height: 26px; }
+    .topbar__logo-text { font-family: var(--font-h); font-weight: 800; font-size: 13px; }
+    .topbar__logo-text span { color: var(--accent-light); }
+    .topbar__breadcrumb { font-size: 12px; color: var(--silver); display: flex; align-items: center; gap: 5px; min-width: 0; overflow: hidden; white-space: nowrap; }
+    .topbar__breadcrumb a { color: var(--silver); transition: color var(--tr); }
+    .topbar__breadcrumb a:hover { color: var(--white); }
+    .topbar__breadcrumb .sep { opacity: .35; }
+    .topbar__breadcrumb .cur { color: var(--white); font-weight: 600; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+    .topbar__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .topbar__btn { padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; background: rgba(74,108,247,0.12); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.25); transition: var(--tr); }
+    .topbar__btn:hover { background: var(--accent); color: #fff; }
+    .topbar__exit { padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; color: var(--silver); border: 1px solid rgba(255,255,255,0.1); transition: var(--tr); }
+    .topbar__exit:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
+
+    /* ── Page ── */
+    .page { max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    /* ── Lesson header ── */
+    .lesson-header {
+      background: var(--navy-3); border: 1px solid rgba(255,255,255,0.08);
+      border-top: 4px solid var(--course-color);
+      border-radius: var(--radius); padding: 24px 28px; margin-bottom: 28px;
+    }
+    .lesson-header__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .lesson-header__tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--course-color); margin-bottom: 6px; }
+    .lesson-header__title { font-family: var(--font-h); font-size: clamp(18px,3vw,24px); font-weight: 900; margin-bottom: 6px; }
+    .lesson-header__desc { font-size: 13px; color: var(--silver); line-height: 1.6; }
+    .lesson-header__meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--silver); }
+    .lesson-header__meta span { display: flex; align-items: center; gap: 4px; }
+    .lesson-prog-bar-wrap { }
+    .lesson-prog-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: var(--silver); }
+    .lesson-prog-label strong { color: var(--white); }
+    .lesson-prog-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; }
+    .lesson-prog-fill { height: 100%; border-radius: 99px; background: var(--course-color); transition: width .5s ease; }
+
+    /* ── Celebration banner ── */
+    .celebration {
+      display: none; background: linear-gradient(135deg, #14532d, #166534);
+      border: 1px solid #22c55e; border-radius: var(--radius); padding: 24px 28px;
+      text-align: center; margin-bottom: 28px;
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    .celebration.show { display: block; }
+    @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .celebration__emoji { font-size: 48px; display: block; margin-bottom: 10px; }
+    .celebration__title { font-family: var(--font-h); font-size: 22px; font-weight: 900; color: #4ade80; margin-bottom: 6px; }
+    .celebration__sub   { font-size: 14px; color: #a7f3d0; margin-bottom: 20px; }
+    .celebration__btns  { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-next { padding: 12px 28px; border-radius: var(--radius-sm); font-family: var(--font-h); font-size: 14px; font-weight: 800; background: #22c55e; color: #fff; transition: var(--tr); }
+    .btn-next:hover { background: #4ade80; }
+    .btn-course { padding: 12px 20px; border-radius: var(--radius-sm); font-family: var(--font-h); font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.1); color: #d1fae5; border: 1px solid rgba(255,255,255,0.2); transition: var(--tr); }
+    .btn-course:hover { background: rgba(255,255,255,0.2); }
+
+    /* ── Activity cards grid ── */
+    .acts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    @media (max-width: 600px) { .acts-grid { grid-template-columns: 1fr; } }
+
+    /* ── Activity card ── */
+    .act-card {
+      background: var(--navy-2); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius); overflow: hidden; transition: border-color var(--tr);
+      display: flex; flex-direction: column;
+    }
+    .act-card.done { border-color: rgba(34,197,94,0.35); }
+    .act-card.producao { opacity: .65; }
+
+    .act-card__head {
+      display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .act-card__icon-wrap {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+      background: rgba(255,255,255,0.07); flex-shrink: 0;
+    }
+    .act-card__label { font-family: var(--font-h); font-size: 13px; font-weight: 700; flex: 1; }
+    .act-card__status { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; }
+    .act-card__status--done     { background: var(--success-bg); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .act-card__status--pending  { background: rgba(74,108,247,0.12); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.2); }
+    .act-card__status--producao { background: rgba(255,255,255,0.06); color: var(--silver); border: 1px solid rgba(255,255,255,0.1); }
+
+    .act-card__body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+
+    /* Em produção state */
+    .producao-msg { text-align: center; padding: 20px 12px; color: var(--silver); }
+    .producao-msg .prod-icon { font-size: 32px; margin-bottom: 8px; }
+    .producao-msg p { font-size: 12px; }
+    .producao-msg strong { display: block; font-family: var(--font-h); font-size: 13px; color: #a8b4d0; margin-bottom: 4px; }
+
+    /* Content area */
+    .act-content { flex: 1; }
+    .act-desc { font-size: 13px; color: var(--silver); line-height: 1.6; margin-bottom: 12px; }
+
+    /* PDF / Lista frame toggle */
+    .frame-toggle {
+      border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm);
+      overflow: hidden; display: none;
+    }
+    .frame-toggle.open { display: block; }
+    .frame-toggle iframe { display: block; width: 100%; height: 420px; border: none; background: #fff; }
+
+    /* Action buttons */
+    .act-btns { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 4px; }
+    .btn-open {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;
+      background: rgba(255,255,255,0.07); color: var(--white); border: 1px solid rgba(255,255,255,0.1);
+      transition: var(--tr); cursor: pointer; font-family: var(--font-h); width: 100%;
+    }
+    .btn-open:hover { background: rgba(255,255,255,0.13); }
+    .btn-open.btn-primary { background: rgba(74,108,247,0.2); color: var(--accent-light); border-color: rgba(74,108,247,0.3); }
+    .btn-open.btn-primary:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Mark done toggle */
+    .btn-done-toggle {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 14px; border-radius: var(--radius-sm);
+      font-family: var(--font-h); font-size: 12px; font-weight: 700;
+      background: transparent; border: 1px solid rgba(255,255,255,0.12); color: var(--silver);
+      transition: var(--tr); width: 100%;
+    }
+    .btn-done-toggle:hover { border-color: rgba(34,197,94,0.5); color: #4ade80; background: rgba(34,197,94,0.05); }
+    .btn-done-toggle.is-done { background: var(--success-bg); border-color: rgba(34,197,94,0.4); color: #4ade80; }
+    .btn-done-toggle.is-done:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: #f87171; }
+
+    /* Game card full-width */
+    .act-card.game-card { grid-column: 1 / -1; }
+    @media (max-width: 600px) { .act-card.game-card { grid-column: 1; } }
+    .game-frame-wrap {
+      border-radius: var(--radius-sm); overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
+      display: none;
+    }
+    .game-frame-wrap.open { display: block; }
+    .game-frame-wrap iframe { display: block; width: 100%; height: 500px; border: none; }
+
+    /* Video embed */
+    .video-embed-wrap { border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 16/9; background: #000; display: none; }
+    .video-embed-wrap.open { display: block; }
+    .video-embed-wrap iframe { display: block; width: 100%; height: 100%; border: none; }
+
+    /* ── Nav prev/next ── */
+    .lesson-nav { display: flex; gap: 12px; }
+    .nav-btn {
+      flex: 1; display: flex; align-items: center; gap: 12px;
+      background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius); padding: 16px 18px; transition: var(--tr);
+      text-decoration: none; color: var(--white); cursor: pointer;
+    }
+    .nav-btn:hover { border-color: rgba(255,255,255,0.2); background: var(--navy-3); }
+    .nav-btn.disabled { opacity: .3; pointer-events: none; }
+    .nav-btn.next { justify-content: flex-end; text-align: right; }
+    .nav-btn__arrow { font-size: 18px; flex-shrink: 0; }
+    .nav-btn__text small { font-size: 11px; color: var(--silver); display: block; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+    .nav-btn__text strong { font-family: var(--font-h); font-size: 13px; display: block; }
+
+    /* ── Error ── */
+    #pageError { display:none; text-align:center; padding:80px 24px; }
+
+    /* ── Confetti overlay ── */
+    .confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; }
+    .confetti-piece {
+      position: absolute; top: -10px; width: 10px; height: 10px;
+      border-radius: 2px; animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar__left">
+    <a href="index.html" class="topbar__logo">
+      <img src="assets/img/logo-branca.png" alt="Professor Leão" />
+      <div class="topbar__logo-text">PROF. <span>LEÃO</span></div>
+    </a>
+    <nav class="topbar__breadcrumb">
+      <a href="minha-area.html">Área</a>
+      <span class="sep">›</span>
+      <a href="#" id="breadCursoLink">Curso</a>
+      <span class="sep">›</span>
+      <span class="cur" id="breadAula">Aula</span>
+    </nav>
+  </div>
+  <div class="topbar__right">
+    <a href="#" id="topBackBtn" class="topbar__exit">← Curso</a>
+    <button class="topbar__btn" onclick="plAuth.logout()">Sair</button>
+  </div>
+</header>
+
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<main class="page" id="pageMain" style="display:none">
+
+  <!-- Lesson header -->
+  <div class="lesson-header" id="lessonHeader">
+    <div class="lesson-header__top">
+      <div>
+        <div class="lesson-header__tag" id="headerTag">Carregando…</div>
+        <div class="lesson-header__title" id="headerTitle">…</div>
+        <div class="lesson-header__desc" id="headerDesc">…</div>
+      </div>
+    </div>
+    <div class="lesson-header__meta" id="headerMeta"></div>
+    <div style="height:14px"></div>
+    <div class="lesson-prog-bar-wrap">
+      <div class="lesson-prog-label">
+        <span>Atividades concluídas</span>
+        <strong id="progLabel">0 / 0</strong>
+      </div>
+      <div class="lesson-prog-bar"><div class="lesson-prog-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Celebration -->
+  <div class="celebration" id="celebrationBanner">
+    <span class="celebration__emoji">🎉</span>
+    <div class="celebration__title">Aula Concluída!</div>
+    <div class="celebration__sub" id="celebSub">Parabéns! Você completou todas as atividades desta aula.</div>
+    <div class="celebration__btns">
+      <a class="btn-next" id="celebNextBtn" href="#">Próxima Aula →</a>
+      <a class="btn-course" id="celebCursoBtn" href="#">Ver Todas as Aulas</a>
+    </div>
+  </div>
+
+  <!-- Activities grid -->
+  <div class="acts-grid" id="actsGrid"><!-- JS-rendered --></div>
+
+  <!-- Prev / Next navigation -->
+  <div class="lesson-nav">
+    <a class="nav-btn prev disabled" id="navPrev" href="#">
+      <span class="nav-btn__arrow">‹</span>
+      <div class="nav-btn__text">
+        <small>Aula anterior</small>
+        <strong id="prevTitle">—</strong>
+      </div>
+    </a>
+    <a class="nav-btn next disabled" id="navNext" href="#">
+      <div class="nav-btn__text">
+        <small>Próxima aula</small>
+        <strong id="nextTitle">—</strong>
+      </div>
+      <span class="nav-btn__arrow">›</span>
+    </a>
+  </div>
+
+</main>
+
+<!-- Error -->
+<div id="pageError">
+  <div style="font-size:48px;margin-bottom:16px">😕</div>
+  <h2 style="font-family:var(--font-h);margin-bottom:8px">Aula não encontrada</h2>
+  <p style="color:var(--silver);margin-bottom:24px">Verifique o link ou volte para o curso.</p>
+  <a href="minha-area.html" style="padding:12px 24px;background:var(--accent);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-h);font-weight:700;">← Minha Área</a>
+</div>
+
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════ */
+const _session = plAuth.requireAuth();
+if (!_session) throw new Error('redirect');
+
+/* ═══════════════════════════════════════════════════
+   PARSE URL
+═══════════════════════════════════════════════════ */
+const _params  = new URLSearchParams(window.location.search);
+const _cursoId = _params.get('curso');
+const _aulaId  = _params.get('aula');
+const _curso   = PL_CATALOG.getCurso(_cursoId);
+const _aula    = _curso ? PL_CATALOG.getAula(_cursoId, _aulaId) : null;
+
+if (!_curso || !_aula) {
+  document.getElementById('pageError').style.display = 'block';
+  throw new Error('not found');
+}
+
+/* ═══════════════════════════════════════════════════
+   COURSE COLOR + PAGE TITLE
+═══════════════════════════════════════════════════ */
+document.documentElement.style.setProperty('--course-color', _curso.cor);
+document.title = `Aula ${_aula.numero} – ${_aula.titulo} | Professor Leão`;
+
+/* ═══════════════════════════════════════════════════
+   PREV / NEXT
+═══════════════════════════════════════════════════ */
+const _idx     = PL_CATALOG.getAulaIndex(_cursoId, _aulaId);
+const _prevAula = _idx > 0 ? _curso.aulas[_idx - 1] : null;
+const _nextAula = _idx < _curso.aulas.length - 1 ? _curso.aulas[_idx + 1] : null;
+
+/* ═══════════════════════════════════════════════════
+   PROGRESS (reactive state)
+═══════════════════════════════════════════════════ */
+function _getProgAula() {
+  const all = plAuth.getProgressV2();
+  return (all[_cursoId] || {})[_aulaId] || {};
+}
+
+/* ═══════════════════════════════════════════════════
+   ACTIVITY CONFIG
+═══════════════════════════════════════════════════ */
+const ACT_CFG = {
+  video:     { icon: '🎥', label: 'Vídeo da Aula',         cor: '#60a5fa', type: 'video' },
+  pdf:       { icon: '📄', label: 'PDF da Aula',            cor: '#34d399', type: 'pdf'   },
+  jogo:      { icon: '🎮', label: 'Jogo Interativo',        cor: '#a78bfa', type: 'game'  },
+  lista:     { icon: '📋', label: 'Lista de Questões',      cor: '#fb923c', type: 'pdf'   },
+  resolucao: { icon: '✏️',  label: 'Resolução de Questões',  cor: '#f472b6', type: 'video' }
+};
+
+/* ═══════════════════════════════════════════════════
+   BUILD HEADER
+═══════════════════════════════════════════════════ */
+document.getElementById('breadCursoLink').textContent = _curso.nome;
+document.getElementById('breadCursoLink').href        = `curso.html?curso=${_cursoId}`;
+document.getElementById('breadAula').textContent      = `Aula ${_aula.numero}`;
+document.getElementById('topBackBtn').href            = `curso.html?curso=${_cursoId}`;
+document.getElementById('headerTag').textContent      = `${_curso.icon}  ${_curso.nome} — Aula ${_aula.numero}`;
+document.getElementById('headerTitle').textContent    = _aula.titulo;
+document.getElementById('headerDesc').textContent     = _aula.descricao || '';
+
+const durBadge = _aula.duracao ? `<span>⏱ ${_aula.duracao}</span>` : '';
+document.getElementById('headerMeta').innerHTML = durBadge;
+
+/* ═══════════════════════════════════════════════════
+   BUILD CELEBRATION BUTTONS
+═══════════════════════════════════════════════════ */
+document.getElementById('celebCursoBtn').href = `curso.html?curso=${_cursoId}`;
+if (_nextAula) {
+  document.getElementById('celebNextBtn').href = `aula.html?curso=${_cursoId}&aula=${_nextAula.id}`;
+  document.getElementById('celebNextBtn').style.display = 'inline-flex';
+} else {
+  document.getElementById('celebNextBtn').style.display = 'none';
+  document.getElementById('celebSub').textContent = 'Incrível! Você concluiu a última aula deste curso. 🏆';
+}
+
+/* ═══════════════════════════════════════════════════
+   BUILD NAV PREV / NEXT
+═══════════════════════════════════════════════════ */
+if (_prevAula) {
+  const btn = document.getElementById('navPrev');
+  btn.href = `aula.html?curso=${_cursoId}&aula=${_prevAula.id}`;
+  btn.classList.remove('disabled');
+  document.getElementById('prevTitle').textContent = `${_prevAula.numero}. ${_prevAula.titulo}`;
+}
+if (_nextAula) {
+  const btn = document.getElementById('navNext');
+  btn.href = `aula.html?curso=${_cursoId}&aula=${_nextAula.id}`;
+  btn.classList.remove('disabled');
+  document.getElementById('nextTitle').textContent = `${_nextAula.numero}. ${_nextAula.titulo}`;
+}
+
+/* ═══════════════════════════════════════════════════
+   UPDATE PROGRESS BAR + CHECK COMPLETION
+═══════════════════════════════════════════════════ */
+let _prevCompleted = false;
+
+function _updateProgress() {
+  const pa          = _getProgAula();
+  const disponiveis = PL_CATALOG.atividadesDisponiveis(_aula.materiais);
+  const total       = disponiveis.length;
+  const feitas      = PL_CATALOG.contarConcluidas(_aula.materiais, pa);
+  const pct         = total ? Math.round((feitas / total) * 100) : 100;
+
+  document.getElementById('progLabel').textContent = total
+    ? `${feitas} / ${total}` : 'Nenhuma atividade disponível';
+  document.getElementById('progFill').style.width = pct + '%';
+
+  /* update each toggle button */
+  Object.keys(ACT_CFG).forEach(key => {
+    const url = _aula.materiais[key];
+    if (!url) return;
+    const btn = document.getElementById(`btn-done-${key}`);
+    if (!btn) return;
+    const done = !!pa[key];
+    btn.classList.toggle('is-done', done);
+    btn.innerHTML = done
+      ? '<span>✓</span> Concluído — clique para desfazer'
+      : '<span>○</span> Marcar como concluído';
+    /* also update card border */
+    const card = document.getElementById(`act-card-${key}`);
+    if (card) card.classList.toggle('done', done);
+    /* update status chip */
+    const chip = document.getElementById(`chip-${key}`);
+    if (chip) {
+      chip.textContent      = done ? '✓ Feito' : 'Pendente';
+      chip.className        = 'act-card__status ' + (done ? 'act-card__status--done' : 'act-card__status--pending');
+    }
+  });
+
+  /* celebration */
+  const completa = PL_CATALOG.aulaCompleta(_aula.materiais, pa);
+  const banner   = document.getElementById('celebrationBanner');
+  if (completa && !_prevCompleted) {
+    plAuth.marcarAulaConcluida(_cursoId, _aulaId);
+    banner.classList.add('show');
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    _launchConfetti();
+  } else if (!completa) {
+    banner.classList.remove('show');
+  }
+  _prevCompleted = completa;
+}
+
+/* ═══════════════════════════════════════════════════
+   TOGGLE ATIVIDADE
+═══════════════════════════════════════════════════ */
+function _toggle(key) {
+  plAuth.toggleAtividade(_cursoId, _aulaId, key);
+  _updateProgress();
+}
+
+/* ═══════════════════════════════════════════════════
+   IFRAME TOGGLE
+═══════════════════════════════════════════════════ */
+function _toggleFrame(frameId, url, btnId) {
+  const frame = document.getElementById(frameId);
+  const btn   = document.getElementById(btnId);
+  if (!frame) return;
+  if (frame.classList.contains('open')) {
+    frame.classList.remove('open');
+    if (btn) btn.textContent = btn.dataset.openLabel || '📂 Abrir';
+  } else {
+    frame.classList.add('open');
+    /* lazy-load src */
+    const el = frame.querySelector('iframe');
+    if (el && !el.src) el.src = url;
+    if (btn) btn.textContent = '✕ Fechar';
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER ACTIVITY CARDS
+═══════════════════════════════════════════════════ */
+const grid = document.getElementById('actsGrid');
+const KEYS = ['video', 'pdf', 'jogo', 'lista', 'resolucao'];
+
+KEYS.forEach(key => {
+  const cfg = ACT_CFG[key];
+  const url = _aula.materiais[key];
+  const pa  = _getProgAula();
+  const isAvail    = url !== null;
+  const isDone     = !!pa[key];
+  const isGame     = cfg.type === 'game';
+  const isVideoType = cfg.type === 'video';
+
+  const card = document.createElement('div');
+  card.id        = `act-card-${key}`;
+  card.className = `act-card${isGame ? ' game-card' : ''}${!isAvail ? ' producao' : ''}${isDone ? ' done' : ''}`;
+
+  /* HEAD */
+  const statusLabel = !isAvail ? 'Em produção' : isDone ? '✓ Feito' : 'Pendente';
+  const statusClass = !isAvail ? 'producao' : isDone ? 'done' : 'pending';
+
+  let bodyHtml = '';
+
+  if (!isAvail) {
+    /* ── EM PRODUÇÃO ── */
+    bodyHtml = `
+      <div class="producao-msg">
+        <div class="prod-icon">🔧</div>
+        <strong>Em produção</strong>
+        <p>Este material estará disponível em breve.</p>
+      </div>
+    `;
+  } else {
+    /* ── DISPONÍVEL ── */
+    const frameId = `frame-${key}`;
+    const btnToggleId = `btn-toggle-${key}`;
+
+    let contentHtml = '';
+
+    if (isVideoType) {
+      /* video URL — YouTube embed or direct link */
+      const isYt = url.includes('youtube.com') || url.includes('youtu.be');
+      if (isYt) {
+        const ytId = _extractYtId(url);
+        const embedUrl = `https://www.youtube.com/embed/${ytId}?rel=0`;
+        contentHtml = `
+          <div class="video-embed-wrap open" id="${frameId}">
+            <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        `;
+      } else {
+        contentHtml = `
+          <button class="btn-open btn-primary" id="${btnToggleId}" data-open-label="▶ Assistir Vídeo" onclick="_toggleFrame('${frameId}','${url}','${btnToggleId}')">▶ Assistir Vídeo</button>
+          <div class="video-embed-wrap" id="${frameId}">
+            <iframe allowfullscreen></iframe>
+          </div>
+        `;
+      }
+    } else if (isGame) {
+      contentHtml = `
+        <button class="btn-open btn-primary" id="${btnToggleId}" data-open-label="🎮 Jogar Agora" onclick="_toggleFrame('${frameId}','${url}','${btnToggleId}')">🎮 Jogar Agora</button>
+        <div class="game-frame-wrap" id="${frameId}">
+          <iframe allowfullscreen></iframe>
+        </div>
+      `;
+    } else {
+      /* PDF / lista */
+      const openLabel = key === 'lista' ? '📋 Abrir Lista' : '📄 Abrir PDF';
+      contentHtml = `
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-open btn-primary" id="${btnToggleId}" data-open-label="${openLabel}" style="flex:1" onclick="_toggleFrame('${frameId}','${url}','${btnToggleId}')">${openLabel}</button>
+          <a class="btn-open" href="${url}" target="_blank" rel="noopener" style="flex:0 0 auto;padding:10px 12px" title="Baixar/Abrir em nova aba">↗</a>
+        </div>
+        <div class="frame-toggle" id="${frameId}">
+          <iframe></iframe>
+        </div>
+      `;
+    }
+
+    bodyHtml = `
+      <div class="act-content">${contentHtml}</div>
+      <div class="act-btns">
+        <button class="btn-done-toggle ${isDone ? 'is-done' : ''}" id="btn-done-${key}" onclick="_toggle('${key}')">
+          <span>${isDone ? '✓' : '○'}</span>
+          ${isDone ? 'Concluído — clique para desfazer' : 'Marcar como concluído'}
+        </button>
+      </div>
+    `;
+  }
+
+  card.innerHTML = `
+    <div class="act-card__head">
+      <div class="act-card__icon-wrap" style="background:${cfg.cor}22">${cfg.icon}</div>
+      <div class="act-card__label">${cfg.label}</div>
+      <span class="act-card__status act-card__status--${statusClass}" id="chip-${key}">${statusLabel}</span>
+    </div>
+    <div class="act-card__body">${bodyHtml}</div>
+  `;
+
+  grid.appendChild(card);
+});
+
+/* ═══════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════ */
+function _extractYtId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+    return u.searchParams.get('v') || '';
+  } catch { return ''; }
+}
+
+/* ═══════════════════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════════════════ */
+function _launchConfetti() {
+  const wrap   = document.getElementById('confettiWrap');
+  const colors = ['#fcd34d','#60a5fa','#4ade80','#f472b6','#a78bfa','#fb923c'];
+  for (let i = 0; i < 70; i++) {
+    const div   = document.createElement('div');
+    div.className = 'confetti-piece';
+    div.style.cssText = `
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;
+      border-radius:${Math.random() > .5 ? '50%' : '2px'};
+      animation-duration:${1.5+Math.random()*2}s;
+      animation-delay:${Math.random()*.6}s;
+    `;
+    wrap.appendChild(div);
+  }
+  setTimeout(() => wrap.innerHTML = '', 4000);
+}
+
+/* ═══════════════════════════════════════════════════
+   SETLASTVISITED + INITIAL RENDER
+═══════════════════════════════════════════════════ */
+plAuth.setLastVisited(_cursoId, _aulaId, _aula.numero, _aula.titulo, _curso.nome);
+_updateProgress();
+
+/* Check if already marked complete on load (returning student) */
+const _paOnLoad = _getProgAula();
+if (PL_CATALOG.aulaCompleta(_aula.materiais, _paOnLoad)) {
+  _prevCompleted = true;
+  document.getElementById('celebrationBanner').classList.add('show');
+}
+
+document.getElementById('pageMain').style.display = 'block';
+</script>
+</body>
+</html>
