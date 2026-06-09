@@ -381,6 +381,43 @@ h1, h2, h3, h4 {
 .sobre__container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
 .sobre__visual { display: flex; justify-content: center; }
 .sobre__shield-card { position: relative; display: flex; align-items: center; justify-content: center; }
+
+/* Credentials pills */
+.sobre__credentials {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.credential-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 999px;
+  background: rgba(74,108,247,0.1); border: 1px solid rgba(74,108,247,0.25);
+  color: var(--accent-light); font-family: var(--font-heading);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
+}
+.credential-pill svg { flex-shrink: 0; }
+
+/* Quote */
+.sobre__quote {
+  position: relative;
+  margin: 22px 0;
+  padding: 20px 24px 20px 52px;
+  background: rgba(74,108,247,0.06);
+  border: 1px solid rgba(74,108,247,0.18);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.sobre__quote .quote-icon {
+  position: absolute; top: 18px; left: 16px;
+  color: var(--accent-light); opacity: 0.5;
+}
+.sobre__quote p {
+  color: rgba(255,255,255,0.82); font-style: italic;
+  font-size: 14.5px; line-height: 1.7; margin-bottom: 8px;
+}
+.sobre__quote cite {
+  font-family: var(--font-heading); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.5px; color: var(--accent-light); font-style: normal;
+}
+
 .sobre__approval-badge {
   position: absolute;
   bottom: -16px;
@@ -627,6 +664,64 @@ h1, h2, h3, h4 {
 .blog-card__link { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-heading); font-size: 12.5px; font-weight: 700; color: var(--accent-light); transition: var(--transition); }
 .blog-card__link:hover { gap: 9px; }
 .blog__cta { text-align: center; margin-top: 44px; }
+
+/* ============ INSTAGRAM ============ */
+.instagram { background: var(--navy-2); }
+
+.insta-profile {
+  display: flex; align-items: center; gap: 28px;
+  padding: 32px; margin-bottom: 44px;
+  background: var(--navy-3); border: 1px solid rgba(74,108,247,0.12);
+  border-radius: var(--radius-lg); max-width: 680px; margin-left: auto; margin-right: auto;
+}
+.insta-profile__avatar {
+  width: 90px; height: 90px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
+  background: linear-gradient(135deg, var(--navy-mid), var(--accent));
+  padding: 3px;
+  background: linear-gradient(135deg, #f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+}
+.insta-profile__avatar img {
+  width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+  background: var(--navy-3); padding: 8px;
+}
+.insta-profile__info h3 {
+  font-family: var(--font-heading); font-size: 20px; font-weight: 800;
+  color: var(--white); margin-bottom: 10px;
+}
+.insta-profile__bio {
+  color: rgba(255,255,255,0.65); font-size: 13.5px; line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-bottom: 32px;
+}
+.insta-post {
+  position: relative; aspect-ratio: 1; overflow: hidden;
+  border-radius: var(--radius-sm); display: block;
+  background: var(--navy-3);
+}
+.insta-post img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.insta-post__overlay {
+  position: absolute; inset: 0;
+  background: rgba(10,22,40,0.7);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.insta-post:hover img { transform: scale(1.06); }
+.insta-post:hover .insta-post__overlay { opacity: 1; }
+.insta-post__overlay span {
+  font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+  color: var(--white); text-align: center;
+}
+
+.insta-cta { text-align: center; }
 
 /* ============ CTA FINAL ============ */
 .cta-final {
@@ -998,6 +1093,7 @@ h1, h2, h3, h4 {
   .diferenciais__grid { grid-template-columns: repeat(2, 1fr); }
   .footer__grid { grid-template-columns: 1fr 1fr; }
   .jogos__grid { grid-template-columns: 1fr 1fr; }
+  .insta-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 900px) {
   .hero__container { grid-template-columns: 1fr; }
@@ -1041,6 +1137,9 @@ h1, h2, h3, h4 {
   .diferenciais__grid { grid-template-columns: 1fr; }
   .cursos__grid { grid-template-columns: 1fr; }
   .materiais__grid { grid-template-columns: 1fr 1fr; }
+  .insta-grid { grid-template-columns: repeat(3, 1fr); }
+  .insta-profile { flex-direction: column; text-align: center; padding: 24px 20px; }
+  .sobre__credentials { justify-content: flex-start; }
   .depoimentos__grid { grid-template-columns: 1fr; }
   .estatisticas__grid { grid-template-columns: repeat(2, 1fr); }
   .estatistica-item::after { display: none; }

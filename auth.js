@@ -8,7 +8,7 @@ const PL_SESSION_KEY = 'pl_session';
 /* ---------- Admin padrão ---------- */
 const DEFAULT_ADMIN = {
   id: 'admin-001',
-  name: 'Samuel Leão',
+  name: 'Lucas Samuel Leão',
   email: 'samuel@professorleao.com',
   password: 'leao2024',
   role: 'admin',
