@@ -12,20 +12,20 @@ CFO - SD/
 Correios/
 Recursos/
 
-# Arquivos avulsos de fonte na raiz
+# Arquivos avulsos de fonte na raiz (imagens originais e PDFs brutos)
 *.crdownload
-PERFIL*.png
-"LEÃO - *.png"
-"LEAO - *.png"
-"APOSLISTA*.png"
-"Apostila*.pdf"
-"Mentoria*.pdf"
-"PROFESSOR LEÃO - *.pdf"
-"PROFESSOR LEÃO - *.jpg"
-"Logo azul.JPG"
-"policia-militar*.png"
-"WhatsApp Image*.jpeg"
-"Últimas Vagas*.png"
+PERFIL *.png
+LEÃO - *.png
+LEAO - *.png
+APOSLISTA COMPLETA*.png
+Apostila Matemática*.pdf
+Mentoria Matemática*.pdf
+PROFESSOR LEÃO - *.pdf
+PROFESSOR LEÃO - *.jpg
+Logo azul.JPG
+policia-militar*.png
+WhatsApp Image*.jpeg
+Últimas Vagas Storie.png
 
 # Outros temporários
 *.tmp
