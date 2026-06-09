@@ -153,3 +153,158 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+/* ============================================================
+   PLANO DE ESTUDOS – PÁGINA PÚBLICA
+   (Importado e adaptado do Elite Feminina)
+   ============================================================ */
+
+const MATERIAS_PUB = {
+  'CFO PMBA':  ['Matemática','Português','Direito Constitucional','Direito Administrativo','Direito Penal','Legislação PM','Informática','Inglês','Raciocínio Lógico'],
+  'SD PMBA':   ['Matemática','Português','História e Geog. da BA','Atualidades','Legislação PM','Direito Constitucional','Informática','Raciocínio Lógico'],
+  'PM':        ['Matemática','Português','Raciocínio Lógico','Informática','Legislação Específica','Conhecimentos Gerais'],
+  'PC':        ['Matemática','Português','Raciocínio Lógico','Informática','Direito Penal','Direito Processual Penal'],
+  'PF':        ['Matemática','Português','Raciocínio Lógico','Informática','Direito Constitucional','Direito Administrativo','Inglês'],
+  'PRF':       ['Matemática','Português','Raciocínio Lógico','Informática','Legislação de Trânsito','Física'],
+  'Bombeiros': ['Matemática','Português','Raciocínio Lógico','Físico-Química','Informática','Conhecimentos Gerais'],
+  'Correios':  ['Matemática','Português','Raciocínio Lógico','Informática','Atualidades','Conhecimentos Específicos'],
+  'Outro':     ['Matemática','Português','Raciocínio Lógico','Informática','Conhecimentos Gerais','Legislação Específica'],
+};
+
+(function initPubPlano() {
+  const pubConcurso   = document.getElementById('pubConcurso');
+  const pubDataProva  = document.getElementById('pubDataProva');
+  const pubHorasDia   = document.getElementById('pubHorasDia');
+  const pubDiasSemana = document.getElementById('pubDiasSemana');
+  const pubDifBox     = document.getElementById('pubDifBox');
+  const pubPlanForm   = document.getElementById('pubPlanForm');
+  if (!pubPlanForm) return; // página sem o plano (ex: login.html)
+
+  function buildCheckboxes(concurso) {
+    const list = MATERIAS_PUB[concurso] || MATERIAS_PUB['Outro'];
+    pubDifBox.innerHTML = list.map(m => `
+      <label class="pub-cb-label">
+        <input type="checkbox" name="pubDificuldade" value="${m}" /> ${m}
+      </label>
+    `).join('');
+  }
+
+  function updatePreview() {
+    const dateVal = pubDataProva.value;
+    const horas   = parseInt(pubHorasDia.value) || 0;
+    const dias    = parseInt(pubDiasSemana.value) || 0;
+
+    if (dateVal) {
+      const diff = Math.max(0, Math.ceil((new Date(dateVal + 'T00:00:00') - new Date()) / 86400000));
+      document.getElementById('pubDaysLeft').textContent = diff;
+      document.getElementById('pubMode').textContent =
+        diff < 30 ? '🔥 Sprint' : diff < 90 ? '⚡ Intensivo' : '📅 Regular';
+    } else {
+      document.getElementById('pubDaysLeft').textContent = '--';
+      document.getElementById('pubMode').textContent = '--';
+    }
+    const weekly = horas * dias;
+    document.getElementById('pubWeeklyLoad').textContent = weekly ? weekly + 'h' : '--';
+    if (horas && dias) {
+      const ciclos = Math.floor((horas * 60) / 30);
+      document.getElementById('pubPomodoroText').textContent =
+        `${ciclos} ciclos Pomodoro/dia (${horas}h = ${ciclos}×25min foco + pausas de 5min). Após 4 ciclos: 20min de descanso.`;
+    }
+  }
+
+  if (pubConcurso) {
+    pubConcurso.addEventListener('change', () => {
+      if (pubConcurso.value) buildCheckboxes(pubConcurso.value);
+      updatePreview();
+    });
+  }
+
+  document.querySelectorAll('.switch-pub').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.dataset.val;
+      if (pubConcurso) pubConcurso.value = val;
+      document.querySelectorAll('.switch-pub').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      buildCheckboxes(val);
+      updatePreview();
+    });
+  });
+
+  [pubDataProva, pubHorasDia, pubDiasSemana].forEach(el => {
+    if (!el) return;
+    el.addEventListener('input', updatePreview);
+    el.addEventListener('change', updatePreview);
+  });
+
+  pubPlanForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const concurso  = pubConcurso ? pubConcurso.value : 'Concurso';
+    const dataProva = pubDataProva ? pubDataProva.value : '';
+    const horas     = parseInt(pubHorasDia ? pubHorasDia.value : '') || 2;
+    const dias      = parseInt(pubDiasSemana ? pubDiasSemana.value : '') || 5;
+    const nivel     = (document.getElementById('pubNivel') || {}).value || 'intermediario';
+    const diffs     = [...document.querySelectorAll('[name=pubDificuldade]:checked')].map(c => c.value);
+    const subs      = MATERIAS_PUB[concurso] || MATERIAS_PUB['Outro'];
+    const prioritized = diffs.length ? diffs : subs;
+
+    const daysLeft  = dataProva
+      ? Math.max(1, Math.ceil((new Date(dataProva + 'T00:00:00') - new Date()) / 86400000))
+      : 60;
+    const weekDays  = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].slice(0, dias);
+    const sessPerDay = Math.max(1, Math.floor(horas * 60 / 55));
+
+    const result = document.getElementById('pubPlanResult');
+    let html = `<h4>📋 Plano Pomodoro — ${concurso} · ${daysLeft} dias</h4>
+    <p style="font-size:13px;color:var(--gray-mid);margin-bottom:16px;">
+      <strong style="color:var(--accent-light)">${horas}h/dia × ${dias} dias</strong> = ${horas*dias}h/semana.
+      Nível: <strong style="color:var(--white)">${nivel}</strong>.
+      Prioridades: <strong style="color:var(--white)">${prioritized.slice(0,3).join(', ')}</strong>.
+    </p>`;
+
+    weekDays.forEach((day, i) => {
+      html += `<div class="prd-day"><div class="prd-day-title">📅 ${day}</div>`;
+      for (let s = 0; s < sessPerDay; s++) {
+        const sub  = prioritized[(i * sessPerDay + s) % prioritized.length];
+        const tipo = s === 0 ? 'Teoria' : (s === sessPerDay - 1 && sessPerDay > 2 ? 'Revisão' : 'Questões');
+        html += `<div class="prd-session">⏱ Sessão ${s+1} (25min): <strong>${sub}</strong> — ${tipo}</div>`;
+      }
+      html += `</div>`;
+    });
+
+    html += `
+      <div class="plan-wa-cta">
+        <div>
+          <strong>💡 Dica do Professor Leão</strong>
+          <p>Imprima e cole na parede. A execução consistente supera qualquer estratégia perfeita. Foco e disciplina!</p>
+        </div>
+        <a href="https://wa.me/5577999229281?text=Olá%20Professor%20Leão!%20Gerei%20meu%20plano%20para%20${encodeURIComponent(concurso)}%20e%20quero%20começar%20meus%20estudos."
+           target="_blank" rel="noopener" class="btn btn--primary btn--sm">
+          Falar com o Professor →
+        </a>
+      </div>`;
+
+    if (result) {
+      result.innerHTML = html;
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  // Inicializar
+  buildCheckboxes('CFO PMBA');
+  updatePreview();
+})();
+
+/* ── Formatador de telefone (contato) ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const phoneInputs = ['whatsapp', 'telefone'].map(id => document.getElementById(id)).filter(Boolean);
+  phoneInputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g,'').slice(0,11);
+      if      (v.length <= 2)  e.target.value = v;
+      else if (v.length <= 6)  e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length <= 10) e.target.value = `(${v.slice(0,2)}) ${v.slice(2,6)}-${v.slice(6)}`;
+      else                     e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+    });
+  });
+});
