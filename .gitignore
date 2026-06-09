@@ -1,0 +1,33 @@
+# Materiais de fonte / arquivos locais de trabalho
+_fontes/
+
+# Projeto de referência (Elite Feminina — backend Node.js, não faz parte do site)
+elite-feminina-missao-farda-v6/
+
+# Pasta original dos jogos (já movida para assets/jogos/)
+Jogos/
+
+# Pastas de fonte dos cursos (vídeos MP4 grandes, PDFs originais)
+CFO - SD/
+Correios/
+Recursos/
+
+# Arquivos avulsos de fonte na raiz
+*.crdownload
+PERFIL*.png
+"LEÃO - *.png"
+"LEAO - *.png"
+"APOSLISTA*.png"
+"Apostila*.pdf"
+"Mentoria*.pdf"
+"PROFESSOR LEÃO - *.pdf"
+"PROFESSOR LEÃO - *.jpg"
+"Logo azul.JPG"
+"policia-militar*.png"
+"WhatsApp Image*.jpeg"
+"Últimas Vagas*.png"
+
+# Outros temporários
+*.tmp
+Thumbs.db
+.DS_Store
