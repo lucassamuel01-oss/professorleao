@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Conjuntos Numéricos – Professor Leão</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:#0A1628;--navy-2:#0F1E38;--navy-3:#152545;--navy-4:#1B2E6B;
+  --accent:#4A6CF7;--al:#6B89FF;
+  --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;--white:#fff;--sil:#8892B4;
+  --fh:'Montserrat',sans-serif;--fb:'Open Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--navy)}
+body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+/* ── Topbar ── */
+.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(74,108,247,.15);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar__left{display:flex;align-items:center;gap:10px}
+.topbar__logo{font-family:var(--fh);font-size:14px;font-weight:800;letter-spacing:1px}
+.topbar__logo span{color:var(--al)}
+.topbar__tag{background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.25);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--al)}
+.btn-back{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s}
+.btn-back:hover{color:var(--white)}
+
+/* ── Layout ── */
+.wrap{width:100%;max-width:740px;padding:24px 16px 60px;flex:1}
+
+/* ── Lobby ── */
+.lobby{background:var(--navy-2);border:1px solid rgba(74,108,247,.15);border-radius:20px;padding:40px 32px;text-align:center}
+.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(74,108,247,.4))}
+.lobby__title{font-family:var(--fh);font-size:28px;font-weight:900;margin-bottom:8px}
+.lobby__sub{color:var(--sil);font-size:15px;margin-bottom:28px;line-height:1.5}
+.lobby__rules{background:var(--navy-3);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
+.lobby__rules h3{font-family:var(--fh);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--al);margin-bottom:10px}
+.rule-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sil);margin-bottom:6px}
+.rule-item:last-child{margin-bottom:0}
+.lobby__input{width:100%;max-width:320px;padding:13px 16px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(74,108,247,.2);color:var(--white);font-size:15px;outline:none;text-align:center;margin-bottom:8px;transition:.2s}
+.lobby__input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,108,247,.12)}
+.lobby__input::placeholder{color:rgba(255,255,255,.2)}
+.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.diff-btn{padding:9px 18px;border-radius:8px;font-family:var(--fh);font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:var(--navy-3);color:var(--sil);cursor:pointer;transition:.2s}
+.diff-btn.active{border-color:var(--accent);background:rgba(74,108,247,.2);color:var(--white)}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,var(--navy-4),var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(74,108,247,.4)}
+.btn-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
+
+/* ── HUD ── */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.hud__progress{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--sil)}
+.hud__progress strong{color:var(--white)}
+.hud__score{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--al)}
+.hud__streak{display:flex;align-items:center;gap:4px;font-family:var(--fh);font-size:13px;font-weight:800;color:var(--warn);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:4px 10px;opacity:0;transition:.3s}
+.hud__streak.show{opacity:1}
+
+/* Timer bar */
+.timer-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:20px}
+.timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
+
+/* ── Question card ── */
+.q-card{background:var(--navy-2);border:1px solid rgba(74,108,247,.15);border-radius:20px;padding:28px 28px 24px;margin-bottom:16px}
+.q-card__num-badge{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy-4),var(--accent));border-radius:12px;padding:14px 28px;font-family:var(--fh);font-size:34px;font-weight:900;margin-bottom:16px;min-width:140px;letter-spacing:1px;box-shadow:0 4px 20px rgba(74,108,247,.3)}
+.q-card__ask{font-size:15px;color:var(--sil);line-height:1.5}
+.q-card__ask strong{color:var(--white)}
+.q-card__hint{font-size:12px;color:rgba(255,255,255,.3);margin-top:8px}
+
+/* ── Options ── */
+.opt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.opt-btn{
+  padding:14px 8px;border-radius:12px;border:2px solid rgba(74,108,247,.18);
+  background:var(--navy-3);color:var(--white);font-family:var(--fh);font-size:13px;font-weight:700;
+  cursor:pointer;transition:.2s;text-align:center;line-height:1.25;
+  user-select:none;
+}
+.opt-btn:hover{border-color:rgba(74,108,247,.4);background:rgba(74,108,247,.08)}
+.opt-btn.sel{border-color:var(--accent);background:rgba(74,108,247,.22);color:var(--al);box-shadow:0 0 0 1px var(--accent)}
+.opt-btn.reveal-ok  {border-color:var(--ok)!important;background:rgba(34,197,94,.2)!important;color:#4ade80!important}
+.opt-btn.reveal-err {border-color:var(--err)!important;background:rgba(239,68,68,.2)!important;color:#f87171!important}
+.opt-btn.reveal-miss{border-color:var(--warn)!important;background:rgba(245,158,11,.15)!important;color:#fbbf24!important}
+.opt-btn:disabled{cursor:default}
+
+/* Submit button */
+.btn-answer{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--navy-4),var(--accent));color:var(--white);font-family:var(--fh);font-weight:900;font-size:15px;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(74,108,247,.3)}
+.btn-answer:hover{filter:brightness(1.12)}
+.btn-answer:disabled{opacity:.5;cursor:default}
+
+/* ── Feedback toast ── */
+.feedback{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+  width:calc(100% - 32px);max-width:500px;z-index:100;
+  background:var(--navy-3);border:1px solid rgba(74,108,247,.2);border-radius:16px;
+  padding:16px 20px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);transition:.35s cubic-bezier(.34,1.56,.64,1);
+}
+.feedback.show{transform:translateX(-50%) translateY(0)}
+.feedback.perfect{border-color:var(--ok);background:rgba(22,101,52,.4)}
+.feedback.partial{border-color:var(--warn);background:rgba(120,60,0,.3)}
+.feedback.wrong{border-color:var(--err);background:rgba(120,20,20,.3)}
+.feedback__icon{font-size:32px;flex-shrink:0}
+.feedback__text{flex:1}
+.feedback__title{font-family:var(--fh);font-size:14px;font-weight:800}
+.feedback__sub{font-size:12.5px;color:rgba(255,255,255,.65);margin-top:3px}
+.feedback__pts{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al);flex-shrink:0}
+.feedback.perfect .feedback__pts{color:#4ade80}
+.feedback.wrong .feedback__pts{color:#f87171}
+
+/* ── Result screen ── */
+.result{background:var(--navy-2);border:1px solid rgba(74,108,247,.15);border-radius:20px;padding:36px 28px;text-align:center}
+.result__icon{font-size:72px;margin-bottom:12px;display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.result__title{font-family:var(--fh);font-size:26px;font-weight:900;margin-bottom:6px}
+.result__score{font-family:var(--fh);font-size:52px;font-weight:900;color:var(--al);line-height:1;margin:12px 0 4px}
+.result__sub{font-size:14px;color:var(--sil);margin-bottom:24px}
+.result__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.result__stat{background:var(--navy-3);border-radius:10px;padding:14px}
+.result__stat-val{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al)}
+.result__stat-lbl{font-size:11px;color:var(--sil);margin-top:3px}
+.result__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.btn-replay{padding:13px 28px;border-radius:10px;font-family:var(--fh);font-weight:800;font-size:14px;background:linear-gradient(135deg,var(--navy-4),var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s}
+.btn-replay:hover{filter:brightness(1.12)}
+.btn-hub{padding:13px 24px;border-radius:10px;font-family:var(--fh);font-weight:700;font-size:14px;background:rgba(255,255,255,.07);color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s}
+.btn-hub:hover{color:var(--white)}
+
+/* ── Ranking (result) ── */
+.mini-rank{background:var(--navy-3);border-radius:14px;overflow:hidden}
+.mini-rank-head{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center}
+.mini-rank-head h3{font-family:var(--fh);font-size:13px;font-weight:800}
+.period-tabs{display:flex;gap:4px}
+.period-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--sil);border:1px solid transparent;transition:.2s}
+.period-tab.active{background:rgba(74,108,247,.2);border-color:rgba(74,108,247,.35);color:var(--al)}
+.rank-rows{padding:4px 0}
+.rrow{display:grid;grid-template-columns:30px 28px 1fr auto;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;transition:.2s}
+.rrow:hover{background:rgba(255,255,255,.04)}
+.rrow--self{background:rgba(74,108,247,.1);border:1px solid rgba(74,108,247,.2)}
+.rpos{font-family:var(--fh);font-size:12px;font-weight:800;text-align:center;color:var(--sil)}
+.rpos-1{color:#f59e0b}.rpos-2{color:#94a3b8}.rpos-3{color:#b87333}
+.rav{width:28px;height:28px;border-radius:50%;background:var(--navy-4);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:11px;font-weight:800;color:var(--al);flex-shrink:0}
+.rname{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rscore{font-family:var(--fh);font-size:14px;font-weight:900;color:var(--al)}
+.rscore-1{color:#f59e0b}.rscore-2{color:#94a3b8}.rscore-3{color:#b87333}
+
+@media(max-width:480px){.opt-grid{grid-template-columns:1fr 1fr}.result__grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__left">
+    <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
+    <div class="topbar__tag">🔢 Conjuntos Numéricos</div>
+  </div>
+  <a href="../jogos.html"><button class="btn-back">← Arena</button></a>
+</header>
+
+<div class="wrap">
+  <!-- Lobby -->
+  <div id="screenLobby">
+    <div class="lobby">
+      <span class="lobby__icon">🔢</span>
+      <div class="lobby__title">Conjuntos Numéricos</div>
+      <div class="lobby__sub">Classifique números nos conjuntos ℕ, ℤ, ℚ, 𝕀, ℝ e ℂ.<br/>Contra o relógio — quanto mais rápido, mais pontos!</div>
+      <div class="lobby__rules">
+        <h3>📋 Regras</h3>
+        <div class="rule-item">⚡ <span>Resposta perfeita = <strong>100 pts</strong> + bônus de velocidade (até +50)</span></div>
+        <div class="rule-item">🔥 <span>Sequência de acertos (streak) = <strong>+20 pts extras por rodada</strong></span></div>
+        <div class="rule-item">⚠️ <span>Erros = –15 pts · Não marcou = –8 pts</span></div>
+        <div class="rule-item">🏆 <span><strong>10 questões</strong>, pontuação salva no ranking automaticamente</span></div>
+      </div>
+      <input class="lobby__input" id="inputNome" placeholder="Seu nome (para o ranking)" autocomplete="name"/>
+      <br/>
+      <div class="diff-row">
+        <button class="diff-btn active" data-diff="facil"  onclick="setDiff(this)">😊 Fácil</button>
+        <button class="diff-btn"        data-diff="normal" onclick="setDiff(this)">⚡ Normal</button>
+        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil</button>
+      </div>
+      <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
+    </div>
+  </div>
+
+  <!-- Game -->
+  <div id="screenGame" style="display:none">
+    <div class="hud">
+      <div class="hud__progress">Questão <strong id="hudQ">1</strong>/10</div>
+      <div class="hud__streak" id="hudStreak">🔥 ×<span id="streakNum">0</span></div>
+      <div class="hud__score" id="hudScore">0</div>
+    </div>
+    <div class="timer-wrap"><div class="timer-bar" id="timerBar" style="width:100%"></div></div>
+    <div class="q-card">
+      <div class="q-card__num-badge" id="qNum">—</div>
+      <div class="q-card__ask"><strong>Marque todos os conjuntos</strong> aos quais este número pertence:</div>
+      <div class="q-card__hint" id="qHint"></div>
+    </div>
+    <div class="opt-grid" id="optGrid"></div>
+    <button class="btn-answer" id="btnAnswer" onclick="submitAnswer()">Confirmar Resposta</button>
+  </div>
+
+  <!-- Result -->
+  <div id="screenResult" style="display:none">
+    <div class="result">
+      <span class="result__icon" id="resIcon">🏆</span>
+      <div class="result__title" id="resTitle">Jogo Finalizado!</div>
+      <div class="result__score" id="resScore">0</div>
+      <div class="result__sub" id="resSub">pontos</div>
+      <div class="result__grid">
+        <div class="result__stat"><div class="result__stat-val" id="rsPerfect">0</div><div class="result__stat-lbl">Rodadas perfeitas</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsAcc">0%</div><div class="result__stat-lbl">Precisão</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsMax">0</div><div class="result__stat-lbl">Streak máx</div></div>
+      </div>
+      <div class="result__actions">
+        <button class="btn-replay" onclick="startGame()">↺ Jogar Novamente</button>
+        <button class="btn-hub" onclick="location.href='../jogos.html'">← Arena</button>
+      </div>
+      <div class="mini-rank">
+        <div class="mini-rank-head">
+          <h3>🏆 Ranking</h3>
+          <div class="period-tabs">
+            <div class="period-tab active" onclick="setResPeriod(this,'daily')">Hoje</div>
+            <div class="period-tab" onclick="setResPeriod(this,'weekly')">Semana</div>
+            <div class="period-tab" onclick="setResPeriod(this,'all')">Geral</div>
+          </div>
+        </div>
+        <div class="rank-rows" id="rankRows"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback toast -->
+<div class="feedback" id="fbToast">
+  <div class="feedback__icon" id="fbIcon">✅</div>
+  <div class="feedback__text">
+    <div class="feedback__title" id="fbTitle">Perfeito!</div>
+    <div class="feedback__sub" id="fbSub">Todos os conjuntos corretos</div>
+  </div>
+  <div class="feedback__pts" id="fbPts">+100</div>
+</div>
+
+<script src="rankings.js"></script>
+<script src="../auth.js"></script>
+<script>
+'use strict';
+const GAME_ID = 'conjuntos-numericos';
+
+// ── Question bank ──
+const BANK = [
+  { n:'7',          sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'-5',         sets:['ℤ','ℚ','ℝ','ℂ'] },
+  { n:'2/3',        sets:['ℚ','ℝ','ℂ'] },
+  { n:'√2',         sets:['𝕀','ℝ','ℂ'] },
+  { n:'π',          sets:['𝕀','ℝ','ℂ'] },
+  { n:'0',          sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'3 + 2i',     sets:['ℂ'] },
+  { n:'i',          sets:['ℂ'] },
+  { n:'-4,5',       sets:['ℚ','ℝ','ℂ'] },
+  { n:'√25',        sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'1/3',        sets:['ℚ','ℝ','ℂ'] },
+  { n:'5i',         sets:['ℂ'] },
+  { n:'-7,8',       sets:['ℚ','ℝ','ℂ'] },
+  { n:'22/7',       sets:['ℚ','ℝ','ℂ'] },
+  { n:'-√11',       sets:['𝕀','ℝ','ℂ'] },
+  { n:'8',          sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'√4',         sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'-0,5',       sets:['ℚ','ℝ','ℂ'] },
+  { n:'∛8',         sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'-2,75',      sets:['ℚ','ℝ','ℂ'] },
+  { n:'√(-1)',      sets:['ℂ'] },
+  { n:'e (Euler)',  sets:['𝕀','ℝ','ℂ'] },
+  { n:'-10',        sets:['ℤ','ℚ','ℝ','ℂ'] },
+  { n:'100',        sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'0,333…',     sets:['ℚ','ℝ','ℂ'] },
+  { n:'√9',         sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+  { n:'-√4',        sets:['ℤ','ℚ','ℝ','ℂ'] },
+  { n:'3,14',       sets:['ℚ','ℝ','ℂ'] },
+  { n:'∛(-27)',     sets:['ℤ','ℚ','ℝ','ℂ'] },
+  { n:'4 + 0i',     sets:['ℕ','ℤ','ℚ','ℝ','ℂ'] },
+];
+
+const ALL_SETS = ['ℕ','ℤ','ℚ','𝕀','ℝ','ℂ'];
+const SET_LABELS = {
+  'ℕ':'ℕ Naturais','ℤ':'ℤ Inteiros','ℚ':'ℚ Racionais',
+  '𝕀':'𝕀 Irracionais','ℝ':'ℝ Reais','ℂ':'ℂ Complexos'
+};
+const SET_HINTS = {
+  'ℕ':'0, 1, 2, 3…','ℤ':'…–2, –1, 0, 1, 2…','ℚ':'p/q com q≠0',
+  '𝕀':'não representável como fração','ℝ':'toda a reta numérica','ℂ':'a+bi'
+};
+
+// ── State ──
+let diff = 'normal', playerName = '', playerEmail = '';
+let questions = [], qIdx = 0, score = 0, selected = [];
+let streak = 0, maxStreak = 0, perfect = 0;
+let timerSec = 20, timerInterval = null, timerStarted;
+let totalAcertos = 0, totalPossible = 0;
+let answering = false;
+let resPeriod = 'daily';
+
+function setDiff(el) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  diff = el.dataset.diff;
+}
+
+function getTimerSec() { return diff === 'dificil' ? 15 : diff === 'facil' ? 30 : 20; }
+
+// Session prefill
+try {
+  const sess = JSON.parse(localStorage.getItem('pl_session')||'null');
+  if (sess) {
+    document.getElementById('inputNome').value = sess.name || '';
+    playerEmail = sess.email || '';
+  }
+} catch(e){}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function startGame() {
+  playerName = document.getElementById('inputNome').value.trim() || 'Anônimo';
+  questions = shuffle(BANK).slice(0, 10);
+  qIdx = 0; score = 0; streak = 0; maxStreak = 0; perfect = 0;
+  totalAcertos = 0; totalPossible = 0;
+  answering = false;
+
+  show('screenGame');
+  document.getElementById('hudScore').textContent = '0';
+  document.getElementById('hudStreak').classList.remove('show');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (qIdx >= questions.length) { endGame(); return; }
+  const q = questions[qIdx];
+  answering = false;
+  selected = [];
+
+  document.getElementById('hudQ').textContent = qIdx + 1;
+  document.getElementById('qNum').textContent  = q.n;
+
+  // Hint for easy
+  const hintEl = document.getElementById('qHint');
+  if (diff === 'facil') {
+    hintEl.textContent = 'Dica: lembre-se da hierarquia ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ';
+  } else { hintEl.textContent = ''; }
+
+  // Options
+  const grid = document.getElementById('optGrid');
+  grid.innerHTML = ALL_SETS.map(s => `
+    <button class="opt-btn" data-set="${s}" onclick="toggleOpt(this,'${s}')">
+      ${SET_LABELS[s]}
+      ${diff==='facil' ? `<br/><span style="font-size:10px;opacity:.45">${SET_HINTS[s]}</span>` : ''}
+    </button>`).join('');
+
+  document.getElementById('btnAnswer').disabled = false;
+  startTimer();
+}
+
+function toggleOpt(el, s) {
+  if (answering) return;
+  if (selected.includes(s)) {
+    selected = selected.filter(x => x !== s);
+    el.classList.remove('sel');
+  } else {
+    selected.push(s);
+    el.classList.add('sel');
+  }
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerSec = getTimerSec();
+  timerStarted = Date.now();
+  const bar = document.getElementById('timerBar');
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  bar.style.background = 'var(--accent)';
+  requestAnimationFrame(() => {
+    bar.style.transition = `width ${timerSec}s linear, background .3s`;
+    bar.style.width = '0%';
+  });
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - timerStarted) / 1000;
+    const pct = Math.max(0, 1 - elapsed / getTimerSec());
+    if (pct < 0.33) bar.style.background = 'var(--err)';
+    else if (pct < 0.6) bar.style.background = 'var(--warn)';
+    if (elapsed >= getTimerSec()) { clearInterval(timerInterval); submitAnswer(true); }
+  }, 200);
+}
+
+function submitAnswer(timeout = false) {
+  if (answering) return;
+  answering = true;
+  clearInterval(timerInterval);
+  document.getElementById('btnAnswer').disabled = true;
+
+  const q = questions[qIdx];
+  const timeLeft = Math.max(0, getTimerSec() - (Date.now() - timerStarted) / 1000);
+
+  // Calculate score
+  const acertos  = selected.filter(s => q.sets.includes(s)).length;
+  const erros    = selected.filter(s => !q.sets.includes(s)).length;
+  const faltantes = q.sets.filter(s => !selected.includes(s)).length;
+  const isPerfect = (acertos === q.sets.length && erros === 0 && faltantes === 0);
+
+  totalAcertos  += acertos;
+  totalPossible += q.sets.length;
+
+  let pts = 0;
+  if (isPerfect) {
+    pts = 100;
+    const speedBonus = Math.round((timeLeft / getTimerSec()) * 50);
+    pts += speedBonus;
+    streak++;
+    if (streak > maxStreak) maxStreak = streak;
+    const streakBonus = Math.min(streak, 5) * 20;
+    pts += streakBonus;
+    perfect++;
+  } else {
+    pts = Math.max(0, acertos * 15 - erros * 15 - faltantes * 8);
+    streak = 0;
+  }
+
+  score += pts;
+  updateHUD();
+
+  // Reveal options
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b => {
+    const s = b.dataset.set;
+    b.disabled = true;
+    if (selected.includes(s) && q.sets.includes(s))  b.classList.add('reveal-ok');
+    else if (selected.includes(s) && !q.sets.includes(s)) b.classList.add('reveal-err');
+    else if (!selected.includes(s) && q.sets.includes(s)) b.classList.add('reveal-miss');
+  });
+
+  // Feedback toast
+  showFeedback(isPerfect, acertos, erros, faltantes, pts, timeout);
+
+  setTimeout(() => {
+    hideFeedback();
+    qIdx++;
+    renderQuestion();
+  }, 2400);
+}
+
+function showFeedback(isPerfect, ac, er, fa, pts, timeout) {
+  const fb = document.getElementById('fbToast');
+  fb.className = 'feedback ' + (timeout && !isPerfect ? 'wrong' : isPerfect ? 'perfect' : (pts>0?'partial':'wrong'));
+  document.getElementById('fbIcon').textContent  = timeout && !isPerfect ? '⏰' : isPerfect ? '🎯' : pts>0 ? '⚡' : '❌';
+  document.getElementById('fbTitle').textContent = timeout && !isPerfect ? 'Tempo esgotado!' : isPerfect ? 'Perfeito! 🔥' : pts>0 ? 'Parcial' : 'Errou!';
+  document.getElementById('fbSub').textContent   = `✅${ac} acerto${ac!==1?'s':''} · ❌${er} erro${er!==1?'s':''} · ⚠️${fa} não marcou`;
+  document.getElementById('fbPts').textContent   = (pts>0?'+':'')+pts;
+  requestAnimationFrame(() => fb.classList.add('show'));
+}
+function hideFeedback() {
+  document.getElementById('fbToast').classList.remove('show');
+}
+
+function updateHUD() {
+  document.getElementById('hudScore').textContent = score.toLocaleString('pt-BR');
+  const sk = document.getElementById('hudStreak');
+  if (streak >= 2) {
+    document.getElementById('streakNum').textContent = streak;
+    sk.classList.add('show');
+  } else { sk.classList.remove('show'); }
+}
+
+function endGame() {
+  hideFeedback();
+  show('screenResult');
+
+  // Save to rankings
+  PL_Rankings.save(GAME_ID, { name: playerName, email: playerEmail, score, difficulty: diff });
+
+  // Display
+  const acc = totalPossible > 0 ? Math.round((totalAcertos/totalPossible)*100) : 0;
+  const icon = score >= 1200 ? '🏆' : score >= 800 ? '🎯' : score >= 400 ? '⚡' : '📚';
+  const title = score >= 1200 ? 'Resultado Incrível!' : score >= 800 ? 'Muito Bem!' : score >= 400 ? 'Bom Jogo!' : 'Continue Praticando!';
+  document.getElementById('resIcon').textContent  = icon;
+  document.getElementById('resTitle').textContent = title;
+  animScore(score);
+  document.getElementById('resSub').textContent  = `pontos · dificuldade ${diff}`;
+  document.getElementById('rsPerfect').textContent = perfect;
+  document.getElementById('rsAcc').textContent    = acc + '%';
+  document.getElementById('rsMax').textContent    = maxStreak;
+
+  renderResRank('daily');
+}
+
+function animScore(target) {
+  const el = document.getElementById('resScore');
+  let cur = 0, step = Math.ceil(target / 40);
+  const iv = setInterval(() => {
+    cur = Math.min(cur + step, target);
+    el.textContent = cur.toLocaleString('pt-BR');
+    if (cur >= target) clearInterval(iv);
+  }, 30);
+}
+
+function setResPeriod(el, period) {
+  resPeriod = period;
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderResRank(period);
+}
+
+function renderResRank(period) {
+  const board = PL_Rankings.getBoard(GAME_ID, period, 10);
+  const rows  = document.getElementById('rankRows');
+  const MEDALS = ['🥇','🥈','🥉'];
+  if (!board.length) { rows.innerHTML = `<div style="text-align:center;padding:20px;color:var(--sil);font-size:13px">Nenhuma partida ainda</div>`; return; }
+  rows.innerHTML = board.map((e,i) => {
+    const isSelf = e.e && playerEmail && e.e === playerEmail;
+    const pos = i < 3 ? MEDALS[i] : `#${i+1}`;
+    const posClass = i<3?`rpos-${i+1}`:'';
+    const scoreClass = i<3?`rscore-${i+1}`:'';
+    const init = (e.n||'?').slice(0,2).toUpperCase();
+    return `<div class="rrow ${isSelf?'rrow--self':''}">
+      <div class="rpos ${posClass}">${pos}</div>
+      <div class="rav">${init}</div>
+      <div class="rname">${esc(e.n)}${isSelf?' <span style="font-size:10px;color:var(--al)">(você)</span>':''}</div>
+      <div class="rscore ${scoreClass}">${e.s.toLocaleString('pt-BR')}</div>
+    </div>`;
+  }).join('');
+}
+
+function show(id) {
+  ['screenLobby','screenGame','screenResult'].forEach(s => {
+    document.getElementById(s).style.display = s===id ? 'block' : 'none';
+  });
+}
+function esc(s) { return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+</script>
+</body>
+</html>

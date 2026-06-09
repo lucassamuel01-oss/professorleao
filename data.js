@@ -27,7 +27,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf',
-            jogo:     'assets/jogos/conjuntos-numericos.html',
+            jogo:     'jogos/conjuntos-numericos.html',
             lista:    'assets/listas/cfo-sd/lista-conjuntos-numericos.pdf',
             resolucao: null
           }
@@ -66,7 +66,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf',
-            jogo:     'assets/jogos/multiplos-divisores.html',
+            jogo:     'jogos/multiplos-divisores.html',
             lista:    null,
             resolucao: null
           }
@@ -92,7 +92,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      null,
-            jogo:     'assets/jogos/teoria-conjuntos.html',
+            jogo:     'jogos/conjuntos-operacoes.html',
             lista:    'assets/listas/cfo-sd/lista-teoria-conjuntos.pdf',
             resolucao: null
           }
@@ -221,7 +221,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf',
-            jogo:     'assets/jogos/conjuntos-numericos.html',
+            jogo:     'jogos/conjuntos-numericos.html',
             lista:    'assets/listas/cfo-sd/lista-conjuntos-numericos.pdf',
             resolucao: null
           }
@@ -234,7 +234,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf',
-            jogo:     'assets/jogos/multiplos-divisores.html',
+            jogo:     'jogos/multiplos-divisores.html',
             lista:    null,
             resolucao: null
           }
@@ -286,7 +286,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      null,
-            jogo:     'assets/jogos/teoria-conjuntos.html',
+            jogo:     'jogos/conjuntos-operacoes.html',
             lista:    'assets/listas/cfo-sd/lista-teoria-conjuntos.pdf',
             resolucao: null
           }
@@ -337,7 +337,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf',
-            jogo:     'assets/jogos/conjuntos-numericos.html',
+            jogo:     'jogos/conjuntos-numericos.html',
             lista:    'assets/listas/cfo-sd/lista-conjuntos-numericos.pdf',
             resolucao: null
           }
@@ -350,7 +350,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf',
-            jogo:     'assets/jogos/multiplos-divisores.html',
+            jogo:     'jogos/multiplos-divisores.html',
             lista:    null,
             resolucao: null
           }
@@ -415,7 +415,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      null,
-            jogo:     'assets/jogos/teoria-conjuntos.html',
+            jogo:     'jogos/conjuntos-operacoes.html',
             lista:    'assets/listas/cfo-sd/lista-teoria-conjuntos.pdf',
             resolucao: null
           }
@@ -440,7 +440,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/correios/aula-01-inteiros-multiplos.pdf',
-            jogo:     'assets/jogos/multiplos-divisores.html',
+            jogo:     'jogos/multiplos-divisores.html',
             lista:    null,
             resolucao: null
           }
