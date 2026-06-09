@@ -673,30 +673,30 @@
     </section>
 
     <!-- ══════════════════════════════════════════
-         PLANO DE ESTUDOS (PÚBLICO)
+         PLANO DE ESTUDOS — TEASER
     ══════════════════════════════════════════ -->
     <section class="plano section" id="plano">
       <div class="container">
-        <div class="plano-wrap">
+        <div class="plano-teaser" data-aos="fade-up">
 
-          <!-- Esquerda: info + Pomodoro -->
-          <div class="plano-info" data-aos="fade-right">
-            <span class="section__badge">Gratuito</span>
-            <h2 class="section__title">Gere seu <span class="text-accent">Plano Pomodoro</span></h2>
-            <p style="color:var(--gray-mid);font-size:15px;margin-top:12px;line-height:1.7;">Cronograma personalizado por concurso, matéria e sua rotina real. Gratuito e gerado agora mesmo.</p>
+          <!-- Esquerda: texto + benefícios -->
+          <div class="plano-teaser__text">
+            <span class="section__badge">Exclusivo · Área do Aluno</span>
+            <h2 class="section__title">Plano de Estudos <span class="text-accent">Pomodoro Personalizado</span></h2>
+            <p class="plano-teaser__desc">Cronograma semana a semana gerado para o seu concurso, sua rotina e suas dificuldades — com download em PDF incluso.</p>
 
             <div class="plano-benefits">
               <div class="plano-benefit">
                 <span class="plano-benefit-icon">🎯</span>
                 <div>
-                  <b>Distribuição estratégica</b>
-                  <span>Mais tempo no que você tem dificuldade — baseado no edital real do concurso.</span>
+                  <b>Distribuição por peso do edital</b>
+                  <span>Mais tempo nas matérias de maior peso e nas que você tem dificuldade.</span>
                 </div>
               </div>
               <div class="plano-benefit">
                 <span class="plano-benefit-icon">⏱️</span>
                 <div>
-                  <b>Técnica Pomodoro tática</b>
+                  <b>Ciclos Pomodoro táticos</b>
                   <span>25min de foco + 5min de pausa. Após 4 ciclos, 20min de descanso ativo.</span>
                 </div>
               </div>
@@ -704,182 +704,63 @@
                 <span class="plano-benefit-icon">📅</span>
                 <div>
                   <b>Adaptado à sua rotina</b>
-                  <span>Configure dias, horas e data da prova — o plano ajusta ao seu tempo real.</span>
+                  <span>Configure horas por dia, dias por semana e data da prova.</span>
                 </div>
               </div>
               <div class="plano-benefit">
-                <span class="plano-benefit-icon">🦁</span>
+                <span class="plano-benefit-icon">📄</span>
                 <div>
-                  <b>Método do Professor Leão</b>
-                  <span>Estratégia usada por +1000 aprovados em CFO PMBA, SD PMBA, Correios e mais.</span>
+                  <b>Exporta em PDF</b>
+                  <span>Gere e baixe o plano completo para estudar offline ou imprimir.</span>
                 </div>
               </div>
             </div>
 
-            <!-- Mini seção Pomodoro -->
-            <div style="margin-bottom:16px;">
-              <p class="eyebrow" style="font-family:var(--font-heading);font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:8px;">Técnica Pomodoro</p>
-              <p style="color:var(--gray-mid);font-size:14px;margin-bottom:14px;">O cronograma usa ciclos curtos para manter foco, alternar disciplinas e aumentar retenção.</p>
-            </div>
-            <div class="plano-info metodo-grid" style="grid-template-columns:repeat(2,1fr);gap:12px;">
-              <div class="metodo-card">
-                <strong>25min</strong>
-                <span>Foco total em teoria, questões ou revisão</span>
-              </div>
-              <div class="metodo-card">
-                <strong>5min</strong>
-                <span>Pausa curta para recuperar atenção</span>
-              </div>
-              <div class="metodo-card">
-                <strong>4 ciclos</strong>
-                <span>Depois, pausa longa de 20min</span>
-              </div>
-              <div class="metodo-card">
-                <strong>Rodízio</strong>
-                <span>O plano evita repetir a mesma matéria em sequência</span>
-              </div>
-            </div>
+            <a href="login.html" class="btn btn--primary btn--lg" style="margin-top:8px">
+              🚀 Criar meu Plano na Área do Aluno
+            </a>
+            <p style="font-size:12.5px;color:var(--gray-mid);margin-top:12px">Gratuito para alunos cadastrados. Já tem conta? <a href="login.html" style="color:var(--accent-light)">Entrar →</a></p>
           </div>
 
-          <!-- Direita: formulário -->
-          <div class="plano-card" data-aos="fade-left">
-            <div class="plano-card-header">
-              <div class="icon-wrap">🚀</div>
-              <div>
-                <h3>Criar meu plano de estudos</h3>
-                <p>Preencha os dados para iniciar sua missão</p>
+          <!-- Direita: preview visual do plano -->
+          <div class="plano-teaser__preview" data-aos="fade-left">
+            <div class="plano-preview-card">
+              <div class="plano-preview-card__header">
+                <span>📋 Plano de Estudos — CFO PMBA</span>
+                <span class="plano-preview-badge">⚡ Intensivo</span>
+              </div>
+              <div class="plano-preview-card__meta">
+                <span>🗓️ 8 semanas</span>
+                <span>⏱️ 3h/dia</span>
+                <span>📆 5 dias/sem</span>
+                <span>🍅 6 Pomodoros/dia</span>
+              </div>
+              <div class="plano-preview-card__week">
+                <div class="plano-preview-week-title">Semana 1 — Base</div>
+                <div class="plano-preview-day">
+                  <strong>Segunda</strong>
+                  <div class="plano-preview-poms">
+                    <span class="pom pom--focus" title="Teoria">📖 Língua Portuguesa</span>
+                    <span class="pom pom--focus" title="Questões">✏️ Direito Constitucional</span>
+                    <span class="pom pom--break" title="Pausa">☕ Pausa longa</span>
+                    <span class="pom pom--focus" title="Revisão">🔄 Língua Portuguesa</span>
+                  </div>
+                </div>
+                <div class="plano-preview-day">
+                  <strong>Terça</strong>
+                  <div class="plano-preview-poms">
+                    <span class="pom pom--focus">📖 Matemática/RLM</span>
+                    <span class="pom pom--focus">✏️ Ciências Humanas</span>
+                    <span class="pom pom--break">☕ Pausa longa</span>
+                    <span class="pom pom--focus">🔄 Direito</span>
+                  </div>
+                </div>
+              </div>
+              <div class="plano-preview-card__footer">
+                <button class="plano-preview-pdf-btn" disabled>📄 Baixar PDF completo</button>
+                <span>Disponível na Área do Aluno</span>
               </div>
             </div>
-
-            <form class="plano-form" id="pubPlanForm" autocomplete="on">
-
-              <!-- Concurso -->
-              <div class="pf-group">
-                <label for="pubConcurso">Qual concurso você irá fazer?</label>
-                <select id="pubConcurso" name="concurso" required>
-                  <option value="">Selecione o concurso...</option>
-                  <option value="CFO PMBA">CFO PMBA</option>
-                  <option value="SD PMBA">Soldado (SD) PMBA</option>
-                  <option value="Matemática Básica">Matemática Básica</option>
-                  <option value="Correios">Correios</option>
-                </select>
-                <div class="switch-row-pub">
-                  <button type="button" class="switch-pub" data-val="CFO PMBA">CFO PMBA</button>
-                  <button type="button" class="switch-pub" data-val="SD PMBA">SD PMBA</button>
-                  <button type="button" class="switch-pub" data-val="Correios">Correios</button>
-                  <button type="button" class="switch-pub" data-val="Matemática Básica">Mat. Básica</button>
-                </div>
-              </div>
-
-              <!-- Nome + E-mail -->
-              <div class="pf-row">
-                <div class="pf-group">
-                  <label for="pubNome">Seu nome</label>
-                  <input type="text" id="pubNome" name="nome" placeholder="Ex: João Silva" autocomplete="name" required />
-                </div>
-                <div class="pf-group">
-                  <label for="pubEmail">E-mail</label>
-                  <input type="email" id="pubEmail" name="email" placeholder="seuemail@gmail.com" autocomplete="email" required />
-                </div>
-              </div>
-
-              <!-- Telefone + Data da prova -->
-              <div class="pf-row">
-                <div class="pf-group">
-                  <label for="pubTelefone">WhatsApp</label>
-                  <input type="tel" id="pubTelefone" name="telefone" placeholder="(77) 99999-9999" autocomplete="tel" />
-                </div>
-                <div class="pf-group">
-                  <label for="pubDataProva">Data da prova</label>
-                  <input type="date" id="pubDataProva" name="dataProva" required />
-                </div>
-              </div>
-
-              <!-- Horas + dias + nível -->
-              <div class="pf-row">
-                <div class="pf-group">
-                  <label for="pubHorasDia">Horas por dia</label>
-                  <input type="number" id="pubHorasDia" min="1" max="16" placeholder="Ex: 3" inputmode="numeric" required />
-                </div>
-                <div class="pf-group">
-                  <label for="pubDiasSemana">Dias por semana</label>
-                  <input type="number" id="pubDiasSemana" min="1" max="7" placeholder="Ex: 5" inputmode="numeric" required />
-                </div>
-              </div>
-
-              <!-- Trabalha + estudou antes -->
-              <div class="pf-row">
-                <div class="pf-group">
-                  <label for="pubTrabalha">Trabalha atualmente?</label>
-                  <select id="pubTrabalha" name="trabalha" required>
-                    <option value="">Selecione...</option>
-                    <option value="Sim">Sim</option>
-                    <option value="Não">Não</option>
-                  </select>
-                </div>
-                <div class="pf-group">
-                  <label for="pubNivel">Nível atual</label>
-                  <select id="pubNivel" name="nivel" required>
-                    <option value="">Selecione...</option>
-                    <option value="iniciante">Iniciante</option>
-                    <option value="intermediario">Intermediário</option>
-                    <option value="avancado">Avançado</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Estudou antes + nota alvo -->
-              <div class="pf-row">
-                <div class="pf-group">
-                  <label for="pubEstudouAntes">Já estudou para este concurso antes?</label>
-                  <select id="pubEstudouAntes" name="estudouAntes">
-                    <option value="">Selecione...</option>
-                    <option value="Sim">Sim</option>
-                    <option value="Não">Não</option>
-                  </select>
-                </div>
-                <div class="pf-group">
-                  <label for="pubNotaAlvo">Nota alvo (pontos)</label>
-                  <input type="number" id="pubNotaAlvo" name="notaAlvo" min="0" max="100" placeholder="Ex: 70" inputmode="numeric" />
-                </div>
-              </div>
-
-              <!-- Matérias com dificuldade -->
-              <div class="pf-group">
-                <label>Matérias com mais dificuldade <span style="opacity:0.5;font-weight:400;">(marque uma ou mais)</span></label>
-                <div class="pub-checkbox-grid" id="pubDifBox"></div>
-              </div>
-
-              <!-- Matérias com facilidade -->
-              <div class="pf-group">
-                <label>Matérias com mais facilidade <span style="opacity:0.5;font-weight:400;">(marque as que você domina)</span></label>
-                <div class="pub-checkbox-grid" id="pubFacBox"></div>
-              </div>
-
-              <!-- Observações -->
-              <div class="pf-group">
-                <label for="pubObservacoes">Observações (opcional)</label>
-                <textarea id="pubObservacoes" name="observacoes" rows="3" placeholder="Conte algo sobre sua rotina, dificuldades, trabalho ou objetivo..." style="background:var(--navy-light);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);color:var(--white);padding:12px;font-family:var(--font-body);font-size:14px;width:100%;resize:vertical;"></textarea>
-              </div>
-
-              <!-- Preview Pomodoro -->
-              <div class="mission-bar">
-                <div><span id="pubDaysLeft">--</span><small>dias até a prova</small></div>
-                <div><span id="pubWeeklyLoad">--</span><small>horas/semana</small></div>
-                <div><span id="pubMode">--</span><small>intensidade</small></div>
-              </div>
-              <div class="pomodoro-tip">
-                <strong>Pomodoro:</strong>
-                <span id="pubPomodoroText">Preencha os dados para ver a estratégia de estudo.</span>
-              </div>
-
-              <button type="submit" class="btn btn--primary btn--full" style="font-size:16px;padding:16px;border-radius:var(--radius);">
-                🚀 Gerar meu plano de estudos
-              </button>
-            </form>
-
-            <!-- Resultado -->
-            <div class="plan-result-pub" id="pubPlanResult"></div>
           </div>
 
         </div>
