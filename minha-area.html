@@ -313,24 +313,61 @@
     ══════════════════════════════════════════ */
     #printArea { display: none; }
     @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body > *:not(#printArea) { display: none !important; }
       #printArea {
         display: block !important;
-        font-family: Arial, sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         color: #111; background: white;
-        padding: 24px; max-width: 100%;
+        padding: 0; max-width: 100%; font-size: 11px;
       }
-      #printArea h1 { font-size: 22px; margin-bottom: 6px; }
-      #printArea .pr-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #555; margin-bottom: 16px; }
-      #printArea .pr-section-title { font-size: 14px; font-weight: bold; margin: 20px 0 8px; color: #1a3a7a; border-bottom: 2px solid #4A6CF7; padding-bottom: 4px; }
-      #printArea .pr-semana { margin-bottom: 20px; page-break-inside: avoid; }
-      #printArea .pr-semana-title { font-size: 13px; font-weight: bold; background: #1a3a7a; color: white; padding: 6px 12px; border-radius: 4px; margin-bottom: 8px; }
-      #printArea .pr-dia { margin-bottom: 10px; }
-      #printArea .pr-dia-nome { font-size: 12px; font-weight: bold; color: #4A6CF7; margin-bottom: 4px; }
-      #printArea .pr-pom { font-size: 11.5px; padding: 3px 0; border-bottom: 1px dotted #ddd; }
-      #printArea .pr-alerta { font-size: 12px; padding: 4px 0; color: #555; }
-      #printArea .pr-footer { margin-top: 24px; font-size: 11px; color: #888; border-top: 1px solid #ddd; padding-top: 10px; text-align: center; }
-      @page { margin: 18mm; size: A4; }
+      #printArea h1 { font-size: 18px; margin: 0 0 4px; color: #0d1f3c; }
+      #printArea .pr-meta {
+        display: flex; gap: 10px; flex-wrap: wrap;
+        font-size: 10.5px; color: #444; margin-bottom: 12px;
+        padding-bottom: 10px; border-bottom: 1px solid #ccc;
+      }
+      #printArea .pr-meta span {
+        background: #f0f4ff; border: 1px solid #c8d5f5;
+        border-radius: 4px; padding: 2px 8px;
+      }
+      #printArea .pr-section-title {
+        font-size: 12px; font-weight: bold; margin: 14px 0 6px;
+        color: #1a3a7a; border-bottom: 2px solid #4A6CF7;
+        padding-bottom: 3px; page-break-after: avoid;
+      }
+      /* Cada semana é uma unidade — tenta não quebrar no meio */
+      #printArea .pr-semana {
+        margin-bottom: 14px;
+        border: 1px solid #dce3f5; border-radius: 4px;
+        overflow: hidden; page-break-inside: avoid;
+      }
+      #printArea .pr-semana-title {
+        font-size: 11.5px; font-weight: bold;
+        background: #1a3a7a; color: white;
+        padding: 5px 10px; margin: 0;
+      }
+      #printArea .pr-dia {
+        padding: 6px 10px; border-top: 1px solid #eef0f7;
+      }
+      #printArea .pr-dia-nome {
+        font-size: 11px; font-weight: bold; color: #2a4a9a;
+        margin-bottom: 3px;
+      }
+      #printArea .pr-pom {
+        font-size: 10.5px; padding: 2px 0 2px 12px;
+        border-bottom: 1px dotted #e5e9f5; color: #333;
+        line-height: 1.4;
+      }
+      #printArea .pr-pom:last-child { border-bottom: none; }
+      #printArea .pr-alerta {
+        font-size: 11px; padding: 3px 0; color: #444; line-height: 1.5;
+      }
+      #printArea .pr-footer {
+        margin-top: 20px; font-size: 10px; color: #888;
+        border-top: 1px solid #ddd; padding-top: 8px; text-align: center;
+      }
+      @page { margin: 14mm 14mm 16mm; size: A4; }
     }
   </style>
 </head>
@@ -960,58 +997,119 @@ function baixarPDF() {
 }
 
 function buildPrintHTML(dados, plano) {
+  const esc = s => String(s || '').replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
   const dataProvaFmt = dados.dataProva
     ? new Date(dados.dataProva + 'T00:00:00').toLocaleDateString('pt-BR')
     : '—';
 
+  const agora = new Date();
+  const geradoEm = agora.toLocaleDateString('pt-BR') + ' às ' +
+    agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  // ── Cabeçalho ──
   let html = `
-    <h1>📋 Plano de Estudos — ${dados.concurso}</h1>
-    <p style="font-size:12px;color:#555;margin-bottom:16px">Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} · Professor Leão</p>
+    <h1>📋 Plano de Estudos — ${esc(dados.concurso)}</h1>
+    <p style="font-size:12px;color:#555;margin-bottom:16px">
+      Gerado em ${esc(geradoEm)} · Professor Leão
+    </p>
     <div class="pr-meta">
-      <span>👤 ${dados.nome}</span>
-      <span>🗓️ Prova: ${dataProvaFmt}</span>
-      <span>⏱️ ${dados.horasDia}h/dia</span>
-      <span>📆 ${dados.diasSemana} dias/semana</span>
-      <span>📊 ${plano.semanas} semanas</span>
-      <span>⚡ ${plano.intensidade}</span>
+      <span>👤 ${esc(dados.nome || '—')}</span>
+      <span>🗓️ Prova: ${esc(dataProvaFmt)}</span>
+      <span>⏱️ ${esc(String(dados.horasDia))}h/dia</span>
+      <span>📆 ${esc(String(dados.diasSemana))} dias/semana</span>
+      <span>📊 ${plano.semanas} semana${plano.semanas !== 1 ? 's' : ''}</span>
+      <span>⚡ ${esc(plano.intensidade)}</span>
+      <span>🎯 ${plano.totalPoms} pomodoros</span>
     </div>`;
 
+  // ── Prioridades / dificuldades ──
   if (dados.diffs && dados.diffs.length) {
-    html += `<div class="pr-section-title">🎯 Prioridade Alta (Dificuldades)</div>`;
-    html += dados.diffs.map(d => `<div class="pr-alerta">⚠️ ${d} — maior atenção no cronograma</div>`).join('');
+    html += `<div class="pr-section-title">🎯 Matérias com Prioridade Máxima (Dificuldades)</div>`;
+    html += dados.diffs.map(d => `<div class="pr-alerta">⚠️ ${esc(d)} — reforço extra no cronograma</div>`).join('');
   }
 
+  // ── Alertas táticos ──
   if (plano.alertas && plano.alertas.length) {
     html += `<div class="pr-section-title">💡 Alertas Táticos</div>`;
-    html += plano.alertas.map(a => `<div class="pr-alerta">• ${a}</div>`).join('');
+    html += plano.alertas.map(a => `<div class="pr-alerta">• ${esc(a)}</div>`).join('');
   }
 
-  html += `<div class="pr-section-title">📅 Cronograma Semanal</div>`;
+  // ── Protocolo de revisões ──
+  if (plano.revisoes && plano.revisoes.length) {
+    html += `<div class="pr-section-title">🔄 Protocolo de Revisões</div>`;
+    html += plano.revisoes.map(r => `<div class="pr-alerta">• ${esc(r)}</div>`).join('');
+  }
 
-  (plano.agenda || []).slice(0, 8).forEach((semana, si) => {
+  // ── Cronograma — TODAS as semanas ──
+  html += `<div class="pr-section-title">📅 Cronograma Semanal Completo (${plano.semanas} semana${plano.semanas !== 1 ? 's' : ''})</div>`;
+
+  (plano.agenda || []).forEach((semana, si) => {
+    const retaFinal = (semana.foco || '').toLowerCase().includes('reta');
     html += `<div class="pr-semana">
-      <div class="pr-semana-title">Semana ${si + 1}${semana.rotulo ? ' — ' + semana.rotulo : ''}</div>`;
+      <div class="pr-semana-title">
+        Semana ${semana.numero || (si + 1)}${retaFinal ? ' 🔥 RETA FINAL' : ''}
+        <span style="font-weight:normal;font-size:11px;margin-left:8px;opacity:.8">— ${esc(semana.foco || '')}</span>
+      </div>`;
+
     (semana.dias || []).forEach(dia => {
+      // dia.dia contém o nome do dia (ex: "Segunda")
+      const diaNome = dia.dia || dia.nome || dia.diaNome || '';
+      // dia.blocos contém todos os blocos (pomodoros, pausas, simulados)
+      const blocos  = dia.blocos || dia.pomodoros || [];
+      const poms    = blocos.filter(b => b.tipo === 'pomodoro');
+      const sims    = blocos.filter(b => b.tipo === 'simulado');
+      const pausas  = blocos.filter(b => b.tipo === 'pausa');
+
       html += `<div class="pr-dia">
-        <div class="pr-dia-nome">${dia.nome || dia.diaNome || ''}</div>`;
-      (dia.pomodoros || []).forEach(pom => {
-        const tipo = pom.tipo === 'pausa' ? '☕ Pausa' : pom.tipo === 'simulado' ? '🎯 Simulado' : '📖';
-        const mat  = pom.materia || '';
-        const task = pom.tarefa  || '';
-        html += `<div class="pr-pom">${tipo} ${mat}${mat && task ? ' — ' : ''}${task}</div>`;
+        <div class="pr-dia-nome">📅 ${esc(diaNome)}
+          <span style="font-weight:normal;font-size:10px;color:#4A6CF7;margin-left:6px;">${poms.length} pomodoro${poms.length !== 1 ? 's' : ''}</span>
+        </div>`;
+
+      // Matérias do dia
+      if (dia.matsDay && dia.matsDay.length) {
+        html += `<div style="font-size:10.5px;color:#666;margin-bottom:4px;">
+          Matérias: ${dia.matsDay.map(m => esc(m)).join(' · ')}
+        </div>`;
+      }
+
+      // Pomodoros
+      poms.forEach(b => {
+        // pom.mat contém a matéria, pom.assunto o tópico, pom.tarefa a atividade
+        const mat     = b.mat     || b.materia || '';
+        const assunto = b.assunto || '';
+        const tarefa  = b.tarefa  || '';
+        html += `<div class="pr-pom">
+          ⏱ 25min
+          <strong>${esc(mat)}</strong>
+          ${assunto ? '— ' + esc(assunto) : ''}
+          ${tarefa  ? '<em style="color:#4A6CF7"> [' + esc(tarefa) + ']</em>' : ''}
+        </div>`;
       });
-      html += `</div>`;
+
+      // Pausas longas
+      if (pausas.length) {
+        html += `<div class="pr-pom" style="color:#888;">☕ Pausa longa (15–20min)</div>`;
+      }
+
+      // Simulados / revisão semanal
+      sims.forEach(b => {
+        html += `<div class="pr-pom" style="font-weight:bold;color:#1a3a7a;">
+          ⭐ ${esc(b.titulo || 'Revisão')}: ${esc(b.assunto || '')}
+        </div>`;
+      });
+
+      html += `</div>`; // pr-dia
     });
-    html += `</div>`;
+
+    html += `</div>`; // pr-semana
   });
 
-  if (plano.revisoes && plano.revisoes.length) {
-    html += `<div class="pr-section-title">🔄 Protocolo de Revisão</div>`;
-    html += plano.revisoes.map(r => `<div class="pr-alerta">• ${r}</div>`).join('');
-  }
-
+  // ── Rodapé ──
   html += `<div class="pr-footer">
-    Plano gerado pelo método Pomodoro do Professor Leão · instagram.com/professor.leao · wa.me/5577999229281
+    Plano Pomodoro gerado pelo Professor Leão · professorleao.github.io ·
+    instagram.com/professor.leao · wa.me/5577999229281
   </div>`;
 
   return html;

@@ -744,27 +744,29 @@ function renderPlanoHTML(dados, plano) {
       </div>`;
   }).join('');
 
-  /* ── Semanas (primeiras 4 exibidas, resto indicado) ── */
-  const SEMtoShow = Math.min(plano.agenda.length, 4);
+  /* ── Todas as semanas (accordion — 1ª aberta, demais fechadas) ── */
   let weeksHtml = '';
 
-  for (let si = 0; si < SEMtoShow; si++) {
+  for (let si = 0; si < plano.agenda.length; si++) {
     const sem  = plano.agenda[si];
     const open = si === 0;
     const wid  = `week-body-${si}`;
     const arId = `week-arrow-${si}`;
+    const retaFinalTag = sem.foco.toLowerCase().includes('reta') ?
+      '<span style="background:rgba(239,68,68,0.18);color:#f87171;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;margin-left:4px;">🔥 Reta final</span>' : '';
 
     weeksHtml += `
-      <div style="margin-bottom:10px;border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;">
+      <div style="margin-bottom:8px;border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;">
         <button type="button"
-          onclick="var b=document.getElementById('${wid}');var a=document.getElementById('${arId}');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'›':'‹';"
-          style="width:100%;text-align:left;background:rgba(255,255,255,0.03);border:none;color:#fff;padding:11px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;font-size:13px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <strong>Semana ${sem.numero}</strong>
-            ${si === 0 ? '<span style="background:rgba(74,108,247,0.2);color:#6B89FF;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;">← começar aqui</span>' : ''}
-            <span style="font-size:11px;color:#6B89FF;">${esc(sem.foco)}</span>
+          onclick="(function(){var b=document.getElementById('${wid}');var a=document.getElementById('${arId}');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'▸':'▾';})();"
+          style="width:100%;text-align:left;background:rgba(255,255,255,0.03);border:none;color:#fff;padding:11px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;font-size:13px;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0;">
+            <strong style="white-space:nowrap;">Semana ${sem.numero}</strong>
+            ${si === 0 ? '<span style="background:rgba(74,108,247,0.2);color:#6B89FF;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;">← começar aqui</span>' : ''}
+            ${retaFinalTag}
+            <span style="font-size:11px;color:#8892B4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(sem.foco)}</span>
           </div>
-          <span id="${arId}" style="color:#4A6CF7;font-size:16px;">${open ? '‹' : '›'}</span>
+          <span id="${arId}" style="color:#4A6CF7;font-size:14px;flex-shrink:0;">${open ? '▾' : '▸'}</span>
         </button>
 
         <div id="${wid}" style="display:${open ? 'block' : 'none'};">
@@ -773,23 +775,23 @@ function renderPlanoHTML(dados, plano) {
             const sims = dia.blocos.filter(b => b.tipo === 'simulado');
             return `
               <div style="padding:10px 16px;border-top:1px solid rgba(255,255,255,0.04);">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
                   <strong style="font-size:12px;color:#6B89FF;">📅 ${esc(dia.dia)}</strong>
+                  <span style="font-size:11px;color:#4A6CF7;">${poms.length} pomodoro${poms.length !== 1 ? 's' : ''}</span>
                   <div style="display:flex;flex-wrap:wrap;gap:4px;">
                     ${dia.matsDay.map(m => `<span style="background:rgba(74,108,247,0.1);border:1px solid rgba(74,108,247,0.18);border-radius:20px;padding:2px 8px;font-size:10px;color:#a8b4d0;">${esc(m)}</span>`).join('')}
                   </div>
                 </div>
-                <ul style="margin:0;padding-left:14px;">
+                <ul style="margin:0;padding:0;list-style:none;">
                   ${poms.map(b => `
-                    <li style="font-size:12px;color:#6B89FF;margin-bottom:3px;list-style:none;padding-left:0;">
-                      <span style="color:#8892B4">⏱</span>
-                      <strong style="color:#fff">${esc(b.titulo)}</strong>
-                      · <span style="color:#60a5fa">${esc(b.mat)}</span>
-                      <span style="color:#6B7280"> — ${esc(b.assunto)}</span>
+                    <li style="font-size:12px;margin-bottom:4px;padding:4px 8px;background:rgba(255,255,255,0.02);border-radius:6px;border-left:2px solid rgba(74,108,247,0.35);">
+                      <span style="color:#8892B4">⏱ 25min</span>
+                      <strong style="color:#fff;margin:0 4px;">${esc(b.mat)}</strong>
+                      <span style="color:#a8b4d0;">— ${esc(b.assunto)}</span>
                       <em style="color:#4A6CF7;font-size:11px;"> [${esc(b.tarefa)}]</em>
                     </li>`).join('')}
                   ${sims.map(b => `
-                    <li style="font-size:12px;color:#fbbf24;margin-top:4px;list-style:none;">
+                    <li style="font-size:12px;color:#fbbf24;margin-top:4px;padding:4px 8px;background:rgba(245,158,11,0.06);border-radius:6px;border-left:2px solid rgba(245,158,11,0.4);">
                       ⭐ <strong>${esc(b.titulo)}</strong>: ${esc(b.assunto)}
                     </li>`).join('')}
                 </ul>
@@ -797,12 +799,6 @@ function renderPlanoHTML(dados, plano) {
           }).join('')}
         </div>
       </div>`;
-  }
-
-  if (plano.agenda.length > SEMtoShow) {
-    weeksHtml += `<p style="font-size:11px;color:#6B89FF;text-align:center;margin:4px 0 0;padding:8px;">
-      + ${plano.agenda.length - SEMtoShow} semana${plano.agenda.length - SEMtoShow > 1 ? 's' : ''} adicionais no seu plano completo (${plano.semanas} no total)
-    </p>`;
   }
 
   /* ── WhatsApp CTA ── */
@@ -851,7 +847,7 @@ function renderPlanoHTML(dados, plano) {
 
       <!-- Cronograma -->
       <div style="background:#0F1E38;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px;margin-bottom:14px;">
-        <strong style="font-size:11px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;color:#fff;">📅 Cronograma Pomodoro — primeiras ${SEMtoShow} semanas</strong>
+        <strong style="font-size:11px;font-family:'Montserrat',sans-serif;display:block;margin-bottom:10px;color:#fff;">📅 Cronograma Pomodoro Completo — ${plano.semanas} semana${plano.semanas !== 1 ? 's' : ''} · clique para expandir cada semana</strong>
         ${weeksHtml}
       </div>
 
