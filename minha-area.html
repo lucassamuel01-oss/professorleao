@@ -294,6 +294,44 @@
     /* plan-result-pub receives inline HTML from renderPlanoHTML */
     .plan-result-pub { display: block; }
 
+    /* ── Questões section ── */
+    .listas-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px; margin-bottom: 40px;
+    }
+    .lista-card {
+      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.12);
+      border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column;
+      gap: 10px; transition: var(--tr); position: relative; overflow: hidden;
+      cursor: pointer; text-decoration: none; color: inherit;
+    }
+    .lista-card:hover { transform: translateY(-3px); border-color: rgba(74,108,247,0.35); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .lista-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .lista-card__title { font-family: var(--font-h); font-size: 14px; font-weight: 800; line-height: 1.35; }
+    .lista-card__meta { font-size: 12px; color: var(--silver); }
+    .lista-card__pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .lpill { font-family: var(--font-h); font-size: 10px; font-weight: 700;
+      padding: 2px 9px; border-radius: 99px; }
+    .lpill-blue   { background: rgba(74,108,247,0.15); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.25); }
+    .lpill-green  { background: rgba(34,197,94,0.12);  color: #86efac;            border: 1px solid rgba(34,197,94,0.25); }
+    .lpill-yellow { background: rgba(245,158,11,0.12); color: #fcd34d;            border: 1px solid rgba(245,158,11,0.25); }
+    .lpill-red    { background: rgba(239,68,68,0.12);  color: #fca5a5;            border: 1px solid rgba(239,68,68,0.25); }
+    .lista-card__footer {
+      margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .lista-card__cta {
+      padding: 9px 18px; border-radius: 8px; font-family: var(--font-h); font-size: 12px; font-weight: 800;
+      background: rgba(74,108,247,0.2); color: var(--accent-light); border: 1px solid rgba(74,108,247,0.3);
+      transition: var(--tr);
+    }
+    .lista-card:hover .lista-card__cta { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .lista-card__score {
+      font-family: var(--font-h); font-size: 13px; font-weight: 800;
+    }
+    .lista-card__score.good { color: var(--success); }
+    .lista-card__score.ok   { color: var(--warn); }
+    .lista-card__score.bad  { color: var(--danger); }
+
     /* ── Responsive ── */
     @media (max-width: 640px) {
       .page { padding: 24px 16px 60px; }
@@ -476,6 +514,19 @@
     </a>
   </div>
 
+  <!-- ── Listas de Questões ── -->
+  <div class="sec-header" id="listasSec" style="margin-top:16px">
+    <h2>📝 Listas de Questões</h2>
+    <p>Resolva questões e acompanhe seu desempenho</p>
+  </div>
+  <div id="listasEmpty" style="display:none;margin-bottom:32px">
+    <div style="background:var(--navy-2);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:28px 24px;text-align:center;color:var(--silver)">
+      <div style="font-size:36px;margin-bottom:10px">📭</div>
+      <p style="font-size:14px">Nenhuma lista disponível ainda. O professor irá publicar listas em breve.</p>
+    </div>
+  </div>
+  <div class="listas-grid" id="listasGrid" style="display:none"></div>
+
   <!-- Cursos -->
   <div class="sec-header">
     <h2>📚 Seus Cursos</h2>
@@ -653,6 +704,7 @@
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script src="plano.js"></script>
+<script src="questoes.js"></script>
 <script>
 /* ── Auth ── */
 const _session = plAuth.requireAuth();
@@ -714,6 +766,72 @@ function carregarPlanoExistente() {
 }
 
 carregarPlanoExistente();
+
+/* ════════════════════════════════════════
+   LISTAS DE QUESTÕES
+════════════════════════════════════════ */
+function carregarListas() {
+  const lists = PlQuestoes.getLists();
+  const grid  = document.getElementById('listasGrid');
+  const empty = document.getElementById('listasEmpty');
+  const sec   = document.getElementById('listasSec');
+
+  if (!lists.length) {
+    grid.style.display  = 'none';
+    empty.style.display = 'block';
+    sec.style.display   = 'flex';
+    return;
+  }
+
+  sec.style.display   = 'flex';
+  empty.style.display = 'none';
+  grid.style.display  = 'grid';
+
+  const difInfo = {
+    facil:   { label:'🟢 Fácil',   cls:'lpill-green'  },
+    medio:   { label:'🟡 Médio',   cls:'lpill-yellow' },
+    dificil: { label:'🔴 Difícil', cls:'lpill-red'    }
+  };
+
+  grid.innerHTML = lists.map(l => {
+    const prev  = PlQuestoes.getResp(l.id, _session.email);
+    const score = prev && prev.finalizadoEm ? PlQuestoes.calcScore(l.id, prev.respostas) : null;
+    const dif   = difInfo[l.dificuldade] || difInfo.medio;
+    const link  = `lista.html?id=${encodeURIComponent(l.id)}`;
+
+    let scoreHtml = '';
+    let ctaText   = '▶ Resolver';
+    if (score) {
+      const cls = score.percent >= 70 ? 'good' : score.percent >= 50 ? 'ok' : 'bad';
+      scoreHtml = `<span class="lista-card__score ${cls}">${score.percent}%</span>`;
+      ctaText   = '🔄 Refazer';
+    } else if (prev && !prev.finalizadoEm) {
+      const answered = Object.keys(prev.respostas || {}).length;
+      ctaText = `▶ Continuar (${answered}/${l.total})`;
+    }
+
+    return `<a class="lista-card" href="${link}">
+      <div class="lista-card__top">
+        <div class="lista-card__title">${escHtml(l.titulo)}</div>
+      </div>
+      ${l.materia || l.fonte ? `<div class="lista-card__meta">${[l.materia, l.fonte].filter(Boolean).join(' · ')}</div>` : ''}
+      <div class="lista-card__pills">
+        <span class="lpill lpill-blue">${l.total} questões</span>
+        <span class="lpill ${dif.cls}">${dif.label}</span>
+      </div>
+      <div class="lista-card__footer">
+        <span class="lista-card__cta">${ctaText}</span>
+        ${scoreHtml}
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+carregarListas();
 
 /* ── Course cards ── */
 const grid = document.getElementById('coursesGrid');

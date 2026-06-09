@@ -242,6 +242,85 @@
     }
     .override-banner strong { font-family: var(--font-h); }
 
+    /* ══════════════════ QUESTÕES TAB ══════════════════ */
+    .q-upload-zone {
+      border: 2px dashed rgba(74,108,247,0.35); border-radius: var(--radius);
+      padding: 36px 20px; text-align: center; cursor: pointer;
+      transition: all .22s ease; background: rgba(74,108,247,0.04);
+      margin-bottom: 20px;
+    }
+    .q-upload-zone:hover, .q-upload-zone.drag { border-color: var(--accent); background: rgba(74,108,247,0.1); }
+    .q-upload-zone .upload-icon { font-size: 40px; margin-bottom: 10px; }
+    .q-upload-zone p { color: var(--silver); font-size: 14px; }
+    .q-upload-zone p strong { color: var(--white); }
+    .q-upload-zone input[type=file] { display: none; }
+
+    .q-parse-status {
+      padding: 14px 18px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; display: none;
+    }
+    .q-parse-status.show { display: flex; align-items: center; gap: 12px; }
+    .q-parse-status.processing { background: rgba(74,108,247,0.1); border: 1px solid rgba(74,108,247,0.25); color: var(--accent-light); }
+    .q-parse-status.ok   { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+    .q-parse-status.err  { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+    .q-parse-status .spin { animation: spin .8s linear infinite; display:inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Questão preview/editor */
+    .qeditor-wrap { max-height: 420px; overflow-y: auto; margin-bottom: 20px; }
+    .qeditor-item {
+      background: var(--navy-3); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 16px 18px; margin-bottom: 10px;
+    }
+    .qeditor-item__head {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;
+    }
+    .qeditor-num {
+      font-family: var(--font-h); font-size: 11px; font-weight: 800;
+      background: rgba(74,108,247,0.2); color: var(--accent-light);
+      padding: 3px 10px; border-radius: 99px; flex-shrink: 0; margin-top: 2px;
+    }
+    .qeditor-enunciado {
+      flex: 1; padding: 8px 12px; border-radius: 8px;
+      border: 1px solid rgba(74,108,247,0.12); background: var(--navy);
+      color: var(--white); font-size: 13px; resize: vertical; min-height: 52px; outline: none;
+      font-family: var(--font-b); line-height: 1.5;
+    }
+    .qeditor-enunciado:focus { border-color: var(--accent); }
+    .qeditor-opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .qeditor-opt {
+      display: flex; align-items: center; gap: 7px;
+    }
+    .qeditor-opt-key {
+      font-family: var(--font-h); font-size: 12px; font-weight: 800;
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.06); color: var(--silver);
+    }
+    .qeditor-opt input {
+      flex: 1; padding: 6px 10px; border-radius: 7px;
+      border: 1px solid rgba(255,255,255,0.08); background: var(--navy);
+      color: var(--white); font-size: 12.5px; outline: none;
+    }
+    .qeditor-opt input:focus { border-color: var(--accent); }
+    .qeditor-gab-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .qeditor-gab-row label { font-family: var(--font-h); font-size: 11px; font-weight: 700; color: var(--silver); }
+    .qeditor-gab-row select {
+      padding: 6px 10px; border-radius: 7px; border: 1px solid rgba(74,108,247,0.2);
+      background: var(--navy); color: var(--white); font-family: var(--font-h); font-size: 12px; font-weight: 700; outline: none;
+    }
+    .qeditor-gab-row select.has-gab { border-color: var(--success); color: #86efac; }
+    .qeditor-expl { flex: 1; padding: 6px 10px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.08); background: var(--navy); color: var(--white); font-size: 12px; outline: none; min-width: 140px; }
+    .qeditor-expl:focus { border-color: var(--accent); }
+    .qeditor-del { padding: 5px 10px; border-radius: 7px; border: 1px solid rgba(239,68,68,0.25); color: rgba(239,68,68,0.7); font-size: 12px; cursor: pointer; flex-shrink: 0; transition: var(--transition); }
+    .qeditor-del:hover { background: rgba(239,68,68,0.1); color: #fca5a5; }
+
+    /* Listas table */
+    .listas-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .qdif-badge { display: inline-block; padding: 2px 9px; border-radius: 99px; font-family: var(--font-h); font-size: 10px; font-weight: 700; }
+    .qdif-facil   { background: rgba(34,197,94,0.15);  color: #86efac;  border: 1px solid rgba(34,197,94,0.3); }
+    .qdif-medio   { background: rgba(245,158,11,0.15); color: #fcd34d;  border: 1px solid rgba(245,158,11,0.3); }
+    .qdif-dificil { background: rgba(239,68,68,0.15);  color: #fca5a5;  border: 1px solid rgba(239,68,68,0.3); }
+
     /* ── Responsive ── */
     @media (max-width: 900px) {
       .stats-row { grid-template-columns: 1fr 1fr; }
@@ -280,6 +359,7 @@
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="alunos">👥 Alunos</button>
     <button class="tab-btn" data-tab="cursos">📚 Cursos &amp; Conteúdo</button>
+    <button class="tab-btn" data-tab="questoes">📝 Questões</button>
   </div>
 
   <main class="admin-wrap">
@@ -452,6 +532,128 @@
       </div>
 
     </div><!-- /tab-cursos -->
+
+    <!-- ══════ TAB: QUESTÕES ══════ -->
+    <div id="tab-questoes" class="tab-pane">
+
+        <div class="admin-header">
+          <p class="eyebrow">📝 Banco de Questões</p>
+          <h1>Listas de Questões</h1>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row" id="qStatsRow">
+          <div class="stat-box"><div class="n" id="qsTotal">0</div><div class="l">Listas</div></div>
+          <div class="stat-box"><div class="n" id="qsQuestoes">0</div><div class="l">Questões</div></div>
+          <div class="stat-box"><div class="n" id="qsRespostas">0</div><div class="l">Respostas de alunos</div></div>
+          <div class="stat-box"><div class="n" id="qsAlunos">0</div><div class="l">Alunos que responderam</div></div>
+        </div>
+
+        <!-- ─── Import card ─── -->
+        <div class="card">
+          <h2>📤 Importar Nova Lista</h2>
+
+          <!-- Upload zone -->
+          <div class="q-upload-zone" id="qUploadZone">
+            <input type="file" id="qFileInput" accept=".pdf,.txt" />
+            <div class="upload-icon">📄</div>
+            <p><strong>Clique aqui</strong> ou arraste um arquivo PDF</p>
+            <p style="font-size:12px;margin-top:6px;opacity:.6">Suporta PDF de questões com gabarito • O sistema detectará questões e respostas automaticamente</p>
+          </div>
+
+          <!-- Status -->
+          <div class="q-parse-status" id="qParseStatus">
+            <span id="qParseIcon">⏳</span>
+            <span id="qParseMsg">Processando...</span>
+          </div>
+
+          <!-- Metadata form -->
+          <div id="qMetaForm" style="display:none">
+            <div class="form-grid" style="margin-bottom:20px">
+              <div class="field">
+                <label>Título da Lista *</label>
+                <input type="text" id="qmTitulo" placeholder="Ex: Lista 1 — Conjuntos Numéricos" />
+              </div>
+              <div class="field">
+                <label>Matéria</label>
+                <input type="text" id="qmMateria" placeholder="Ex: Matemática" />
+              </div>
+              <div class="field">
+                <label>Fonte / Concurso</label>
+                <input type="text" id="qmFonte" placeholder="Ex: CFO PMBA 2023" />
+              </div>
+            </div>
+            <div class="form-grid-2" style="margin-bottom:20px">
+              <div class="field">
+                <label>Dificuldade</label>
+                <select id="qmDificuldade">
+                  <option value="facil">🟢 Fácil</option>
+                  <option value="medio" selected>🟡 Médio</option>
+                  <option value="dificil">🔴 Difícil</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Curso vinculado (opcional)</label>
+                <select id="qmCurso">
+                  <option value="">— Nenhum —</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Gabarito manual (se não detectado) -->
+            <div id="qGabManualWrap" style="display:none; margin-bottom:20px">
+              <div class="field">
+                <label>Gabarito Manual <span style="font-weight:400;color:var(--silver)">(cole no formato: 01-A 02-B 03-C ...)</span></label>
+                <textarea id="qGabManual" rows="3" placeholder="01-A 02-B 03-C 04-D 05-A ..."></textarea>
+              </div>
+              <button class="btn-secondary" style="margin-top:8px" onclick="aplicarGabManual()">Aplicar Gabarito</button>
+            </div>
+          </div>
+
+          <!-- Preview do parsing -->
+          <div id="qPreviewWrap" style="display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+              <div>
+                <span id="qPreviewCount" style="font-family:var(--font-h);font-size:14px;font-weight:800;color:var(--accent-light)">0 questões</span>
+                <span style="color:var(--silver);font-size:13px"> detectadas</span>
+                <span id="qGabCount" style="margin-left:10px;font-family:var(--font-h);font-size:13px;font-weight:700;color:#86efac"></span>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn-secondary" onclick="addQuestaoVazia()">+ Adicionar Questão</button>
+                <button class="btn-warn" id="btnGabManual" onclick="toggleGabManual()">✏️ Inserir Gabarito Manual</button>
+              </div>
+            </div>
+            <div class="qeditor-wrap" id="qEditorList"></div>
+          </div>
+
+          <!-- Save button -->
+          <div id="qSaveWrap" style="display:none;margin-top:8px">
+            <button class="btn-success" id="qSaveBtn" onclick="salvarLista()">✓ Salvar Lista</button>
+            <button class="btn-cancel" style="margin-left:10px" onclick="resetImport()">Cancelar</button>
+          </div>
+        </div>
+
+        <!-- ─── Lists table ─── -->
+        <div class="card" id="qListasCard">
+          <h2>📋 Listas Salvas</h2>
+          <div class="listas-toolbar">
+            <input type="text" class="search-input" id="qSearchInput" placeholder="🔍  Buscar lista..." style="max-width:300px" />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Título</th><th>Matéria</th><th>Fonte</th><th>Dificuldade</th>
+                  <th>Questões</th><th>Criada em</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="qListasTable">
+                <tr><td class="empty-cell" colspan="7">Nenhuma lista cadastrada ainda.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div><!-- /tab-questoes -->
 
   </main>
 
@@ -630,6 +832,7 @@
 
   <script src="auth.js"></script>
   <script src="data.js"></script>
+  <script src="questoes.js"></script>
   <script>
   /* ═══════════════════════════════════════════
      AUTH
@@ -667,7 +870,8 @@
       document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      if (btn.dataset.tab === 'cursos') initCursosTab();
+      if (btn.dataset.tab === 'cursos')   initCursosTab();
+      if (btn.dataset.tab === 'questoes') initQuestoesTab();
     });
   });
 
@@ -1100,6 +1304,380 @@ const PL_CATALOG = {
     if (saved&&Array.isArray(saved.ATIVIDADES)) PL_CATALOG.ATIVIDADES=saved.ATIVIDADES;
   } catch(e){ console.warn('[PL] Erro ao aplicar overrides do admin:',e); }
 })();`;
+  }
+
+  /* ═══════════════════════════════════════════
+     QUESTÕES TAB
+  ═══════════════════════════════════════════ */
+  let _parsedQuestoes = [];   // questões do parseamento atual
+  let _qListaSearch   = '';
+
+  /* ─── Carrega PDF.js (CDN) lazily ─── */
+  function loadPdfJs() {
+    return new Promise((res, rej) => {
+      if (window.pdfjsLib) { res(); return; }
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = () => {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        res();
+      };
+      s.onerror = () => rej(new Error('Falha ao carregar PDF.js'));
+      document.head.appendChild(s);
+    });
+  }
+
+  let _qTabInited = false;
+  function initQuestoesTab() {
+    loadQListasTable();
+    loadQStats();
+    if (_qTabInited) return;
+    _qTabInited = true;
+    populateCursoSelect();
+
+    // Upload zone
+    const zone  = document.getElementById('qUploadZone');
+    const input = document.getElementById('qFileInput');
+    zone.addEventListener('click', () => input.click());
+    input.addEventListener('change', e => { if (e.target.files[0]) processFile(e.target.files[0]); });
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag');
+      const f = e.dataTransfer.files[0];
+      if (f) processFile(f);
+    });
+
+    document.getElementById('qSearchInput').addEventListener('input', e => {
+      _qListaSearch = e.target.value.toLowerCase();
+      loadQListasTable();
+    });
+  }
+
+  function populateCursoSelect() {
+    const sel = document.getElementById('qmCurso');
+    sel.innerHTML = '<option value="">— Nenhum —</option>';
+    const catalog = window.plAuth ? (localStorage.getItem('pl_catalog_custom') ? JSON.parse(localStorage.getItem('pl_catalog_custom')) : null) : null;
+    const cursos = catalog ? catalog.cursos : (window.PL_CATALOG ? PL_CATALOG.cursos : {});
+    Object.values(cursos).forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.id || ''; o.textContent = c.nome || c.id;
+      sel.appendChild(o);
+    });
+  }
+
+  async function processFile(file) {
+    setParseStatus('processing', `⏳ Processando <strong>${esc(file.name)}</strong>...`);
+    document.getElementById('qMetaForm').style.display    = 'none';
+    document.getElementById('qPreviewWrap').style.display = 'none';
+    document.getElementById('qSaveWrap').style.display    = 'none';
+
+    try {
+      let text = '';
+      if (file.name.toLowerCase().endsWith('.pdf')) {
+        await loadPdfJs();
+        text = await PlQuestoes.extractTextFromPDF(file);
+      } else {
+        text = await file.text();
+      }
+
+      if (!text.trim()) throw new Error('Arquivo vazio ou sem texto extraível.');
+
+      const result = PlQuestoes.parsePDFText(text);
+      _parsedQuestoes = result.questoes;
+
+      if (!_parsedQuestoes.length) throw new Error('Nenhuma questão detectada. Verifique o formato do arquivo.');
+
+      const gabCnt = _parsedQuestoes.filter(q => q.gabarito).length;
+      setParseStatus('ok', `✅ ${_parsedQuestoes.length} questões detectadas · ${gabCnt} gabaritos identificados`);
+
+      document.getElementById('qMetaForm').style.display    = 'block';
+      document.getElementById('qPreviewWrap').style.display = 'block';
+      document.getElementById('qSaveWrap').style.display    = 'block';
+
+      // Suggest title from filename
+      const suggested = file.name.replace(/\.pdf$/i,'').replace(/[-_]/g,' ').trim();
+      if (!document.getElementById('qmTitulo').value) document.getElementById('qmTitulo').value = suggested;
+
+      document.getElementById('qPreviewCount').textContent = _parsedQuestoes.length + ' questões';
+      document.getElementById('qGabCount').textContent = gabCnt > 0 ? `· ${gabCnt} com gabarito ✅` : '· ⚠️ Gabarito não detectado';
+      if (gabCnt === 0) document.getElementById('qGabManualWrap').style.display = 'block';
+
+      renderEditorList();
+
+    } catch (err) {
+      setParseStatus('err', '❌ ' + err.message);
+    }
+  }
+
+  function setParseStatus(type, html) {
+    const el = document.getElementById('qParseStatus');
+    el.className = 'q-parse-status show ' + type;
+    el.innerHTML = html;
+  }
+
+  /* ─── Editor de questões ─── */
+  function renderEditorList() {
+    const wrap = document.getElementById('qEditorList');
+    wrap.innerHTML = _parsedQuestoes.map((q, idx) => {
+      const letters = ['A','B','C','D','E'];
+      const opcHtml = letters.map(l => `
+        <div class="qeditor-opt">
+          <span class="qeditor-opt-key">${l}</span>
+          <input type="text" data-q="${idx}" data-opt="${l}" value="${esc(q.opcoes && q.opcoes[l] ? q.opcoes[l] : '')}" placeholder="Opção ${l}..." />
+        </div>`).join('');
+
+      const gabSel = ['','A','B','C','D','E'].map(v => {
+        const sel = q.gabarito === v ? 'selected' : '';
+        return `<option value="${v}" ${sel}>${v || '— selecione —'}</option>`;
+      }).join('');
+
+      const hasGab = q.gabarito ? ' has-gab' : '';
+
+      return `<div class="qeditor-item" id="qei-${idx}">
+        <div class="qeditor-item__head">
+          <span class="qeditor-num">Q${q.num}</span>
+          <textarea class="qeditor-enunciado" data-q="${idx}" rows="2">${esc(q.enunciado)}</textarea>
+          <button class="qeditor-del" onclick="removeQuestao(${idx})" title="Remover questão">✕</button>
+        </div>
+        <div class="qeditor-opcoes">${opcHtml}</div>
+        <div class="qeditor-gab-row">
+          <label>Gabarito:</label>
+          <select class="${hasGab}" data-q="${idx}" data-gab="1">${gabSel}</select>
+          <label style="margin-left:12px">Explicação:</label>
+          <input class="qeditor-expl" type="text" data-q="${idx}" data-expl="1" value="${esc(q.explicacao||'')}" placeholder="Explicação opcional..." />
+        </div>
+      </div>`;
+    }).join('');
+
+    // Bind inputs
+    wrap.querySelectorAll('[data-q]').forEach(el => {
+      el.addEventListener('input', syncEditorToState);
+      el.addEventListener('change', syncEditorToState);
+    });
+  }
+
+  function syncEditorToState(e) {
+    const idx = parseInt(e.target.dataset.q);
+    if (isNaN(idx) || !_parsedQuestoes[idx]) return;
+    const q = _parsedQuestoes[idx];
+
+    if (e.target.tagName === 'TEXTAREA') {
+      q.enunciado = e.target.value;
+    } else if (e.target.dataset.opt) {
+      if (!q.opcoes) q.opcoes = {};
+      q.opcoes[e.target.dataset.opt] = e.target.value;
+    } else if (e.target.dataset.gab) {
+      q.gabarito = e.target.value;
+      e.target.className = q.gabarito ? 'has-gab' : '';
+      // Update gab count
+      const gabCnt = _parsedQuestoes.filter(q => q.gabarito).length;
+      document.getElementById('qGabCount').textContent = gabCnt > 0 ? `· ${gabCnt} com gabarito ✅` : '· ⚠️ Gabarito não detectado';
+    } else if (e.target.dataset.expl) {
+      q.explicacao = e.target.value;
+    }
+  }
+
+  function removeQuestao(idx) {
+    _parsedQuestoes.splice(idx, 1);
+    renderEditorList();
+    document.getElementById('qPreviewCount').textContent = _parsedQuestoes.length + ' questões';
+  }
+
+  function addQuestaoVazia() {
+    const maxNum = _parsedQuestoes.reduce((m, q) => Math.max(m, q.num), 0);
+    _parsedQuestoes.push({ num: maxNum + 1, enunciado: '', opcoes: { A:'', B:'', C:'', D:'', E:'' }, gabarito: '', explicacao: '' });
+    renderEditorList();
+    document.getElementById('qPreviewCount').textContent = _parsedQuestoes.length + ' questões';
+    document.getElementById('qEditorList').lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleGabManual() {
+    const w = document.getElementById('qGabManualWrap');
+    w.style.display = w.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function aplicarGabManual() {
+    const raw = document.getElementById('qGabManual').value;
+    const gabarito = {};
+    // Parse "01-A 02-B" or "01. A" or "1A 2B"
+    const p1 = /(\d{1,3})\s*[-–—.]\s*([A-Ea-e])\b/g;
+    const p2 = /\b(\d{1,3})\s+([A-Ea-e])\b/g;
+    let m;
+    while ((m = p1.exec(raw))) gabarito[parseInt(m[1])] = m[2].toUpperCase();
+    while ((m = p2.exec(raw))) { const n = parseInt(m[1]); if (!gabarito[n]) gabarito[n] = m[2].toUpperCase(); }
+
+    let cnt = 0;
+    _parsedQuestoes.forEach(q => {
+      if (gabarito[q.num]) { q.gabarito = gabarito[q.num]; cnt++; }
+    });
+    renderEditorList();
+    const gabCnt = _parsedQuestoes.filter(q => q.gabarito).length;
+    document.getElementById('qGabCount').textContent = gabCnt > 0 ? `· ${gabCnt} com gabarito ✅` : '· ⚠️ Gabarito não detectado';
+    toast(`Gabarito aplicado: ${cnt} questões atualizadas.`);
+  }
+
+  /* ─── Salvar lista ─── */
+  function salvarLista() {
+    const titulo = document.getElementById('qmTitulo').value.trim();
+    if (!titulo) { toast('Informe o título da lista.', 'err'); return; }
+    if (!_parsedQuestoes.length) { toast('Nenhuma questão para salvar.', 'err'); return; }
+
+    const lista = {
+      titulo,
+      materia:    document.getElementById('qmMateria').value.trim(),
+      fonte:      document.getElementById('qmFonte').value.trim(),
+      dificuldade:document.getElementById('qmDificuldade').value,
+      cursoId:    document.getElementById('qmCurso').value,
+      questoes:   _parsedQuestoes.map(q => ({
+        num:       q.num,
+        enunciado: q.enunciado.trim(),
+        opcoes:    q.opcoes || {},
+        gabarito:  q.gabarito || '',
+        explicacao:q.explicacao || ''
+      }))
+    };
+
+    const id = PlQuestoes.saveList(lista);
+    toast(`✅ Lista "${titulo}" salva com ${lista.questoes.length} questões!`);
+    resetImport();
+    loadQListasTable();
+    loadQStats();
+  }
+
+  function resetImport() {
+    _parsedQuestoes = [];
+    document.getElementById('qFileInput').value = '';
+    document.getElementById('qParseStatus').className = 'q-parse-status';
+    document.getElementById('qMetaForm').style.display    = 'none';
+    document.getElementById('qPreviewWrap').style.display = 'none';
+    document.getElementById('qSaveWrap').style.display    = 'none';
+    document.getElementById('qGabManualWrap').style.display = 'none';
+    document.getElementById('qmTitulo').value   = '';
+    document.getElementById('qmMateria').value  = '';
+    document.getElementById('qmFonte').value    = '';
+    document.getElementById('qmDificuldade').value = 'medio';
+    document.getElementById('qEditorList').innerHTML = '';
+  }
+
+  /* ─── Listas table ─── */
+  function loadQListasTable() {
+    const lists = PlQuestoes.getLists();
+    const q     = _qListaSearch;
+    const shown = q ? lists.filter(l => (l.titulo+l.materia+l.fonte).toLowerCase().includes(q)) : lists;
+    const tb    = document.getElementById('qListasTable');
+    if (!shown.length) {
+      tb.innerHTML = '<tr><td class="empty-cell" colspan="7">Nenhuma lista encontrada.</td></tr>';
+      return;
+    }
+    tb.innerHTML = shown.map(l => {
+      const dif = l.dificuldade || 'medio';
+      const difLabel = { facil:'🟢 Fácil', medio:'🟡 Médio', dificil:'🔴 Difícil' }[dif] || dif;
+      const difClass = 'qdif-badge qdif-' + dif;
+      const date = new Date(l.criadoEm).toLocaleDateString('pt-BR');
+      const link = `lista.html?id=${encodeURIComponent(l.id)}`;
+      return `<tr>
+        <td><strong>${esc(l.titulo)}</strong></td>
+        <td style="color:var(--gray-mid)">${esc(l.materia||'—')}</td>
+        <td style="color:var(--gray-mid)">${esc(l.fonte||'—')}</td>
+        <td><span class="${difClass}">${difLabel}</span></td>
+        <td style="text-align:center;font-family:var(--font-h);font-weight:700;color:var(--accent-light)">${l.total}</td>
+        <td style="color:var(--gray-mid)">${date}</td>
+        <td>
+          <a class="action-btn" href="${link}" target="_blank">Ver</a>
+          <button class="action-btn" onclick="copiarLinkLista('${l.id}')">Copiar Link</button>
+          <button class="action-btn success" onclick="editarLista('${l.id}')">Editar</button>
+          <button class="action-btn danger" onclick="excluirLista('${l.id}','${esc(l.titulo)}')">Excluir</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function loadQStats() {
+    const lists = PlQuestoes.getLists();
+    const total   = lists.length;
+    const questoes= lists.reduce((s,l) => s + (l.total||0), 0);
+    // Count answer records
+    let respostas = 0, alunos = new Set();
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('pl_resp_')) { respostas++; alunos.add(k.split('_').slice(3).join('_')); }
+    }
+    document.getElementById('qsTotal').textContent    = total;
+    document.getElementById('qsQuestoes').textContent  = questoes;
+    document.getElementById('qsRespostas').textContent = respostas;
+    document.getElementById('qsAlunos').textContent    = alunos.size;
+  }
+
+  function copiarLinkLista(id) {
+    const url = location.origin + location.pathname.replace('admin.html','') + 'lista.html?id=' + id;
+    navigator.clipboard.writeText(url).then(() => toast('🔗 Link copiado!')).catch(() => toast('Erro ao copiar.','err'));
+  }
+
+  let _editingListaId = null;
+  function editarLista(id) {
+    const lista = PlQuestoes.getList(id);
+    if (!lista) { toast('Lista não encontrada.','err'); return; }
+    _editingListaId = id;
+    _parsedQuestoes = lista.questoes.map(q => ({ ...q, opcoes: { ...q.opcoes } }));
+    document.getElementById('qmTitulo').value      = lista.titulo;
+    document.getElementById('qmMateria').value     = lista.materia || '';
+    document.getElementById('qmFonte').value       = lista.fonte || '';
+    document.getElementById('qmDificuldade').value = lista.dificuldade || 'medio';
+    if (lista.cursoId) document.getElementById('qmCurso').value = lista.cursoId;
+
+    setParseStatus('ok', `✏️ Editando lista: <strong>${esc(lista.titulo)}</strong> — ${lista.questoes.length} questões`);
+    document.getElementById('qMetaForm').style.display    = 'block';
+    document.getElementById('qPreviewWrap').style.display = 'block';
+    document.getElementById('qSaveWrap').style.display    = 'block';
+    document.getElementById('qPreviewCount').textContent  = lista.questoes.length + ' questões';
+    const gabCnt = lista.questoes.filter(q => q.gabarito).length;
+    document.getElementById('qGabCount').textContent = gabCnt > 0 ? `· ${gabCnt} com gabarito ✅` : '· ⚠️ Sem gabarito';
+
+    renderEditorList();
+
+    // Override save to update
+    document.getElementById('qSaveBtn').onclick = () => salvarListaEdicao();
+    document.getElementById('qListasCard').scrollIntoView({ behavior:'smooth' });
+    window.scrollTo({ top: 0, behavior:'smooth' });
+  }
+
+  function salvarListaEdicao() {
+    const titulo = document.getElementById('qmTitulo').value.trim();
+    if (!titulo) { toast('Informe o título da lista.', 'err'); return; }
+    const lista = {
+      id: _editingListaId,
+      titulo,
+      materia:    document.getElementById('qmMateria').value.trim(),
+      fonte:      document.getElementById('qmFonte').value.trim(),
+      dificuldade:document.getElementById('qmDificuldade').value,
+      cursoId:    document.getElementById('qmCurso').value,
+      criadoEm:   (PlQuestoes.getList(_editingListaId)||{}).criadoEm || new Date().toISOString(),
+      questoes:   _parsedQuestoes.map(q => ({
+        num: q.num, enunciado: q.enunciado.trim(),
+        opcoes: q.opcoes||{}, gabarito: q.gabarito||'', explicacao: q.explicacao||''
+      }))
+    };
+    PlQuestoes.saveList(lista);
+    toast(`✅ Lista "${titulo}" atualizada!`);
+    _editingListaId = null;
+    resetImport();
+    document.getElementById('qSaveBtn').onclick = salvarLista;
+    loadQListasTable();
+    loadQStats();
+  }
+
+  let _excluirListaId = null;
+  function excluirLista(id, titulo) {
+    _excluirListaId = id;
+    const ok = confirm(`Excluir a lista "${titulo}"?\n\nIsso não pode ser desfeito.`);
+    if (ok) {
+      PlQuestoes.deleteList(id);
+      toast('Lista excluída.');
+      loadQListasTable();
+      loadQStats();
+    }
   }
 
   </script>
