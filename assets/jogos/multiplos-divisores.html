@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Caça ao Número Perfeito - Professor Leão</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #3498db, #6dd5fa); color: #333; text-align: center; padding: 20px; }
+  .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.3); }
+  .number-btn { padding: 15px 30px; margin: 10px; background: #2980b9; color: white; border: none; border-radius: 10px; font-size: 20px; cursor: pointer; transition: 0.3s; }
+  .number-btn:hover { background: #1c5980; }
+  .selected { background-color: #2ecc71 !important; }
+  .start-btn, .restart-btn { padding: 15px 40px; background: #27ae60; color: white; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; transition: 0.4s; }
+  .start-btn:hover, .restart-btn:hover { background: #1e8449; }
+  #mission, #timer, #score, #ranking { font-size: 22px; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎯 Caça ao Número Perfeito - Professor Leão 🎯</h1>
+
+  <div id="rules">
+    <p>Digite seu nome e clique em começar. Em cada fase, capture os números corretos antes do tempo acabar!</p>
+    <input type="text" id="playerName" placeholder="Digite seu nome aqui" style="padding:10px; width:60%; font-size:18px;"><br>
+    <button class="start-btn" onclick="startGame()">🚀 Começar Jogo</button>
+  </div>
+
+  <div id="game" style="display:none;">
+    <div id="mission"></div>
+    <div id="numbers"></div>
+    <div id="timer">⏱ Tempo: <span id="timeLeft">30</span> s</div>
+    <div id="score">Pontuação: 0</div>
+  </div>
+
+  <div id="ranking" style="display:none;"></div>
+  <button class="restart-btn" style="display:none;" onclick="resetGame()">🔄 Jogar Novamente</button>
+</div>
+
+<script>
+let phases = [
+  { text: "Capture os múltiplos de 4", type: "multiple", base: 4 },
+  { text: "Capture os divisores de 60", type: "divisor", base: 60 },
+  { text: "Capture os números com MDC 4 com o número 20", type: "mdc", base: 20, mdcCheck: 4 },
+  { text: "Capture os números com MMC com 12 menor que 60", type: "mmc", base: 12, mmcMax: 60 },
+  { text: "Capture números múltiplos de 3 e divisores de 60", type: "multi-div", multi: 3, div: 60 }
+];
+let currentPhase = 0, player = "", score = 0, time = 30, timer, rankingList = [];
+let numbers = [], correctNumbers = [], selectedNumbers = [];
+
+function startGame() {
+  player = document.getElementById('playerName').value.trim();
+  if (!player) { alert("Digite seu nome!"); return; }
+  document.getElementById('rules').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+  score = 0; currentPhase = 0;
+  nextPhase();
+}
+
+function nextPhase() {
+  if (currentPhase >= phases.length) { finishGame(); return; }
+  let phase = phases[currentPhase];
+  document.getElementById('mission').innerHTML = `🔎 Fase ${currentPhase + 1}: ${phase.text}`;
+  generateNumbers();
+  renderNumbers();
+  time = 30;
+  document.getElementById('timeLeft').innerText = time;
+  clearInterval(timer);
+  timer = setInterval(() => {
+    time--;
+    document.getElementById('timeLeft').innerText = time;
+    if (time === 0) checkPhase();
+  }, 1000);
+}
+
+function generateNumbers() {
+  numbers = Array.from({length: 15}, () => Math.floor(Math.random() * 50) + 1);
+  correctNumbers = numbers.filter(n => isCorrect(n, phases[currentPhase]));
+}
+
+function renderNumbers() {
+  selectedNumbers = [];
+  document.getElementById('numbers').innerHTML = '';
+  numbers.forEach(num => {
+    const btn = document.createElement('button');
+    btn.className = 'number-btn';
+    btn.textContent = num;
+    btn.onclick = () => toggleSelect(btn, num);
+    document.getElementById('numbers').appendChild(btn);
+  });
+}
+
+function toggleSelect(btn, num) {
+  if (selectedNumbers.includes(num)) {
+    selectedNumbers = selectedNumbers.filter(n => n !== num);
+    btn.classList.remove('selected');
+  } else {
+    selectedNumbers.push(num);
+    btn.classList.add('selected');
+  }
+}
+
+function isCorrect(n, phase) {
+  if (phase.type === "multiple") return n % phase.base === 0;
+  if (phase.type === "divisor") return phase.base % n === 0;
+  if (phase.type === "mdc") return gcd(n, phase.base) === phase.mdcCheck;
+  if (phase.type === "mmc") return lcm(n, phase.base) < phase.mmcMax;
+  if (phase.type === "multi-div") return n % phase.multi === 0 && phase.div % n === 0;
+}
+
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function lcm(a, b) { return (a * b) / gcd(a, b); }
+
+function checkPhase() {
+  clearInterval(timer);
+  let acertos = selectedNumbers.filter(n => correctNumbers.includes(n)).length;
+  let erros = selectedNumbers.filter(n => !correctNumbers.includes(n)).length;
+  let faltou = correctNumbers.filter(n => !selectedNumbers.includes(n)).length;
+  let pontos = (acertos * 10) - (erros * 10) - (faltou * 5);
+  score += pontos;
+  alert(`✅ Acertos: ${acertos}\n❌ Erros: ${erros}\n⚠️ Não marcou: ${faltou}\n🎯 Pontos da fase: ${pontos}`);
+  document.getElementById('score').innerHTML = "Pontuação: " + score;
+  currentPhase++;
+  nextPhase();
+}
+
+function finishGame() {
+  alert(`🏁 Fim do jogo! ${player}, sua pontuação foi: ${score}`);
+  rankingList.push({nome: player, pontos: score});
+  rankingList.sort((a, b) => b.pontos - a.pontos);
+
+  let rankHtml = "<h2>🏆 Ranking:</h2><ol>";
+  rankingList.slice(0, 5).forEach(p => { rankHtml += `<li>${p.nome} - ${p.pontos} pontos</li>`; });
+  rankHtml += "</ol>";
+
+  document.getElementById('ranking').innerHTML = rankHtml;
+  document.getElementById('ranking').style.display = 'block';
+  document.querySelector('.restart-btn').style.display = 'inline-block';
+  document.getElementById('game').style.display = 'none';
+}
+
+function resetGame() {
+  document.getElementById('rules').style.display = 'block';
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('ranking').style.display = 'none';
+  document.querySelector('.restart-btn').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
