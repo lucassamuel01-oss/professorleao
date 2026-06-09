@@ -156,20 +156,68 @@ document.head.appendChild(style);
 
 /* ============================================================
    PLANO DE ESTUDOS – PÁGINA PÚBLICA
-   (Importado e adaptado do Elite Feminina)
+   Copiado e adaptado do Elite Feminina — todas as matérias
+   baseadas nos editais reais de cada concurso.
    ============================================================ */
 
 const MATERIAS_PUB = {
-  'CFO PMBA':  ['Matemática','Português','Direito Constitucional','Direito Administrativo','Direito Penal','Legislação PM','Informática','Inglês','Raciocínio Lógico'],
-  'SD PMBA':   ['Matemática','Português','História e Geog. da BA','Atualidades','Legislação PM','Direito Constitucional','Informática','Raciocínio Lógico'],
-  'PM':        ['Matemática','Português','Raciocínio Lógico','Informática','Legislação Específica','Conhecimentos Gerais'],
-  'PC':        ['Matemática','Português','Raciocínio Lógico','Informática','Direito Penal','Direito Processual Penal'],
-  'PF':        ['Matemática','Português','Raciocínio Lógico','Informática','Direito Constitucional','Direito Administrativo','Inglês'],
-  'PRF':       ['Matemática','Português','Raciocínio Lógico','Informática','Legislação de Trânsito','Física'],
-  'Bombeiros': ['Matemática','Português','Raciocínio Lógico','Físico-Química','Informática','Conhecimentos Gerais'],
-  'Correios':  ['Matemática','Português','Raciocínio Lógico','Informática','Atualidades','Conhecimentos Específicos'],
-  'Outro':     ['Matemática','Português','Raciocínio Lógico','Informática','Conhecimentos Gerais','Legislação Específica'],
+  'CFO PMBA': [
+    'Língua Portuguesa',
+    'Direito Constitucional',
+    'Direito Administrativo',
+    'Direito Penal',
+    'Legislação PM',
+    'Ciências Humanas',
+    'Matemática / RLM',
+    'Informática',
+    'Língua Inglesa'
+  ],
+  'SD PMBA': [
+    'Língua Portuguesa',
+    'Matemática',
+    'Atualidades',
+    'Informática',
+    'História do Brasil',
+    'Geografia do Brasil',
+    'Direito Constitucional',
+    'Direitos Humanos',
+    'Direito Administrativo',
+    'Direito Penal',
+    'Direito Penal Militar',
+    'Igualdade Racial e de Gênero'
+  ],
+  'Matemática Básica': [
+    'Conjuntos Numéricos',
+    'MMC e MDC',
+    'Frações e Números Decimais',
+    'Potenciação e Radiciação',
+    'Porcentagem e Juros',
+    'Regra de Três',
+    'Razão e Proporção',
+    'PA e PG',
+    'Funções do 1° e 2° Graus',
+    'Equações e Sistemas',
+    'Geometria Plana',
+    'Geometria Espacial',
+    'Estatística'
+  ],
+  'Correios': [
+    'Matemática',
+    'Língua Portuguesa',
+    'Raciocínio Lógico',
+    'Informática',
+    'Atualidades',
+    'Conhecimentos Específicos da Área'
+  ]
 };
+
+function formatarTelefone(valor) {
+  const n = String(valor).replace(/\D/g, '').slice(0, 11);
+  if (n.length <= 2)  return n;
+  if (n.length <= 6)  return `(${n.slice(0,2)}) ${n.slice(2)}`;
+  if (n.length <= 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`;
+}
 
 (function initPubPlano() {
   const pubConcurso   = document.getElementById('pubConcurso');
@@ -177,45 +225,73 @@ const MATERIAS_PUB = {
   const pubHorasDia   = document.getElementById('pubHorasDia');
   const pubDiasSemana = document.getElementById('pubDiasSemana');
   const pubDifBox     = document.getElementById('pubDifBox');
+  const pubFacBox     = document.getElementById('pubFacBox');
   const pubPlanForm   = document.getElementById('pubPlanForm');
-  if (!pubPlanForm) return; // página sem o plano (ex: login.html)
+  if (!pubPlanForm) return;
 
-  function buildCheckboxes(concurso) {
-    const list = MATERIAS_PUB[concurso] || MATERIAS_PUB['Outro'];
-    pubDifBox.innerHTML = list.map(m => `
-      <label class="pub-cb-label">
-        <input type="checkbox" name="pubDificuldade" value="${m}" /> ${m}
+  function criarCheckboxes(container, name, lista) {
+    if (!container) return;
+    container.innerHTML = lista.map((m, i) => `
+      <label class="pub-cb-label" for="${name}-${i}">
+        <input type="checkbox" id="${name}-${i}" name="${name}" value="${m}" />
+        <span>${m}</span>
       </label>
     `).join('');
   }
 
-  function updatePreview() {
-    const dateVal = pubDataProva.value;
-    const horas   = parseInt(pubHorasDia.value) || 0;
-    const dias    = parseInt(pubDiasSemana.value) || 0;
+  function preencherMaterias(concurso) {
+    const lista = MATERIAS_PUB[concurso] || MATERIAS_PUB['SD PMBA'];
+    criarCheckboxes(pubDifBox, 'pubDificuldade', lista);
+    criarCheckboxes(pubFacBox, 'pubFacilidade', lista);
+    document.querySelectorAll('.switch-pub').forEach(b =>
+      b.classList.toggle('active', b.dataset.val === concurso)
+    );
+  }
+
+  function atualizarPreview() {
+    const dateVal = pubDataProva ? pubDataProva.value : '';
+    const horas   = parseInt(pubHorasDia ? pubHorasDia.value : '') || 0;
+    const dias    = parseInt(pubDiasSemana ? pubDiasSemana.value : '') || 0;
 
     if (dateVal) {
-      const diff = Math.max(0, Math.ceil((new Date(dateVal + 'T00:00:00') - new Date()) / 86400000));
+      const hoje  = new Date(); hoje.setHours(0,0,0,0);
+      const prova = new Date(dateVal + 'T00:00:00');
+      const diff  = Math.max(0, Math.ceil((prova - hoje) / 86400000));
       document.getElementById('pubDaysLeft').textContent = diff;
-      document.getElementById('pubMode').textContent =
-        diff < 30 ? '🔥 Sprint' : diff < 90 ? '⚡ Intensivo' : '📅 Regular';
+      if (diff <= 15)      document.getElementById('pubMode').textContent = '🔥 Sprint final';
+      else if (diff <= 30) document.getElementById('pubMode').textContent = '⚡ Reta final';
+      else if (diff <= 90) document.getElementById('pubMode').textContent = '⚡ Intensivo';
+      else                 document.getElementById('pubMode').textContent = '📅 Base';
     } else {
       document.getElementById('pubDaysLeft').textContent = '--';
-      document.getElementById('pubMode').textContent = '--';
+      document.getElementById('pubMode').textContent = 'Missão';
     }
+
     const weekly = horas * dias;
     document.getElementById('pubWeeklyLoad').textContent = weekly ? weekly + 'h' : '--';
+
     if (horas && dias) {
       const ciclos = Math.floor((horas * 60) / 30);
       document.getElementById('pubPomodoroText').textContent =
-        `${ciclos} ciclos Pomodoro/dia (${horas}h = ${ciclos}×25min foco + pausas de 5min). Após 4 ciclos: 20min de descanso.`;
+        `Treino com ${horas}h por dia, ${dias} dias por semana, total de ${weekly}h semanais. ${ciclos} ciclos Pomodoro/dia (25min foco + 5min pausa). Após 4 ciclos: 20min de descanso.`;
+    } else {
+      document.getElementById('pubPomodoroText').textContent =
+        'Informe seus dados para ver a estratégia de estudo.';
     }
+  }
+
+  function salvarLeadLocal(formData) {
+    try {
+      const leads = JSON.parse(localStorage.getItem('pl_leads') || '[]');
+      leads.push({ ...formData, criadoEm: new Date().toISOString() });
+      localStorage.setItem('pl_leads', JSON.stringify(leads));
+    } catch(e) { console.warn('Erro ao salvar lead:', e); }
   }
 
   if (pubConcurso) {
     pubConcurso.addEventListener('change', () => {
-      if (pubConcurso.value) buildCheckboxes(pubConcurso.value);
-      updatePreview();
+      if (pubConcurso.value) preencherMaterias(pubConcurso.value);
+      atualizarPreview();
     });
   }
 
@@ -223,62 +299,95 @@ const MATERIAS_PUB = {
     btn.addEventListener('click', () => {
       const val = btn.dataset.val;
       if (pubConcurso) pubConcurso.value = val;
-      document.querySelectorAll('.switch-pub').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      buildCheckboxes(val);
-      updatePreview();
+      preencherMaterias(val);
+      atualizarPreview();
     });
   });
 
   [pubDataProva, pubHorasDia, pubDiasSemana].forEach(el => {
     if (!el) return;
-    el.addEventListener('input', updatePreview);
-    el.addEventListener('change', updatePreview);
+    el.addEventListener('input', atualizarPreview);
+    el.addEventListener('change', atualizarPreview);
   });
 
-  pubPlanForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const concurso  = pubConcurso ? pubConcurso.value : 'Concurso';
-    const dataProva = pubDataProva ? pubDataProva.value : '';
-    const horas     = parseInt(pubHorasDia ? pubHorasDia.value : '') || 2;
-    const dias      = parseInt(pubDiasSemana ? pubDiasSemana.value : '') || 5;
-    const nivel     = (document.getElementById('pubNivel') || {}).value || 'intermediario';
-    const diffs     = [...document.querySelectorAll('[name=pubDificuldade]:checked')].map(c => c.value);
-    const subs      = MATERIAS_PUB[concurso] || MATERIAS_PUB['Outro'];
-    const prioritized = diffs.length ? diffs : subs;
+  const pubTelefone = document.getElementById('pubTelefone');
+  if (pubTelefone) {
+    pubTelefone.addEventListener('input', e => {
+      e.target.value = formatarTelefone(e.target.value);
+    });
+  }
 
-    const daysLeft  = dataProva
-      ? Math.max(1, Math.ceil((new Date(dataProva + 'T00:00:00') - new Date()) / 86400000))
+  if (pubDifBox) pubDifBox.addEventListener('change', () => {});
+  if (pubFacBox) pubFacBox.addEventListener('change', () => {});
+
+  pubPlanForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const concurso   = pubConcurso ? pubConcurso.value : 'CFO PMBA';
+    const nome       = (document.getElementById('pubNome')        || {}).value || '';
+    const email      = (document.getElementById('pubEmail')       || {}).value || '';
+    const telefone   = (document.getElementById('pubTelefone')    || {}).value || '';
+    const dataProva  = pubDataProva ? pubDataProva.value : '';
+    const horas      = parseInt(pubHorasDia ? pubHorasDia.value : '') || 2;
+    const dias       = parseInt(pubDiasSemana ? pubDiasSemana.value : '') || 5;
+    const nivel      = (document.getElementById('pubNivel')       || {}).value || 'intermediario';
+    const trabalha   = (document.getElementById('pubTrabalha')    || {}).value || '';
+    const estudou    = (document.getElementById('pubEstudouAntes')|| {}).value || '';
+    const notaAlvo   = (document.getElementById('pubNotaAlvo')    || {}).value || '';
+    const obs        = (document.getElementById('pubObservacoes') || {}).value || '';
+
+    const diffs = [...document.querySelectorAll('[name=pubDificuldade]:checked')].map(c => c.value);
+    const facs  = [...document.querySelectorAll('[name=pubFacilidade]:checked')].map(c => c.value);
+    const subs  = MATERIAS_PUB[concurso] || MATERIAS_PUB['SD PMBA'];
+
+    // Prioridade: dificuldades > todas as matérias; excluir facilidades
+    const prioritized = diffs.length
+      ? diffs
+      : subs.filter(s => !facs.includes(s));
+
+    // Salvar lead no localStorage
+    salvarLeadLocal({ nome, email, telefone, concurso, dataProva, horas, dias, nivel, trabalha, estudou, notaAlvo, dificuldades: diffs, facilidades: facs, obs });
+
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const daysLeft = dataProva
+      ? Math.max(1, Math.ceil((new Date(dataProva + 'T00:00:00') - hoje) / 86400000))
       : 60;
-    const weekDays  = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].slice(0, dias);
+    const weekDays   = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].slice(0, dias);
     const sessPerDay = Math.max(1, Math.floor(horas * 60 / 55));
 
     const result = document.getElementById('pubPlanResult');
-    let html = `<h4>📋 Plano Pomodoro — ${concurso} · ${daysLeft} dias</h4>
-    <p style="font-size:13px;color:var(--gray-mid);margin-bottom:16px;">
-      <strong style="color:var(--accent-light)">${horas}h/dia × ${dias} dias</strong> = ${horas*dias}h/semana.
-      Nível: <strong style="color:var(--white)">${nivel}</strong>.
-      Prioridades: <strong style="color:var(--white)">${prioritized.slice(0,3).join(', ')}</strong>.
-    </p>`;
+    let html = `
+      <div style="margin-bottom:16px;">
+        <h4 style="font-size:18px;margin-bottom:6px;">📋 Plano Pomodoro — ${concurso}</h4>
+        <p style="font-size:13px;color:var(--gray-mid);">
+          ${nome ? `<strong style="color:var(--accent-light)">${nome}</strong> · ` : ''}
+          <strong style="color:var(--accent-light)">${horas}h/dia × ${dias} dias</strong> = ${horas*dias}h/semana ·
+          <strong style="color:var(--white)">${daysLeft} dias até a prova</strong>
+          ${nivel ? ` · Nível: <strong style="color:var(--white)">${nivel}</strong>` : ''}
+        </p>
+        ${diffs.length ? `<p style="font-size:12px;color:var(--gray-mid);margin-top:4px;">⚠️ Prioridade: <strong style="color:var(--white)">${diffs.slice(0,3).join(', ')}</strong></p>` : ''}
+      </div>`;
 
     weekDays.forEach((day, i) => {
       html += `<div class="prd-day"><div class="prd-day-title">📅 ${day}</div>`;
       for (let s = 0; s < sessPerDay; s++) {
-        const sub  = prioritized[(i * sessPerDay + s) % prioritized.length];
+        const sub  = prioritized[((i * sessPerDay) + s) % prioritized.length];
         const tipo = s === 0 ? 'Teoria' : (s === sessPerDay - 1 && sessPerDay > 2 ? 'Revisão' : 'Questões');
         html += `<div class="prd-session">⏱ Sessão ${s+1} (25min): <strong>${sub}</strong> — ${tipo}</div>`;
       }
       html += `</div>`;
     });
 
+    const waMsg = encodeURIComponent(
+      `Olá Professor Leão! Gerei meu plano de estudos para ${concurso}${nome ? ` (sou ${nome})` : ''} e quero começar meus estudos.`
+    );
     html += `
       <div class="plan-wa-cta">
         <div>
           <strong>💡 Dica do Professor Leão</strong>
           <p>Imprima e cole na parede. A execução consistente supera qualquer estratégia perfeita. Foco e disciplina!</p>
         </div>
-        <a href="https://wa.me/5577999229281?text=Olá%20Professor%20Leão!%20Gerei%20meu%20plano%20para%20${encodeURIComponent(concurso)}%20e%20quero%20começar%20meus%20estudos."
-           target="_blank" rel="noopener" class="btn btn--primary btn--sm">
+        <a href="https://wa.me/5577999229281?text=${waMsg}" target="_blank" rel="noopener" class="btn btn--primary btn--sm">
           Falar com o Professor →
         </a>
       </div>`;
@@ -290,21 +399,18 @@ const MATERIAS_PUB = {
     }
   });
 
-  // Inicializar
-  buildCheckboxes('CFO PMBA');
-  updatePreview();
+  // Inicializar com CFO PMBA
+  preencherMaterias('CFO PMBA');
+  atualizarPreview();
 })();
 
-/* ── Formatador de telefone (contato) ── */
+/* ── Formatador de telefone (formulário de contato) ── */
 document.addEventListener('DOMContentLoaded', () => {
-  const phoneInputs = ['whatsapp', 'telefone'].map(id => document.getElementById(id)).filter(Boolean);
-  phoneInputs.forEach(input => {
-    input.addEventListener('input', (e) => {
-      let v = e.target.value.replace(/\D/g,'').slice(0,11);
-      if      (v.length <= 2)  e.target.value = v;
-      else if (v.length <= 6)  e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
-      else if (v.length <= 10) e.target.value = `(${v.slice(0,2)}) ${v.slice(2,6)}-${v.slice(6)}`;
-      else                     e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  ['whatsapp', 'telefone', 'pubTelefone'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', e => {
+      e.target.value = formatarTelefone(e.target.value);
     });
   });
 });
