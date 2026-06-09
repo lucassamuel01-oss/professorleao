@@ -544,3 +544,26 @@ const PL_CATALOG = {
   }
 
 };
+
+/* ──────────────────────────────────────────
+   OVERRIDES DO ADMIN (localStorage)
+   O painel admin salva em 'pl_catalog_custom'.
+   Aplicamos aqui APÓS definir o catálogo base,
+   para que todos os métodos (getCurso, etc.)
+   continuem funcionando com os dados editados.
+────────────────────────────────────────── */
+(function _applyAdminOverrides() {
+  try {
+    const raw = localStorage.getItem('pl_catalog_custom');
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved && saved.cursos) {
+      PL_CATALOG.cursos = saved.cursos;
+    }
+    if (saved && Array.isArray(saved.ATIVIDADES)) {
+      PL_CATALOG.ATIVIDADES = saved.ATIVIDADES;
+    }
+  } catch (e) {
+    console.warn('[PL] Erro ao aplicar overrides do admin:', e);
+  }
+})();

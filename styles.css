@@ -1372,3 +1372,96 @@ h1, h2, h3, h4 {
   .plan-wa-cta { flex-direction: column; }
   .plan-wa-cta .btn { width: 100%; text-align: center; justify-content: center; }
 }
+
+/* ══════════════════════════════════════════
+   METODOLOGIA / DIDÁTICA
+══════════════════════════════════════════ */
+.metodologia { background: var(--navy-2); }
+
+/* Apostila destaque */
+.metodo-apostila {
+  display: grid; grid-template-columns: 340px 1fr; gap: 56px; align-items: center;
+  background: var(--navy-3); border: 1px solid rgba(74,108,247,0.15);
+  border-radius: var(--radius-lg); padding: 48px; margin-bottom: 48px;
+}
+.metodo-apostila__visual { position: relative; }
+.metodo-apostila__visual img { width: 100%; border-radius: var(--radius); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.metodo-apostila__tag {
+  position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--navy-mid), var(--accent));
+  color: var(--white); font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+  padding: 8px 20px; border-radius: 999px; white-space: nowrap; box-shadow: 0 4px 20px rgba(74,108,247,0.4);
+}
+.metodo-apostila__text h3 {
+  font-family: var(--font-heading); font-size: clamp(22px,2.5vw,30px); font-weight: 800;
+  color: var(--white); margin: 12px 0 16px;
+}
+.metodo-apostila__text > p { color: var(--gray-mid); font-size: 15.5px; line-height: 1.7; margin-bottom: 24px; }
+.metodo-apostila__list { list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 12px; }
+.metodo-apostila__list li {
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(255,255,255,0.8); font-size: 14.5px;
+}
+.metodo-apostila__list li svg { color: var(--accent-light); flex-shrink: 0; }
+
+/* Fluxo de aprendizagem */
+.metodo-fluxo { margin-bottom: 40px; }
+.metodo-fluxo__title {
+  font-family: var(--font-heading); font-size: 18px; font-weight: 800;
+  color: var(--white); text-align: center; margin-bottom: 32px;
+}
+.metodo-fluxo__steps {
+  display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap;
+  background: var(--navy-3); border: 1px solid rgba(74,108,247,0.12);
+  border-radius: var(--radius-lg); padding: 32px 24px;
+}
+.metodo-fluxo__step {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 8px; flex: 1; min-width: 140px; padding: 16px;
+}
+.metodo-fluxo__num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-mid), var(--accent));
+  color: var(--white); font-family: var(--font-heading); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.metodo-fluxo__icon { font-size: 28px; }
+.metodo-fluxo__step strong { font-family: var(--font-heading); font-size: 13px; font-weight: 800; color: var(--white); }
+.metodo-fluxo__step p { font-size: 12.5px; color: var(--gray-mid); line-height: 1.5; margin: 0; }
+.metodo-fluxo__arrow { color: var(--accent); font-size: 22px; font-weight: 700; padding: 0 8px; flex-shrink: 0; }
+
+/* CTA dentro da metodologia */
+.metodo-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  padding: 32px 40px;
+  background: linear-gradient(135deg, rgba(74,108,247,0.12), rgba(74,108,247,0.04));
+  border: 1px solid rgba(74,108,247,0.25); border-radius: var(--radius-lg);
+}
+.metodo-cta__text h3 { font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+.metodo-cta__text p { color: var(--gray-mid); font-size: 14.5px; line-height: 1.6; max-width: 540px; margin: 0; }
+
+/* Materiais topics list */
+.material-card__topics {
+  list-style: none; padding: 0; margin: 12px 0 18px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.material-card__topics li { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+/* Materiais CTA strip */
+.materiais__cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  flex-wrap: wrap; padding: 28px 36px; margin-top: 12px;
+  background: var(--navy-3); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-lg);
+}
+.materiais__cta p { color: var(--gray-mid); font-size: 14.5px; margin: 0; flex: 1; }
+
+/* Responsive metodologia */
+@media (max-width: 960px) {
+  .metodo-apostila { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px; }
+  .metodo-apostila__visual { max-width: 300px; margin: 0 auto; }
+  .metodo-fluxo__steps { gap: 8px; }
+  .metodo-fluxo__arrow { display: none; }
+  .metodo-cta { flex-direction: column; text-align: center; }
+  .materiais__cta { flex-direction: column; text-align: center; }
+}

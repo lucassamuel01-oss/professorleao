@@ -26,19 +26,13 @@
       --font-b:      'Open Sans', sans-serif;
       --radius:      12px;
       --transition:  0.3s ease;
-      --shadow:      0 8px 40px rgba(0,0,0,0.45);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-b);
-      background: var(--navy);
-      color: var(--white);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
+    body { font-family: var(--font-b); background: var(--navy); color: var(--white); min-height: 100vh; line-height: 1.6; }
     img { max-width: 100%; display: block; }
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; font-family: inherit; border: none; background: none; }
+    textarea, input, select { font-family: inherit; }
 
     /* ── Topbar ── */
     .topbar {
@@ -53,170 +47,215 @@
     .topbar__right { display: flex; align-items: center; gap: 10px; }
     .btn-ghost {
       padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(74,108,247,0.2);
-      color: var(--silver); font-family: var(--font-h); font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: var(--transition);
+      color: var(--silver); font-family: var(--font-h); font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition);
     }
     .btn-ghost:hover { border-color: rgba(74,108,247,0.4); color: var(--accent-light); }
     .btn-danger-ghost {
       padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);
-      color: rgba(239,68,68,0.7); font-family: var(--font-h); font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: var(--transition);
+      color: rgba(239,68,68,0.7); font-family: var(--font-h); font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition);
     }
     .btn-danger-ghost:hover { border-color: rgba(239,68,68,0.5); color: #fca5a5; background: rgba(239,68,68,0.06); }
 
-    /* ── Wrap ── */
-    .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; }
-
-    .admin-header { margin-bottom: 36px; }
-    .admin-header .eyebrow {
-      font-family: var(--font-h); font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
-      text-transform: uppercase; color: var(--accent-light); margin-bottom: 8px;
+    /* ── Tabs ── */
+    .admin-tabs {
+      display: flex; gap: 4px;
+      padding: 16px 28px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: var(--navy-2);
     }
-    .admin-header h1 { font-family: var(--font-h); font-size: clamp(22px, 3vw, 32px); font-weight: 900; color: var(--white); }
+    .tab-btn {
+      padding: 10px 22px; border-radius: 10px 10px 0 0;
+      font-family: var(--font-h); font-size: 13px; font-weight: 700;
+      color: var(--silver); border: 1px solid transparent;
+      border-bottom: none; background: none; cursor: pointer; transition: var(--transition);
+    }
+    .tab-btn:hover { color: var(--white); }
+    .tab-btn.active {
+      background: var(--navy); border-color: rgba(74,108,247,0.2);
+      color: var(--accent-light); position: relative; top: 1px;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Wrap ── */
+    .admin-wrap { max-width: 1140px; margin: 0 auto; padding: 32px 24px 80px; }
+    .admin-header { margin-bottom: 32px; }
+    .admin-header .eyebrow { font-family: var(--font-h); font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent-light); margin-bottom: 8px; }
+    .admin-header h1 { font-family: var(--font-h); font-size: clamp(20px,3vw,30px); font-weight: 900; }
 
     /* ── Stats strip ── */
     .stats-row {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-      border: 1px solid rgba(74,108,247,0.1); border-radius: var(--radius);
-      background: var(--navy-2); overflow: hidden; margin-bottom: 32px;
+      border: 1px solid rgba(74,108,247,0.1); border-radius: var(--radius); background: var(--navy-2); overflow: hidden; margin-bottom: 28px;
     }
-    .stat-box {
-      padding: 20px; text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.06);
-    }
+    .stat-box { padding: 20px; text-align: center; border-right: 1px solid rgba(255,255,255,0.06); }
     .stat-box:last-child { border-right: none; }
-    .stat-box .n {
-      font-family: var(--font-h); font-size: 32px; font-weight: 900; color: var(--accent-light); line-height: 1; margin-bottom: 5px;
-    }
+    .stat-box .n { font-family: var(--font-h); font-size: 32px; font-weight: 900; color: var(--accent-light); line-height: 1; margin-bottom: 5px; }
     .stat-box .l { font-size: 12px; color: var(--gray-mid); font-family: var(--font-h); font-weight: 600; }
 
     /* ── Card ── */
-    .card {
-      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.1);
-      border-radius: 18px; padding: 28px; margin-bottom: 24px;
-    }
-    .card h2 {
-      font-family: var(--font-h); font-size: 16px; font-weight: 800; margin-bottom: 22px;
-      padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
-      display: flex; align-items: center; gap: 8px;
-    }
+    .card { background: var(--navy-2); border: 1px solid rgba(74,108,247,0.1); border-radius: 18px; padding: 28px; margin-bottom: 24px; }
+    .card h2 { font-family: var(--font-h); font-size: 16px; font-weight: 800; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 8px; }
 
     /* ── Form grid ── */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
     .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
     .field { display: flex; flex-direction: column; gap: 5px; }
     .field label { font-family: var(--font-h); font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255,255,255,0.45); text-transform: uppercase; }
-    .field input, .field select {
-      padding: 11px 13px; border-radius: 8px;
-      border: 1px solid rgba(74,108,247,0.15);
-      background: var(--navy-3); color: var(--white);
-      font-family: var(--font-b); font-size: 14px; outline: none; transition: var(--transition);
+    .field input, .field select, .field textarea {
+      padding: 11px 13px; border-radius: 8px; border: 1px solid rgba(74,108,247,0.15);
+      background: var(--navy-3); color: var(--white); font-size: 14px; outline: none; transition: var(--transition);
     }
-    .field input::placeholder { color: rgba(255,255,255,0.2); }
-    .field input:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(74,108,247,0.12); }
+    .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.2); }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(74,108,247,0.12); }
     .field select option { background: var(--navy-3); }
+    .field textarea { resize: vertical; min-height: 80px; }
 
     .btn-primary {
-      padding: 12px 24px; border-radius: 10px; border: none;
+      padding: 11px 22px; border-radius: 10px; border: none;
       background: linear-gradient(135deg, var(--navy-mid), var(--accent));
-      color: var(--white); font-family: var(--font-h); font-weight: 800; font-size: 14px;
-      cursor: pointer; transition: var(--transition); box-shadow: 0 4px 16px rgba(74,108,247,0.3);
+      color: var(--white); font-family: var(--font-h); font-weight: 800; font-size: 13.5px;
+      cursor: pointer; transition: var(--transition); box-shadow: 0 4px 16px rgba(74,108,247,0.28);
     }
-    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-secondary {
+      padding: 10px 20px; border-radius: 10px;
+      border: 1px solid rgba(74,108,247,0.3);
+      color: var(--accent-light); font-family: var(--font-h); font-weight: 700; font-size: 13px;
+      cursor: pointer; transition: var(--transition); background: rgba(74,108,247,0.06);
+    }
+    .btn-secondary:hover { background: rgba(74,108,247,0.14); }
+    .btn-success {
+      padding: 10px 20px; border-radius: 10px; border: none;
+      background: linear-gradient(135deg, #14532d, #22c55e);
+      color: var(--white); font-family: var(--font-h); font-weight: 800; font-size: 13.5px;
+      cursor: pointer; transition: var(--transition);
+    }
+    .btn-warn {
+      padding: 10px 20px; border-radius: 10px; border: none;
+      background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.35);
+      color: #fcd34d; font-family: var(--font-h); font-weight: 700; font-size: 13px;
+      cursor: pointer; transition: var(--transition);
+    }
+    .btn-warn:hover { background: rgba(245,158,11,0.22); }
 
     /* ── Table ── */
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    thead th {
-      text-align: left; padding: 10px 12px;
-      color: rgba(255,255,255,0.4); font-family: var(--font-h); font-size: 11px;
-      font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
+    thead th { text-align: left; padding: 10px 12px; color: rgba(255,255,255,0.4); font-family: var(--font-h); font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.08); }
     tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
     tbody tr:hover { background: rgba(74,108,247,0.05); }
-    tbody td { padding: 12px; vertical-align: middle; }
+    tbody td { padding: 11px 12px; vertical-align: middle; }
     .empty-cell { text-align: center; color: var(--gray-mid); padding: 36px; opacity: 0.5; }
 
     /* ── Badges ── */
-    .badge {
-      display: inline-block; padding: 3px 10px; border-radius: 999px;
-      font-family: var(--font-h); font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
-    }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-family: var(--font-h); font-size: 11px; font-weight: 700; }
     .b-active   { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
     .b-expired  { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
     .b-inactive { background: rgba(148,163,184,.1); color: #94a3b8; border: 1px solid rgba(148,163,184,.2); }
     .b-admin    { background: rgba(74,108,247,.18); color: var(--accent-light); border: 1px solid rgba(74,108,247,.35); }
+    .mat-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin: 0 2px; }
+    .mat-dot.on  { background: var(--success); }
+    .mat-dot.off { background: rgba(255,255,255,0.12); }
 
     /* ── Action buttons ── */
-    .action-btn {
-      padding: 5px 11px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.65); font-family: var(--font-h); font-size: 11px; font-weight: 700;
-      cursor: pointer; transition: var(--transition); margin-right: 4px;
-    }
+    .action-btn { padding: 5px 11px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); font-family: var(--font-h); font-size: 11px; font-weight: 700; cursor: pointer; transition: var(--transition); margin-right: 4px; }
     .action-btn:hover { background: rgba(74,108,247,0.12); border-color: rgba(74,108,247,0.3); color: var(--accent-light); }
     .action-btn.danger { border-color: rgba(239,68,68,.3); color: rgba(239,68,68,.7); }
     .action-btn.danger:hover { background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.5); color: #fca5a5; }
+    .action-btn.success { border-color: rgba(34,197,94,.3); color: rgba(34,197,94,.8); }
+    .action-btn.success:hover { background: rgba(34,197,94,.1); }
 
     /* ── Search ── */
     .search-wrap { margin-bottom: 18px; }
-    .search-input {
-      width: 100%; padding: 11px 14px; border-radius: 8px;
-      border: 1px solid rgba(74,108,247,0.15);
-      background: var(--navy-3); color: var(--white);
-      font-family: var(--font-b); font-size: 14px; outline: none;
-    }
+    .search-input { width: 100%; padding: 11px 14px; border-radius: 8px; border: 1px solid rgba(74,108,247,0.15); background: var(--navy-3); color: var(--white); font-size: 14px; outline: none; }
     .search-input::placeholder { color: rgba(255,255,255,0.25); }
     .search-input:focus { border-color: var(--accent); }
 
     /* ── Toast ── */
-    .toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 999;
-      padding: 13px 20px; border-radius: 12px; font-family: var(--font-h);
-      font-size: 13.5px; font-weight: 700; opacity: 0; transform: translateY(8px);
-      transition: opacity 0.3s, transform 0.3s; pointer-events: none;
-    }
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; padding: 13px 20px; border-radius: 12px; font-family: var(--font-h); font-size: 13.5px; font-weight: 700; opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
     .toast.show { opacity: 1; transform: none; }
     .toast.ok  { background: #14532d; color: #bbf7d0; border: 1px solid #22c55e; }
     .toast.err { background: #7f1d1d; color: #fecaca; border: 1px solid #f87171; }
+    .toast.warn { background: #78350f; color: #fef3c7; border: 1px solid #f59e0b; }
 
     /* ── Modal ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-      z-index: 200; place-items: center; backdrop-filter: blur(4px);
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; place-items: center; backdrop-filter: blur(4px); overflow-y: auto; padding: 20px; }
     .modal-overlay.show { display: grid; }
-    .modal {
-      width: min(480px, 95vw); background: var(--navy-2);
-      border: 1px solid rgba(74,108,247,0.2); border-radius: 18px;
-      padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-    .modal h3 { font-family: var(--font-h); font-size: 18px; margin-bottom: 20px; color: var(--white); }
-    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-    .modal-actions .btn-cancel {
-      padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);
-      color: var(--silver); font-family: var(--font-h); font-size: 13px; font-weight: 700;
-      cursor: pointer; transition: var(--transition);
-    }
-    .modal-actions .btn-cancel:hover { background: rgba(255,255,255,0.04); }
-    .modal-actions .btn-confirm-danger {
-      padding: 10px 20px; border-radius: 8px; border: none;
-      background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
-      color: #fca5a5; font-family: var(--font-h); font-size: 13px; font-weight: 800;
-      cursor: pointer; transition: var(--transition);
-    }
-    .modal-actions .btn-confirm-danger:hover { background: rgba(239,68,68,0.25); }
+    .modal { width: min(520px, 96vw); background: var(--navy-2); border: 1px solid rgba(74,108,247,0.2); border-radius: 18px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .modal--lg { width: min(720px, 96vw); }
+    .modal h3 { font-family: var(--font-h); font-size: 18px; margin-bottom: 4px; color: var(--white); }
+    .modal .modal-sub { color: var(--gray-mid); font-size: 13px; margin-bottom: 24px; }
+    .modal-section-title { font-family: var(--font-h); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-light); margin: 20px 0 12px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
+    .btn-cancel { padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); color: var(--silver); font-family: var(--font-h); font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition); }
+    .btn-cancel:hover { background: rgba(255,255,255,0.04); }
+    .btn-confirm-danger { padding: 10px 20px; border-radius: 8px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; font-family: var(--font-h); font-size: 13px; font-weight: 800; cursor: pointer; transition: var(--transition); }
+    .btn-confirm-danger:hover { background: rgba(239,68,68,0.25); }
 
+    /* ── Courses tab ── */
+    .cursos-toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .cursos-toolbar__left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .cursos-toolbar__right { display: flex; align-items: center; gap: 8px; }
+    .curso-select {
+      padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(74,108,247,0.25);
+      background: var(--navy-3); color: var(--white); font-family: var(--font-h); font-size: 13px;
+      font-weight: 700; outline: none; min-width: 200px; cursor: pointer;
+    }
+    .curso-select:focus { border-color: var(--accent); }
+    .curso-select option { background: var(--navy-3); }
+
+    /* Curso info mini form */
+    .curso-info-form {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;
+      padding: 24px; background: var(--navy-3); border-radius: var(--radius);
+      border: 1px solid rgba(74,108,247,0.1);
+    }
+    .curso-info-form .field--full { grid-column: 1 / -1; }
+    .curso-info-form-actions {
+      display: flex; gap: 10px; grid-column: 1 / -1; margin-top: 4px;
+    }
+
+    /* Aulas table extras */
+    .aulas-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; gap: 12px; flex-wrap: wrap;
+    }
+    .aulas-header h3 { font-family: var(--font-h); font-size: 15px; font-weight: 800; }
+    .aulas-table-num { width: 36px; text-align: center; font-family: var(--font-h); font-size: 12px; font-weight: 700; color: var(--accent-light); }
+    .aulas-table-icons { display: flex; gap: 4px; align-items: center; }
+    .mat-icon { font-size: 14px; opacity: 0.25; }
+    .mat-icon.has { opacity: 1; }
+    .order-btns { display: flex; gap: 4px; }
+    .order-btn { padding: 3px 7px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); font-size: 11px; cursor: pointer; transition: var(--transition); }
+    .order-btn:hover { border-color: rgba(74,108,247,0.4); color: var(--accent-light); }
+
+    /* Export area */
+    .export-area { background: var(--navy-3); border-radius: var(--radius); padding: 16px; max-height: 320px; overflow-y: auto; margin: 16px 0; }
+    .export-area pre { font-family: 'Courier New', monospace; font-size: 11.5px; color: rgba(255,255,255,0.65); white-space: pre-wrap; word-break: break-all; }
+    .override-banner {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #fcd34d;
+    }
+    .override-banner strong { font-family: var(--font-h); }
+
+    /* ── Responsive ── */
     @media (max-width: 900px) {
       .stats-row { grid-template-columns: 1fr 1fr; }
       .stat-box:nth-child(2) { border-right: none; }
       .form-grid { grid-template-columns: 1fr 1fr; }
+      .curso-info-form { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .admin-wrap { padding: 20px 16px 60px; }
       .form-grid, .form-grid-2 { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr 1fr; }
       .topbar { padding: 12px 16px; }
+      .admin-tabs { padding: 12px 16px 0; }
+      .cursos-toolbar { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -237,99 +276,192 @@
     </div>
   </header>
 
+  <!-- TABS NAV -->
+  <div class="admin-tabs">
+    <button class="tab-btn active" data-tab="alunos">👥 Alunos</button>
+    <button class="tab-btn" data-tab="cursos">📚 Cursos &amp; Conteúdo</button>
+  </div>
+
   <main class="admin-wrap">
 
-    <div class="admin-header">
-      <p class="eyebrow">⚙️ Painel Administrativo</p>
-      <h1 id="adminGreeting">Gestão de Alunos e Acessos</h1>
-    </div>
+    <!-- ══════ TAB: ALUNOS ══════ -->
+    <div id="tab-alunos" class="tab-pane active">
 
-    <!-- Stats -->
-    <div class="stats-row" id="statsRow">
-      <div class="stat-box"><div class="n" id="sTotal">0</div><div class="l">Total de Alunos</div></div>
-      <div class="stat-box"><div class="n" id="sAtivos">0</div><div class="l">Acessos Ativos</div></div>
-      <div class="stat-box"><div class="n" id="sExpirados">0</div><div class="l">Expirados</div></div>
-      <div class="stat-box"><div class="n" id="sInativos">0</div><div class="l">Inativos</div></div>
-    </div>
+      <div class="admin-header">
+        <p class="eyebrow">⚙️ Painel Administrativo</p>
+        <h1 id="adminGreeting">Gestão de Alunos e Acessos</h1>
+      </div>
 
-    <!-- Criar usuário -->
-    <div class="card">
-      <h2>➕ Criar novo acesso</h2>
-      <div class="form-grid">
-        <div class="field">
-          <label>Nome completo</label>
-          <input type="text" id="newName" placeholder="João Silva" />
+      <!-- Stats -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-box"><div class="n" id="sTotal">0</div><div class="l">Total de Alunos</div></div>
+        <div class="stat-box"><div class="n" id="sAtivos">0</div><div class="l">Acessos Ativos</div></div>
+        <div class="stat-box"><div class="n" id="sExpirados">0</div><div class="l">Expirados</div></div>
+        <div class="stat-box"><div class="n" id="sInativos">0</div><div class="l">Inativos</div></div>
+      </div>
+
+      <!-- Criar usuário -->
+      <div class="card">
+        <h2>➕ Criar novo acesso</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome completo</label>
+            <input type="text" id="newName" placeholder="João Silva" />
+          </div>
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" id="newEmail" placeholder="joao@email.com" />
+          </div>
+          <div class="field">
+            <label>Senha inicial</label>
+            <input type="password" id="newPassword" placeholder="mínimo 6 caracteres" />
+          </div>
         </div>
-        <div class="field">
-          <label>E-mail</label>
-          <input type="email" id="newEmail" placeholder="joao@email.com" />
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Concurso / Turma</label>
+            <select id="newCurso">
+              <option value="">Selecione...</option>
+              <option value="CFO PMBA">CFO PMBA</option>
+              <option value="SD PMBA">SD PMBA</option>
+              <option value="Matemática Básica">Matemática Básica</option>
+              <option value="Correios">Correios</option>
+              <option value="Todos">Acesso Completo</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Acesso expira em</label>
+            <input type="date" id="newExpires" />
+          </div>
+          <div class="field">
+            <label>Perfil</label>
+            <select id="newRole">
+              <option value="student">Aluno</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
         </div>
-        <div class="field">
-          <label>Senha inicial</label>
-          <input type="password" id="newPassword" placeholder="mínimo 6 caracteres" />
+        <button class="btn-primary" id="createBtn">Criar acesso</button>
+      </div>
+
+      <!-- Lista de alunos -->
+      <div class="card">
+        <h2>👥 Alunos cadastrados</h2>
+        <div class="search-wrap">
+          <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar por nome ou e-mail..." />
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th><th>E-mail</th><th>Turma</th><th>Perfil</th>
+                <th>Status</th><th>Expira em</th><th>Criado em</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usersTable">
+              <tr><td class="empty-cell" colspan="8">Carregando...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="form-grid-2">
-        <div class="field">
-          <label>Concurso / Turma</label>
-          <select id="newCurso">
-            <option value="">Selecione...</option>
-            <option value="CFO PMBA">CFO PMBA</option>
-            <option value="SD PMBA">SD PMBA</option>
-            <option value="Matemática Básica">Matemática Básica</option>
-            <option value="Correios">Correios</option>
-            <option value="Todos">Acesso Completo</option>
+
+    </div><!-- /tab-alunos -->
+
+    <!-- ══════ TAB: CURSOS ══════ -->
+    <div id="tab-cursos" class="tab-pane">
+
+      <div class="admin-header">
+        <p class="eyebrow">📚 Editor de Conteúdo</p>
+        <h1>Cursos, Aulas &amp; Materiais</h1>
+      </div>
+
+      <!-- Override banner (shown when custom data is active) -->
+      <div class="override-banner" id="overrideBanner" style="display:none">
+        ⚠️ <div><strong>Dados customizados ativos.</strong> As alterações salvas estão sobrepondo o catálogo padrão em todos os dispositivos deste navegador.</div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="cursos-toolbar">
+        <div class="cursos-toolbar__left">
+          <select class="curso-select" id="cursoSelect">
+            <!-- populated by JS -->
           </select>
+          <button class="btn-secondary" id="addCursoBtn">+ Novo Curso</button>
+          <button class="action-btn danger" id="delCursoBtn">Excluir Curso</button>
         </div>
-        <div class="field">
-          <label>Acesso expira em</label>
-          <input type="date" id="newExpires" />
-        </div>
-        <div class="field">
-          <label>Perfil</label>
-          <select id="newRole">
-            <option value="student">Aluno</option>
-            <option value="admin">Admin</option>
-          </select>
+        <div class="cursos-toolbar__right">
+          <button class="btn-warn" id="resetCatalogBtn">↺ Restaurar Padrão</button>
+          <button class="btn-secondary" id="exportBtn">⬇ Exportar data.js</button>
+          <button class="btn-success" id="saveCatalogBtn">✓ Salvar Alterações</button>
         </div>
       </div>
-      <button class="btn-primary" id="createBtn">Criar acesso</button>
-    </div>
 
-    <!-- Lista de alunos -->
-    <div class="card">
-      <h2>👥 Alunos cadastrados</h2>
-      <div class="search-wrap">
-        <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar por nome ou e-mail..." />
+      <!-- Course info editor -->
+      <div class="card" id="cursoInfoCard">
+        <h2 id="cursoInfoTitle">📋 Informações do Curso</h2>
+        <div class="curso-info-form" id="cursoInfoForm">
+          <div class="field">
+            <label>Nome do Curso</label>
+            <input type="text" id="ci_nome" placeholder="Ex: CFO PMBA" />
+          </div>
+          <div class="field">
+            <label>Subtítulo</label>
+            <input type="text" id="ci_subtitulo" placeholder="Ex: Curso de Formação de Oficiais" />
+          </div>
+          <div class="field">
+            <label>Ícone (emoji)</label>
+            <input type="text" id="ci_icon" placeholder="🎖️" style="font-size:20px" />
+          </div>
+          <div class="field">
+            <label>Cor (hex)</label>
+            <input type="text" id="ci_cor" placeholder="#fcd34d" />
+          </div>
+          <div class="field field--full">
+            <label>Descrição</label>
+            <textarea id="ci_descricao" rows="2" placeholder="Descrição curta do curso..."></textarea>
+          </div>
+          <div class="curso-info-form-actions">
+            <button class="btn-primary" id="saveCursoInfoBtn">Aplicar Info do Curso</button>
+          </div>
+        </div>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>E-mail</th>
-              <th>Turma</th>
-              <th>Perfil</th>
-              <th>Status</th>
-              <th>Expira em</th>
-              <th>Criado em</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="usersTable">
-            <tr><td class="empty-cell" colspan="8">Carregando...</td></tr>
-          </tbody>
-        </table>
+
+      <!-- Aulas list -->
+      <div class="card">
+        <div class="aulas-header">
+          <h3 id="aulasCardTitle">Aulas do Curso</h3>
+          <button class="btn-primary" id="addAulaBtn">+ Adicionar Aula</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:40px">#</th>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th style="width:80px">Duração</th>
+                <th style="width:140px">Materiais</th>
+                <th style="width:160px">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="aulasTable">
+              <tr><td class="empty-cell" colspan="6">Selecione um curso acima</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+    </div><!-- /tab-cursos -->
 
   </main>
 
-  <!-- Confirm delete modal -->
+  <!-- ══════ MODAIS ══════ -->
+
+  <!-- Confirm delete (users) -->
   <div class="modal-overlay" id="confirmModal">
     <div class="modal">
       <h3>Remover acesso</h3>
-      <p id="confirmText" style="color:var(--gray-mid);font-size:14px;">Tem certeza que deseja remover este acesso?</p>
+      <p id="confirmText" style="color:var(--gray-mid);font-size:14px;margin-top:8px">Tem certeza?</p>
       <div class="modal-actions">
         <button class="btn-cancel" id="confirmCancel">Cancelar</button>
         <button class="btn-confirm-danger" id="confirmOk">Sim, remover</button>
@@ -337,11 +469,11 @@
     </div>
   </div>
 
-  <!-- Extend modal -->
+  <!-- Extend modal (users) -->
   <div class="modal-overlay" id="extendModal">
     <div class="modal">
       <h3>Alterar data de expiração</h3>
-      <div class="field" style="margin:16px 0;">
+      <div class="field" style="margin:16px 0">
         <label>Nova data (deixe em branco para acesso vitalício)</label>
         <input type="date" id="extendDate" />
       </div>
@@ -352,188 +484,624 @@
     </div>
   </div>
 
+  <!-- Edit/Add Aula modal -->
+  <div class="modal-overlay" id="aulaModal">
+    <div class="modal modal--lg">
+      <h3 id="aulaModalTitle">Editar Aula</h3>
+      <p class="modal-sub" id="aulaModalSub">Preencha os dados da aula abaixo</p>
+
+      <div class="form-grid-2">
+        <div class="field field--full" style="grid-column:1/-1">
+          <label>Título da Aula *</label>
+          <input type="text" id="am_titulo" placeholder="Ex: Conjuntos Numéricos" />
+        </div>
+        <div class="field">
+          <label>Duração</label>
+          <input type="text" id="am_duracao" placeholder="Ex: 90min" />
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label>Descrição</label>
+          <textarea id="am_descricao" rows="2" placeholder="Breve descrição do conteúdo da aula..."></textarea>
+        </div>
+      </div>
+
+      <p class="modal-section-title">🔗 URLs dos Materiais <span style="color:var(--gray-mid);font-weight:400;text-transform:none;font-size:11px">(deixe em branco se ainda não disponível)</span></p>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="field">
+          <label>🎥 Vídeo da Aula (URL iframe YouTube ou outro)</label>
+          <input type="text" id="am_video" placeholder="https://www.youtube.com/embed/..." />
+        </div>
+        <div class="field">
+          <label>📄 PDF da Aula (URL do arquivo)</label>
+          <input type="text" id="am_pdf" placeholder="assets/aulas/cfo-sd/aula-01.pdf" />
+        </div>
+        <div class="field">
+          <label>🎮 Jogo Interativo (URL da página HTML)</label>
+          <input type="text" id="am_jogo" placeholder="assets/jogos/conjuntos-numericos.html" />
+        </div>
+        <div class="field">
+          <label>📋 Lista de Questões (URL do PDF)</label>
+          <input type="text" id="am_lista" placeholder="assets/listas/cfo-sd/lista-01.pdf" />
+        </div>
+        <div class="field">
+          <label>✏️ Resolução de Questões (URL do PDF ou vídeo)</label>
+          <input type="text" id="am_resolucao" placeholder="assets/resolucoes/aula-01-resolucao.pdf" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" id="aulaModalCancel">Cancelar</button>
+        <button class="btn-primary" id="aulaModalSave">Salvar Aula</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm delete aula -->
+  <div class="modal-overlay" id="delAulaModal">
+    <div class="modal">
+      <h3>Excluir Aula</h3>
+      <p id="delAulaText" style="color:var(--gray-mid);font-size:14px;margin-top:8px">Tem certeza que deseja excluir esta aula?</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="delAulaCancel">Cancelar</button>
+        <button class="btn-confirm-danger" id="delAulaOk">Sim, excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Course modal -->
+  <div class="modal-overlay" id="addCursoModal">
+    <div class="modal">
+      <h3>Novo Curso</h3>
+      <p class="modal-sub">Preencha as informações do novo curso</p>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="field">
+          <label>ID único (slug, sem espaços) *</label>
+          <input type="text" id="nc_id" placeholder="ex: meu-curso" />
+        </div>
+        <div class="field">
+          <label>Nome do Curso *</label>
+          <input type="text" id="nc_nome" placeholder="Ex: CFO PMBA" />
+        </div>
+        <div class="field">
+          <label>Subtítulo</label>
+          <input type="text" id="nc_sub" placeholder="Ex: Curso de Formação de Oficiais" />
+        </div>
+        <div class="field">
+          <label>Descrição</label>
+          <textarea id="nc_desc" rows="2" placeholder="Breve descrição..."></textarea>
+        </div>
+        <div class="form-grid-2" style="margin:0">
+          <div class="field">
+            <label>Ícone (emoji)</label>
+            <input type="text" id="nc_icon" placeholder="🎖️" />
+          </div>
+          <div class="field">
+            <label>Cor (hex)</label>
+            <input type="text" id="nc_cor" placeholder="#4A6CF7" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="addCursoCancel">Cancelar</button>
+        <button class="btn-primary" id="addCursoSave">Criar Curso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm delete curso -->
+  <div class="modal-overlay" id="delCursoModal">
+    <div class="modal">
+      <h3>Excluir Curso</h3>
+      <p id="delCursoText" style="color:var(--gray-mid);font-size:14px;margin-top:8px">Tem certeza? Todas as aulas do curso serão removidas.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="delCursoCancel">Cancelar</button>
+        <button class="btn-confirm-danger" id="delCursoOk">Sim, excluir tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal modal--lg">
+      <h3>Exportar data.js</h3>
+      <p class="modal-sub">Copie o conteúdo abaixo e substitua o arquivo <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px">data.js</code> no projeto para tornar as alterações permanentes.</p>
+      <div class="export-area"><pre id="exportContent">Gerando...</pre></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="exportClose">Fechar</button>
+        <button class="btn-primary" id="exportCopy">📋 Copiar Tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm reset catalog -->
+  <div class="modal-overlay" id="resetModal">
+    <div class="modal">
+      <h3>Restaurar catálogo padrão</h3>
+      <p style="color:var(--gray-mid);font-size:14px;margin-top:8px">Isso removerá todas as suas alterações e voltará ao catálogo original do código. Tem certeza?</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="resetCancel">Cancelar</button>
+        <button class="btn-confirm-danger" id="resetOk">Sim, restaurar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script src="auth.js"></script>
+  <script src="data.js"></script>
   <script>
-    /* ── Auth check ── */
-    const session = window.plAuth.requireAuth(true);
-    if (!session) { /* redirected */ }
-    else {
-      document.getElementById('adminGreeting').textContent = `Gestão de Alunos — Olá, ${session.name.split(' ')[0]}!`;
-    }
+  /* ═══════════════════════════════════════════
+     AUTH
+  ═══════════════════════════════════════════ */
+  const session = window.plAuth.requireAuth(true);
+  if (session) {
+    document.getElementById('adminGreeting').textContent = `Gestão de Alunos — Olá, ${session.name.split(' ')[0]}!`;
+  }
+  document.getElementById('logoutBtn').addEventListener('click', () => window.plAuth.logout());
 
-    /* ── Logout ── */
-    document.getElementById('logoutBtn').addEventListener('click', () => window.plAuth.logout());
+  /* ═══════════════════════════════════════════
+     TOAST + HELPERS
+  ═══════════════════════════════════════════ */
+  function toast(msg, type = 'ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3200);
+  }
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function openModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  // close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
+  });
 
-    /* ── Toast ── */
-    function toast(msg, type = 'ok') {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.className = `toast ${type} show`;
-      setTimeout(() => t.className = 'toast', 3200);
-    }
-
-    /* ── Helpers ── */
-    function esc(s) {
-      return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-    function statusBadge(u) {
-      const now = Date.now();
-      if (u.role === 'admin') return '<span class="badge b-admin">Admin</span>';
-      if (!u.active) return '<span class="badge b-inactive">Inativo</span>';
-      if (u.expiresAt && new Date(u.expiresAt).getTime() < now) return '<span class="badge b-expired">Expirado</span>';
-      return '<span class="badge b-active">Ativo</span>';
-    }
-    function roleBadge(u) {
-      return u.role === 'admin'
-        ? '<span class="badge b-admin">Admin</span>'
-        : '<span class="badge b-inactive">Aluno</span>';
-    }
-
-    /* ── Load & render ── */
-    let searchQuery = '';
-    function loadUsers() {
-      const all = window.plAuth.getUsers();
-      const now = Date.now();
-      const students = all.filter(u => u.role !== 'admin');
-      const active  = students.filter(u => u.active && (!u.expiresAt || new Date(u.expiresAt).getTime() >= now));
-      const expired = students.filter(u => u.active && u.expiresAt && new Date(u.expiresAt).getTime() < now);
-      const inactive = students.filter(u => !u.active);
-
-      document.getElementById('sTotal').textContent = students.length;
-      document.getElementById('sAtivos').textContent = active.length;
-      document.getElementById('sExpirados').textContent = expired.length;
-      document.getElementById('sInativos').textContent = inactive.length;
-
-      const filtered = all.filter(u =>
-        (u.name || '').toLowerCase().includes(searchQuery) ||
-        (u.email || '').toLowerCase().includes(searchQuery)
-      );
-
-      const tbody = document.getElementById('usersTable');
-      if (!filtered.length) {
-        tbody.innerHTML = '<tr><td class="empty-cell" colspan="8">Nenhum aluno encontrado.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(u => {
-        const exp = u.expiresAt
-          ? new Date(u.expiresAt).toLocaleDateString('pt-BR')
-          : '<span style="opacity:.4">Vitalício</span>';
-        const created = new Date(u.createdAt).toLocaleDateString('pt-BR');
-        const toggleLabel = u.active ? 'Desativar' : 'Ativar';
-        const isAdmin = u.id === 'admin-001';
-        return `
-          <tr>
-            <td><strong style="color:var(--white)">${esc(u.name)}</strong></td>
-            <td style="color:var(--gray-mid)">${esc(u.email)}</td>
-            <td>${esc(u.curso || '—')}</td>
-            <td>${roleBadge(u)}</td>
-            <td>${statusBadge(u)}</td>
-            <td>${exp}</td>
-            <td style="color:var(--gray-mid)">${created}</td>
-            <td>
-              ${isAdmin ? '<span style="font-size:11px;color:var(--gray-mid)">—</span>' : `
-                <button class="action-btn" onclick="toggleUser('${u.id}',${u.active})">${toggleLabel}</button>
-                <button class="action-btn" onclick="openExtend('${u.id}')">Prazo</button>
-                <button class="action-btn danger" onclick="openConfirm('${u.id}','${esc(u.name)}')">Remover</button>
-              `}
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    /* ── Create ── */
-    document.getElementById('createBtn').addEventListener('click', () => {
-      const name     = document.getElementById('newName').value.trim();
-      const email    = document.getElementById('newEmail').value.trim();
-      const password = document.getElementById('newPassword').value;
-      const curso    = document.getElementById('newCurso').value;
-      const expires  = document.getElementById('newExpires').value;
-      const role     = document.getElementById('newRole').value;
-
-      if (!name || !email || !password) { toast('Preencha nome, e-mail e senha.', 'err'); return; }
-      if (password.length < 6) { toast('Senha com mínimo 6 caracteres.', 'err'); return; }
-
-      const result = window.plAuth.createUser({
-        name, email, password, role, expiresAt: expires || null, curso
-      });
-
-      if (result.success) {
-        toast('✅ Acesso criado com sucesso!');
-        ['newName','newEmail','newPassword','newExpires'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('newCurso').value = '';
-        document.getElementById('newRole').value = 'student';
-        loadUsers();
-      } else {
-        toast(result.message, 'err');
-      }
+  /* ═══════════════════════════════════════════
+     TAB SWITCHING
+  ═══════════════════════════════════════════ */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'cursos') initCursosTab();
     });
+  });
 
-    /* ── Toggle ── */
-    function toggleUser(id, active) {
-      window.plAuth.updateUser(id, { active: !active });
-      toast(active ? 'Usuário desativado.' : 'Usuário ativado.');
+  /* ═══════════════════════════════════════════
+     ALUNOS TAB — (same as before)
+  ═══════════════════════════════════════════ */
+  function statusBadge(u) {
+    const now = Date.now();
+    if (u.role === 'admin') return '<span class="badge b-admin">Admin</span>';
+    if (!u.active) return '<span class="badge b-inactive">Inativo</span>';
+    if (u.expiresAt && new Date(u.expiresAt).getTime() < now) return '<span class="badge b-expired">Expirado</span>';
+    return '<span class="badge b-active">Ativo</span>';
+  }
+  function roleBadge(u) {
+    return u.role === 'admin'
+      ? '<span class="badge b-admin">Admin</span>'
+      : '<span class="badge b-inactive">Aluno</span>';
+  }
+
+  let searchQuery = '';
+  function loadUsers() {
+    const all = window.plAuth.getUsers();
+    const now = Date.now();
+    const students = all.filter(u => u.role !== 'admin');
+    const active   = students.filter(u => u.active && (!u.expiresAt || new Date(u.expiresAt).getTime() >= now));
+    const expired  = students.filter(u => u.active && u.expiresAt && new Date(u.expiresAt).getTime() < now);
+    const inactive = students.filter(u => !u.active);
+    document.getElementById('sTotal').textContent    = students.length;
+    document.getElementById('sAtivos').textContent   = active.length;
+    document.getElementById('sExpirados').textContent = expired.length;
+    document.getElementById('sInativos').textContent  = inactive.length;
+
+    const filtered = all.filter(u =>
+      (u.name  || '').toLowerCase().includes(searchQuery) ||
+      (u.email || '').toLowerCase().includes(searchQuery)
+    );
+    const tbody = document.getElementById('usersTable');
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td class="empty-cell" colspan="8">Nenhum aluno encontrado.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = filtered.map(u => {
+      const exp = u.expiresAt ? new Date(u.expiresAt).toLocaleDateString('pt-BR') : '<span style="opacity:.4">Vitalício</span>';
+      const created = new Date(u.createdAt).toLocaleDateString('pt-BR');
+      const isAdmin = u.id === 'admin-001';
+      return `<tr>
+        <td><strong>${esc(u.name)}</strong></td>
+        <td style="color:var(--gray-mid)">${esc(u.email)}</td>
+        <td>${esc(u.curso || '—')}</td>
+        <td>${roleBadge(u)}</td>
+        <td>${statusBadge(u)}</td>
+        <td>${exp}</td>
+        <td style="color:var(--gray-mid)">${created}</td>
+        <td>${isAdmin ? '<span style="font-size:11px;color:var(--gray-mid)">—</span>' : `
+          <button class="action-btn" onclick="toggleUser('${u.id}',${u.active})">${u.active ? 'Desativar' : 'Ativar'}</button>
+          <button class="action-btn" onclick="openExtend('${u.id}')">Prazo</button>
+          <button class="action-btn danger" onclick="openConfirmDelete('${u.id}','${esc(u.name)}')">Remover</button>
+        `}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  document.getElementById('createBtn').addEventListener('click', () => {
+    const name=document.getElementById('newName').value.trim(), email=document.getElementById('newEmail').value.trim();
+    const password=document.getElementById('newPassword').value, curso=document.getElementById('newCurso').value;
+    const expires=document.getElementById('newExpires').value, role=document.getElementById('newRole').value;
+    if (!name||!email||!password) { toast('Preencha nome, e-mail e senha.','err'); return; }
+    if (password.length < 6) { toast('Senha com mínimo 6 caracteres.','err'); return; }
+    const result = window.plAuth.createUser({ name, email, password, role, expiresAt: expires||null, curso });
+    if (result.success) {
+      toast('✅ Acesso criado!');
+      ['newName','newEmail','newPassword','newExpires'].forEach(id => document.getElementById(id).value='');
+      document.getElementById('newCurso').value=''; document.getElementById('newRole').value='student';
       loadUsers();
-    }
+    } else { toast(result.message,'err'); }
+  });
 
-    /* ── Extend ── */
-    let extendId = null;
-    function openExtend(id) {
-      extendId = id;
-      const user = window.plAuth.getUsers().find(u => u.id === id);
-      document.getElementById('extendDate').value = user?.expiresAt ? user.expiresAt.slice(0, 10) : '';
-      document.getElementById('extendModal').classList.add('show');
-    }
-    document.getElementById('extendCancel').addEventListener('click', () => {
-      document.getElementById('extendModal').classList.remove('show');
-    });
-    document.getElementById('extendOk').addEventListener('click', () => {
-      if (!extendId) return;
-      const date = document.getElementById('extendDate').value || null;
-      window.plAuth.updateUser(extendId, { expiresAt: date ? new Date(date).toISOString() : null });
-      toast('✅ Prazo atualizado.');
-      document.getElementById('extendModal').classList.remove('show');
-      loadUsers();
-    });
+  function toggleUser(id, active) { window.plAuth.updateUser(id,{active:!active}); toast(active?'Usuário desativado.':'Usuário ativado.'); loadUsers(); }
+  let extendId=null;
+  function openExtend(id) {
+    extendId=id;
+    const u = window.plAuth.getUsers().find(u=>u.id===id);
+    document.getElementById('extendDate').value = u?.expiresAt ? u.expiresAt.slice(0,10) : '';
+    openModal('extendModal');
+  }
+  document.getElementById('extendCancel').addEventListener('click',()=>closeModal('extendModal'));
+  document.getElementById('extendOk').addEventListener('click',()=>{
+    if (!extendId) return;
+    const date = document.getElementById('extendDate').value||null;
+    window.plAuth.updateUser(extendId,{expiresAt: date?new Date(date).toISOString():null});
+    toast('✅ Prazo atualizado.'); closeModal('extendModal'); loadUsers();
+  });
 
-    /* ── Delete ── */
-    let deleteId = null;
-    function openConfirm(id, name) {
-      deleteId = id;
-      document.getElementById('confirmText').textContent = `Remover acesso de "${name}"? Esta ação não pode ser desfeita.`;
-      document.getElementById('confirmModal').classList.add('show');
+  let deleteUserId=null;
+  function openConfirmDelete(id,name) {
+    deleteUserId=id;
+    document.getElementById('confirmText').textContent=`Remover acesso de "${name}"? Esta ação não pode ser desfeita.`;
+    openModal('confirmModal');
+  }
+  document.getElementById('confirmCancel').addEventListener('click',()=>closeModal('confirmModal'));
+  document.getElementById('confirmOk').addEventListener('click',()=>{
+    if (!deleteUserId) return;
+    const r=window.plAuth.deleteUser(deleteUserId);
+    if (r.success) { toast('Acesso removido.'); closeModal('confirmModal'); loadUsers(); }
+    else toast(r.message,'err');
+  });
+
+  document.getElementById('searchInput').addEventListener('input',e=>{ searchQuery=e.target.value.trim().toLowerCase(); loadUsers(); });
+  loadUsers();
+
+  /* ═══════════════════════════════════════════
+     CURSOS TAB
+  ═══════════════════════════════════════════ */
+
+  // Working copy of the catalog — deep-cloned so we can discard changes
+  let workCatalog = null;
+  let activeCursoId = null;
+  let editingAulaIdx = null; // null = new
+
+  function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+  function getCursoIds() { return Object.keys(workCatalog.cursos); }
+  function getActiveCurso() { return workCatalog.cursos[activeCursoId] || null; }
+
+  function initCursosTab() {
+    // Build working copy from current PL_CATALOG
+    workCatalog = {
+      cursos: deepClone(PL_CATALOG.cursos),
+      ATIVIDADES: deepClone(PL_CATALOG.ATIVIDADES)
+    };
+    // Remove helper-method keys (they're not serializable)
+    const methodKeys = ['getCurso','getAula','getAulaIndex','atividadesDisponiveis','contarConcluidas','aulaCompleta'];
+    methodKeys.forEach(k => { delete workCatalog[k]; });
+
+    // Check if override is active
+    const hasOverride = !!localStorage.getItem('pl_catalog_custom');
+    document.getElementById('overrideBanner').style.display = hasOverride ? 'flex' : 'none';
+
+    populateCursoSelect();
+  }
+
+  function populateCursoSelect() {
+    const sel = document.getElementById('cursoSelect');
+    const ids = getCursoIds();
+    sel.innerHTML = ids.map(id => {
+      const c = workCatalog.cursos[id];
+      return `<option value="${esc(id)}">${c.icon||''} ${esc(c.nome||id)}</option>`;
+    }).join('');
+    if (!activeCursoId || !workCatalog.cursos[activeCursoId]) {
+      activeCursoId = ids[0] || null;
     }
-    document.getElementById('confirmCancel').addEventListener('click', () => {
-      document.getElementById('confirmModal').classList.remove('show');
-    });
-    document.getElementById('confirmOk').addEventListener('click', () => {
-      if (!deleteId) return;
-      const result = window.plAuth.deleteUser(deleteId);
-      if (result.success) {
-        toast('Acesso removido.');
-        document.getElementById('confirmModal').classList.remove('show');
-        loadUsers();
-      } else {
-        toast(result.message, 'err');
+    sel.value = activeCursoId || '';
+    renderCursoInfo();
+    renderAulas();
+  }
+
+  document.getElementById('cursoSelect').addEventListener('change', e => {
+    activeCursoId = e.target.value;
+    renderCursoInfo();
+    renderAulas();
+  });
+
+  function renderCursoInfo() {
+    const c = getActiveCurso();
+    if (!c) return;
+    document.getElementById('cursoInfoTitle').textContent = `📋 ${c.nome || activeCursoId}`;
+    document.getElementById('ci_nome').value      = c.nome      || '';
+    document.getElementById('ci_subtitulo').value = c.subtitulo || '';
+    document.getElementById('ci_icon').value      = c.icon      || '';
+    document.getElementById('ci_cor').value       = c.cor       || '';
+    document.getElementById('ci_descricao').value = c.descricao || '';
+  }
+
+  document.getElementById('saveCursoInfoBtn').addEventListener('click', () => {
+    const c = getActiveCurso(); if (!c) return;
+    c.nome      = document.getElementById('ci_nome').value.trim()      || c.nome;
+    c.subtitulo = document.getElementById('ci_subtitulo').value.trim();
+    c.icon      = document.getElementById('ci_icon').value.trim();
+    c.cor       = document.getElementById('ci_cor').value.trim();
+    c.descricao = document.getElementById('ci_descricao').value.trim();
+    toast('✅ Info do curso aplicada. Clique em "Salvar Alterações" para persistir.','ok');
+    populateCursoSelect();
+  });
+
+  /* ─── Render aulas table ─── */
+  const MAT_KEYS = ['video','pdf','jogo','lista','resolucao'];
+  const MAT_ICONS = { video:'🎥', pdf:'📄', jogo:'🎮', lista:'📋', resolucao:'✏️' };
+
+  function renderAulas() {
+    const c = getActiveCurso();
+    document.getElementById('aulasCardTitle').textContent = c ? `Aulas — ${c.nome}` : 'Aulas do Curso';
+    const tbody = document.getElementById('aulasTable');
+    if (!c || !c.aulas || !c.aulas.length) {
+      tbody.innerHTML = '<tr><td class="empty-cell" colspan="6">Nenhuma aula cadastrada. Clique em "+ Adicionar Aula".</td></tr>';
+      return;
+    }
+    tbody.innerHTML = c.aulas.map((aula, idx) => {
+      const matIcons = MAT_KEYS.map(k =>
+        `<span class="mat-icon ${aula.materiais[k] ? 'has' : ''}" title="${MAT_ICONS[k]} ${k}">${MAT_ICONS[k]}</span>`
+      ).join('');
+      const isFirst = idx === 0, isLast = idx === c.aulas.length - 1;
+      return `<tr>
+        <td class="aulas-table-num">${aula.numero || idx+1}</td>
+        <td><strong style="color:var(--white);font-size:13.5px">${esc(aula.titulo)}</strong></td>
+        <td style="color:var(--gray-mid);font-size:12.5px;max-width:220px">${esc((aula.descricao||'').slice(0,80))}${(aula.descricao||'').length>80?'…':''}</td>
+        <td style="color:var(--gray-mid);font-size:12.5px">${esc(aula.duracao||'—')}</td>
+        <td><div class="aulas-table-icons">${matIcons}</div></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <div class="order-btns">
+              <button class="order-btn" ${isFirst?'disabled':''} onclick="moveAula(${idx},-1)" title="Subir">↑</button>
+              <button class="order-btn" ${isLast?'disabled':''} onclick="moveAula(${idx},1)" title="Descer">↓</button>
+            </div>
+            <button class="action-btn" onclick="openEditAula(${idx})">✏ Editar</button>
+            <button class="action-btn danger" onclick="openDelAula(${idx},'${esc(aula.titulo)}')">✕</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ─── Move aula up/down ─── */
+  function moveAula(idx, dir) {
+    const c = getActiveCurso(); if (!c) return;
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= c.aulas.length) return;
+    [c.aulas[idx], c.aulas[newIdx]] = [c.aulas[newIdx], c.aulas[idx]];
+    // renumber
+    c.aulas.forEach((a,i) => a.numero = i+1);
+    renderAulas();
+  }
+
+  /* ─── Open edit aula modal ─── */
+  function openEditAula(idx) {
+    editingAulaIdx = idx;
+    const aula = getActiveCurso().aulas[idx];
+    document.getElementById('aulaModalTitle').textContent = 'Editar Aula';
+    document.getElementById('aulaModalSub').textContent   = `Curso: ${getActiveCurso().nome} · Aula ${aula.numero||idx+1}`;
+    document.getElementById('am_titulo').value    = aula.titulo    || '';
+    document.getElementById('am_descricao').value = aula.descricao || '';
+    document.getElementById('am_duracao').value   = aula.duracao   || '';
+    document.getElementById('am_video').value     = aula.materiais.video     || '';
+    document.getElementById('am_pdf').value       = aula.materiais.pdf       || '';
+    document.getElementById('am_jogo').value      = aula.materiais.jogo      || '';
+    document.getElementById('am_lista').value     = aula.materiais.lista     || '';
+    document.getElementById('am_resolucao').value = aula.materiais.resolucao || '';
+    openModal('aulaModal');
+    document.getElementById('am_titulo').focus();
+  }
+
+  /* ─── Add aula ─── */
+  document.getElementById('addAulaBtn').addEventListener('click', () => {
+    editingAulaIdx = null;
+    const c = getActiveCurso(); if (!c) { toast('Selecione um curso primeiro.','err'); return; }
+    document.getElementById('aulaModalTitle').textContent = 'Adicionar Nova Aula';
+    document.getElementById('aulaModalSub').textContent   = `Curso: ${c.nome}`;
+    ['am_titulo','am_descricao','am_duracao','am_video','am_pdf','am_jogo','am_lista','am_resolucao']
+      .forEach(id => document.getElementById(id).value = '');
+    openModal('aulaModal');
+    document.getElementById('am_titulo').focus();
+  });
+
+  /* ─── Save aula ─── */
+  document.getElementById('aulaModalSave').addEventListener('click', () => {
+    const titulo = document.getElementById('am_titulo').value.trim();
+    if (!titulo) { toast('O título da aula é obrigatório.','err'); return; }
+    const c = getActiveCurso();
+    const novaAula = {
+      id: editingAulaIdx !== null ? c.aulas[editingAulaIdx].id : (activeCursoId + '-' + Date.now()),
+      numero: 0, // renumbered below
+      titulo,
+      descricao: document.getElementById('am_descricao').value.trim(),
+      duracao:   document.getElementById('am_duracao').value.trim() || '60min',
+      materiais: {
+        video:     document.getElementById('am_video').value.trim()     || null,
+        pdf:       document.getElementById('am_pdf').value.trim()       || null,
+        jogo:      document.getElementById('am_jogo').value.trim()      || null,
+        lista:     document.getElementById('am_lista').value.trim()     || null,
+        resolucao: document.getElementById('am_resolucao').value.trim() || null
       }
-    });
-    // close modals on overlay click
-    ['confirmModal','extendModal'].forEach(id => {
-      document.getElementById(id).addEventListener('click', e => {
-        if (e.target === e.currentTarget) e.currentTarget.classList.remove('show');
-      });
-    });
+    };
+    if (editingAulaIdx !== null) {
+      c.aulas[editingAulaIdx] = { ...c.aulas[editingAulaIdx], ...novaAula };
+      toast('✅ Aula atualizada.');
+    } else {
+      c.aulas.push(novaAula);
+      toast('✅ Aula adicionada.');
+    }
+    c.aulas.forEach((a,i) => a.numero = i+1);
+    closeModal('aulaModal');
+    renderAulas();
+  });
+  document.getElementById('aulaModalCancel').addEventListener('click', () => closeModal('aulaModal'));
 
-    /* ── Search ── */
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      searchQuery = e.target.value.trim().toLowerCase();
-      loadUsers();
-    });
+  /* ─── Delete aula ─── */
+  let delAulaIdx = null;
+  function openDelAula(idx, titulo) {
+    delAulaIdx = idx;
+    document.getElementById('delAulaText').textContent = `Excluir "${titulo}"? Esta ação é irreversível no contexto atual (salve antes de fechar).`;
+    openModal('delAulaModal');
+  }
+  document.getElementById('delAulaCancel').addEventListener('click', () => closeModal('delAulaModal'));
+  document.getElementById('delAulaOk').addEventListener('click', () => {
+    if (delAulaIdx === null) return;
+    const c = getActiveCurso();
+    c.aulas.splice(delAulaIdx, 1);
+    c.aulas.forEach((a,i) => a.numero = i+1);
+    toast('Aula removida.','warn');
+    closeModal('delAulaModal');
+    renderAulas();
+  });
 
-    /* ── Init ── */
-    loadUsers();
+  /* ─── Add course ─── */
+  document.getElementById('addCursoBtn').addEventListener('click', () => {
+    ['nc_id','nc_nome','nc_sub','nc_desc','nc_icon','nc_cor'].forEach(id => document.getElementById(id).value='');
+    openModal('addCursoModal');
+  });
+  document.getElementById('addCursoCancel').addEventListener('click', () => closeModal('addCursoModal'));
+  document.getElementById('addCursoSave').addEventListener('click', () => {
+    const id = document.getElementById('nc_id').value.trim().replace(/\s+/g,'-').toLowerCase();
+    const nome = document.getElementById('nc_nome').value.trim();
+    if (!id || !nome) { toast('ID e nome são obrigatórios.','err'); return; }
+    if (workCatalog.cursos[id]) { toast('Já existe um curso com este ID.','err'); return; }
+    workCatalog.cursos[id] = {
+      id, nome,
+      subtitulo: document.getElementById('nc_sub').value.trim(),
+      descricao: document.getElementById('nc_desc').value.trim(),
+      icon: document.getElementById('nc_icon').value.trim() || '📚',
+      cor: document.getElementById('nc_cor').value.trim() || '#4A6CF7',
+      corBg: 'rgba(74,108,247,0.12)',
+      aulas: []
+    };
+    activeCursoId = id;
+    toast('✅ Curso criado. Adicione aulas agora.');
+    closeModal('addCursoModal');
+    populateCursoSelect();
+  });
+
+  /* ─── Delete course ─── */
+  document.getElementById('delCursoBtn').addEventListener('click', () => {
+    const c = getActiveCurso(); if (!c) return;
+    document.getElementById('delCursoText').textContent = `Excluir "${c.nome}" e todas as suas ${c.aulas.length} aulas?`;
+    openModal('delCursoModal');
+  });
+  document.getElementById('delCursoCancel').addEventListener('click', () => closeModal('delCursoModal'));
+  document.getElementById('delCursoOk').addEventListener('click', () => {
+    if (!activeCursoId) return;
+    delete workCatalog.cursos[activeCursoId];
+    activeCursoId = null;
+    toast('Curso excluído.','warn');
+    closeModal('delCursoModal');
+    populateCursoSelect();
+  });
+
+  /* ─── Save catalog to localStorage ─── */
+  document.getElementById('saveCatalogBtn').addEventListener('click', () => {
+    try {
+      localStorage.setItem('pl_catalog_custom', JSON.stringify(workCatalog));
+      // Also update the live PL_CATALOG so changes are visible immediately
+      PL_CATALOG.cursos = deepClone(workCatalog.cursos);
+      document.getElementById('overrideBanner').style.display = 'flex';
+      toast('✅ Alterações salvas! Todas as páginas já refletem o novo conteúdo.');
+    } catch(e) {
+      toast('Erro ao salvar: ' + e.message, 'err');
+    }
+  });
+
+  /* ─── Reset to default ─── */
+  document.getElementById('resetCatalogBtn').addEventListener('click', () => openModal('resetModal'));
+  document.getElementById('resetCancel').addEventListener('click', () => closeModal('resetModal'));
+  document.getElementById('resetOk').addEventListener('click', () => {
+    localStorage.removeItem('pl_catalog_custom');
+    document.getElementById('overrideBanner').style.display = 'none';
+    toast('Catálogo restaurado para o padrão.','warn');
+    closeModal('resetModal');
+    initCursosTab();
+  });
+
+  /* ─── Export data.js ─── */
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const content = generateDataJs();
+    document.getElementById('exportContent').textContent = content;
+    openModal('exportModal');
+  });
+  document.getElementById('exportClose').addEventListener('click', () => closeModal('exportModal'));
+  document.getElementById('exportCopy').addEventListener('click', () => {
+    const content = document.getElementById('exportContent').textContent;
+    navigator.clipboard.writeText(content).then(() => toast('📋 Copiado para a área de transferência!')).catch(() => {
+      toast('Selecione o texto manualmente e copie.','warn');
+    });
+  });
+
+  function generateDataJs() {
+    const cursosStr = JSON.stringify(workCatalog.cursos, null, 2)
+      .replace(/"([a-zA-Z_][a-zA-Z0-9_]*)":/g, '$1:'); // style keys without quotes (best-effort)
+    const atividadesStr = JSON.stringify(workCatalog.ATIVIDADES, null, 2);
+
+    return `/* ============================================================
+   PROFESSOR LEÃO – CATÁLOGO DE CURSOS E AULAS
+   data.js — gerado em ${new Date().toLocaleString('pt-BR')} via Admin
+   ============================================================ */
+
+'use strict';
+
+const PL_CATALOG = {
+
+  cursos: ${cursosStr},
+
+  ATIVIDADES: ${atividadesStr},
+
+  getCurso(id) { return this.cursos[id] || null; },
+  getAula(cursoId, aulaId) { const c=this.getCurso(cursoId); return c?(c.aulas.find(a=>a.id===aulaId)||null):null; },
+  getAulaIndex(cursoId, aulaId) { const c=this.getCurso(cursoId); return c?c.aulas.findIndex(a=>a.id===aulaId):-1; },
+  atividadesDisponiveis(materiais) { return this.ATIVIDADES.filter(a=>materiais[a.key]!==null); },
+  contarConcluidas(materiais, progAula={}) { return this.ATIVIDADES.filter(a=>materiais[a.key]!==null&&progAula[a.key]).length; },
+  aulaCompleta(materiais, progAula={}) {
+    const disp=this.ATIVIDADES.filter(a=>materiais[a.key]!==null);
+    if (!disp.length) return true;
+    return disp.every(a=>progAula[a.key]);
+  }
+
+};
+
+(function _applyAdminOverrides(){
+  try {
+    const raw=localStorage.getItem('pl_catalog_custom');
+    if (!raw) return;
+    const saved=JSON.parse(raw);
+    if (saved&&saved.cursos) PL_CATALOG.cursos=saved.cursos;
+    if (saved&&Array.isArray(saved.ATIVIDADES)) PL_CATALOG.ATIVIDADES=saved.ATIVIDADES;
+  } catch(e){ console.warn('[PL] Erro ao aplicar overrides do admin:',e); }
+})();`;
+  }
+
   </script>
 </body>
 </html>
