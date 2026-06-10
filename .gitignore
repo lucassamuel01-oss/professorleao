@@ -4,8 +4,13 @@ _fontes/
 # Projeto de referência (Elite Feminina — backend Node.js, não faz parte do site)
 elite-feminina-missao-farda-v6/
 
-# Pasta original dos jogos (já movida para assets/jogos/)
-Jogos/
+# Arquivos antigos dentro de jogos/ (nomes de exibição — substituídos pelos slugs)
+# ATENÇÃO: não ignorar a pasta jogos/ inteira — o git no Windows não diferencia
+# maiúsculas de minúsculas e "Jogos/" também ignorava "jogos/" (causava 404 no site)
+jogos/Jogo dos Conjuntos*.html
+jogos/Múltiplos e Divisores.html
+jogos/Teoria dos Conjuntos.html
+jogos/Logo Branca.jpg
 
 # Pastas de fonte dos cursos (vídeos MP4 grandes, PDFs originais)
 CFO - SD/

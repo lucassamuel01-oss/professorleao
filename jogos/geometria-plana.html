@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Geometria Plana – Professor Leão</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0A1628;--navy-2:#0F1E38;--navy-3:#152545;--navy-4:#1B2E6B;
+  --accent:#f97316;--al:#fdba74;
+  --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;--white:#fff;--sil:#8892B4;
+  --fh:'Montserrat',sans-serif;--fb:'Open Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--navy)}
+body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(249,115,22,.15);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar__left{display:flex;align-items:center;gap:10px}
+.topbar__logo{font-family:var(--fh);font-size:14px;font-weight:800;letter-spacing:1px}
+.topbar__logo span{color:var(--al)}
+.topbar__tag{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.25);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--al)}
+.btn-back{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center}
+.btn-back:hover{color:var(--white)}
+.wrap{width:100%;max-width:700px;padding:24px 16px 60px;flex:1}
+.lobby{background:var(--navy-2);border:1px solid rgba(249,115,22,.15);border-radius:20px;padding:40px 32px;text-align:center}
+.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(249,115,22,.4))}
+.lobby__title{font-family:var(--fh);font-size:28px;font-weight:900;margin-bottom:8px}
+.lobby__sub{color:var(--sil);font-size:15px;margin-bottom:28px;line-height:1.55}
+.lobby__rules{background:var(--navy-3);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
+.lobby__rules h3{font-family:var(--fh);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--al);margin-bottom:10px}
+.rule-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--sil);margin-bottom:6px;line-height:1.4}
+.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.diff-btn{padding:10px 18px;border-radius:8px;font-family:var(--fh);font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:var(--navy-3);color:var(--sil);cursor:pointer;transition:.2s;line-height:1.3;text-align:center}
+.diff-btn.active{border-color:var(--accent);background:rgba(249,115,22,.2);color:var(--white)}
+.diff-mult{font-size:10px;opacity:.7;display:block;margin-top:2px}
+.lobby__input{width:100%;max-width:320px;padding:13px 16px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(249,115,22,.2);color:var(--white);font-size:15px;outline:none;text-align:center;margin-bottom:8px;transition:.2s;display:block;margin-left:auto;margin-right:auto}
+.lobby__input:focus{border-color:var(--accent)}
+.lobby__input::placeholder{color:rgba(255,255,255,.2)}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,#7c2d12,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(249,115,22,.35);margin-top:16px}
+.btn-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.hud__progress{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--sil)}
+.hud__progress strong{color:var(--white)}
+.hud__right{display:flex;align-items:center;gap:10px}
+.hud__score{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--al)}
+.hud__streak{display:flex;align-items:center;gap:4px;font-family:var(--fh);font-size:12px;font-weight:800;color:var(--warn);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:4px 10px;opacity:0;transition:.3s}
+.hud__streak.show{opacity:1}
+.hud__mult{font-family:var(--fh);font-size:11px;font-weight:800;padding:4px 9px;border-radius:20px;border:1px solid;opacity:.85}
+.timer-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
+/* SVG card */
+.q-card{background:var(--navy-2);border:1px solid rgba(249,115,22,.2);border-radius:20px;padding:20px 16px;margin-bottom:16px}
+.q-tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:10px;text-align:center}
+.q-svg{display:flex;justify-content:center;margin:10px 0;min-height:140px;align-items:center}
+.q-svg svg{max-width:300px;width:100%;height:auto}
+.q-formula{font-family:var(--fh);font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-align:center;margin:6px 0 2px;letter-spacing:.5px}
+.q-text{font-size:15px;color:rgba(255,255,255,.8);text-align:center;line-height:1.5;margin-top:6px}
+/* Options */
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.opt-btn{padding:16px 12px;border-radius:12px;border:2px solid rgba(249,115,22,.18);background:var(--navy-3);color:var(--white);font-family:var(--fh);font-size:18px;font-weight:900;cursor:pointer;transition:.2s;text-align:center;user-select:none}
+.opt-btn:hover:not(:disabled){border-color:rgba(249,115,22,.45);background:rgba(249,115,22,.1)}
+.opt-btn.sel{border-color:var(--accent);background:rgba(249,115,22,.22);color:var(--al)}
+.opt-btn.reveal-ok {border-color:var(--ok)!important;background:rgba(34,197,94,.2)!important;color:#4ade80!important}
+.opt-btn.reveal-err{border-color:var(--err)!important;background:rgba(239,68,68,.2)!important;color:#f87171!important}
+.opt-btn:disabled{cursor:default}
+.btn-answer{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#7c2d12,var(--accent));color:var(--white);font-family:var(--fh);font-weight:900;font-size:15px;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(249,115,22,.3)}
+.btn-answer:hover{filter:brightness(1.12)}
+.btn-answer:disabled{opacity:.5;cursor:default}
+.feedback{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);width:calc(100% - 32px);max-width:500px;z-index:100;background:var(--navy-3);border:1px solid rgba(249,115,22,.2);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 16px 48px rgba(0,0,0,.6);transition:.35s cubic-bezier(.34,1.56,.64,1)}
+.feedback.show{transform:translateX(-50%) translateY(0)}
+.feedback.perfect{border-color:var(--ok);background:rgba(22,101,52,.4)}
+.feedback.wrong{border-color:var(--err);background:rgba(120,20,20,.3)}
+.feedback__icon{font-size:32px;flex-shrink:0}
+.feedback__text{flex:1}
+.feedback__title{font-family:var(--fh);font-size:14px;font-weight:800}
+.feedback__sub{font-size:12.5px;color:rgba(255,255,255,.65);margin-top:3px}
+.feedback__pts{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al);flex-shrink:0}
+.feedback.perfect .feedback__pts{color:#4ade80}
+.feedback.wrong .feedback__pts{color:#f87171}
+.result{background:var(--navy-2);border:1px solid rgba(249,115,22,.15);border-radius:20px;padding:36px 28px;text-align:center}
+.result__icon{font-size:72px;margin-bottom:12px;display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.result__title{font-family:var(--fh);font-size:26px;font-weight:900;margin-bottom:6px}
+.result__score{font-family:var(--fh);font-size:52px;font-weight:900;color:var(--al);line-height:1;margin:12px 0 2px}
+.result__raw{font-size:12px;color:var(--sil);margin-bottom:4px}
+.result__sub{font-size:14px;color:var(--sil);margin-bottom:24px}
+.result__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.result__stat{background:var(--navy-3);border-radius:10px;padding:14px}
+.result__stat-val{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al)}
+.result__stat-lbl{font-size:11px;color:var(--sil);margin-top:3px}
+.result__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.btn-replay{padding:13px 28px;border-radius:10px;font-family:var(--fh);font-weight:800;font-size:14px;background:linear-gradient(135deg,#7c2d12,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s}
+.btn-hub{padding:13px 24px;border-radius:10px;font-family:var(--fh);font-weight:700;font-size:14px;background:rgba(255,255,255,.07);color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s}
+.btn-hub:hover{color:var(--white)}
+.mini-rank{background:var(--navy-3);border-radius:14px;overflow:hidden}
+.mini-rank-head{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center}
+.mini-rank-head h3{font-family:var(--fh);font-size:13px;font-weight:800}
+.period-tabs{display:flex;gap:4px}
+.period-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--sil);border:1px solid transparent;transition:.2s}
+.period-tab.active{background:rgba(249,115,22,.2);border-color:rgba(249,115,22,.35);color:var(--al)}
+.rank-rows{padding:4px 0}
+.rrow{display:grid;grid-template-columns:30px 28px 1fr auto;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;transition:.2s}
+.rrow:hover{background:rgba(255,255,255,.04)}
+.rrow--self{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2)}
+.rpos{font-family:var(--fh);font-size:12px;font-weight:800;text-align:center;color:var(--sil)}
+.rpos-1{color:#f59e0b}.rpos-2{color:#94a3b8}.rpos-3{color:#b87333}
+.rav{width:28px;height:28px;border-radius:50%;background:var(--navy-4);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:11px;font-weight:800;color:var(--al);flex-shrink:0}
+.rname{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rscore{font-family:var(--fh);font-size:14px;font-weight:900;color:var(--al);text-align:right}
+.rscore-1{color:#f59e0b}.rscore-2{color:#94a3b8}.rscore-3{color:#b87333}
+.rdiff{font-size:9px;opacity:.55;margin-top:1px}
+@media(max-width:480px){.opt-grid{grid-template-columns:1fr}.result__grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
+    <div class="topbar__tag">📏 Geom. Plana</div>
+  </div>
+  <a href="../jogos.html" class="btn-back">← Arena</a>
+</header>
+<div class="wrap">
+  <div id="screenLobby">
+    <div class="lobby">
+      <span class="lobby__icon">📐</span>
+      <div class="lobby__title">Geometria Plana</div>
+      <div class="lobby__sub">Veja a figura e calcule a área ou perímetro!<br/>Triângulos, quadriláteros, círculos e mais.</div>
+      <div class="lobby__rules">
+        <h3>🖼️ Formato Visual + Múltipla Escolha</h3>
+        <div class="rule-item">📐 <span>Cada questão mostra uma <strong>figura com medidas</strong></span></div>
+        <div class="rule-item">✅ <span>Acerto = <strong>100 pts</strong> + bônus velocidade (até +50)</span></div>
+        <div class="rule-item">🔥 <span>Streak = <strong>+20 pts × combo</strong></span></div>
+        <div class="rule-item">⚖️ <span>Ranking = pontos × multiplicador de dificuldade</span></div>
+      </div>
+      <input class="lobby__input" id="inputNome" placeholder="Seu nome (para o ranking)" autocomplete="name"/>
+      <div class="diff-row">
+        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">×0.7 · 25s</span></button>
+        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">×1.0 · 18s</span></button>
+        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">×1.5 · 12s</span></button>
+      </div>
+      <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
+    </div>
+  </div>
+  <div id="screenGame" style="display:none">
+    <div class="hud">
+      <div class="hud__progress">Questão <strong id="hudQ">1</strong>/10</div>
+      <div class="hud__right">
+        <div class="hud__streak" id="hudStreak">🔥 ×<span id="streakNum">0</span></div>
+        <div class="hud__mult" id="hudMult"></div>
+        <div class="hud__score" id="hudScore">0</div>
+      </div>
+    </div>
+    <div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div>
+    <div class="q-card">
+      <div class="q-tipo" id="qTipo"></div>
+      <div class="q-svg" id="qSvg"></div>
+      <div class="q-formula" id="qFormula"></div>
+      <div class="q-text" id="qText"></div>
+    </div>
+    <div class="opt-grid" id="optGrid"></div>
+    <button class="btn-answer" id="btnAnswer" onclick="submitAnswer()">Confirmar Resposta</button>
+  </div>
+  <div id="screenResult" style="display:none">
+    <div class="result">
+      <span class="result__icon" id="resIcon">🏆</span>
+      <div class="result__title" id="resTitle">Jogo Finalizado!</div>
+      <div class="result__score" id="resScore">0</div>
+      <div class="result__raw" id="resRaw"></div>
+      <div class="result__sub" id="resSub"></div>
+      <div class="result__grid">
+        <div class="result__stat"><div class="result__stat-val" id="rsAcertos">0</div><div class="result__stat-lbl">Acertos</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsAcc">0%</div><div class="result__stat-lbl">Precisão</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsStreak">0</div><div class="result__stat-lbl">Streak máx</div></div>
+      </div>
+      <div class="result__actions">
+        <button class="btn-replay" onclick="startGame()">↺ Jogar Novamente</button>
+        <button class="btn-hub" onclick="location.href='../jogos.html'">← Arena</button>
+      </div>
+      <div class="mini-rank">
+        <div class="mini-rank-head"><h3>🏆 Ranking</h3>
+          <div class="period-tabs">
+            <div class="period-tab active" onclick="setResPeriod(this,'daily')">Hoje</div>
+            <div class="period-tab" onclick="setResPeriod(this,'weekly')">Semana</div>
+            <div class="period-tab" onclick="setResPeriod(this,'all')">Geral</div>
+          </div>
+        </div>
+        <div class="rank-rows" id="rankRows"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="feedback" id="fbToast">
+  <div class="feedback__icon" id="fbIcon">✅</div>
+  <div class="feedback__text">
+    <div class="feedback__title" id="fbTitle">Correto!</div>
+    <div class="feedback__sub"  id="fbSub">Muito bem!</div>
+  </div>
+  <div class="feedback__pts" id="fbPts">+100</div>
+</div>
+<script src="rankings.js"></script>
+<script src="../auth.js"></script>
+<script>
+'use strict';
+const GAME_ID = 'geometria-plana';
+
+/* svg: inline SVG string; formula: fórmula usada */
+const BANK = [
+  // ── FÁCIL ──
+  {
+    diff:'facil', tipo:'Área do Quadrado',
+    svg:`<svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="30" width="120" height="120" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <text x="100" y="98" text-anchor="middle" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+      <text x="100" y="168" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">6 cm</text>
+      <text x="25" y="92" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">6 cm</text>
+    </svg>`,
+    formula:'A = l²', texto:'Calcule a Área:', ops:['12 cm²','24 cm²','36 cm²','48 cm²'], g:2
+  },
+  {
+    diff:'facil', tipo:'Perímetro do Retângulo',
+    svg:`<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="40" width="160" height="80" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <text x="110" y="132" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">8 cm</text>
+      <text x="15" y="84" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">4 cm</text>
+      <text x="110" y="88" text-anchor="middle" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'P = 2(b+h)', texto:'Calcule o Perímetro:', ops:['20 cm','22 cm','24 cm','32 cm'], g:2
+  },
+  {
+    diff:'facil', tipo:'Área do Retângulo',
+    svg:`<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="40" width="160" height="80" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <text x="110" y="132" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">10 cm</text>
+      <text x="15" y="84" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">5 cm</text>
+      <text x="110" y="88" text-anchor="middle" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'A = b × h', texto:'Calcule a Área:', ops:['30 cm²','40 cm²','50 cm²','60 cm²'], g:2
+  },
+  {
+    diff:'facil', tipo:'Área do Triângulo',
+    svg:`<svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="100,20 20,155 180,155" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <line x1="100" y1="20" x2="100" y2="155" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4,3" opacity=".6"/>
+      <text x="100" y="172" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">8 cm</text>
+      <text x="112" y="90" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">6 cm</text>
+      <text x="85" y="100" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'A = (b×h)/2', texto:'Calcule a Área:', ops:['16 cm²','20 cm²','24 cm²','48 cm²'], g:2
+  },
+  {
+    diff:'facil', tipo:'Circunferência',
+    svg:`<svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="95" r="65" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <line x1="100" y1="95" x2="165" y2="95" stroke="#fdba74" stroke-width="2"/>
+      <text x="130" y="88" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">7 cm</text>
+      <text x="100" y="95" text-anchor="middle" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'C = 2πr  (π≈3,14)', texto:'Calcule a Circunferência:', ops:['14π cm','21π cm','28π cm','49π cm'], g:0
+  },
+
+  // ── NORMAL ──
+  {
+    diff:'normal', tipo:'Área do Trapézio',
+    svg:`<svg viewBox="0 0 230 170" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,30 180,30 210,145 20,145" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <line x1="115" y1="30" x2="115" y2="145" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4,3" opacity=".6"/>
+      <text x="115" y="163" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Open Sans,sans-serif">B=12cm</text>
+      <text x="115" y="24" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Open Sans,sans-serif">b=6cm</text>
+      <text x="125" y="92" fill="#94a3b8" font-size="11" font-family="Open Sans,sans-serif">h=8cm</text>
+      <text x="85" y="92" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'A = (B+b)×h/2', texto:'Calcule a Área:', ops:['60 cm²','72 cm²','80 cm²','96 cm²'], g:1
+  },
+  {
+    diff:'normal', tipo:'Área do Círculo',
+    svg:`<svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="95" r="65" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <line x1="100" y1="95" x2="165" y2="95" stroke="#fdba74" stroke-width="2"/>
+      <text x="130" y="88" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">5 cm</text>
+      <text x="60" y="105" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'A = πr²  (π≈3,14)', texto:'Calcule a Área:', ops:['25π cm²','50π cm²','100π cm²','10π cm²'], g:0
+  },
+  {
+    diff:'normal', tipo:'Triângulo Equilátero',
+    svg:`<svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="100,15 10,170 190,170" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <text x="100" y="185" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">l = 6 cm</text>
+      <text x="100" y="110" text-anchor="middle" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'P = 3l', texto:'Calcule o Perímetro:', ops:['12 cm','15 cm','18 cm','24 cm'], g:2
+  },
+
+  // ── DIFÍCIL ──
+  {
+    diff:'dificil', tipo:'Área do Hexágono Regular',
+    svg:`<svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="100,10 175,52 175,138 100,180 25,138 25,52" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <line x1="100" y1="10" x2="175" y2="52" stroke="#fdba74" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="152" y="35" fill="#94a3b8" font-size="11" font-family="Open Sans,sans-serif">l=6cm</text>
+      <text x="85" y="100" fill="#fdba74" font-size="13" font-family="Montserrat,sans-serif" font-weight="700">?</text>
+    </svg>`,
+    formula:'A = 3l²√3/2', texto:'Calcule a Área (use √3≈1,73):', ops:['54 cm²','81 cm²','93,42 cm²','108 cm²'], g:2
+  },
+  {
+    diff:'dificil', tipo:'Setor Circular',
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100,100 L165,100 A65,65,0,0,0,132.5,43.6 Z" fill="rgba(249,115,22,.25)" stroke="#f97316" stroke-width="2.5"/>
+      <circle cx="100" cy="100" r="65" fill="none" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4,3" opacity=".35"/>
+      <line x1="100" y1="100" x2="165" y2="100" stroke="#fdba74" stroke-width="2"/>
+      <text x="130" y="115" fill="#94a3b8" font-size="11" font-family="Open Sans,sans-serif">r=10cm</text>
+      <text x="130" y="70" fill="#94a3b8" font-size="11" font-family="Open Sans,sans-serif">60°</text>
+      <text x="70" y="90" fill="#fdba74" font-size="12" font-family="Montserrat,sans-serif" font-weight="700">Área?</text>
+    </svg>`,
+    formula:'A = (θ/360)×πr²', texto:'Calcule a Área do Setor:', ops:['10π/3 cm²','50π/3 cm²','25π cm²','100π/3 cm²'], g:1
+  },
+  {
+    diff:'dificil', tipo:'Área Total — Quadrado + Semicírculo',
+    svg:`<svg viewBox="0 0 210 190" xmlns="http://www.w3.org/2000/svg">
+      <rect x="45" y="70" width="120" height="110" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>
+      <path d="M45,70 A60,60,0,0,1,165,70" fill="rgba(249,115,22,.12)" stroke="#f97316" stroke-width="2.5"/>
+      <text x="105" y="182" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans,sans-serif">l = 6 cm</text>
+      <text x="105" y="128" text-anchor="middle" fill="#fdba74" font-size="12" font-family="Montserrat,sans-serif" font-weight="700">Área total?</text>
+    </svg>`,
+    formula:'A = l² + πr²/2  (r=l/2)', texto:'Use π≈3,14:', ops:['54 cm²','49,13 cm²','56,13 cm²','64,27 cm²'], g:2
+  },
+];
+
+let diff='facil', playerName='', playerEmail='';
+let questions=[], qIdx=0, score=0, selected=null;
+let streak=0, maxStreak=0, acertos=0;
+let timerSec=25, timerInterval=null, timerStarted;
+let answering=false;
+
+function getTimerSec(){ return diff==='dificil'?12:diff==='facil'?25:18; }
+function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
+
+try{
+  const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
+  if(sess){ document.getElementById('inputNome').value=sess.name||''; playerEmail=sess.email||''; }
+}catch(e){}
+
+function setDiff(el){
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); diff=el.dataset.diff;
+}
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+
+function startGame(){
+  playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
+  const pool=BANK.filter(q=>q.diff===diff);
+  questions=shuffle(pool).slice(0,Math.min(10,pool.length));
+  qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
+  const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';
+  const el=document.getElementById('hudMult');
+  el.textContent='×'+getMultiplier().toFixed(1); el.style.color=mc; el.style.borderColor=mc;
+  show('screenGame'); document.getElementById('hudScore').textContent='0';
+  document.getElementById('hudStreak').classList.remove('show');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  if(qIdx>=questions.length){ endGame(); return; }
+  const q=questions[qIdx]; answering=false; selected=null;
+  document.getElementById('hudQ').textContent=qIdx+1;
+  document.getElementById('qTipo').textContent=q.tipo;
+  document.getElementById('qSvg').innerHTML=q.svg;
+  document.getElementById('qFormula').textContent=q.formula||'';
+  document.getElementById('qText').innerHTML=q.texto;
+  const grid=document.getElementById('optGrid');
+  grid.innerHTML=q.ops.map((op,i)=>`<button class="opt-btn" data-idx="${i}" onclick="selectOpt(this,${i})">${op}</button>`).join('');
+  document.getElementById('btnAnswer').disabled=true;
+  startTimer();
+}
+
+function selectOpt(el,idx){
+  if(answering)return;
+  document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel'); selected=idx;
+  document.getElementById('btnAnswer').disabled=false;
+}
+
+function startTimer(){
+  clearInterval(timerInterval); timerSec=getTimerSec(); timerStarted=Date.now();
+  const bar=document.getElementById('timerBar');
+  bar.style.transition='none'; bar.style.width='100%'; bar.style.background='var(--accent)';
+  requestAnimationFrame(()=>{ bar.style.transition=`width ${timerSec}s linear,background .3s`; bar.style.width='0%'; });
+  timerInterval=setInterval(()=>{
+    const elapsed=(Date.now()-timerStarted)/1000, pct=Math.max(0,1-elapsed/getTimerSec());
+    if(pct<0.33)document.getElementById('timerBar').style.background='var(--err)'; else if(pct<0.6)document.getElementById('timerBar').style.background='var(--warn)';
+    if(elapsed>=getTimerSec()){ clearInterval(timerInterval); submitAnswer(true); }
+  },200);
+}
+
+function submitAnswer(timeout=false){
+  if(answering)return; answering=true; clearInterval(timerInterval);
+  document.getElementById('btnAnswer').disabled=true;
+  const q=questions[qIdx];
+  const timeLeft=Math.max(0,getTimerSec()-(Date.now()-timerStarted)/1000);
+  const isCorrect=!timeout&&selected===q.g;
+  let pts=0;
+  if(isCorrect){ pts=100+Math.round((timeLeft/getTimerSec())*50); streak++; if(streak>maxStreak)maxStreak=streak; pts+=Math.min(streak,5)*20; acertos++; }
+  else{ streak=0; if(!timeout)pts=-15; }
+  score=Math.max(0,score+pts); updateHUD();
+  document.querySelectorAll('.opt-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.g)b.classList.add('reveal-ok'); else if(i===selected&&!isCorrect)b.classList.add('reveal-err');
+  });
+  showFeedback(isCorrect,pts,timeout,q.ops[q.g]);
+  setTimeout(()=>{ hideFeedback(); qIdx++; renderQuestion(); },2400);
+}
+
+function showFeedback(ok,pts,timeout,correto){
+  const fb=document.getElementById('fbToast');
+  fb.className='feedback '+(timeout?'wrong':ok?'perfect':'wrong');
+  document.getElementById('fbIcon').textContent=timeout?'⏰':ok?'🎯':'❌';
+  document.getElementById('fbTitle').textContent=timeout?'Tempo esgotado!':ok?'Correto! 🔥':'Errado!';
+  document.getElementById('fbSub').textContent=ok?`+${pts} pts (streak ×${streak})`:`Resposta: ${correto}`;
+  document.getElementById('fbPts').textContent=(pts>=0?'+':'')+pts;
+  requestAnimationFrame(()=>document.getElementById('fbToast').classList.add('show'));
+}
+function hideFeedback(){ document.getElementById('fbToast').classList.remove('show'); }
+function updateHUD(){
+  document.getElementById('hudScore').textContent=score.toLocaleString('pt-BR');
+  const sk=document.getElementById('hudStreak');
+  if(streak>=2){ document.getElementById('streakNum').textContent=streak; sk.classList.add('show'); } else sk.classList.remove('show');
+}
+
+function endGame(){
+  hideFeedback();
+  const ws=PL_Rankings.calcWeighted(score,diff);
+  PL_Rankings.save(GAME_ID,{name:playerName,email:playerEmail,score,difficulty:diff});
+  show('screenResult');
+  const acc=questions.length?Math.round(acertos/questions.length*100):0;
+  const icon=ws>=1200?'🏆':ws>=800?'🎯':ws>=400?'⚡':'📚';
+  document.getElementById('resIcon').textContent=icon;
+  document.getElementById('resTitle').textContent=ws>=1200?'Incrível!':ws>=800?'Muito Bem!':ws>=400?'Bom Jogo!':'Continue Praticando!';
+  animScore(ws);
+  document.getElementById('resRaw').textContent=`Score bruto: ${score.toLocaleString('pt-BR')} × ${getMultiplier().toFixed(1)} = ${ws.toLocaleString('pt-BR')}`;
+  document.getElementById('resSub').textContent=`pontos no ranking · ${PL_Rankings.DIFF_LABEL[diff]}`;
+  document.getElementById('rsAcertos').textContent=acertos+'/'+questions.length;
+  document.getElementById('rsAcc').textContent=acc+'%';
+  document.getElementById('rsStreak').textContent=maxStreak;
+  renderResRank('daily');
+}
+function animScore(target){
+  const el=document.getElementById('resScore'); let cur=0,step=Math.ceil(target/40);
+  const iv=setInterval(()=>{ cur=Math.min(cur+step,target); el.textContent=cur.toLocaleString('pt-BR'); if(cur>=target)clearInterval(iv); },30);
+}
+function setResPeriod(el,period){
+  document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); renderResRank(period);
+}
+function renderResRank(period){
+  const board=PL_Rankings.getBoard(GAME_ID,period,10);
+  const rows=document.getElementById('rankRows'); const MEDALS=['🥇','🥈','🥉'];
+  if(!board.length){ rows.innerHTML='<div style="text-align:center;padding:20px;color:var(--sil);font-size:13px">Nenhuma partida ainda</div>'; return; }
+  rows.innerHTML=board.map((e,i)=>{
+    const isSelf=e.e&&playerEmail&&e.e===playerEmail;
+    const ws=(e.ws!==undefined?e.ws:e.s).toLocaleString('pt-BR');
+    return `<div class="rrow ${isSelf?'rrow--self':''}">
+      <div class="rpos ${i<3?`rpos-${i+1}`:''}">${i<3?MEDALS[i]:`#${i+1}`}</div>
+      <div class="rav">${(e.n||'?').slice(0,2).toUpperCase()}</div>
+      <div class="rname">${esc(e.n)}${isSelf?' <span style="font-size:10px;color:var(--al)">(você)</span>':''}</div>
+      <div class="rscore ${i<3?`rscore-${i+1}`:''}">
+        ${ws}<div class="rdiff">${PL_Rankings.DIFF_LABEL[e.d]||e.d}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function show(id){ ['screenLobby','screenGame','screenResult'].forEach(s=>{ document.getElementById(s).style.display=s===id?'block':'none'; }); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+</script>
+</body>
+</html>
