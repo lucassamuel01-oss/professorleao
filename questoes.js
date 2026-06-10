@@ -21,12 +21,39 @@ const PlQuestoes = (() => {
     return (email || 'anonimo').replace(/[^a-zA-Z0-9_-]/g, '_');
   }
 
+  /* ─────────── Listas integradas (listas-data.js) ───────────
+     Listas que acompanham a plataforma e aparecem junto às
+     salvas no localStorage. Uma lista salva pelo admin com o
+     mesmo id sobrescreve a integrada (e excluí-la restaura a
+     versão original). */
+  function _seeds() {
+    return (typeof window !== 'undefined' && Array.isArray(window.PL_SEED_LISTAS))
+      ? window.PL_SEED_LISTAS : [];
+  }
+
   /* ─────────── Storage ─────────── */
   function getLists() {
-    try { return JSON.parse(localStorage.getItem('pl_listas') || '[]'); } catch { return []; }
+    let stored = [];
+    try { stored = JSON.parse(localStorage.getItem('pl_listas') || '[]'); } catch { stored = []; }
+    const seeds = _seeds()
+      .filter(s => !stored.some(l => l.id === s.id))
+      .map(s => ({
+        id: s.id, titulo: s.titulo, materia: s.materia || '',
+        fonte: s.fonte || '', dificuldade: s.dificuldade || 'medio',
+        total: (s.questoes || []).length,
+        cursoId: s.cursoId || '', aulaId: s.aulaId || '',
+        aulaIds: Array.isArray(s.aulaIds) ? s.aulaIds : [],
+        seed: true,
+        criadoEm: s.criadoEm || ''
+      }));
+    return [...stored, ...seeds];
   }
   function getList(id) {
-    try { return JSON.parse(localStorage.getItem('pl_lista_' + id) || 'null'); } catch { return null; }
+    try {
+      const stored = JSON.parse(localStorage.getItem('pl_lista_' + id) || 'null');
+      if (stored) return stored;
+    } catch { /* cai para as integradas */ }
+    return _seeds().find(s => s.id === id) || null;
   }
   function saveList(lista) {
     const id = lista.id || _id();

@@ -300,6 +300,7 @@
 
 <script src="auth.js"></script>
 <script src="data.js"></script>
+<script src="listas-data.js"></script>
 <script src="questoes.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════
@@ -584,9 +585,14 @@ KEYS.forEach(key => {
 ═══════════════════════════════════════════════════ */
 (function _renderListasInterativas() {
   if (typeof PlQuestoes === 'undefined') return;
-  const todas   = PlQuestoes.getLists();
-  const daAula  = todas.filter(l => l.aulaId && l.aulaId === _aulaId);
-  const doCurso = todas.filter(l => !l.aulaId && l.cursoId === _cursoId);
+  const todas = PlQuestoes.getLists();
+  /* listas integradas usam aulaIds (sufixo do id da aula): 'mat-06'
+     casa com sd-pmba-mat-06, cfo-cbmba-mat-06, mb-06 (igualdade) etc. */
+  const matchIds = l => Array.isArray(l.aulaIds) &&
+    l.aulaIds.some(s => _aulaId === s || _aulaId.endsWith('-' + s));
+  const daAula  = todas.filter(l => (l.aulaId && l.aulaId === _aulaId) || matchIds(l));
+  const doCurso = todas.filter(l =>
+    !l.aulaId && !(Array.isArray(l.aulaIds) && l.aulaIds.length) && l.cursoId === _cursoId);
   const listas  = [...daAula, ...doCurso];
   if (!listas.length) return;
 

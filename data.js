@@ -70,10 +70,10 @@ function _matSD(pfx, offset) {
       duracao: '25min',
       materiais: {
         video:    _V  + 'aula-14-pg.mp4',
-        pdf:      '_fontes/cfo-sd/aulas-pdfs/aula-07-pg.pdf',
+        pdf:      _AP + 'aula-07-pg.pdf',
         jogo:     'jogos/pa-pg.html',
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-juros-pa-pg.pdf',
+        resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
       }
     },
     {
@@ -85,7 +85,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-02-numeros-primos-mmc-mdc.mp4',
         pdf:      _AP + 'aula-04-mmc-mdc.pdf',
         jogo:     'jogos/multiplos-divisores.html',
-        lista:    null,
+        lista:    _LP + 'lista-matematica-basica.pdf',
         resolucao: null
       }
     },
@@ -111,7 +111,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-11-potenciacao.mp4',
         pdf:      _AP + 'aula-03-dizimas-potenciacao.pdf',
         jogo:     'jogos/potenciacao.html',
-        lista:    null,
+        lista:    _LP + 'lista-funcoes-exp-log.pdf',
         resolucao: null
       }
     },
@@ -137,8 +137,8 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-07-teoria-conjuntos-p2.mp4',
         pdf:      null,
         jogo:     'jogos/conjuntos-operacoes.html',
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-teoria-conjuntos.pdf',
+        resolucao: _VQ + 'questoes-teoria-conjuntos.mp4'
       }
     },
     {
@@ -163,8 +163,8 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-15-funcao-1grau.mp4',
         pdf:      null,
         jogo:     'jogos/funcoes.html',
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        resolucao: _VQ + 'questoes-funcoes-exp-log.mp4'
       }
     },
     {
@@ -176,8 +176,8 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-16-funcao-2grau.mp4',
         pdf:      null,
         jogo:     'jogos/funcoes.html',
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        resolucao: _VQ + 'questoes-funcoes-exp-log.mp4'
       }
     },
     {
@@ -254,8 +254,8 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-20-probabilidade.mp4',
         pdf:      null,
         jogo:     'jogos/combinatoria.html',
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-combinatoria-probabilidade.pdf',
+        resolucao: _VQ + 'questoes-combinatoria.mp4'
       }
     },
     {
@@ -306,8 +306,8 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-29-geom-espacial-corpos.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-geometria-espacial.pdf',
+        resolucao: _VQ + 'questoes-geometria-espacial.mp4'
       }
     },
     {
@@ -332,8 +332,8 @@ function _matSD(pfx, offset) {
         video:    _VG + 'aula-21-geom-analitica-trig.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    null,
-        resolucao: null
+        lista:    _LP + 'lista-geometria-analitica.pdf',
+        resolucao: _VQ + 'questoes-geometria-analitica.mp4'
       }
     }
   ];
@@ -769,7 +769,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      'assets/aulas/correios/aula-01-inteiros-multiplos.pdf',
             jogo:     'jogos/multiplos-divisores.html',
-            lista:    null,
+            lista:    _LP + 'lista-matematica-basica.pdf',
             resolucao: null
           }
         },
@@ -782,7 +782,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      'assets/aulas/correios/aula-02-numeros-racionais.pdf',
             jogo:     'jogos/fracoes.html',
-            lista:    null,
+            lista:    _LP + 'lista-numeros-racionais.pdf',
             resolucao: null
           }
         },
@@ -821,7 +821,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      null,
             jogo:     'jogos/geometria-plana.html',
-            lista:    null,
+            lista:    _LP + 'lista-geometria-plana.pdf',
             resolucao: null
           }
         }
@@ -893,4 +893,24 @@ const PL_CATALOG = {
       PL_CATALOG.ATIVIDADES = saved.ATIVIDADES;
     }
   } catch (e) { /* silently ignore */ }
+})();
+
+/* ── Normalização de fontes locais ─────────────────────────
+   Os caminhos "_fontes/..." acima referenciam os arquivos de
+   gravação no computador do professor (MP4s grandes) e NÃO são
+   publicados no GitHub Pages. Em tempo de execução viram null:
+   a aula exibe "Em produção" até o material ganhar um link
+   público (ex.: YouTube), que pode ser cadastrado no admin.
+   Roda após o override do admin para sanear também catálogos
+   customizados salvos com esses caminhos.
+─────────────────────────────────────────────────────────── */
+(function _normalizeLocalSources() {
+  Object.values(PL_CATALOG.cursos || {}).forEach(curso => {
+    (curso.aulas || []).forEach(aula => {
+      const m = aula.materiais || {};
+      Object.keys(m).forEach(k => {
+        if (typeof m[k] === 'string' && m[k].indexOf('_fontes/') === 0) m[k] = null;
+      });
+    });
+  });
 })();

@@ -727,8 +727,9 @@
           <input type="text" id="am_pdf" placeholder="assets/aulas/cfo-sd/aula-01.pdf" />
         </div>
         <div class="field">
-          <label>🎮 Jogo Interativo (URL da página HTML)</label>
-          <input type="text" id="am_jogo" placeholder="assets/jogos/conjuntos-numericos.html" />
+          <label>🎮 Jogo Interativo (escolha entre os disponíveis)</label>
+          <select id="am_jogo_select"></select>
+          <input type="text" id="am_jogo" placeholder="Ex: jogos/meu-jogo.html ou https://..." style="display:none;margin-top:8px" />
         </div>
         <div class="field">
           <label>📋 Lista de Questões (URL do PDF)</label>
@@ -840,6 +841,7 @@
 
   <script src="auth.js"></script>
   <script src="data.js"></script>
+  <script src="listas-data.js"></script>
   <script src="questoes.js"></script>
   <script>
   /* ═══════════════════════════════════════════
@@ -1121,6 +1123,53 @@
     renderAulas();
   }
 
+  /* ─── Jogos disponíveis (pasta jogos/) ─── */
+  const PL_JOGOS = [
+    { url: 'jogos/conjuntos-numericos.html', nome: '🔢 Conjuntos Numéricos' },
+    { url: 'jogos/conjuntos-operacoes.html', nome: '⭕ Missão Conjuntos (operações)' },
+    { url: 'jogos/multiplos-divisores.html', nome: '🎯 Caça ao Número (múltiplos e divisores)' },
+    { url: 'jogos/potenciacao.html',         nome: '💥 Potenciação & Raiz' },
+    { url: 'jogos/regra-de-tres.html',       nome: '⚖️ Regra de Três' },
+    { url: 'jogos/porcentagem.html',         nome: '📈 Porcentagem' },
+    { url: 'jogos/pa-pg.html',               nome: '📊 Progressões PA & PG' },
+    { url: 'jogos/fracoes.html',             nome: '🍕 Frações' },
+    { url: 'jogos/funcoes.html',             nome: '📐 Funções (1° e 2° graus)' },
+    { url: 'jogos/geometria-plana.html',     nome: '🔺 Geometria Plana' },
+    { url: 'jogos/combinatoria.html',        nome: '🎲 Combinatória & Probabilidade' },
+    { url: 'jogos/juros.html',               nome: '💰 Juros Simples & Compostos' },
+  ];
+
+  (function initJogoSelect() {
+    const sel = document.getElementById('am_jogo_select');
+    sel.innerHTML = '<option value="">— Nenhum —</option>' +
+      PL_JOGOS.map(j => `<option value="${j.url}">${j.nome}</option>`).join('') +
+      '<option value="__custom__">🔗 URL personalizada…</option>';
+    sel.addEventListener('change', () => {
+      const inp = document.getElementById('am_jogo');
+      const custom = sel.value === '__custom__';
+      inp.style.display = custom ? 'block' : 'none';
+      inp.value = custom ? '' : sel.value;
+      if (custom) inp.focus();
+    });
+  })();
+
+  function setJogoField(url) {
+    const sel = document.getElementById('am_jogo_select');
+    const inp = document.getElementById('am_jogo');
+    if (!url) { sel.value = ''; inp.value = ''; inp.style.display = 'none'; return; }
+    if (PL_JOGOS.some(j => j.url === url)) {
+      sel.value = url; inp.value = url; inp.style.display = 'none';
+    } else {
+      sel.value = '__custom__'; inp.value = url; inp.style.display = 'block';
+    }
+  }
+
+  function getJogoField() {
+    const sel = document.getElementById('am_jogo_select');
+    if (sel.value === '__custom__') return document.getElementById('am_jogo').value.trim() || null;
+    return sel.value || null;
+  }
+
   /* ─── Open edit aula modal ─── */
   function openEditAula(idx) {
     editingAulaIdx = idx;
@@ -1132,7 +1181,7 @@
     document.getElementById('am_duracao').value   = aula.duracao   || '';
     document.getElementById('am_video').value     = aula.materiais.video     || '';
     document.getElementById('am_pdf').value       = aula.materiais.pdf       || '';
-    document.getElementById('am_jogo').value      = aula.materiais.jogo      || '';
+    setJogoField(aula.materiais.jogo || '');
     document.getElementById('am_lista').value     = aula.materiais.lista     || '';
     document.getElementById('am_resolucao').value = aula.materiais.resolucao || '';
     openModal('aulaModal');
@@ -1147,6 +1196,7 @@
     document.getElementById('aulaModalSub').textContent   = `Curso: ${c.nome}`;
     ['am_titulo','am_descricao','am_duracao','am_video','am_pdf','am_jogo','am_lista','am_resolucao']
       .forEach(id => document.getElementById(id).value = '');
+    setJogoField('');
     openModal('aulaModal');
     document.getElementById('am_titulo').focus();
   });
@@ -1165,7 +1215,7 @@
       materiais: {
         video:     document.getElementById('am_video').value.trim()     || null,
         pdf:       document.getElementById('am_pdf').value.trim()       || null,
-        jogo:      document.getElementById('am_jogo').value.trim()      || null,
+        jogo:      getJogoField(),
         lista:     document.getElementById('am_lista').value.trim()     || null,
         resolucao: document.getElementById('am_resolucao').value.trim() || null
       }
