@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Blog do Professor Leão — dicas de matemática, metodologia de estudos, notícias de concursos e editais (PMBA, CBMBA, Correios)." />
+  <title>Blog – Professor Leão</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-branca.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0A1628; --navy-2: #0F1E38; --navy-3: #152545;
+      --accent: #4A6CF7; --accent-light: #6B89FF;
+      --silver: #8892B4; --white: #FFFFFF;
+      --font-h: 'Montserrat', sans-serif; --font-b: 'Open Sans', sans-serif;
+      --radius: 14px; --radius-sm: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-b); background: var(--navy); color: var(--white); min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+    /* ── Topbar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,22,40,0.96); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(74,108,247,0.2);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .topbar__logo { display: flex; align-items: center; gap: 9px; }
+    .topbar__logo img { height: 26px; }
+    .topbar__logo-text { font-family: var(--font-h); font-weight: 800; font-size: 13px; }
+    .topbar__logo-text span { color: var(--accent-light); }
+    .topbar__right { display: flex; align-items: center; gap: 8px; }
+    .topbar__btn {
+      padding: 7px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700;
+      background: rgba(74,108,247,0.12); color: var(--accent-light);
+      border: 1px solid rgba(74,108,247,0.25); transition: .2s;
+    }
+    .topbar__btn:hover { background: var(--accent); color: #fff; }
+
+    .page { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* ── Hero ── */
+    .blog-hero { text-align: center; margin-bottom: 34px; }
+    .blog-hero .badge {
+      display: inline-block; padding: 5px 14px; border-radius: 999px;
+      background: rgba(74,108,247,0.14); color: var(--accent-light);
+      font-family: var(--font-h); font-size: 11px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .blog-hero h1 { font-family: var(--font-h); font-size: clamp(26px,4.5vw,40px); font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+    .blog-hero h1 span { color: var(--accent-light); }
+    .blog-hero p { color: var(--silver); font-size: 14.5px; line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+    /* ── Filtros ── */
+    .blog-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 32px; }
+    .blog-filters button {
+      padding: 8px 18px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12); background: transparent;
+      color: var(--silver); font-size: 13px; font-weight: 700; transition: .2s;
+    }
+    .blog-filters button:hover { border-color: var(--accent); color: var(--accent-light); }
+    .blog-filters button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ── Grid de posts ── */
+    .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+    .post-card {
+      display: flex; flex-direction: column; gap: 11px; padding: 24px;
+      background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius); cursor: pointer; transition: .22s;
+    }
+    .post-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .post-tag {
+      width: max-content; padding: 4px 11px; border-radius: 999px;
+      font-size: 11px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase;
+      background: rgba(74,108,247,0.14); color: var(--accent-light);
+      border: 1px solid rgba(74,108,247,0.3);
+    }
+    .post-card h3 { font-family: var(--font-h); font-size: 17px; font-weight: 800; line-height: 1.35; }
+    .post-card p { flex: 1; color: var(--silver); font-size: 13px; line-height: 1.65; }
+    .post-meta { color: var(--silver); font-size: 12px; }
+    .post-cta { font-family: var(--font-h); color: var(--accent-light); font-weight: 800; font-size: 13px; }
+
+    /* ── Leitura do artigo ── */
+    #articleView { display: none; max-width: 740px; margin: 0 auto; }
+    .article-back {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px;
+      padding: 9px 18px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14); background: transparent;
+      color: var(--accent-light); font-size: 13px; font-weight: 700; transition: .2s;
+    }
+    .article-back:hover { border-color: var(--accent); }
+    .article-head { margin-bottom: 24px; }
+    .article-head h1 { font-family: var(--font-h); font-size: clamp(22px,3.6vw,32px); font-weight: 900; line-height: 1.25; margin: 14px 0 10px; }
+    .article-body {
+      padding: 28px; background: var(--navy-2);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius);
+    }
+    .article-body p { color: #D6DCEC; font-size: 15px; line-height: 1.85; margin-bottom: 16px; }
+    .article-body h3 { font-family: var(--font-h); color: var(--accent-light); font-size: 18px; font-weight: 800; margin: 24px 0 12px; }
+    .article-body ul { margin: 0 0 16px 4px; padding-left: 18px; }
+    .article-body li { color: #D6DCEC; font-size: 14.5px; line-height: 1.75; margin-bottom: 8px; }
+    .article-body strong { color: #fff; }
+    .article-body em { color: var(--silver); }
+    .article-cta {
+      margin-top: 28px; padding: 20px 22px; border-radius: var(--radius);
+      background: rgba(74,108,247,0.1); border: 1px solid rgba(74,108,247,0.35);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .article-cta b { font-family: var(--font-h); font-size: 15px; }
+    .article-cta small { display: block; color: var(--silver); margin-top: 4px; }
+    .article-cta a {
+      padding: 11px 22px; border-radius: var(--radius-sm); white-space: nowrap;
+      background: var(--accent); color: #fff; font-family: var(--font-h);
+      font-size: 13px; font-weight: 800; transition: .2s;
+    }
+    .article-cta a:hover { background: var(--accent-light); }
+
+    .posts-empty { text-align: center; color: var(--silver); padding: 40px 0; }
+
+    footer { text-align: center; padding: 28px 20px; border-top: 1px solid rgba(255,255,255,0.06); color: var(--silver); font-size: 12px; }
+    footer strong { font-family: var(--font-h); color: #fff; display: block; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="topbar__logo">
+    <img src="assets/img/logo-branca.png" alt="Professor Leão" />
+    <div class="topbar__logo-text">PROF. <span>LEÃO</span></div>
+  </a>
+  <div class="topbar__right">
+    <a href="index.html" class="topbar__btn">← Início</a>
+    <a href="jogos.html" class="topbar__btn">🎮 Jogos</a>
+    <a href="minha-area.html" class="topbar__btn">👤 Minha Área</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- Lista de artigos -->
+  <div id="listView">
+    <div class="blog-hero">
+      <span class="badge">📰 Blog do Professor Leão</span>
+      <h1>Conteúdo que <span>aprova</span></h1>
+      <p>Dicas de matemática, metodologia de estudos, redação, preparação física e o radar de concursos e editais — PMBA, CBMBA, Correios e mais.</p>
+    </div>
+
+    <div class="blog-filters" id="blogFilters" role="group" aria-label="Filtrar artigos por categoria">
+      <button data-cat="todos" class="active">Todos</button>
+      <button data-cat="metodologia">📊 Metodologia</button>
+      <button data-cat="questoes">🎯 Questões</button>
+      <button data-cat="redacao">✍️ Redação</button>
+      <button data-cat="taf">💪 TAF</button>
+      <button data-cat="noticias">📰 Concursos & Editais</button>
+    </div>
+
+    <div class="posts-grid" id="postsGrid"></div>
+    <p class="posts-empty" id="postsEmpty" hidden>Nenhum artigo nesta categoria ainda.</p>
+  </div>
+
+  <!-- Leitura de artigo -->
+  <article id="articleView">
+    <button type="button" class="article-back" id="articleBack">← Voltar para o blog</button>
+    <div class="article-head">
+      <span class="post-tag" id="articleTag"></span>
+      <h1 id="articleTitle"></h1>
+      <div class="post-meta" id="articleMeta"></div>
+    </div>
+    <div class="article-body" id="articleBody"></div>
+    <div class="article-cta">
+      <div>
+        <b>Pronto(a) para colocar em prática?</b>
+        <small>Acesse seus cursos, jogos e listas interativas na área do aluno.</small>
+      </div>
+      <a href="minha-area.html">👤 Ir para a Minha Área</a>
+    </div>
+  </article>
+
+</main>
+
+<footer>
+  <strong>PROFESSOR LEÃO</strong>
+  Matemática para concursos — PMBA · CBMBA · Correios
+</footer>
+
+<script src="blog-data.js"></script>
+<script>
+  const POSTS = (window.BLOG_POSTS || []).slice()
+    .sort((a, b) => new Date(b.data) - new Date(a.data));
+
+  const fmtData = iso => new Date(iso + 'T12:00:00')
+    .toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  /* ── Render da lista ── */
+  let currentCat = 'todos';
+
+  function renderList() {
+    const grid  = document.getElementById('postsGrid');
+    const posts = currentCat === 'todos' ? POSTS : POSTS.filter(p => p.categoria === currentCat);
+    document.getElementById('postsEmpty').hidden = posts.length > 0;
+
+    grid.innerHTML = posts.map(p => `
+      <div class="post-card" onclick="openPost('${p.id}')" role="button" tabindex="0" aria-label="Ler artigo: ${p.titulo}">
+        <span class="post-tag">${p.tag}</span>
+        <h3>${p.titulo}</h3>
+        <p>${p.resumo}</p>
+        <div class="post-meta">${fmtData(p.data)} · ${p.tempo} min de leitura</div>
+        <span class="post-cta">Ler artigo →</span>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.post-card').forEach(card => {
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+  }
+
+  /* ── Filtros ── */
+  document.getElementById('blogFilters').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-cat]');
+    if (!btn) return;
+    currentCat = btn.dataset.cat;
+    document.querySelectorAll('#blogFilters button').forEach(b => b.classList.toggle('active', b === btn));
+    renderList();
+  });
+
+  /* ── Leitura (deep-link via hash) ── */
+  function openPost(id, push = true) {
+    const post = POSTS.find(p => p.id === id);
+    if (!post) return;
+    document.getElementById('articleTag').textContent   = post.tag;
+    document.getElementById('articleTitle').textContent = post.titulo;
+    document.getElementById('articleMeta').textContent  = `${fmtData(post.data)} · ${post.tempo} min de leitura`;
+    document.getElementById('articleBody').innerHTML    = post.conteudo;
+    document.getElementById('listView').style.display    = 'none';
+    document.getElementById('articleView').style.display = 'block';
+    document.title = `${post.titulo} – Professor Leão`;
+    if (push) history.pushState({ post: id }, '', '#' + id);
+    window.scrollTo({ top: 0 });
+  }
+
+  function closePost(push = true) {
+    document.getElementById('articleView').style.display = 'none';
+    document.getElementById('listView').style.display    = 'block';
+    document.title = 'Blog – Professor Leão';
+    if (push) history.pushState({}, '', location.pathname);
+  }
+
+  document.getElementById('articleBack').addEventListener('click', () => closePost());
+  window.addEventListener('popstate', () => {
+    const id = location.hash.replace('#', '');
+    if (id && POSTS.some(p => p.id === id)) openPost(id, false);
+    else closePost(false);
+  });
+
+  /* ── Boot ── */
+  renderList();
+  const initial = location.hash.replace('#', '');
+  if (initial && POSTS.some(p => p.id === initial)) openPost(initial, false);
+</script>
+</body>
+</html>

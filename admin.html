@@ -360,6 +360,7 @@
     <button class="tab-btn active" data-tab="alunos">👥 Alunos</button>
     <button class="tab-btn" data-tab="cursos">📚 Cursos &amp; Conteúdo</button>
     <button class="tab-btn" data-tab="questoes">📝 Questões</button>
+    <button class="tab-btn" data-tab="avisos">📣 Avisos</button>
   </div>
 
   <main class="admin-wrap">
@@ -663,6 +664,78 @@
         </div>
     </div><!-- /tab-questoes -->
 
+    <!-- ═══════════ TAB: AVISOS ═══════════ -->
+    <div id="tab-avisos" class="tab-pane">
+
+      <div class="admin-header">
+        <p class="eyebrow">📣 Quadro de Avisos</p>
+        <h1>Avisos para os Alunos</h1>
+      </div>
+
+      <div class="card">
+        <h2>Publicar novo aviso</h2>
+        <p style="color:var(--silver,#8892B4);font-size:13px;margin-bottom:18px;line-height:1.6">
+          O aviso aparece no <strong>Quadro de Avisos da Minha Área</strong>: aulas ao vivo, notícias de concursos, editais e comunicados.
+        </p>
+
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="field">
+            <label>Título *</label>
+            <input type="text" id="avTitulo" maxlength="120" placeholder="Ex: Aula ao vivo de Razão e Proporção — quinta às 19h" />
+          </div>
+          <div class="field">
+            <label>Categoria</label>
+            <select id="avCategoria">
+              <option value="aula">🔴 Aula ao Vivo</option>
+              <option value="concurso">📰 Notícia de Concurso</option>
+              <option value="edital">📜 Edital</option>
+              <option value="aviso" selected>📢 Comunicado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:14px">
+          <label>Mensagem *</label>
+          <textarea id="avMensagem" rows="3" maxlength="2000" placeholder="Escreva o aviso completo. Quebras de linha são mantidas."></textarea>
+        </div>
+
+        <div class="form-grid" style="margin-bottom:16px">
+          <div class="field">
+            <label>Link (opcional — ex: YouTube/Meet)</label>
+            <input type="url" id="avLink" placeholder="https://..." />
+          </div>
+          <div class="field">
+            <label>Data/hora do evento (opcional)</label>
+            <input type="datetime-local" id="avEvento" />
+          </div>
+          <div class="field" style="justify-content:flex-end">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="avFixado" style="width:16px;height:16px;accent-color:var(--accent,#4A6CF7)" />
+              📌 Fixar no topo
+            </label>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="publicarAviso()">📣 Publicar aviso</button>
+      </div>
+
+      <div class="card">
+        <h2>Avisos publicados</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Título</th><th>Categoria</th><th>Evento</th><th>Fixado</th><th>Publicado</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="avisosTable">
+              <tr><td class="empty-cell" colspan="6">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-avisos -->
+
   </main>
 
   <!-- ══════ MODAIS ══════ -->
@@ -843,6 +916,7 @@
   <script src="data.js"></script>
   <script src="listas-data.js"></script>
   <script src="questoes.js"></script>
+  <script src="avisos-data.js"></script>
   <script>
   /* ═══════════════════════════════════════════
      AUTH
@@ -882,6 +956,7 @@
       document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
       if (btn.dataset.tab === 'cursos')   initCursosTab();
       if (btn.dataset.tab === 'questoes') initQuestoesTab();
+      if (btn.dataset.tab === 'avisos')   loadAvisosTable();
     });
   });
 
@@ -1771,6 +1846,66 @@ const PL_CATALOG = {
       loadQListasTable();
       loadQStats();
     }
+  }
+
+  /* ════════════════════════════════════════
+     TAB: AVISOS (Quadro de Avisos)
+  ════════════════════════════════════════ */
+  const AVISO_CAT_LABEL = {
+    aula:     '🔴 Aula ao Vivo',
+    concurso: '📰 Concurso',
+    edital:   '📜 Edital',
+    aviso:    '📢 Comunicado',
+  };
+
+  function publicarAviso() {
+    const titulo   = document.getElementById('avTitulo').value.trim();
+    const mensagem = document.getElementById('avMensagem').value.trim();
+    const link     = document.getElementById('avLink').value.trim();
+    if (!titulo || !mensagem) { toast('Preencha título e mensagem.', 'err'); return; }
+    if (link && !/^https?:\/\//i.test(link)) { toast('O link precisa começar com http:// ou https://', 'err'); return; }
+
+    const rec = PL_Avisos.publish({
+      titulo, mensagem, link,
+      categoria:  document.getElementById('avCategoria').value,
+      dataEvento: document.getElementById('avEvento').value || null,
+      fixado:     document.getElementById('avFixado').checked,
+    });
+    if (!rec) { toast('Erro ao publicar aviso.', 'err'); return; }
+
+    toast('✅ Aviso publicado no quadro dos alunos!');
+    ['avTitulo','avMensagem','avLink','avEvento'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('avFixado').checked = false;
+    loadAvisosTable();
+  }
+
+  function excluirAviso(id, titulo) {
+    if (!confirm(`Excluir o aviso "${titulo}"?\n\nEle some do quadro dos alunos.`)) return;
+    PL_Avisos.remove(id);
+    toast('Aviso excluído.');
+    loadAvisosTable();
+  }
+
+  function loadAvisosTable() {
+    const avisos = PL_Avisos.getAll();
+    const tbody  = document.getElementById('avisosTable');
+    if (!avisos.length) {
+      tbody.innerHTML = '<tr><td class="empty-cell" colspan="6">Nenhum aviso publicado ainda.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = avisos.map(a => {
+      const eventoStr = a.dataEvento
+        ? new Date(a.dataEvento).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' })
+        : '<span style="opacity:.35">—</span>';
+      return `<tr>
+        <td>${esc(a.titulo)}</td>
+        <td>${AVISO_CAT_LABEL[a.categoria] || esc(a.categoria)}</td>
+        <td>${eventoStr}</td>
+        <td>${a.fixado ? '📌 Sim' : '<span style="opacity:.35">—</span>'}</td>
+        <td>${new Date(a.criadoEm).toLocaleDateString('pt-BR')}</td>
+        <td><button class="action-btn danger" onclick="excluirAviso('${a.id}','${esc(a.titulo).replace(/'/g, '&#039;')}')">Excluir</button></td>
+      </tr>`;
+    }).join('');
   }
 
   </script>

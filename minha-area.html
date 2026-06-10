@@ -465,6 +465,13 @@
   </div>
   <div class="courses-grid" id="coursesGrid" style="margin-bottom:40px"></div>
 
+  <!-- Quadro de Avisos -->
+  <div class="sec-header" id="avisosSec" style="display:none">
+    <h2>📣 Quadro de Avisos</h2>
+    <p>Aulas ao vivo · concursos · editais</p>
+  </div>
+  <div id="avisosBoard" style="display:none;flex-direction:column;gap:12px;margin-bottom:40px"></div>
+
   <!-- ── Plano de Estudos ── -->
   <div class="plano-section">
     <div class="plano-section-title">🗓️ Plano de Estudos Pomodoro</div>
@@ -706,6 +713,7 @@
 <script src="plano.js"></script>
 <script src="listas-data.js"></script>
 <script src="questoes.js"></script>
+<script src="avisos-data.js"></script>
 <script>
 /* ── Auth ── */
 const _session = plAuth.requireAuth();
@@ -1233,6 +1241,52 @@ function buildPrintHTML(dados, plano) {
 
   return html;
 }
+
+/* ════════════════════════════════════════
+   QUADRO DE AVISOS
+════════════════════════════════════════ */
+(function _renderAvisos() {
+  if (typeof PL_Avisos === 'undefined') return;
+  const avisos = PL_Avisos.getAll();
+  if (!avisos.length) return;
+
+  const CAT = {
+    aula:     { label: '🔴 Aula ao Vivo', cor: '#f87171' },
+    concurso: { label: '📰 Concurso',     cor: '#60a5fa' },
+    edital:   { label: '📜 Edital',       cor: '#fbbf24' },
+    aviso:    { label: '📢 Comunicado',   cor: '#34d399' },
+  };
+  const escAv = s => String(s || '').replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmtEvento = iso => {
+    const d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' })
+      + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const board = document.getElementById('avisosBoard');
+  board.innerHTML = avisos.map(a => {
+    const cat = CAT[a.categoria] || CAT.aviso;
+    const evento = a.dataEvento
+      ? `<div style="display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:7px 13px;border-radius:8px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#fca5a5;font-size:13px;font-weight:700">🗓️ ${fmtEvento(a.dataEvento)}</div>` : '';
+    const link = a.link
+      ? `<a href="${escAv(a.link)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;margin-top:10px;margin-left:8px;padding:8px 16px;border-radius:8px;background:var(--accent);color:#fff;font-family:var(--font-h);font-size:12px;font-weight:800;text-decoration:none">${a.categoria === 'aula' ? '▶ Entrar na aula' : '↗ Acessar'}</a>` : '';
+    return `<div style="background:var(--navy-2);border:1px solid ${a.fixado ? 'rgba(74,108,247,0.4)' : 'rgba(255,255,255,0.08)'};border-left:4px solid ${cat.cor};border-radius:var(--radius);padding:18px 20px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <span style="padding:3px 10px;border-radius:99px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;background:${cat.cor}22;color:${cat.cor};border:1px solid ${cat.cor}55">${cat.label}</span>
+        ${a.fixado ? '<span style="font-size:11px;color:var(--accent-light);font-weight:800">📌 Fixado</span>' : ''}
+        <span style="margin-left:auto;font-size:12px;color:var(--silver)">${new Date(a.criadoEm).toLocaleDateString('pt-BR')}</span>
+      </div>
+      <div style="font-family:var(--font-h);font-size:15px;font-weight:800;margin-bottom:5px">${escAv(a.titulo)}</div>
+      <div style="font-size:13.5px;color:var(--silver);line-height:1.65;white-space:pre-line">${escAv(a.mensagem)}</div>
+      ${evento}${link}
+    </div>`;
+  }).join('');
+
+  document.getElementById('avisosSec').style.display = '';
+  board.style.display = 'flex';
+})();
 </script>
 </body>
 </html>

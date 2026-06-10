@@ -904,6 +904,37 @@ const PL_CATALOG = {
    Roda após o override do admin para sanear também catálogos
    customizados salvos com esses caminhos.
 ─────────────────────────────────────────────────────────── */
+/* ── Apostilas e materiais gerais por curso ────────────────
+   Exibidos na página inicial de cada curso (curso.html).
+   Aplicado após o override do admin para que catálogos salvos
+   antes deste recurso também recebam as apostilas. ─────────── */
+(function _addApostilas() {
+  const APOSTILAS_MILITAR = [
+    { titulo: 'Apostila Completa de Matemática — CFO/SD', desc: 'Teoria completa de todos os assuntos do edital de matemática.', url: 'assets/apostila-cfo.pdf' },
+    { titulo: 'Conteúdo Programático — CFO/SD',           desc: 'O que cai na prova: edital de matemática detalhado.',          url: 'assets/conteudo-cfo.pdf' },
+    { titulo: 'Cronograma da Mentoria',                   desc: 'Planejamento de estudos semana a semana da mentoria.',         url: 'assets/cronograma-mentoria.pdf' },
+    { titulo: 'Mentoria de Matemática — Revisão',         desc: 'Material de revisão geral usado na mentoria.',                 url: 'assets/mentoria.pdf' },
+  ];
+  const APOSTILAS_POR_CURSO = {
+    'sd-pmba':   APOSTILAS_MILITAR,
+    'sd-cbmba':  APOSTILAS_MILITAR,
+    'cfo-pmba':  APOSTILAS_MILITAR,
+    'cfo-cbmba': APOSTILAS_MILITAR,
+    'mat-basica': [
+      { titulo: 'Apostila de Matemática Básica',    desc: 'Fundamentos completos — do zero ao nível de concurso.', url: 'assets/apostila-basica.pdf' },
+      { titulo: 'Mentoria de Matemática — Revisão', desc: 'Material de revisão geral usado na mentoria.',          url: 'assets/mentoria.pdf' },
+    ],
+    'correios': [
+      { titulo: 'Apostila de Matemática — Correios',  desc: 'Teoria focada no edital dos Correios.',            url: 'assets/apostila-correios.pdf' },
+      { titulo: 'Conteúdo Programático — Correios',   desc: 'O que cai na prova: edital detalhado.',            url: 'assets/conteudo-correios.pdf' },
+    ],
+  };
+  Object.entries(APOSTILAS_POR_CURSO).forEach(([id, aps]) => {
+    const curso = PL_CATALOG.cursos[id];
+    if (curso && !Array.isArray(curso.apostilas)) curso.apostilas = aps;
+  });
+})();
+
 (function _normalizeLocalSources() {
   /* Jogos antigos (versões sem ranking, antes em assets/jogos/ ou com
      nome de exibição) → versões novas em jogos/. Catálogos salvos pelo

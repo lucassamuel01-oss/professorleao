@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ============================================================
    EDITAIS — dados completos dos 4 cursos do Professor Leão
-   Baseado nos editais reais + modelo do projeto Elite Feminina
+   Baseado nos editais reais dos concursos atendidos
    ============================================================ */
 
 const EDITAIS_PL = {
@@ -468,7 +468,7 @@ const EDITAIS_PL = {
 
 /* ============================================================
    ENGINE DE PLANO POMODORO
-   Algoritmo completo adaptado do projeto Elite Feminina —
+   Algoritmo completo de geração de cronograma —
    sem dependência de backend, 100% client-side.
    ============================================================ */
 
