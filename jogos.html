@@ -39,7 +39,7 @@
     .arena-hero {
       background: linear-gradient(135deg, var(--navy-3) 0%, #1a3a8a 100%);
       border: 1px solid rgba(74,108,247,0.2); border-radius: 20px;
-      padding: 48px 40px; margin-bottom: 48px; position: relative; overflow: hidden;
+      padding: 48px 40px; margin-bottom: 40px; position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: space-between; gap: 32px;
     }
     .arena-hero::before {
@@ -56,13 +56,77 @@
     .hero-stat__val { font-family: var(--font-h); font-size: 28px; font-weight: 900; color: var(--accent-light); line-height: 1; }
     .hero-stat__lbl { font-size: 11px; color: var(--silver); margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
 
+    /* ── Difficulty explainer box ── */
+    .diff-explainer {
+      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.2); border-radius: 20px;
+      padding: 28px 32px; margin-bottom: 48px;
+    }
+    .diff-explainer__title {
+      font-family: var(--font-h); font-size: 17px; font-weight: 800; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .diff-explainer__sub {
+      font-size: 13px; color: var(--silver); margin-bottom: 24px; line-height: 1.5;
+    }
+    .diff-explainer__grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px;
+    }
+    .diff-card {
+      border-radius: 14px; padding: 20px 16px; text-align: center; border: 1px solid;
+    }
+    .diff-card--facil   { background: rgba(34,197,94,0.08);  border-color: rgba(34,197,94,0.25); }
+    .diff-card--normal  { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+    .diff-card--dificil { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.25); }
+    .diff-card__emoji { font-size: 32px; margin-bottom: 8px; }
+    .diff-card__name {
+      font-family: var(--font-h); font-size: 14px; font-weight: 800; margin-bottom: 4px;
+    }
+    .diff-card--facil   .diff-card__name { color: #4ade80; }
+    .diff-card--normal  .diff-card__name { color: #fbbf24; }
+    .diff-card--dificil .diff-card__name { color: #f87171; }
+    .diff-card__mult {
+      font-family: var(--font-h); font-size: 28px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+    }
+    .diff-card--facil   .diff-card__mult { color: #4ade80; }
+    .diff-card--normal  .diff-card__mult { color: #fbbf24; }
+    .diff-card--dificil .diff-card__mult { color: #f87171; }
+    .diff-card__desc { font-size: 12px; color: var(--silver); line-height: 1.5; }
+    .diff-formula {
+      background: var(--navy-3); border-radius: 12px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .diff-formula__text {
+      font-family: var(--font-h); font-size: 14px; font-weight: 700; color: var(--white);
+      flex: 1;
+    }
+    .diff-formula__text span { color: var(--accent-light); }
+    .diff-formula__example {
+      display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--silver);
+      background: rgba(255,255,255,0.05); padding: 8px 14px; border-radius: 8px; flex-wrap: wrap;
+    }
+    .diff-formula__example strong { color: var(--white); }
+
     /* ── Section header ── */
     .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
     .sec-head h2 { font-family: var(--font-h); font-size: 18px; font-weight: 800; }
     .sec-head a { font-size: 13px; color: var(--accent-light); }
 
+    /* ── Category label ── */
+    .cat-label {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px; margin-top: 36px;
+    }
+    .cat-label:first-of-type { margin-top: 0; }
+    .cat-label__pill {
+      font-family: var(--font-h); font-size: 12px; font-weight: 800;
+      padding: 5px 14px; border-radius: 20px; letter-spacing: .5px;
+    }
+    .cat-label__pill--blue   { background: rgba(74,108,247,0.2);  color: #6B89FF; border: 1px solid rgba(74,108,247,0.3); }
+    .cat-label__pill--green  { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+    .cat-label__pill--orange { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+    .cat-label__line { flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+
     /* ── Game cards ── */
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 24px; margin-bottom: 56px; }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 24px; margin-bottom: 8px; }
 
     .game-card {
       background: var(--navy-2); border: 1px solid rgba(255,255,255,0.07);
@@ -73,32 +137,23 @@
     .game-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.5); border-color: rgba(74,108,247,0.3); }
     .game-card:hover::after { opacity: 1; }
 
-    .game-card__banner { height: 140px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-    .game-card__icon { font-size: 72px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.15)); z-index: 1; transition: .3s; }
+    .game-card__banner { height: 130px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .game-card__icon { font-size: 64px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.15)); z-index: 1; transition: .3s; }
     .game-card:hover .game-card__icon { transform: scale(1.12) rotate(-3deg); }
-    .game-card__difficulty { position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: .5px; }
-    .game-card__difficulty--facil { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
-    .game-card__difficulty--medio { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
-    .game-card__difficulty--avancado { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-
-    .game-card__body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .game-card__body { padding: 18px 20px; flex: 1; display: flex; flex-direction: column; gap: 9px; }
     .game-card__tag { font-size: 11px; font-weight: 700; color: var(--accent-light); text-transform: uppercase; letter-spacing: 1px; }
-    .game-card__name { font-family: var(--font-h); font-size: 18px; font-weight: 800; line-height: 1.2; }
+    .game-card__name { font-family: var(--font-h); font-size: 17px; font-weight: 800; line-height: 1.2; }
     .game-card__desc { font-size: 13px; color: var(--silver); line-height: 1.5; flex: 1; }
-    .game-card__meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+    .game-card__meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 2px; }
     .game-card__meta-item { font-size: 12px; color: var(--silver); display: flex; align-items: center; gap: 4px; }
     .game-card__best { background: rgba(74,108,247,0.1); border: 1px solid rgba(74,108,247,0.2); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
     .game-card__best-label { font-size: 11px; color: var(--silver); }
-    .game-card__best-score { font-family: var(--font-h); font-size: 16px; font-weight: 800; color: var(--accent-light); }
-    .game-card__foot { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 10px; }
-    .btn-play { flex: 1; padding: 12px; border-radius: 10px; font-family: var(--font-h); font-weight: 900; font-size: 14px; background: linear-gradient(135deg, var(--navy-4), var(--accent)); color: var(--white); border: none; cursor: pointer; transition: .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .game-card__best-score { font-family: var(--font-h); font-size: 15px; font-weight: 800; color: var(--accent-light); }
+    .game-card__foot { padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 10px; }
+    .btn-play { flex: 1; padding: 11px; border-radius: 10px; font-family: var(--font-h); font-weight: 900; font-size: 14px; background: linear-gradient(135deg, var(--navy-4), var(--accent)); color: var(--white); border: none; cursor: pointer; transition: .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-play:hover { filter: brightness(1.15); transform: translateY(-1px); }
-    .btn-rank { padding: 12px 16px; border-radius: 10px; background: rgba(255,255,255,0.06); color: var(--silver); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: .2s; font-size: 16px; }
+    .btn-rank { padding: 11px 15px; border-radius: 10px; background: rgba(255,255,255,0.06); color: var(--silver); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: .2s; font-size: 16px; }
     .btn-rank:hover { background: rgba(255,255,255,0.1); color: var(--white); }
-
-    /* Coming soon card */
-    .game-card--soon { opacity: .5; pointer-events: none; }
-    .game-card--soon .game-card__icon { filter: grayscale(1); }
 
     /* ── Ranking Board ── */
     .ranking-board {
@@ -113,7 +168,7 @@
     /* Game tabs */
     .rank-game-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: none; }
     .rank-game-tabs::-webkit-scrollbar { display: none; }
-    .rank-gtab { padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--silver); border: 1px solid rgba(255,255,255,0.08); background: var(--navy-3); cursor: pointer; white-space: nowrap; transition: .2s; display: flex; align-items: center; gap: 5px; }
+    .rank-gtab { padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--silver); border: 1px solid rgba(255,255,255,0.08); background: var(--navy-3); cursor: pointer; white-space: nowrap; transition: .2s; display: flex; align-items: center; gap: 5px; }
     .rank-gtab:hover { color: var(--white); }
     .rank-gtab.active { background: rgba(74,108,247,0.18); border-color: rgba(74,108,247,0.4); color: var(--accent-light); }
 
@@ -142,6 +197,7 @@
     .rank-score--1 { color: var(--gold); }
     .rank-score--2 { color: var(--silver-c); }
     .rank-score--3 { color: var(--bronze); }
+    .rank-diff-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
     .rank-empty { text-align: center; padding: 40px 20px; color: var(--silver); font-size: 14px; }
     .rank-empty span { display: block; font-size: 32px; margin-bottom: 8px; }
 
@@ -167,11 +223,13 @@
       .arena-hero { flex-direction: column; }
       .arena-hero__stats { min-width: unset; width: 100%; }
       .ranking-board { grid-template-columns: 1fr; }
+      .diff-explainer__grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .page { padding: 20px 16px 60px; }
       .arena-hero { padding: 28px 20px; }
       .games-grid { grid-template-columns: 1fr; }
+      .diff-explainer { padding: 20px; }
     }
   </style>
 </head>
@@ -196,11 +254,11 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>Jogos educativos gamificados com rankings diários, semanais e histórico geral. Treine os conteúdos do edital de forma divertida e compete com outros alunos.</p>
+      <p>6 jogos de matemática com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
-        <div class="hero-stat__val" id="statJogos">3</div>
+        <div class="hero-stat__val" id="statJogos">6</div>
         <div class="hero-stat__lbl">Jogos</div>
       </div>
       <div class="hero-stat">
@@ -214,91 +272,235 @@
     </div>
   </section>
 
-  <!-- Games -->
-  <div class="sec-head"><h2>🕹️ Escolha um Jogo</h2></div>
-  <div class="games-grid" id="gamesGrid">
+  <!-- ═══════════════════════════════════════════════════════
+       COMO FUNCIONA O RANKING
+  ═══════════════════════════════════════════════════════ -->
+  <div class="diff-explainer">
+    <div class="diff-explainer__title">⚖️ Como funciona o Ranking</div>
+    <div class="diff-explainer__sub">
+      Todo jogo tem 3 dificuldades. A dificuldade que você escolhe define um <strong style="color:var(--white)">multiplicador</strong> que é aplicado à sua pontuação bruta na hora de entrar no ranking — quanto mais difícil, mais vale cada ponto!
+    </div>
 
-    <!-- Card 1 -->
-    <div class="game-card" style="--card-clr:#4A6CF7">
+    <div class="diff-explainer__grid">
+      <!-- Fácil -->
+      <div class="diff-card diff-card--facil">
+        <div class="diff-card__emoji">😊</div>
+        <div class="diff-card__name">Fácil</div>
+        <div class="diff-card__mult">×0.7</div>
+        <div class="diff-card__desc">Timer mais longo · Dicas disponíveis · Boa para treinar sem pressão. Pontuação reduzida no ranking.</div>
+      </div>
+      <!-- Normal -->
+      <div class="diff-card diff-card--normal">
+        <div class="diff-card__emoji">⚡</div>
+        <div class="diff-card__name">Normal</div>
+        <div class="diff-card__mult">×1.0</div>
+        <div class="diff-card__desc">Timer equilibrado · Sem dicas · O ponto de partida para disputar o ranking. Pontuação integral.</div>
+      </div>
+      <!-- Difícil -->
+      <div class="diff-card diff-card--dificil">
+        <div class="diff-card__emoji">🔥</div>
+        <div class="diff-card__name">Difícil</div>
+        <div class="diff-card__mult">×1.5</div>
+        <div class="diff-card__desc">Timer bem curto · Questões complexas · Alto risco, alta recompensa. Pontos 50% maiores no ranking!</div>
+      </div>
+    </div>
+
+    <div class="diff-formula">
+      <div class="diff-formula__text">
+        🧮 Fórmula: <span>pontos brutos × multiplicador = pontos no ranking</span>
+      </div>
+      <div class="diff-formula__example">
+        Ex: <strong>800 pts brutos</strong> no Difícil →
+        800 × 1.5 = <strong style="color:#f87171">1.200 pts no ranking</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       JOGOS
+  ═══════════════════════════════════════════════════════ -->
+  <div class="sec-head"><h2>🕹️ Escolha um Jogo</h2></div>
+
+  <!-- ── Categoria: Teoria dos Conjuntos ── -->
+  <div class="cat-label">
+    <div class="cat-label__pill cat-label__pill--blue">📐 Teoria dos Conjuntos</div>
+    <div class="cat-label__line"></div>
+  </div>
+  <div class="games-grid">
+
+    <!-- Conjuntos Numéricos -->
+    <div class="game-card">
       <div class="game-card__banner" style="background:linear-gradient(135deg,#0f2060,#1a3a8a)">
         <div class="game-card__icon">🔢</div>
-        <span class="game-card__difficulty game-card__difficulty--medio">Médio</span>
       </div>
       <div class="game-card__body">
         <div class="game-card__tag">Teoria dos Conjuntos</div>
         <div class="game-card__name">Conjuntos Numéricos</div>
-        <div class="game-card__desc">Classifique números em ℕ, ℤ, ℚ, 𝕀, ℝ e ℂ. Contra o relógio — quanto mais rápido, mais pontos!</div>
+        <div class="game-card__desc">Classifique números em ℕ, ℤ, ℚ, 𝕀, ℝ e ℂ. Contra o relógio — quanto mais rápido e difícil, mais pontos no ranking!</div>
         <div class="game-card__meta">
-          <span class="game-card__meta-item">⏱ 20s/questão</span>
+          <span class="game-card__meta-item">⏱ 15–30s/questão</span>
           <span class="game-card__meta-item">📋 10 rodadas</span>
           <span class="game-card__meta-item">🔥 Combo streak</span>
         </div>
         <div class="game-card__best" id="best-cn">
-          <span class="game-card__best-label">Seu melhor</span>
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
           <span class="game-card__best-score">—</span>
         </div>
       </div>
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/conjuntos-numericos.html">▶ Jogar Agora</a>
-        <button class="btn-rank" onclick="openRankModal('conjuntos-numericos')" title="Ver ranking">🏆</button>
+        <button class="btn-rank" onclick="openRankModal('conjuntos-numericos','🔢 Conjuntos Numéricos')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
-    <!-- Card 2 -->
+    <!-- Missão Conjuntos -->
     <div class="game-card">
       <div class="game-card__banner" style="background:linear-gradient(135deg,#1a2060,#2a1a8a)">
         <div class="game-card__icon">⭕</div>
-        <span class="game-card__difficulty game-card__difficulty--medio">Médio</span>
       </div>
       <div class="game-card__body">
         <div class="game-card__tag">Operações com Conjuntos</div>
         <div class="game-card__name">Missão Conjuntos</div>
         <div class="game-card__desc">Diagrama de Venn interativo. Execute União, Interseção, Diferença e Diferença Simétrica entre conjuntos A e B.</div>
         <div class="game-card__meta">
-          <span class="game-card__meta-item">⏱ 25s/rodada</span>
+          <span class="game-card__meta-item">⏱ 15–25s/rodada</span>
           <span class="game-card__meta-item">📋 10 rodadas</span>
           <span class="game-card__meta-item">🎯 Bônus velocidade</span>
         </div>
         <div class="game-card__best" id="best-co">
-          <span class="game-card__best-label">Seu melhor</span>
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
           <span class="game-card__best-score">—</span>
         </div>
       </div>
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/conjuntos-operacoes.html">▶ Jogar Agora</a>
-        <button class="btn-rank" onclick="openRankModal('conjuntos-operacoes')" title="Ver ranking">🏆</button>
+        <button class="btn-rank" onclick="openRankModal('conjuntos-operacoes','⭕ Missão Conjuntos')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
-    <!-- Card 3 -->
+  </div>
+
+  <!-- ── Categoria: Aritmética ── -->
+  <div class="cat-label">
+    <div class="cat-label__pill cat-label__pill--green">🔢 Aritmética</div>
+    <div class="cat-label__line"></div>
+  </div>
+  <div class="games-grid">
+
+    <!-- Caça ao Número -->
     <div class="game-card">
       <div class="game-card__banner" style="background:linear-gradient(135deg,#1a3318,#0f4020)">
         <div class="game-card__icon">🎯</div>
-        <span class="game-card__difficulty game-card__difficulty--avancado">Avançado</span>
       </div>
       <div class="game-card__body">
         <div class="game-card__tag">MMC, MDC e Divisibilidade</div>
         <div class="game-card__name">Caça ao Número</div>
         <div class="game-card__desc">Contra o relógio: selecione múltiplos, divisores, primos e números com MDC/MMC específicos antes que o tempo acabe!</div>
         <div class="game-card__meta">
-          <span class="game-card__meta-item">⏱ 25s/fase</span>
+          <span class="game-card__meta-item">⏱ 18–30s/fase</span>
           <span class="game-card__meta-item">📋 7 fases</span>
           <span class="game-card__meta-item">⚡ Progressivo</span>
         </div>
         <div class="game-card__best" id="best-md">
-          <span class="game-card__best-label">Seu melhor</span>
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
           <span class="game-card__best-score">—</span>
         </div>
       </div>
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/multiplos-divisores.html">▶ Jogar Agora</a>
-        <button class="btn-rank" onclick="openRankModal('multiplos-divisores')" title="Ver ranking">🏆</button>
+        <button class="btn-rank" onclick="openRankModal('multiplos-divisores','🎯 Caça ao Número')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Potenciação & Raiz -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#2d1b69,#4a2090)">
+        <div class="game-card__icon">💥</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Potências e Radicais</div>
+        <div class="game-card__name">Potenciação & Raiz</div>
+        <div class="game-card__desc">Potências, raízes, expoentes negativos e fracionários, equações exponenciais. Do básico ao avançado em 10 rodadas!</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">⏱ 12–25s/questão</span>
+          <span class="game-card__meta-item">📋 10 rodadas</span>
+          <span class="game-card__meta-item">🧮 Expressões matemáticas</span>
+        </div>
+        <div class="game-card__best" id="best-pot">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/potenciacao.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('potenciacao','💥 Potenciação & Raiz')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
   </div>
 
-  <!-- Ranking + Tips -->
+  <!-- ── Categoria: Matemática Prática ── -->
+  <div class="cat-label">
+    <div class="cat-label__pill cat-label__pill--orange">📊 Matemática Prática</div>
+    <div class="cat-label__line"></div>
+  </div>
+  <div class="games-grid" style="margin-bottom:56px">
+
+    <!-- Regra de Três -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#0f2860,#1a4aaa)">
+        <div class="game-card__icon">⚖️</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Proporções e Razões</div>
+        <div class="game-card__name">Regra de Três</div>
+        <div class="game-card__desc">Proporção direta, inversa, regra de três composta e trabalho combinado. O assunto mais cobrado em provas de concurso!</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">⏱ 18–35s/questão</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">📐 4 tipos</span>
+        </div>
+        <div class="game-card__best" id="best-rt">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/regra-de-tres.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('regra-de-tres','⚖️ Regra de Três')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Porcentagem -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#064e3b,#065f46)">
+        <div class="game-card__icon">📈</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Porcentagem e Juros</div>
+        <div class="game-card__name">Porcentagem</div>
+        <div class="game-card__desc">Cálculo direto, descontos, aumentos, variações encadeadas, preço de custo e montante. Essencial para provas militares!</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">⏱ 15–30s/questão</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">💹 6 tipos</span>
+        </div>
+        <div class="game-card__best" id="best-pct">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/porcentagem.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('porcentagem','📈 Porcentagem')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RANKING GERAL + DICAS
+  ═══════════════════════════════════════════════════════ -->
   <div class="sec-head"><h2>🏆 Ranking Geral</h2></div>
   <div class="ranking-board">
 
@@ -307,11 +509,14 @@
       <div class="rank-panel-head">
         <h2 id="rankPanelTitle">🏆 Ranking</h2>
 
-        <!-- Game tabs -->
+        <!-- Game tabs (scrollable) -->
         <div class="rank-game-tabs" id="rankGameTabs">
-          <div class="rank-gtab active" data-game="conjuntos-numericos" onclick="setRankGame(this,'conjuntos-numericos')">🔢 C. Numéricos</div>
-          <div class="rank-gtab" data-game="conjuntos-operacoes" onclick="setRankGame(this,'conjuntos-operacoes')">⭕ Missão Conj.</div>
-          <div class="rank-gtab" data-game="multiplos-divisores" onclick="setRankGame(this,'multiplos-divisores')">🎯 Caça Número</div>
+          <div class="rank-gtab active" data-game="conjuntos-numericos"  onclick="setRankGame(this,'conjuntos-numericos')">🔢 C. Numéricos</div>
+          <div class="rank-gtab" data-game="conjuntos-operacoes"          onclick="setRankGame(this,'conjuntos-operacoes')">⭕ Missão Conj.</div>
+          <div class="rank-gtab" data-game="multiplos-divisores"          onclick="setRankGame(this,'multiplos-divisores')">🎯 Caça Número</div>
+          <div class="rank-gtab" data-game="potenciacao"                   onclick="setRankGame(this,'potenciacao')">💥 Potenciação</div>
+          <div class="rank-gtab" data-game="regra-de-tres"                 onclick="setRankGame(this,'regra-de-tres')">⚖️ Regra de 3</div>
+          <div class="rank-gtab" data-game="porcentagem"                   onclick="setRankGame(this,'porcentagem')">📈 Porcentagem</div>
         </div>
 
         <!-- Period tabs -->
@@ -327,33 +532,38 @@
       <div class="rank-panel-foot" id="rankPanelFoot"></div>
     </div>
 
-    <!-- Tips + My rank -->
+    <!-- Dicas + My rank -->
     <div style="display:flex;flex-direction:column;gap:20px">
       <div class="my-rank-card" id="myRankCard" style="display:none">
         <h3>📊 Minha Performance</h3>
         <div class="my-rank-grid">
           <div class="my-rank-item"><div class="my-rank-item__val" id="mrPos">—</div><div class="my-rank-item__lbl">Posição</div></div>
-          <div class="my-rank-item"><div class="my-rank-item__val" id="mrScore">—</div><div class="my-rank-item__lbl">Pontos</div></div>
+          <div class="my-rank-item"><div class="my-rank-item__val" id="mrScore">—</div><div class="my-rank-item__lbl">Pts (ranking)</div></div>
           <div class="my-rank-item"><div class="my-rank-item__val" id="mrGames">—</div><div class="my-rank-item__lbl">Partidas</div></div>
         </div>
       </div>
+
       <div class="tips-panel">
         <h2>💡 Como Pontuar Mais</h2>
         <div class="tip-item">
-          <div class="tip-item__icon">⚡</div>
-          <div class="tip-item__text"><strong>Bônus de velocidade</strong>Responda antes do tempo acabar. Quanto mais rápido, mais pontos extras.</div>
+          <div class="tip-item__icon">🔥</div>
+          <div class="tip-item__text"><strong>Jogue no Difícil</strong>Dificuldade ×1.5 garante 50% a mais de pontos no ranking. Vale o risco!</div>
         </div>
         <div class="tip-item">
-          <div class="tip-item__icon">🔥</div>
-          <div class="tip-item__text"><strong>Streak (sequência perfeita)</strong>Acertos consecutivos dão multiplicador crescente. 5 seguidos = +75 pontos extras por rodada.</div>
+          <div class="tip-item__icon">⚡</div>
+          <div class="tip-item__text"><strong>Bônus de velocidade</strong>Responda rápido. Quanto mais tempo sobrar no timer, mais pontos extras você leva.</div>
         </div>
         <div class="tip-item">
           <div class="tip-item__icon">🎯</div>
-          <div class="tip-item__text"><strong>Jogo perfeito</strong>Acertar 100% sem erros dá bônus especial no final.</div>
+          <div class="tip-item__text"><strong>Combo streak</strong>Acertos consecutivos ativam multiplicador crescente. 5 seguidos = até +75 pts extras por rodada.</div>
         </div>
         <div class="tip-item">
           <div class="tip-item__icon">📅</div>
-          <div class="tip-item__text"><strong>Ranking diário</strong>Cada dia zera — nova chance de ser 🥇. Jogue todo dia para aparecer no geral.</div>
+          <div class="tip-item__text"><strong>Ranking diário</strong>Cada dia zera — nova chance de ser 🥇. Jogue todos os dias para aparecer no ranking geral!</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-item__icon">📊</div>
+          <div class="tip-item__text"><strong>Pontos no ranking = brutos × mult</strong>O ranking sempre exibe pontos ponderados pela dificuldade.</div>
         </div>
       </div>
     </div>
@@ -362,7 +572,7 @@
 
 </main>
 
-<!-- Rank Modal (inline ranking) -->
+<!-- Rank Modal -->
 <div id="rankModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);z-index:200;overflow-y:auto">
   <div style="max-width:520px;margin:40px auto;padding:0 16px 60px">
     <div style="background:var(--navy-2);border:1px solid rgba(74,108,247,0.2);border-radius:20px;overflow:hidden">
@@ -391,9 +601,12 @@ const _sess = (function() {
 })();
 
 const GAMES = [
-  { id: 'conjuntos-numericos',  name: '🔢 Conjuntos Numéricos', bestId: 'best-cn' },
-  { id: 'conjuntos-operacoes',  name: '⭕ Missão Conjuntos',    bestId: 'best-co' },
-  { id: 'multiplos-divisores',  name: '🎯 Caça ao Número',      bestId: 'best-md' },
+  { id: 'conjuntos-numericos',  name: '🔢 Conjuntos Numéricos', bestId: 'best-cn'  },
+  { id: 'conjuntos-operacoes',  name: '⭕ Missão Conjuntos',     bestId: 'best-co'  },
+  { id: 'multiplos-divisores',  name: '🎯 Caça ao Número',       bestId: 'best-md'  },
+  { id: 'potenciacao',          name: '💥 Potenciação & Raiz',   bestId: 'best-pot' },
+  { id: 'regra-de-tres',        name: '⚖️ Regra de Três',        bestId: 'best-rt'  },
+  { id: 'porcentagem',          name: '📈 Porcentagem',          bestId: 'best-pct' },
 ];
 
 /* ── Load stats ── */
@@ -403,14 +616,14 @@ let topGlobal = 0;
 GAMES.forEach(g => {
   const stats = PL_Rankings.getGameStats(g.id);
   totalPartidas += stats.plays;
-  if (stats.topScore > topGlobal) topGlobal = stats.topScore;
+  if (stats.topWs > topGlobal) topGlobal = stats.topWs;
 
-  // Per-card best
   if (_sess) {
     const best = PL_Rankings.getPlayerBest(g.id, _sess.email, 'all');
     const el = document.getElementById(g.bestId);
     if (el && best) {
-      el.querySelector('.game-card__best-score').textContent = best.s.toLocaleString('pt-BR');
+      const ws = best.ws !== undefined ? best.ws : best.s;
+      el.querySelector('.game-card__best-score').textContent = ws.toLocaleString('pt-BR');
     }
   }
 });
@@ -442,15 +655,20 @@ function renderRankList(containerId, gameId, period) {
     const pos = i < 3 ? MEDALS[i] : `#${i + 1}`;
     const posClass = i < 3 ? `rank-pos--${i+1}` : '';
     const scoreClass = i < 3 ? `rank-score--${i+1}` : '';
+    const ws = e.ws !== undefined ? e.ws : e.s;
+    // Difficulty badge
+    const diffCol = PL_Rankings.DIFF_COLOR[e.d] || '#f59e0b';
+    const diffLbl = { facil:'Fácil', normal:'Normal', dificil:'Difícil' }[e.d] || e.d || 'Normal';
+    const diffBadge = `<span class="rank-diff-badge" style="color:${diffCol};background:${diffCol}22;border:1px solid ${diffCol}44">${diffLbl}</span>`;
     return `
       <div class="rank-item ${isSelf ? 'rank-item--self' : ''}">
         <div class="rank-pos ${posClass}">${pos}</div>
         <div class="rank-avatar">${initials}</div>
         <div>
           <div class="rank-name">${escHtml(e.n)}${isSelf ? ' <span style="font-size:10px;color:var(--accent-light)">(você)</span>' : ''}</div>
-          <div class="rank-time">${PL_Rankings.timeAgo(e.t)}</div>
+          <div class="rank-time" style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">${PL_Rankings.timeAgo(e.t)} ${diffBadge}</div>
         </div>
-        <div class="rank-score ${scoreClass}">${e.s.toLocaleString('pt-BR')}</div>
+        <div class="rank-score ${scoreClass}">${ws.toLocaleString('pt-BR')}</div>
       </div>`;
   }).join('');
 }
@@ -463,8 +681,9 @@ function renderMyRank(gameId, period) {
   const card  = document.getElementById('myRankCard');
   if (!rec) { card.style.display = 'none'; return; }
   card.style.display = 'block';
+  const ws = rec.ws !== undefined ? rec.ws : rec.s;
   document.getElementById('mrPos').textContent   = rank ? `#${rank}` : '—';
-  document.getElementById('mrScore').textContent = rec.s.toLocaleString('pt-BR');
+  document.getElementById('mrScore').textContent = ws.toLocaleString('pt-BR');
   document.getElementById('mrGames').textContent = stats.plays;
 }
 
@@ -490,12 +709,11 @@ function setRankPeriod(el, period) {
 }
 
 /* ── Modal ── */
-function openRankModal(gameId) {
+function openRankModal(gameId, title) {
   _modalGame = gameId;
   _modalPeriod = 'daily';
   document.querySelectorAll('#rankModalPeriodTabs .rank-ptab').forEach((t,i) => t.classList.toggle('active', i===0));
-  const g = GAMES.find(x => x.id === gameId);
-  document.getElementById('rankModalTitle').textContent = `🏆 ${g ? g.name : 'Ranking'}`;
+  document.getElementById('rankModalTitle').textContent = `🏆 ${title || gameId}`;
   renderRankList('rankModalList', _modalGame, _modalPeriod);
   document.getElementById('rankModal').style.display = 'block';
 }

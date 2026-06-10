@@ -403,7 +403,9 @@
             <select id="newCurso">
               <option value="">Selecione...</option>
               <option value="CFO PMBA">CFO PMBA</option>
+              <option value="CFO CBMBA">CFO CBMBA</option>
               <option value="SD PMBA">SD PMBA</option>
+              <option value="SD CBMBA">SD CBMBA</option>
               <option value="Matemática Básica">Matemática Básica</option>
               <option value="Correios">Correios</option>
               <option value="Todos">Acesso Completo</option>
@@ -990,13 +992,22 @@
   let workCatalog = null;
   let activeCursoId = null;
   let editingAulaIdx = null; // null = new
+  let _cursosTabInited = false;
 
   function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
   function getCursoIds() { return Object.keys(workCatalog.cursos); }
   function getActiveCurso() { return workCatalog.cursos[activeCursoId] || null; }
 
-  function initCursosTab() {
+  function initCursosTab(forceReset) {
+    // Guard: don't wipe unsaved edits when user switches tabs back
+    if (!forceReset && _cursosTabInited && workCatalog) {
+      const hasOverride = !!localStorage.getItem('pl_catalog_custom');
+      document.getElementById('overrideBanner').style.display = hasOverride ? 'flex' : 'none';
+      return;
+    }
+    _cursosTabInited = true;
+
     // Build working copy from current PL_CATALOG
     workCatalog = {
       cursos: deepClone(PL_CATALOG.cursos),
@@ -1244,10 +1255,11 @@
   document.getElementById('resetCancel').addEventListener('click', () => closeModal('resetModal'));
   document.getElementById('resetOk').addEventListener('click', () => {
     localStorage.removeItem('pl_catalog_custom');
+    _cursosTabInited = false;
     document.getElementById('overrideBanner').style.display = 'none';
     toast('Catálogo restaurado para o padrão.','warn');
     closeModal('resetModal');
-    initCursosTab();
+    initCursosTab(true);
   });
 
   /* ─── Export data.js ─── */
@@ -1334,7 +1346,7 @@ const PL_CATALOG = {
     loadQStats();
     if (_qTabInited) return;
     _qTabInited = true;
-    populateCursoSelect();
+    populateQCursoSelect();
 
     // Upload zone
     const zone  = document.getElementById('qUploadZone');
@@ -1355,11 +1367,12 @@ const PL_CATALOG = {
     });
   }
 
-  function populateCursoSelect() {
+  function populateQCursoSelect() {
     const sel = document.getElementById('qmCurso');
     sel.innerHTML = '<option value="">— Nenhum —</option>';
-    const catalog = window.plAuth ? (localStorage.getItem('pl_catalog_custom') ? JSON.parse(localStorage.getItem('pl_catalog_custom')) : null) : null;
-    const cursos = catalog ? catalog.cursos : (window.PL_CATALOG ? PL_CATALOG.cursos : {});
+    const raw = localStorage.getItem('pl_catalog_custom');
+    const catalog = raw ? JSON.parse(raw) : null;
+    const cursos = (catalog && catalog.cursos) ? catalog.cursos : (window.PL_CATALOG ? PL_CATALOG.cursos : {});
     Object.values(cursos).forEach(c => {
       const o = document.createElement('option');
       o.value = c.id || ''; o.textContent = c.nome || c.id;

@@ -1,325 +1,650 @@
 /* ============================================================
    PROFESSOR LEÃO – CATÁLOGO DE CURSOS E AULAS
    data.js — incluído em minha-area.html, curso.html e aula.html
+   Atualizado conforme editais:
+     SAEB/05/2022 (FCC)  → SD PMBA / SD CBMBA
+     CFOPM/2024  (UNEB)  → CFO PMBA / CFO CBMBA
+   Metodologia Pomodoro: 25 min por vídeo-aula
    ============================================================ */
 
 'use strict';
 
+/* ── atalhos de path para não repetir strings longas ─────── */
+const _V  = '_fontes/cfo-sd/videos/aulas-cfsd/';
+const _VG = '_fontes/cfo-sd/videos/aulas-gravadas/';
+const _VQ = '_fontes/cfo-sd/videos/questoes/';
+const _AP = 'assets/aulas/cfo-sd/';
+const _LP = 'assets/listas/cfo-sd/';
+
+/* ── bloco de matemática reutilizado em todos os cursos ────
+   Recebe um prefixo de ID (ex: 'sdpm', 'sdbm', 'cfopm', 'cfobm')
+   e um offset de numeração (ex: 5 → aula #6 … #29)
+   Retorna array de 24 aulas (SD) ou 26/27 (CFO com juros+estat / CFO-BM com lógica)
+─────────────────────────────────────────────────────────── */
+function _matSD(pfx, offset) {
+  const n = i => offset + i;
+  return [
+    {
+      id: `${pfx}-mat-01`, numero: n(1),
+      titulo: 'Conjuntos Numéricos: N, Z, Q e R',
+      descricao: 'Naturais, Inteiros, Racionais e Reais — propriedades, operações e representação na reta numérica.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-01-conjuntos-numericos.mp4',
+        pdf:      _AP + 'aula-01-conjuntos-numericos.pdf',
+        jogo:     'jogos/conjuntos-numericos.html',
+        lista:    _LP + 'lista-conjuntos-numericos.pdf',
+        resolucao: _VQ + 'questoes-conjuntos-numericos.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-02`, numero: n(2),
+      titulo: 'Números Irracionais, Reais e Complexos',
+      descricao: 'Irracionais (√2, π), completando os Reais e introdução aos Complexos (a + bi).',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-04-irracionais-reais.mp4',
+        pdf:      _AP + 'aula-05-irracionais-complexos.pdf',
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-03`, numero: n(3),
+      titulo: 'Progressão Aritmética (PA)',
+      descricao: 'Termo geral, soma dos termos e propriedades das PAs — muito cobrado em concursos militares.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-13-sequencias-pa.mp4',
+        pdf:      _AP + 'aula-06-pa.pdf',
+        jogo:     null,
+        lista:    _LP + 'lista-juros-pa-pg.pdf',
+        resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-04`, numero: n(4),
+      titulo: 'Progressão Geométrica (PG)',
+      descricao: 'Razão, termo geral, soma de termos finitos e PG infinita decrescente.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-14-pg.mp4',
+        pdf:      '_fontes/cfo-sd/aulas-pdfs/aula-07-pg.pdf',
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-05`, numero: n(5),
+      titulo: 'Números Primos, MMC e MDC',
+      descricao: 'Crivo de Eratóstenes, fatoração, mínimo múltiplo comum e máximo divisor comum.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-02-numeros-primos-mmc-mdc.mp4',
+        pdf:      _AP + 'aula-04-mmc-mdc.pdf',
+        jogo:     'jogos/multiplos-divisores.html',
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-06`, numero: n(6),
+      titulo: 'Números Racionais e Frações',
+      descricao: 'Operações com frações, dízimas periódicas e comparação de frações.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-03-numeros-racionais.mp4',
+        pdf:      _AP + 'aula-02-numeros-racionais.pdf',
+        jogo:     null,
+        lista:    _LP + 'lista-numeros-racionais.pdf',
+        resolucao: _VQ + 'questoes-racionais.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-07`, numero: n(7),
+      titulo: 'Potenciação e Radiciação',
+      descricao: 'Propriedades das potências, raízes e simplificação de radicais.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-11-potenciacao.mp4',
+        pdf:      _AP + 'aula-03-dizimas-potenciacao.pdf',
+        jogo:     'jogos/potenciacao.html',
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-08`, numero: n(8),
+      titulo: 'Teoria dos Conjuntos — Parte 1',
+      descricao: 'Notação, pertinência, subconjuntos, união e intersecção.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-06-teoria-conjuntos-p1.mp4',
+        pdf:      null,
+        jogo:     'jogos/conjuntos-operacoes.html',
+        lista:    _LP + 'lista-teoria-conjuntos.pdf',
+        resolucao: _VQ + 'questoes-teoria-conjuntos.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-09`, numero: n(9),
+      titulo: 'Teoria dos Conjuntos — Parte 2',
+      descricao: 'Diferença, complementar, diagramas de Venn e problemas de contagem.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-07-teoria-conjuntos-p2.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-10`, numero: n(10),
+      titulo: 'Álgebra: Expressões e Polinômios',
+      descricao: 'Produtos notáveis, fatoração algébrica, MDC e MMC de polinômios.',
+      duracao: '25min',
+      materiais: {
+        video:    _VG + 'aula-23-algebra-polinomios.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-11`, numero: n(11),
+      titulo: 'Funções do 1° Grau',
+      descricao: 'Função afim, gráfico, coeficiente angular, zeros e problemas aplicados.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-15-funcao-1grau.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-12`, numero: n(12),
+      titulo: 'Funções do 2° Grau',
+      descricao: 'Parábola, vértice, discriminante, zeros e máximo/mínimo.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-16-funcao-2grau.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-13`, numero: n(13),
+      titulo: 'Funções Exponencial e Logarítmica',
+      descricao: 'Propriedades dos logaritmos, função exponencial e equações logarítmicas.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-18-funcoes-exp-log.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        resolucao: _VQ + 'questoes-funcoes-exp-log.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-14`, numero: n(14),
+      titulo: 'Razão, Proporção e Regra de Três',
+      descricao: 'Grandezas proporcionais, regra de três simples e composta.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-08-razao-proporcao.mp4',
+        pdf:      null,
+        jogo:     'jogos/regra-de-tres.html',
+        lista:    _LP + 'lista-razao-proporcao.pdf',
+        resolucao: _VQ + 'questoes-razao-proporcao.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-15`, numero: n(15),
+      titulo: 'Porcentagem',
+      descricao: 'Cálculo percentual, acréscimos, descontos e problemas de concurso.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-10-porcentagem.mp4',
+        pdf:      null,
+        jogo:     'jogos/porcentagem.html',
+        lista:    _LP + 'lista-razao-proporcao-porcentagem.pdf',
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-16`, numero: n(16),
+      titulo: 'Sistemas Lineares, Matrizes e Determinantes',
+      descricao: 'Operações com matrizes, regra de Cramer e sistemas 2×2 e 3×3.',
+      duracao: '25min',
+      materiais: {
+        video:    _VG + 'aula-22-matrizes-determinantes.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-17`, numero: n(17),
+      titulo: 'Análise Combinatória',
+      descricao: 'Princípio fundamental da contagem, arranjos, permutações e combinações.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-19-combinatoria.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-combinatoria-probabilidade.pdf',
+        resolucao: _VQ + 'questoes-combinatoria.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-18`, numero: n(18),
+      titulo: 'Probabilidade e Binômio de Newton',
+      descricao: 'Espaço amostral, eventos, probabilidade condicional e Binômio de Newton.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-20-probabilidade.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-19`, numero: n(19),
+      titulo: 'Geometria Plana: Triângulos e Conceitos',
+      descricao: 'Ângulos, triângulos, semelhança, congruência, Pitágoras e áreas.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-24-geom-plana-triangulo.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-geometria-plana.pdf',
+        resolucao: _VQ + 'questoes-geometria-plana-v1.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-20`, numero: n(20),
+      titulo: 'Geometria Plana: Quadriláteros, Círculo e Thales',
+      descricao: 'Paralelogramos, trapézios, círculo, arco, Teorema de Thales e áreas.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-25-geom-plana-quadrilateros.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-geometria-plana-2.pdf',
+        resolucao: _VQ + 'questoes-geometria-plana-v2.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-21`, numero: n(21),
+      titulo: 'Geometria Espacial: Prismas e Pirâmides',
+      descricao: 'Volume e área de prismas, cubos, paralelepípedos e pirâmides.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-27-geom-espacial-intro.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-geometria-espacial.pdf',
+        resolucao: _VQ + 'questoes-geometria-espacial.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-22`, numero: n(22),
+      titulo: 'Geometria Espacial: Cilindro, Cone e Esfera',
+      descricao: 'Área lateral, total e volume de cilindros, cones e esferas.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-29-geom-espacial-corpos.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    },
+    {
+      id: `${pfx}-mat-23`, numero: n(23),
+      titulo: 'Geometria Analítica',
+      descricao: 'Distância entre pontos, equação da reta, circunferência e posições relativas.',
+      duracao: '25min',
+      materiais: {
+        video:    _V  + 'aula-30-geometria-analitica.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-geometria-analitica.pdf',
+        resolucao: _VQ + 'questoes-geometria-analitica.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-24`, numero: n(24),
+      titulo: 'Trigonometria',
+      descricao: 'Razões trigonométricas, Lei dos Senos e Cossenos, identidades e equações.',
+      duracao: '25min',
+      materiais: {
+        video:    _VG + 'aula-21-geom-analitica-trig.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    }
+  ];
+}
+
+/* aulas extra somente para cursos CFO (juros + estatística) */
+function _matCFOExtra(pfx, offset25, offset26) {
+  return [
+    {
+      id: `${pfx}-mat-25`, numero: offset25,
+      titulo: 'Juros Simples e Compostos',
+      descricao: 'Capitalização simples e composta, montante, taxa e problemas financeiros.',
+      duracao: '25min',
+      materiais: {
+        video:    _VG + 'aula-08-juros-pa-pg-v1.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    _LP + 'lista-juros-pa-pg.pdf',
+        resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
+      }
+    },
+    {
+      id: `${pfx}-mat-26`, numero: offset26,
+      titulo: 'Estatística Descritiva e Gráficos',
+      descricao: 'Média, mediana, moda, desvio padrão, tabelas e interpretação de gráficos.',
+      duracao: '25min',
+      materiais: {
+        video:    _VG + 'aula-20-estatistica.mp4',
+        pdf:      null,
+        jogo:     null,
+        lista:    null,
+        resolucao: null
+      }
+    }
+  ];
+}
+
+/* aula de lógica matemática (exclusivo CFO CBMBA) */
+function _aulaLogica(pfx, numero) {
+  return {
+    id: `${pfx}-mat-lg`, numero,
+    titulo: 'Lógica Matemática: Proposições e Valores Lógicos',
+    descricao: 'Proposições, conectivos, tabelas-verdade, negação, tautologias e contradições.',
+    duracao: '25min',
+    materiais: {
+      video:    null,
+      pdf:      null,
+      jogo:     null,
+      lista:    null,
+      resolucao: null
+    }
+  };
+}
+
+/* ── helper: aula sem material (LP, Direito, etc.) ───────── */
+function _null(id, num, titulo, descricao) {
+  return {
+    id, numero: num, titulo, descricao, duracao: '25min',
+    materiais: { video: null, pdf: null, jogo: null, lista: null, resolucao: null }
+  };
+}
+
+/* ============================================================
+   BLOCOS TEMÁTICOS COMPARTILHADOS
+   ============================================================ */
+
+/* Língua Portuguesa SD (5 aulas) */
+function _lpSD(pfx, off) {
+  return [
+    _null(`${pfx}-lp-01`, off+1, 'Compreensão e Interpretação de Textos',  'Estratégias de leitura, inferência e identificação de ideias centrais em textos.'),
+    _null(`${pfx}-lp-02`, off+2, 'Morfologia: Classes de Palavras',          'Substantivos, adjetivos, verbos, advérbios — formação e emprego.'),
+    _null(`${pfx}-lp-03`, off+3, 'Sintaxe: Orações e Períodos',              'Análise sintática, coordenação, subordinação e regências.'),
+    _null(`${pfx}-lp-04`, off+4, 'Ortografia, Acentuação e Pontuação',       'Regras ortográficas, novo acordo, acentuação gráfica e uso da vírgula.'),
+    _null(`${pfx}-lp-05`, off+5, 'Semântica e Figuras de Linguagem',         'Sinonímia, antonímia, polissemia, conotação e principais figuras de linguagem.')
+  ];
+}
+
+/* Língua Portuguesa CFO (6 aulas) */
+function _lpCFO(pfx, off) {
+  return [
+    _null(`${pfx}-lp-01`, off+1, 'Compreensão e Interpretação de Textos',       'Leitura crítica, inferências e reconhecimento de estruturas argumentativas.'),
+    _null(`${pfx}-lp-02`, off+2, 'Morfologia: Classes de Palavras — Parte 1',    'Substantivos, artigos, adjetivos, numerais e pronomes.'),
+    _null(`${pfx}-lp-03`, off+3, 'Morfologia: Classes de Palavras — Parte 2',    'Verbos (conjugação, modos e vozes), advérbios, preposições e conjunções.'),
+    _null(`${pfx}-lp-04`, off+4, 'Sintaxe: Análise Sintática e Concordância',    'Sujeito, predicado, complementos verbais e nominais, concordância verbal e nominal.'),
+    _null(`${pfx}-lp-05`, off+5, 'Ortografia, Acentuação e Pontuação',           'Novo acordo ortográfico, acentuação gráfica, crase e emprego dos sinais de pontuação.'),
+    _null(`${pfx}-lp-06`, off+6, 'Semântica, Coesão e Coerência Textual',        'Figuras de linguagem, recursos coesivos e produção de texto dissertativo.')
+  ];
+}
+
+/* Língua Inglesa CFO (4 aulas) */
+function _liCFO(pfx, off) {
+  return [
+    _null(`${pfx}-li-01`, off+1, 'Reading Comprehension — Nível Básico',   'Estratégias de leitura em inglês: skimming, scanning e compreensão global.'),
+    _null(`${pfx}-li-02`, off+2, 'Vocabulário e Falsos Cognatos',           'Vocabulário geral, falsos cognatos e expressões idiomáticas em contexto.'),
+    _null(`${pfx}-li-03`, off+3, 'Tempos Verbais e Estrutura Frasal',       'Present/past/future tenses, voz passiva e estrutura de sentenças em inglês.'),
+    _null(`${pfx}-li-04`, off+4, 'Textos Técnicos e Militares em Inglês',   'Leitura de textos técnicos, militares e de atualidades em língua inglesa.')
+  ];
+}
+
+/* Informática SD (2 aulas) */
+function _infSD(pfx, off) {
+  return [
+    _null(`${pfx}-inf-01`, off+1, 'Sistemas Operacionais e Internet',            'Windows, conceitos de SO, navegadores, e-mail e segurança básica na internet.'),
+    _null(`${pfx}-inf-02`, off+2, 'Pacote Office: Word, Excel e PowerPoint',      'Processador de textos, planilha eletrônica e apresentações — funções básicas.')
+  ];
+}
+
+/* Informática CFO (3 aulas) */
+function _infCFO(pfx, off) {
+  return [
+    _null(`${pfx}-inf-01`, off+1, 'Sistemas Operacionais Windows',               'Gerenciamento de arquivos, configurações e recursos do SO Windows.'),
+    _null(`${pfx}-inf-02`, off+2, 'Pacote Microsoft Office',                      'Word, Excel e PowerPoint — funções intermediárias e atalhos.'),
+    _null(`${pfx}-inf-03`, off+3, 'Internet, Segurança da Informação e Redes',    'Protocolos TCP/IP, firewall, antivírus, criptografia e redes sem fio.')
+  ];
+}
+
+/* História do Brasil SD-PMBA (4 aulas) */
+function _histPMBA(pfx, off) {
+  return [
+    _null(`${pfx}-hist-01`, off+1, 'Brasil Colonial e Período Imperial',           'Descobrimento, colonização, Ciclos Econômicos e o Segundo Reinado.'),
+    _null(`${pfx}-hist-02`, off+2, 'República Velha e Era Vargas',                  'Proclamação da República, oligarquias, Revolução de 1930 e Estado Novo.'),
+    _null(`${pfx}-hist-03`, off+3, 'Ditadura Militar e Redemocratização',           'Golpe de 1964, AI-5, abertura política, Constituição de 1988.'),
+    _null(`${pfx}-hist-04`, off+4, 'História da Bahia',                             'Formação histórica da Bahia, 2 de Julho, personagens e fatos relevantes.')
+  ];
+}
+
+/* Ciências Naturais SD-CBMBA (4 aulas) */
+function _cnCBMBA(pfx, off) {
+  return [
+    _null(`${pfx}-cn-01`, off+1, 'Física: Mecânica, Calor e Eletricidade',         'Cinemática, dinâmica, termologia, eletrostática e eletrodinâmica básica.'),
+    _null(`${pfx}-cn-02`, off+2, 'Química: Átomos, Ligações e Reações',             'Tabela periódica, ligações químicas, reações inorgânicas e balanceamento.'),
+    _null(`${pfx}-cn-03`, off+3, 'Biologia: Citologia, Genética e Fisiologia',      'Célula, divisão celular, leis de Mendel, sistemas do corpo humano.'),
+    _null(`${pfx}-cn-04`, off+4, 'Ecologia e Meio Ambiente',                        'Ecossistemas, cadeias alimentares, impactos ambientais e legislação ambiental.')
+  ];
+}
+
+/* Atualidades (1 aula — compartilhada SD) */
+function _atuSD(pfx, num) {
+  return [ _null(`${pfx}-atu-01`, num, 'Atualidades: Política, Economia e Cidadania', 'Conjuntura nacional e internacional, fatos recentes e temas relevantes para concursos.') ];
+}
+
+/* Ciências Humanas CFO-PMBA (5 aulas) */
+function _humPMBA(pfx, off) {
+  return [
+    _null(`${pfx}-hum-01`, off+1, 'Geografia do Brasil: Regiões e Biomas',          'Regionalização brasileira, biomas, relevo, clima e hidrografia.'),
+    _null(`${pfx}-hum-02`, off+2, 'História do Brasil: Colônia e Império',           'Colonização, mineração, independência, Segundo Reinado e abolição.'),
+    _null(`${pfx}-hum-03`, off+3, 'História do Brasil: República e Contemporâneo',   'República Velha, Vargas, Ditadura Militar, redemocratização e atualidade.'),
+    _null(`${pfx}-hum-04`, off+4, 'História da Bahia e Atualidades',                 'Formação histórica da Bahia, 2 de Julho e acontecimentos recentes.'),
+    _null(`${pfx}-hum-05`, off+5, 'Geopolítica e Relações Internacionais',           'Blocos econômicos, conflitos globais, organismos internacionais e geopolítica.')
+  ];
+}
+
+/* Ciências Humanas e Naturais CFO-CBMBA (6 aulas) */
+function _humnatCBMBA(pfx, off) {
+  return [
+    _null(`${pfx}-humn-01`, off+1, 'Geografia do Brasil: Regiões e Biomas',          'Regionalização, biomas, relevo, clima, hidrografia e recursos naturais.'),
+    _null(`${pfx}-humn-02`, off+2, 'História do Brasil: Colônia e Império',           'Colonização, ciclos econômicos, independência e Segundo Reinado.'),
+    _null(`${pfx}-humn-03`, off+3, 'História do Brasil: República e Contemporâneo',   'Da República Velha à redemocratização — fatos e personagens históricos.'),
+    _null(`${pfx}-humn-04`, off+4, 'Física: Mecânica, Termodinâmica e Eletricidade',  'Cinemática, dinâmica, calor, termodinâmica e eletromagnetismo básico.'),
+    _null(`${pfx}-humn-05`, off+5, 'Química: Reações, Substâncias e Soluções',        'Ligações, reações químicas, pH, soluções e noções de química orgânica.'),
+    _null(`${pfx}-humn-06`, off+6, 'Biologia e Ecologia',                             'Célula, genética, fisiologia humana, ecossistemas e meio ambiente.')
+  ];
+}
+
+/* Direito SD-PMBA (4 aulas) */
+function _dirSDPM(pfx, off) {
+  return [
+    _null(`${pfx}-dir-01`, off+1, 'Direito Constitucional: Princípios e Direitos Fundamentais', 'Constituição de 1988, princípios, direitos e garantias individuais e coletivos.'),
+    _null(`${pfx}-dir-02`, off+2, 'Direitos Humanos e Garantias Individuais',                    'Declaração Universal, tratados internacionais e aplicação nos concursos PM.'),
+    _null(`${pfx}-dir-03`, off+3, 'Direito Administrativo: Princípios e Atos',                   'LIMPE, atos administrativos, poderes da Administração Pública.'),
+    _null(`${pfx}-dir-04`, off+4, 'Direito Penal: Princípios Gerais e Crimes',                   'Teorias do crime, tipicidade, antijuridicidade, culpabilidade e crimes em espécie.')
+  ];
+}
+
+/* Direito SD-CBMBA (4 aulas) */
+function _dirSDBM(pfx, off) {
+  return [
+    _null(`${pfx}-dir-01`, off+1, 'Direito Constitucional: Princípios e Direitos Fundamentais', 'CF/88 — princípios fundamentais, organização do Estado e direitos individuais.'),
+    _null(`${pfx}-dir-02`, off+2, 'Direitos Humanos e Proteção Internacional',                   'Instrumentos internacionais de proteção dos direitos humanos e sua aplicação.'),
+    _null(`${pfx}-dir-03`, off+3, 'Direito Administrativo dos Bombeiros',                        'Organização administrativa, poder de polícia e princípios aplicados ao CBMBA.'),
+    _null(`${pfx}-dir-04`, off+4, 'Estatuto e Regulamento do CBMBA',                             'Lei de Organização Básica, estatuto do Corpo de Bombeiros e deveres militares.')
+  ];
+}
+
+/* Direito CFO-PMBA (7 aulas) */
+function _dirCFOPM(pfx, off) {
+  return [
+    _null(`${pfx}-dir-01`, off+1, 'Direito Constitucional',              'CF/88: direitos fundamentais, organização dos poderes, segurança pública.'),
+    _null(`${pfx}-dir-02`, off+2, 'Direitos Humanos',                    'Sistemas universal e regional de proteção, aplicação prática no contexto policial.'),
+    _null(`${pfx}-dir-03`, off+3, 'Direito Administrativo',              'Atos, poderes, responsabilidade civil do Estado e servidores públicos.'),
+    _null(`${pfx}-dir-04`, off+4, 'Direito Penal',                       'Teoria geral do crime, concurso de agentes, crimes contra a pessoa e o patrimônio.'),
+    _null(`${pfx}-dir-05`, off+5, 'Direito Processual Penal',            'Inquérito policial, ação penal, prisão em flagrante, medidas cautelares.'),
+    _null(`${pfx}-dir-06`, off+6, 'Estatuto da PMBA',                    'Lei de Organização Básica, estatuto dos militares estaduais e regulamento disciplinar.'),
+    _null(`${pfx}-dir-07`, off+7, 'Ética e Legislação Policial',         'Código de Ética PM, uso da força, abordagem policial e direitos do cidadão.')
+  ];
+}
+
+/* Direito CFO-CBMBA (7 aulas) */
+function _dirCFOBM(pfx, off) {
+  return [
+    _null(`${pfx}-dir-01`, off+1, 'Direito Constitucional',              'CF/88: direitos fundamentais, organização dos poderes e defesa civil.'),
+    _null(`${pfx}-dir-02`, off+2, 'Direitos Humanos',                    'Sistemas de proteção dos direitos humanos e sua aplicação pelo Corpo de Bombeiros.'),
+    _null(`${pfx}-dir-03`, off+3, 'Direito Administrativo',              'Atos administrativos, poderes, licitação e contratos da Administração Pública.'),
+    _null(`${pfx}-dir-04`, off+4, 'Direito Penal',                       'Teoria geral do crime, crimes ambientais e crimes de responsabilidade.'),
+    _null(`${pfx}-dir-05`, off+5, 'Direito Processual Penal',            'Inquérito policial, ação penal pública e privada, medidas cautelares.'),
+    _null(`${pfx}-dir-06`, off+6, 'Estatuto do CBMBA',                   'Lei de Organização Básica, estatuto dos bombeiros militares e regulamento disciplinar.'),
+    _null(`${pfx}-dir-07`, off+7, 'Ética e Legislação de Bombeiros',     'Código de Ética BM, proteção e defesa civil, legislação de combate a incêndio.')
+  ];
+}
+
+/* ============================================================
+   CATÁLOGO
+   ============================================================ */
 const PL_CATALOG = {
 
-  /* ── Cursos ────────────────────────────────────────────── */
   cursos: {
 
-    'cfo-pmba': {
-      id: 'cfo-pmba',
-      nome: 'CFO PMBA',
-      subtitulo: 'Curso de Formação de Oficiais',
-      descricao: 'Preparação completa para o CFO PMBA (banca UNEB) — do básico ao avançado, com foco nas matérias de maior peso.',
-      icon: '🎖️',
-      cor: '#fcd34d',
-      corBg: 'rgba(252,211,77,0.12)',
-      aulas: [
-        {
-          id: 'cfo-01', numero: 1,
-          titulo: 'Conjuntos Numéricos',
-          descricao: 'Naturais, Inteiros, Racionais, Irracionais, Reais e Complexos.',
-          duracao: '90min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf',
-            jogo:     'jogos/conjuntos-numericos.html',
-            lista:    'assets/listas/cfo-sd/lista-conjuntos-numericos.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-02', numero: 2,
-          titulo: 'Números Racionais e Frações',
-          descricao: 'Operações com frações, dízimas periódicas e números decimais.',
-          duracao: '80min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-02-numeros-racionais.pdf',
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-numeros-racionais.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-03', numero: 3,
-          titulo: 'Dízimas, Potenciação e Radiciação',
-          descricao: 'Dízimas periódicas, potências e raízes — fundamentos do CFO.',
-          duracao: '75min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-03-dizimas-potenciacao.pdf',
-            jogo:     null,
-            lista:    null,
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-04', numero: 4,
-          titulo: 'MMC e MDC',
-          descricao: 'Mínimo Múltiplo Comum e Máximo Divisor Comum com aplicações.',
-          duracao: '70min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf',
-            jogo:     'jogos/multiplos-divisores.html',
-            lista:    null,
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-05', numero: 5,
-          titulo: 'Números Irracionais e Complexos',
-          descricao: 'Irracionais (π, √2) e introdução aos números complexos.',
-          duracao: '85min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-05-irracionais-complexos.pdf',
-            jogo:     null,
-            lista:    null,
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-06', numero: 6,
-          titulo: 'Teoria dos Conjuntos',
-          descricao: 'União, intersecção, diferença e complementar — muito cobrado na UNEB.',
-          duracao: '90min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     'jogos/conjuntos-operacoes.html',
-            lista:    'assets/listas/cfo-sd/lista-teoria-conjuntos.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-07', numero: 7,
-          titulo: 'Razão, Proporção e Porcentagem',
-          descricao: 'Razão, proporção, regra de três e porcentagem aplicada.',
-          duracao: '95min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-razao-proporcao-porcentagem.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-08', numero: 8,
-          titulo: 'Sequências, PA e PG',
-          descricao: 'Progressões Aritméticas e Geométricas — padrão de questões UNEB.',
-          duracao: '100min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-06-pa.pdf',
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-juros-pa-pg.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-09', numero: 9,
-          titulo: 'Funções do 1° e 2° Graus',
-          descricao: 'Funções lineares, quadráticas, exponenciais e logarítmicas.',
-          duracao: '110min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-funcoes-exp-log.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-10', numero: 10,
-          titulo: 'Geometria Plana',
-          descricao: 'Triângulos, quadriláteros, circunferência e cálculo de áreas.',
-          duracao: '120min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-geometria-plana.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-11', numero: 11,
-          titulo: 'Geometria Espacial',
-          descricao: 'Prismas, pirâmides, cilindros, cones e esferas.',
-          duracao: '110min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-geometria-espacial.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-12', numero: 12,
-          titulo: 'Geometria Analítica',
-          descricao: 'Coordenadas, retas, circunferência e cônicas no plano.',
-          duracao: '120min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-geometria-analitica.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-13', numero: 13,
-          titulo: 'Análise Combinatória e Probabilidade',
-          descricao: 'Arranjos, combinações, permutações e probabilidade.',
-          duracao: '105min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-combinatoria-probabilidade.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'cfo-14', numero: 14,
-          titulo: 'Matrizes e Determinantes',
-          descricao: 'Operações com matrizes, determinantes e sistemas lineares.',
-          duracao: '115min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    null,
-            resolucao: null
-          }
-        }
-      ]
-    },
-
+    /* ────────────────────────────────────────────────────────
+       SD PMBA — SAEB/05/2022 (Banca FCC)
+       40 aulas: LP(5) + Mat(24) + Hist(4) + Atu(1) + Inf(2) + Dir(4)
+    ──────────────────────────────────────────────────────── */
     'sd-pmba': {
       id: 'sd-pmba',
       nome: 'SD PMBA',
       subtitulo: 'Soldado da Polícia Militar da Bahia',
-      descricao: 'Preparação focada no edital do Soldado PMBA — matérias mais cobradas com abordagem objetiva.',
+      descricao: 'Preparação completa para o SD PMBA (SAEB/05/2022 — Banca FCC). Todas as disciplinas do edital em aulas Pomodoro de 25 minutos.',
       icon: '🚔',
       cor: '#60a5fa',
       corBg: 'rgba(96,165,250,0.12)',
       aulas: [
-        {
-          id: 'sd-01', numero: 1,
-          titulo: 'Conjuntos Numéricos',
-          descricao: 'Naturais, inteiros, racionais — base do SD PMBA.',
-          duracao: '80min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf',
-            jogo:     'jogos/conjuntos-numericos.html',
-            lista:    'assets/listas/cfo-sd/lista-conjuntos-numericos.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-02', numero: 2,
-          titulo: 'MMC, MDC e Múltiplos',
-          descricao: 'Múltiplos, divisores, MMC e MDC — muito cobrado no SD.',
-          duracao: '70min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf',
-            jogo:     'jogos/multiplos-divisores.html',
-            lista:    null,
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-03', numero: 3,
-          titulo: 'Números Racionais e Frações',
-          descricao: 'Frações, operações e representação decimal.',
-          duracao: '75min',
-          materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-02-numeros-racionais.pdf',
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-numeros-racionais.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-04', numero: 4,
-          titulo: 'Razão, Proporção e Regra de Três',
-          descricao: 'O tópico mais cobrado no SD PMBA — domine para garantir pontos.',
-          duracao: '90min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-razao-proporcao.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-05', numero: 5,
-          titulo: 'Porcentagem',
-          descricao: 'Porcentagem simples, composta e problemas aplicados.',
-          duracao: '85min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-razao-proporcao-porcentagem.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-06', numero: 6,
-          titulo: 'Teoria dos Conjuntos',
-          descricao: 'União, intersecção e diferença — muito cobrado no SD.',
-          duracao: '80min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     'jogos/conjuntos-operacoes.html',
-            lista:    'assets/listas/cfo-sd/lista-teoria-conjuntos.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-07', numero: 7,
-          titulo: 'Juros Simples e Compostos',
-          descricao: 'Matemática financeira básica cobrada no SD PMBA.',
-          duracao: '80min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-juros-pa-pg.pdf',
-            resolucao: null
-          }
-        },
-        {
-          id: 'sd-08', numero: 8,
-          titulo: 'Geometria Plana',
-          descricao: 'Áreas e perímetros — presença garantida no SD PMBA.',
-          duracao: '90min',
-          materiais: {
-            video:    null,
-            pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-geometria-plana.pdf',
-            resolucao: null
-          }
-        }
+        ..._lpSD('sdpm', 0),
+        ..._matSD('sdpm', 5),
+        ..._histPMBA('sdpm', 29),
+        ..._atuSD('sdpm', 34),
+        ..._infSD('sdpm', 34),
+        ..._dirSDPM('sdpm', 36)
       ]
     },
 
+    /* ────────────────────────────────────────────────────────
+       SD CBMBA — SAEB/05/2022 (Banca FCC)
+       40 aulas: LP(5) + Mat(24) + CN(4) + Atu(1) + Inf(2) + Dir(4)
+    ──────────────────────────────────────────────────────── */
+    'sd-cbmba': {
+      id: 'sd-cbmba',
+      nome: 'SD CBMBA',
+      subtitulo: 'Soldado do Corpo de Bombeiros Militar da Bahia',
+      descricao: 'Preparação para o SD CBMBA (SAEB/05/2022 — Banca FCC). Disciplinas do edital BM em aulas Pomodoro de 25 minutos.',
+      icon: '🔴',
+      cor: '#f87171',
+      corBg: 'rgba(248,113,113,0.12)',
+      aulas: [
+        ..._lpSD('sdbm', 0),
+        ..._matSD('sdbm', 5),
+        ..._cnCBMBA('sdbm', 29),
+        ..._atuSD('sdbm', 34),
+        ..._infSD('sdbm', 34),
+        ..._dirSDBM('sdbm', 36)
+      ]
+    },
+
+    /* ────────────────────────────────────────────────────────
+       CFO PMBA — CFOPM/2024 (Banca UNEB)
+       51 aulas: LP(6) + LI(4) + Mat(26) + Inf(3) + Hum(5) + Dir(7)
+    ──────────────────────────────────────────────────────── */
+    'cfo-pmba': {
+      id: 'cfo-pmba',
+      nome: 'CFO PMBA',
+      subtitulo: 'Curso de Formação de Oficiais — Polícia Militar da Bahia',
+      descricao: 'Preparação completa para o CFO PMBA (CFOPM/2024 — Banca UNEB). Do básico ao avançado em aulas Pomodoro de 25 minutos.',
+      icon: '🎖️',
+      cor: '#fcd34d',
+      corBg: 'rgba(252,211,77,0.12)',
+      aulas: [
+        ..._lpCFO('cfopm', 0),
+        ..._liCFO('cfopm', 6),
+        ..._matSD('cfopm', 10),
+        ..._matCFOExtra('cfopm', 35, 36),
+        ..._infCFO('cfopm', 36),
+        ..._humPMBA('cfopm', 39),
+        ..._dirCFOPM('cfopm', 44)
+      ]
+    },
+
+    /* ────────────────────────────────────────────────────────
+       CFO CBMBA — CFOPM/2024 (Banca UNEB)
+       53 aulas: LP(6) + LI(4) + Mat(27) + Inf(3) + HumNat(6) + Dir(7)
+    ──────────────────────────────────────────────────────── */
+    'cfo-cbmba': {
+      id: 'cfo-cbmba',
+      nome: 'CFO CBMBA',
+      subtitulo: 'Curso de Formação de Oficiais — Corpo de Bombeiros Militar da Bahia',
+      descricao: 'Preparação para o CFO CBMBA (CFOPM/2024 — Banca UNEB). Edital BM com Ciências Naturais e Lógica Matemática — 25 min por aula.',
+      icon: '🚒',
+      cor: '#fb923c',
+      corBg: 'rgba(251,146,60,0.12)',
+      aulas: [
+        ..._lpCFO('cfobm', 0),
+        ..._liCFO('cfobm', 6),
+        _aulaLogica('cfobm', 11),
+        ..._matSD('cfobm', 11),
+        ..._matCFOExtra('cfobm', 36, 37),
+        ..._infCFO('cfobm', 37),
+        ..._humnatCBMBA('cfobm', 40),
+        ..._dirCFOBM('cfobm', 46)
+      ]
+    },
+
+    /* ────────────────────────────────────────────────────────
+       MATEMÁTICA BÁSICA — Fundamentos para Concursos
+    ──────────────────────────────────────────────────────── */
     'mat-basica': {
       id: 'mat-basica',
       nome: 'Matemática Básica',
@@ -333,23 +658,23 @@ const PL_CATALOG = {
           id: 'mb-01', numero: 1,
           titulo: 'Conjuntos Numéricos',
           descricao: 'Entenda os conjuntos numéricos e suas propriedades fundamentais.',
-          duracao: '80min',
+          duracao: '25min',
           materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-01-conjuntos-numericos.pdf',
+            video:    _V  + 'aula-01-conjuntos-numericos.mp4',
+            pdf:      _AP + 'aula-01-conjuntos-numericos.pdf',
             jogo:     'jogos/conjuntos-numericos.html',
-            lista:    'assets/listas/cfo-sd/lista-conjuntos-numericos.pdf',
-            resolucao: null
+            lista:    _LP + 'lista-conjuntos-numericos.pdf',
+            resolucao: _VQ + 'questoes-conjuntos-numericos.mp4'
           }
         },
         {
           id: 'mb-02', numero: 2,
           titulo: 'MMC e MDC',
           descricao: 'Múltiplos, divisores, mínimo múltiplo e máximo divisor.',
-          duracao: '70min',
+          duracao: '25min',
           materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-04-mmc-mdc.pdf',
+            video:    _V  + 'aula-02-numeros-primos-mmc-mdc.mp4',
+            pdf:      _AP + 'aula-04-mmc-mdc.pdf',
             jogo:     'jogos/multiplos-divisores.html',
             lista:    null,
             resolucao: null
@@ -359,24 +684,24 @@ const PL_CATALOG = {
           id: 'mb-03', numero: 3,
           titulo: 'Frações e Números Decimais',
           descricao: 'Operações com frações, decimais e conversões essenciais.',
-          duracao: '75min',
+          duracao: '25min',
           materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-02-numeros-racionais.pdf',
+            video:    _V  + 'aula-03-numeros-racionais.mp4',
+            pdf:      _AP + 'aula-02-numeros-racionais.pdf',
             jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-numeros-racionais.pdf',
-            resolucao: null
+            lista:    _LP + 'lista-numeros-racionais.pdf',
+            resolucao: _VQ + 'questoes-racionais.mp4'
           }
         },
         {
           id: 'mb-04', numero: 4,
           titulo: 'Potenciação e Radiciação',
           descricao: 'Potências, raízes e dízimas periódicas.',
-          duracao: '70min',
+          duracao: '25min',
           materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-03-dizimas-potenciacao.pdf',
-            jogo:     null,
+            video:    _V  + 'aula-11-potenciacao.mp4',
+            pdf:      _AP + 'aula-03-dizimas-potenciacao.pdf',
+            jogo:     'jogos/potenciacao.html',
             lista:    null,
             resolucao: null
           }
@@ -385,58 +710,61 @@ const PL_CATALOG = {
           id: 'mb-05', numero: 5,
           titulo: 'Razão, Proporção e Regra de Três',
           descricao: 'Conceito central de toda matemática aplicada a concursos.',
-          duracao: '85min',
+          duracao: '25min',
           materiais: {
-            video:    null,
+            video:    _V  + 'aula-08-razao-proporcao.mp4',
             pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-razao-proporcao.pdf',
-            resolucao: null
+            jogo:     'jogos/regra-de-tres.html',
+            lista:    _LP + 'lista-razao-proporcao.pdf',
+            resolucao: _VQ + 'questoes-razao-proporcao.mp4'
           }
         },
         {
           id: 'mb-06', numero: 6,
           titulo: 'PA e PG',
           descricao: 'Progressões aritméticas e geométricas — bases sólidas.',
-          duracao: '90min',
+          duracao: '25min',
           materiais: {
-            video:    null,
-            pdf:      'assets/aulas/cfo-sd/aula-06-pa.pdf',
+            video:    _V  + 'aula-13-sequencias-pa.mp4',
+            pdf:      _AP + 'aula-06-pa.pdf',
             jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-juros-pa-pg.pdf',
-            resolucao: null
+            lista:    _LP + 'lista-juros-pa-pg.pdf',
+            resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
           }
         },
         {
           id: 'mb-07', numero: 7,
           titulo: 'Teoria dos Conjuntos',
           descricao: 'União, intersecção e diferença — fundamentos da lógica matemática.',
-          duracao: '80min',
+          duracao: '25min',
           materiais: {
-            video:    null,
+            video:    _V  + 'aula-06-teoria-conjuntos-p1.mp4',
             pdf:      null,
             jogo:     'jogos/conjuntos-operacoes.html',
-            lista:    'assets/listas/cfo-sd/lista-teoria-conjuntos.pdf',
-            resolucao: null
+            lista:    _LP + 'lista-teoria-conjuntos.pdf',
+            resolucao: _VQ + 'questoes-teoria-conjuntos.mp4'
           }
         }
       ]
     },
 
+    /* ────────────────────────────────────────────────────────
+       CORREIOS — mantido conforme estrutura anterior
+    ──────────────────────────────────────────────────────── */
     'correios': {
       id: 'correios',
       nome: 'Correios',
       subtitulo: 'Empresa Brasileira de Correios e Telégrafos',
       descricao: 'Preparação para o concurso dos Correios — foco em matemática e raciocínio lógico.',
       icon: '📬',
-      cor: '#fb923c',
-      corBg: 'rgba(251,146,60,0.12)',
+      cor: '#a78bfa',
+      corBg: 'rgba(167,139,250,0.12)',
       aulas: [
         {
           id: 'cr-01', numero: 1,
           titulo: 'Inteiros, Múltiplos e Divisores',
           descricao: 'Números inteiros, múltiplos e divisores — base do edital dos Correios.',
-          duracao: '75min',
+          duracao: '25min',
           materiais: {
             video:    null,
             pdf:      'assets/aulas/correios/aula-01-inteiros-multiplos.pdf',
@@ -449,7 +777,7 @@ const PL_CATALOG = {
           id: 'cr-02', numero: 2,
           titulo: 'Números Racionais',
           descricao: 'Frações e operações com números racionais.',
-          duracao: '70min',
+          duracao: '25min',
           materiais: {
             video:    null,
             pdf:      'assets/aulas/correios/aula-02-numeros-racionais.pdf',
@@ -462,12 +790,12 @@ const PL_CATALOG = {
           id: 'cr-03', numero: 3,
           titulo: 'Porcentagem e Regra de Três',
           descricao: 'Porcentagem e regra de três — presença garantida na prova dos Correios.',
-          duracao: '80min',
+          duracao: '25min',
           materiais: {
             video:    null,
             pdf:      null,
-            jogo:     null,
-            lista:    'assets/listas/cfo-sd/lista-razao-proporcao-porcentagem.pdf',
+            jogo:     'jogos/porcentagem.html',
+            lista:    _LP + 'lista-razao-proporcao-porcentagem.pdf',
             resolucao: null
           }
         },
@@ -475,7 +803,7 @@ const PL_CATALOG = {
           id: 'cr-04', numero: 4,
           titulo: 'Raciocínio Lógico',
           descricao: 'Lógica proposicional e argumentação — específico dos Correios.',
-          duracao: '90min',
+          duracao: '25min',
           materiais: {
             video:    null,
             pdf:      null,
@@ -488,7 +816,7 @@ const PL_CATALOG = {
           id: 'cr-05', numero: 5,
           titulo: 'Geometria e Estatística',
           descricao: 'Geometria básica e interpretação de gráficos e tabelas.',
-          duracao: '85min',
+          duracao: '25min',
           materiais: {
             video:    null,
             pdf:      null,
@@ -545,25 +873,24 @@ const PL_CATALOG = {
 
 };
 
-/* ──────────────────────────────────────────
-   OVERRIDES DO ADMIN (localStorage)
-   O painel admin salva em 'pl_catalog_custom'.
-   Aplicamos aqui APÓS definir o catálogo base,
-   para que todos os métodos (getCurso, etc.)
-   continuem funcionando com os dados editados.
-────────────────────────────────────────── */
-(function _applyAdminOverrides() {
+/* ── Admin override via localStorage ──────────────────────
+   O painel admin salva o catálogo completo no formato:
+     { cursos: { 'id': {...} }, ATIVIDADES: [...] }
+   Esta função aplica esses dados sobre o PL_CATALOG em tempo
+   de execução, sem alterar este arquivo.
+─────────────────────────────────────────────────────────── */
+(function _applyCustomOverrides() {
   try {
     const raw = localStorage.getItem('pl_catalog_custom');
     if (!raw) return;
     const saved = JSON.parse(raw);
-    if (saved && saved.cursos) {
+    if (!saved) return;
+    // Formato do admin: { cursos: {...}, ATIVIDADES: [...] }
+    if (saved.cursos && typeof saved.cursos === 'object') {
       PL_CATALOG.cursos = saved.cursos;
     }
-    if (saved && Array.isArray(saved.ATIVIDADES)) {
+    if (Array.isArray(saved.ATIVIDADES) && saved.ATIVIDADES.length) {
       PL_CATALOG.ATIVIDADES = saved.ATIVIDADES;
     }
-  } catch (e) {
-    console.warn('[PL] Erro ao aplicar overrides do admin:', e);
-  }
+  } catch (e) { /* silently ignore */ }
 })();
