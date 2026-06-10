@@ -136,7 +136,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-07-teoria-conjuntos-p2.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/conjuntos-operacoes.html',
         lista:    null,
         resolucao: null
       }
@@ -253,7 +253,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-20-probabilidade.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/combinatoria.html',
         lista:    null,
         resolucao: null
       }
@@ -688,7 +688,7 @@ const PL_CATALOG = {
           materiais: {
             video:    _V  + 'aula-03-numeros-racionais.mp4',
             pdf:      _AP + 'aula-02-numeros-racionais.pdf',
-            jogo:     null,
+            jogo:     'jogos/fracoes.html',
             lista:    _LP + 'lista-numeros-racionais.pdf',
             resolucao: _VQ + 'questoes-racionais.mp4'
           }
@@ -781,7 +781,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      'assets/aulas/correios/aula-02-numeros-racionais.pdf',
-            jogo:     null,
+            jogo:     'jogos/fracoes.html',
             lista:    null,
             resolucao: null
           }
@@ -820,7 +820,7 @@ const PL_CATALOG = {
           materiais: {
             video:    null,
             pdf:      null,
-            jogo:     null,
+            jogo:     'jogos/geometria-plana.html',
             lista:    null,
             resolucao: null
           }
