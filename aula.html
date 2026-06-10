@@ -593,7 +593,8 @@ KEYS.forEach(key => {
   const daAula  = todas.filter(l => (l.aulaId && l.aulaId === _aulaId) || matchIds(l));
   const doCurso = todas.filter(l =>
     !l.aulaId && !(Array.isArray(l.aulaIds) && l.aulaIds.length) && l.cursoId === _cursoId);
-  const listas  = [...daAula, ...doCurso];
+  /* apenas UMA lista interativa por aula — prioridade: vinculada à aula > do curso */
+  const listas  = [...daAula, ...doCurso].slice(0, 1);
   if (!listas.length) return;
 
   const escL = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

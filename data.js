@@ -905,11 +905,27 @@ const PL_CATALOG = {
    customizados salvos com esses caminhos.
 ─────────────────────────────────────────────────────────── */
 (function _normalizeLocalSources() {
+  /* Jogos antigos (versões sem ranking, antes em assets/jogos/ ou com
+     nome de exibição) → versões novas em jogos/. Catálogos salvos pelo
+     admin no localStorage podem ainda apontar para os antigos. */
+  const LEGACY_GAME_MAP = {
+    'assets/jogos/conjuntos-numericos.html': 'jogos/conjuntos-numericos.html',
+    'assets/jogos/multiplos-divisores.html': 'jogos/multiplos-divisores.html',
+    'assets/jogos/teoria-conjuntos.html':    'jogos/conjuntos-operacoes.html',
+    'Jogos/Jogo dos Conjuntos Numéricos - Professor Leão.html': 'jogos/conjuntos-numericos.html',
+    'jogos/Jogo dos Conjuntos Numéricos - Professor Leão.html': 'jogos/conjuntos-numericos.html',
+    'Jogos/Múltiplos e Divisores.html': 'jogos/multiplos-divisores.html',
+    'jogos/Múltiplos e Divisores.html': 'jogos/multiplos-divisores.html',
+    'Jogos/Teoria dos Conjuntos.html':  'jogos/conjuntos-operacoes.html',
+    'jogos/Teoria dos Conjuntos.html':  'jogos/conjuntos-operacoes.html',
+  };
   Object.values(PL_CATALOG.cursos || {}).forEach(curso => {
     (curso.aulas || []).forEach(aula => {
       const m = aula.materiais || {};
       Object.keys(m).forEach(k => {
-        if (typeof m[k] === 'string' && m[k].indexOf('_fontes/') === 0) m[k] = null;
+        if (typeof m[k] !== 'string') return;
+        if (m[k].indexOf('_fontes/') === 0) { m[k] = null; return; }
+        if (LEGACY_GAME_MAP[m[k]]) m[k] = LEGACY_GAME_MAP[m[k]];
       });
     });
   });
