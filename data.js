@@ -58,7 +58,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-13-sequencias-pa.mp4',
         pdf:      _AP + 'aula-06-pa.pdf',
-        jogo:     null,
+        jogo:     'jogos/pa-pg.html',
         lista:    _LP + 'lista-juros-pa-pg.pdf',
         resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
       }
@@ -71,7 +71,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-14-pg.mp4',
         pdf:      '_fontes/cfo-sd/aulas-pdfs/aula-07-pg.pdf',
-        jogo:     null,
+        jogo:     'jogos/pa-pg.html',
         lista:    null,
         resolucao: null
       }
@@ -97,7 +97,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-03-numeros-racionais.mp4',
         pdf:      _AP + 'aula-02-numeros-racionais.pdf',
-        jogo:     null,
+        jogo:     'jogos/fracoes.html',
         lista:    _LP + 'lista-numeros-racionais.pdf',
         resolucao: _VQ + 'questoes-racionais.mp4'
       }
@@ -162,7 +162,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-15-funcao-1grau.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/funcoes.html',
         lista:    null,
         resolucao: null
       }
@@ -175,7 +175,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-16-funcao-2grau.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/funcoes.html',
         lista:    null,
         resolucao: null
       }
@@ -240,7 +240,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-19-combinatoria.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/combinatoria.html',
         lista:    _LP + 'lista-combinatoria-probabilidade.pdf',
         resolucao: _VQ + 'questoes-combinatoria.mp4'
       }
@@ -266,7 +266,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-24-geom-plana-triangulo.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/geometria-plana.html',
         lista:    _LP + 'lista-geometria-plana.pdf',
         resolucao: _VQ + 'questoes-geometria-plana-v1.mp4'
       }
@@ -279,7 +279,7 @@ function _matSD(pfx, offset) {
       materiais: {
         video:    _V  + 'aula-25-geom-plana-quadrilateros.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/geometria-plana.html',
         lista:    _LP + 'lista-geometria-plana-2.pdf',
         resolucao: _VQ + 'questoes-geometria-plana-v2.mp4'
       }
@@ -350,7 +350,7 @@ function _matCFOExtra(pfx, offset25, offset26) {
       materiais: {
         video:    _VG + 'aula-08-juros-pa-pg-v1.mp4',
         pdf:      null,
-        jogo:     null,
+        jogo:     'jogos/juros.html',
         lista:    _LP + 'lista-juros-pa-pg.pdf',
         resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
       }
@@ -727,7 +727,7 @@ const PL_CATALOG = {
           materiais: {
             video:    _V  + 'aula-13-sequencias-pa.mp4',
             pdf:      _AP + 'aula-06-pa.pdf',
-            jogo:     null,
+            jogo:     'jogos/pa-pg.html',
             lista:    _LP + 'lista-juros-pa-pg.pdf',
             resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
           }

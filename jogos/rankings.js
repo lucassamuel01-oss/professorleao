@@ -179,10 +179,57 @@ const PL_Rankings = (() => {
     return `${day} dias atrás`;
   }
 
+  const ALL_GAME_IDS = [
+    'conjuntos-numericos',
+    'conjuntos-operacoes',
+    'multiplos-divisores',
+    'potenciacao',
+    'regra-de-tres',
+    'porcentagem',
+    'pa-pg',
+    'fracoes',
+    'funcoes',
+    'geometria-plana',
+    'combinatoria',
+    'juros',
+  ];
+
+  /**
+   * Ranking global: soma o melhor ws de cada jogo por jogador,
+   * depois ordena pelo total. Só conta jogos em que o jogador participou.
+   * @param {string[]} gameIds   lista de IDs a considerar (default: ALL_GAME_IDS)
+   * @param {'all'|'daily'|'weekly'} period
+   * @param {number} limit
+   * @returns {Array} [{ n, e, total, games, rank }, ...]
+   */
+  function getGlobalBoard(gameIds, period, limit) {
+    gameIds = gameIds || ALL_GAME_IDS;
+    period  = period  || 'all';
+    limit   = limit   || 20;
+
+    const totals = {};
+    gameIds.forEach(gid => {
+      const board = getBoard(gid, period, 10000);
+      board.forEach(e => {
+        const key = e.e || ('__name__' + e.n);
+        if (!totals[key]) totals[key] = { n: e.n, e: e.e, total: 0, games: 0 };
+        const ws = e.ws !== undefined ? e.ws : e.s;
+        totals[key].total += ws;
+        totals[key].games += 1;
+      });
+    });
+
+    return Object.values(totals)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, limit)
+      .map((e, i) => ({ ...e, rank: i + 1 }));
+  }
+
   return {
     save, getBoard, getPlayerRank, getPlayerBest,
-    getGameStats, getGlobalStats,
+    getGameStats, getGlobalStats, getGlobalBoard,
     calcWeighted, timeAgo,
-    DIFF_MULTIPLIER, DIFF_LABEL, DIFF_COLOR
+    DIFF_MULTIPLIER, DIFF_LABEL, DIFF_COLOR,
+    ALL_GAME_IDS,
   };
 })();
