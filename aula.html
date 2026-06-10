@@ -264,6 +264,12 @@
   <!-- Activities grid -->
   <div class="acts-grid" id="actsGrid"><!-- JS-rendered --></div>
 
+  <!-- Listas de questões interativas vinculadas à aula/curso -->
+  <section id="listasIntSec" style="display:none;margin-top:28px">
+    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px">📝 Listas de Questões Interativas</h2>
+    <div id="listasIntGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
+  </section>
+
   <!-- Prev / Next navigation -->
   <div class="lesson-nav">
     <a class="nav-btn prev disabled" id="navPrev" href="#">
@@ -294,6 +300,7 @@
 
 <script src="auth.js"></script>
 <script src="data.js"></script>
+<script src="questoes.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════
    AUTH
@@ -571,6 +578,50 @@ KEYS.forEach(key => {
 
   grid.appendChild(card);
 });
+
+/* ═══════════════════════════════════════════════════
+   LISTAS DE QUESTÕES INTERATIVAS (vinculadas via admin)
+═══════════════════════════════════════════════════ */
+(function _renderListasInterativas() {
+  if (typeof PlQuestoes === 'undefined') return;
+  const todas   = PlQuestoes.getLists();
+  const daAula  = todas.filter(l => l.aulaId && l.aulaId === _aulaId);
+  const doCurso = todas.filter(l => !l.aulaId && l.cursoId === _cursoId);
+  const listas  = [...daAula, ...doCurso];
+  if (!listas.length) return;
+
+  const escL = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  document.getElementById('listasIntGrid').innerHTML = listas.map(l => {
+    const prev  = PlQuestoes.getResp(l.id, _session.email);
+    const score = prev && prev.finalizadoEm ? PlQuestoes.calcScore(l.id, prev.respostas) : null;
+    let cta = '▶ Resolver';
+    let scoreHtml = '';
+    if (score) {
+      const cor = score.percent >= 70 ? '#22c55e' : score.percent >= 50 ? '#f59e0b' : '#ef4444';
+      scoreHtml = `<span style="font-family:var(--font-h);font-weight:900;color:${cor}">${score.percent}%</span>`;
+      cta = '🔄 Refazer';
+    } else if (prev && !prev.finalizadoEm) {
+      cta = `▶ Continuar (${Object.keys(prev.respostas || {}).length}/${l.total})`;
+    }
+    const badge = l.aulaId
+      ? '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(74,108,247,.18);color:#8ea4f8;white-space:nowrap">Desta aula</span>'
+      : '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--silver);white-space:nowrap">Do curso</span>';
+    return `<a href="lista.html?id=${encodeURIComponent(l.id)}" style="display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);text-decoration:none;color:inherit">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <strong style="font-family:var(--font-h);font-size:14px">${escL(l.titulo)}</strong>
+        ${badge}
+      </div>
+      <div style="font-size:12px;color:var(--silver)">${l.total} questões${l.materia ? ' · ' + escL(l.materia) : ''}${l.fonte ? ' · ' + escL(l.fonte) : ''}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto">
+        <span style="font-family:var(--font-h);font-weight:800;font-size:13px;color:var(--accent)">${cta}</span>
+        ${scoreHtml}
+      </div>
+    </a>`;
+  }).join('');
+
+  document.getElementById('listasIntSec').style.display = 'block';
+})();
 
 /* ═══════════════════════════════════════════════════
    HELPERS

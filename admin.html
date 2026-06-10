@@ -600,6 +600,12 @@
                   <option value="">— Nenhum —</option>
                 </select>
               </div>
+              <div class="field">
+                <label>Aula vinculada (opcional)</label>
+                <select id="qmAula">
+                  <option value="">— Nenhuma —</option>
+                </select>
+              </div>
             </div>
 
             <!-- Gabarito manual (se não detectado) -->
@@ -1370,14 +1376,34 @@ const PL_CATALOG = {
   function populateQCursoSelect() {
     const sel = document.getElementById('qmCurso');
     sel.innerHTML = '<option value="">— Nenhum —</option>';
-    const raw = localStorage.getItem('pl_catalog_custom');
-    const catalog = raw ? JSON.parse(raw) : null;
-    const cursos = (catalog && catalog.cursos) ? catalog.cursos : (window.PL_CATALOG ? PL_CATALOG.cursos : {});
+    const cursos = _getQCursos();
     Object.values(cursos).forEach(c => {
       const o = document.createElement('option');
       o.value = c.id || ''; o.textContent = c.nome || c.id;
       sel.appendChild(o);
     });
+    sel.addEventListener('change', e => populateQAulaSelect(e.target.value));
+  }
+
+  function _getQCursos() {
+    const raw = localStorage.getItem('pl_catalog_custom');
+    const catalog = raw ? JSON.parse(raw) : null;
+    return (catalog && catalog.cursos) ? catalog.cursos : (window.PL_CATALOG ? PL_CATALOG.cursos : {});
+  }
+
+  function populateQAulaSelect(cursoId, selected) {
+    const sel = document.getElementById('qmAula');
+    sel.innerHTML = '<option value="">— Nenhuma —</option>';
+    if (!cursoId) return;
+    const curso = _getQCursos()[cursoId];
+    if (!curso || !Array.isArray(curso.aulas)) return;
+    curso.aulas.forEach((a, i) => {
+      const o = document.createElement('option');
+      o.value = a.id;
+      o.textContent = `${String(i + 1).padStart(2, '0')} — ${a.titulo}`;
+      sel.appendChild(o);
+    });
+    if (selected) sel.value = selected;
   }
 
   async function processFile(file) {
@@ -1543,6 +1569,7 @@ const PL_CATALOG = {
       fonte:      document.getElementById('qmFonte').value.trim(),
       dificuldade:document.getElementById('qmDificuldade').value,
       cursoId:    document.getElementById('qmCurso').value,
+      aulaId:     document.getElementById('qmAula').value,
       questoes:   _parsedQuestoes.map(q => ({
         num:       q.num,
         enunciado: q.enunciado.trim(),
@@ -1571,6 +1598,7 @@ const PL_CATALOG = {
     document.getElementById('qmMateria').value  = '';
     document.getElementById('qmFonte').value    = '';
     document.getElementById('qmDificuldade').value = 'medio';
+    document.getElementById('qmAula').value     = '';
     document.getElementById('qEditorList').innerHTML = '';
   }
 
@@ -1639,6 +1667,7 @@ const PL_CATALOG = {
     document.getElementById('qmFonte').value       = lista.fonte || '';
     document.getElementById('qmDificuldade').value = lista.dificuldade || 'medio';
     if (lista.cursoId) document.getElementById('qmCurso').value = lista.cursoId;
+    populateQAulaSelect(lista.cursoId || '', lista.aulaId || '');
 
     setParseStatus('ok', `✏️ Editando lista: <strong>${esc(lista.titulo)}</strong> — ${lista.questoes.length} questões`);
     document.getElementById('qMetaForm').style.display    = 'block';
@@ -1666,6 +1695,7 @@ const PL_CATALOG = {
       fonte:      document.getElementById('qmFonte').value.trim(),
       dificuldade:document.getElementById('qmDificuldade').value,
       cursoId:    document.getElementById('qmCurso').value,
+      aulaId:     document.getElementById('qmAula').value,
       criadoEm:   (PlQuestoes.getList(_editingListaId)||{}).criadoEm || new Date().toISOString(),
       questoes:   _parsedQuestoes.map(q => ({
         num: q.num, enunciado: q.enunciado.trim(),
