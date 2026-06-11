@@ -407,6 +407,42 @@
       }
       @page { margin: 14mm 14mm 16mm; size: A4; }
     }
+    /* ── Missão de Hoje + Leão IA ────── */
+    .meta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0 14px; }
+    .meta-box {
+      flex: 1; min-width: 130px; padding: 12px 14px; border-radius: 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    }
+    .meta-box .mv { font-family: var(--font-h); font-size: 20px; font-weight: 900; }
+    .meta-box .ml { font-size: 11px; color: var(--silver); margin-top: 2px; }
+    .lembrete {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 9px 12px; border-radius: 10px; margin-bottom: 7px;
+      background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent);
+      font-size: 13px; line-height: 1.55; color: #D6DCEC;
+    }
+    .lembrete.alerta  { border-left-color: #f59e0b; background: rgba(245,158,11,0.07); }
+    .lembrete.urgente { border-left-color: #ef4444; background: rgba(239,68,68,0.07); }
+    .lembrete.ok      { border-left-color: #22c55e; background: rgba(34,197,94,0.06); }
+    .mat-chip {
+      display: inline-block; padding: 4px 11px; border-radius: 99px; margin: 2px 4px 2px 0;
+      background: rgba(74,108,247,0.14); border: 1px solid rgba(74,108,247,0.3);
+      color: var(--accent-light); font-size: 12px; font-weight: 700;
+    }
+    .ia-chip {
+      padding: 8px 14px; border-radius: 99px; cursor: pointer;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+      color: #D6DCEC; font-family: var(--font-h); font-size: 12px; font-weight: 700;
+      transition: .2s;
+    }
+    .ia-chip:hover { border-color: var(--accent); color: #fff; background: rgba(74,108,247,0.12); }
+    .ia-bubble {
+      padding: 12px 16px; border-radius: 14px; font-size: 13.5px; line-height: 1.7;
+      white-space: pre-line; max-width: 100%;
+    }
+    .ia-bubble--user { align-self: flex-end; background: rgba(74,108,247,0.18); border: 1px solid rgba(74,108,247,0.35); }
+    .ia-bubble--leao { align-self: flex-start; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #D6DCEC; }
+    .ia-bubble--leao strong { color: var(--accent-light); }
   </style>
 </head>
 <body>
@@ -464,6 +500,30 @@
     <p>Escolha um curso para ver as aulas disponíveis</p>
   </div>
   <div class="courses-grid" id="coursesGrid" style="margin-bottom:40px"></div>
+
+  <!-- 🎯 Missão de Hoje — metas, lembretes e alertas do plano -->
+  <div id="missaoSec" style="display:none">
+    <div class="sec-header">
+      <h2>🎯 Missão de Hoje</h2>
+      <p id="missaoSub">Metas e lembretes personalizados conforme a sua rotina</p>
+    </div>
+    <div id="missaoCard" style="background:var(--navy-2);border:1px solid rgba(74,108,247,.25);border-radius:var(--radius);padding:20px 22px;margin-bottom:40px"></div>
+  </div>
+
+  <!-- 🦁 Leão IA — acompanhamento de desempenho -->
+  <div class="sec-header">
+    <h2>🦁 Leão IA</h2>
+    <p>Acompanhamento inteligente do seu desempenho</p>
+  </div>
+  <div id="iaCard" style="background:var(--navy-2);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:20px 22px;margin-bottom:40px">
+    <div id="iaChat" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="ia-chip" onclick="leaoPerguntar('analise')">📊 Como está meu desempenho?</button>
+      <button class="ia-chip" onclick="leaoPerguntar('estudar')">🎯 O que estudar agora?</button>
+      <button class="ia-chip" onclick="leaoPerguntar('fracos')">🧩 Meus pontos fracos</button>
+      <button class="ia-chip" onclick="leaoPerguntar('projecao')">🔮 Projeção até a prova</button>
+    </div>
+  </div>
 
   <!-- Quadro de Avisos -->
   <div class="sec-header" id="avisosSec" style="display:none">
@@ -583,6 +643,10 @@
               <div class="pf-group">
                 <label>Data da prova *</label>
                 <input type="date" id="pubDataProva" name="dataProva" required />
+                <label style="display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;color:var(--silver);cursor:pointer;font-weight:400;text-transform:none;letter-spacing:0">
+                  <input type="checkbox" id="pubSemData" style="width:15px;height:15px;accent-color:var(--accent)" />
+                  📅 Ainda não sei a data da prova
+                </label>
               </div>
               <div class="pf-group">
                 <label>Horas por dia *</label>
@@ -693,6 +757,7 @@
 <script src="listas-data.js"></script>
 <script src="questoes.js"></script>
 <script src="avisos-data.js"></script>
+<script src="jogos/rankings.js"></script>
 <script>
 /* ── Auth ── */
 const _session = plAuth.requireAuth();
@@ -923,14 +988,14 @@ function renderIntegracaoHTML(dados) {
   const pct = comMat ? Math.round((feitas / comMat) * 100) : 0;
 
   const btnProx = prox
-    ? `<a href="aula.html?curso=${cursoId}&aula=${prox.id}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;text-decoration:none">▶ Estudar agora: Aula ${prox.numero} — ${esc(prox.titulo)}</a>`
+    ? `<a href="aula.html?curso=${cursoId}&aula=${prox.id}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;text-decoration:none">▶ Estudar agora: Aula ${prox.numero} — ${escHtml(prox.titulo)}</a>`
     : `<span style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-family:var(--font-h);font-size:13px;font-weight:800">🏆 Todas as aulas disponíveis concluídas!</span>`;
 
   return `<div style="margin-bottom:18px;padding:18px 20px;border-radius:14px;background:rgba(74,108,247,.08);border:1px solid rgba(74,108,247,.3)">
-    <div style="font-family:var(--font-h);font-weight:900;font-size:15px;margin-bottom:6px">🎯 ${esc(primeiroNome)}, seu plano está conectado às aulas</div>
+    <div style="font-family:var(--font-h);font-weight:900;font-size:15px;margin-bottom:6px">🎯 ${escHtml(primeiroNome)}, seu plano está conectado às aulas</div>
     <div style="font-size:12.5px;color:var(--silver);line-height:1.6;margin-bottom:12px">
       Cada Pomodoro de matemática do cronograma corresponde a uma aula do curso
-      <strong style="color:#fff">${esc(curso.nome)}</strong> — você já concluiu
+      <strong style="color:#fff">${escHtml(curso.nome)}</strong> — você já concluiu
       <strong style="color:var(--accent-light)">${feitas} de ${comMat} aulas (${pct}%)</strong>.
       Siga o plano e marque as atividades dentro de cada aula.
     </div>
@@ -959,6 +1024,12 @@ function preencherFormComLead(lead) {
   const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
   set('pubConcurso', lead.concurso);
   set('pubDataProva', lead.dataProva || '');
+  // Restaura o estado de "ainda não sei a data"
+  const semDataCb = document.getElementById('pubSemData');
+  if (semDataCb) {
+    semDataCb.checked = !lead.dataProva;
+    semDataCb.dispatchEvent(new Event('change'));
+  }
   set('pubHorasDia', lead.horasDia);
   set('pubDiasSemana', lead.diasSemana);
   set('pubTrabalha', lead.trabalha || '');
@@ -1011,9 +1082,13 @@ function preencherMaterias(concurso) {
 function atualizarPreview() {
   const h    = parseInt(document.getElementById('pubHorasDia')?.value) || 0;
   const d    = parseInt(document.getElementById('pubDiasSemana')?.value) || 0;
-  const date = document.getElementById('pubDataProva')?.value || '';
+  const semData = document.getElementById('pubSemData')?.checked;
+  const date = semData ? '' : (document.getElementById('pubDataProva')?.value || '');
 
-  if (date) {
+  if (semData) {
+    document.getElementById('pubDaysLeft').textContent = '—';
+    document.getElementById('pubMode').textContent = '📅 Base';
+  } else if (date) {
     const hoje  = new Date(); hoje.setHours(0,0,0,0);
     const prova = new Date(date + 'T00:00:00');
     const diff  = Math.max(0, Math.ceil((prova - hoje) / 86400000));
@@ -1034,6 +1109,20 @@ function atualizarPreview() {
     document.getElementById('pubPomodoroText').textContent = 'Preencha os dados para ver a estratégia de estudo.';
   }
 }
+
+// "Ainda não sei a data da prova"
+document.getElementById('pubSemData').addEventListener('change', e => {
+  const dateEl = document.getElementById('pubDataProva');
+  if (e.target.checked) {
+    dateEl.value = '';
+    dateEl.required = false;
+    dateEl.disabled = true;
+  } else {
+    dateEl.disabled = false;
+    dateEl.required = true;
+  }
+  atualizarPreview();
+});
 
 // Concurso change
 document.getElementById('pubConcurso').addEventListener('change', () => {
@@ -1297,6 +1386,242 @@ function buildPrintHTML(dados, plano) {
   document.getElementById('avisosSec').style.display = '';
   board.style.display = 'flex';
 })();
+
+/* ════════════════════════════════════════
+   🎯 MISSÃO DE HOJE + 🦁 LEÃO IA
+   Metas, lembretes e análise de desempenho
+   totalmente derivados do plano + progresso
+════════════════════════════════════════ */
+
+function _meuLead() {
+  try {
+    const leads = JSON.parse(localStorage.getItem('pl_leads') || '[]');
+    return [...leads].reverse().find(l => l.email && l.email.toLowerCase() === _session.email.toLowerCase()) || null;
+  } catch { return null; }
+}
+
+function _statsCurso(cursoId) {
+  const curso = PL_CATALOG.getCurso(cursoId);
+  if (!curso) return null;
+  const prog = plAuth.getProgressV2()[cursoId] || {};
+  let tot = 0, done = 0, prox = null;
+  (curso.aulas || []).forEach(a => {
+    const disp = PL_CATALOG.ATIVIDADES.filter(at => a.materiais[at.key] !== null);
+    if (!disp.length) return;
+    tot++;
+    const pa = prog[a.id] || {};
+    if (disp.every(at => pa[at.key])) done++;
+    else if (!prox) prox = a;
+  });
+  return { curso, tot, done, pct: tot ? Math.round(done / tot * 100) : 0, prox };
+}
+
+function _calcRitmo(lead) {
+  /* Compara aulas concluídas com o ritmo esperado pelo plano */
+  const cursoId = CURSO_DO_CONCURSO[lead.concurso];
+  const st = cursoId ? _statsCurso(cursoId) : null;
+  if (!st || !st.tot) return null;
+  const inicio = lead.criadoEm ? new Date(lead.criadoEm) : new Date();
+  const hoje = new Date();
+  const diasDesde = Math.max(0, Math.floor((hoje - inicio) / 86400000));
+  const diasTotais = lead.dataProva
+    ? Math.max(7, Math.round((new Date(lead.dataProva + 'T00:00:00') - inicio) / 86400000))
+    : 60; // sem data: horizonte base de 60 dias
+  const esperado = Math.min(st.tot, Math.round(st.tot * Math.min(1, diasDesde / diasTotais)));
+  const delta = st.done - esperado;
+  return { ...st, cursoId, diasDesde, diasTotais, esperado, delta };
+}
+
+function _diasParaProva(lead) {
+  if (!lead || !lead.dataProva) return null;
+  const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.ceil((new Date(lead.dataProva + 'T00:00:00') - hoje) / 86400000));
+}
+
+/* ── Missão de Hoje ── */
+function initMissao() {
+  const lead = _meuLead();
+  const sec = document.getElementById('missaoSec');
+  if (!lead) { sec.style.display = 'none'; return; }
+
+  let plano = null;
+  try { plano = gerarPlanoCompleto(lead); } catch (e) { console.warn('missao:', e); return; }
+
+  const DIAS_JS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const hojeNome = DIAS_JS[new Date().getDay()];
+  const inicio = lead.criadoEm ? new Date(lead.criadoEm) : new Date();
+  const diasDesde = Math.max(0, Math.floor((Date.now() - inicio) / 86400000));
+  const semanaIdx = Math.min(Math.floor(diasDesde / 7), (plano.agenda || []).length - 1);
+  const semana = (plano.agenda || [])[Math.max(0, semanaIdx)] || null;
+  const diaPlano = semana ? (semana.dias || []).find(d => d.dia === hojeNome) : null;
+
+  const ritmo = _calcRitmo(lead);
+  const dias = _diasParaProva(lead);
+  const ciclosHoje = diaPlano ? (diaPlano.blocos || []).filter(b => b.tipo === 'pomodoro').length : 0;
+  const matsHoje = diaPlano ? (diaPlano.matsDay || []) : [];
+
+  /* — métricas — */
+  let html = '<div class="meta-row">';
+  html += `<div class="meta-box"><div class="mv" style="color:${dias === null ? 'var(--silver)' : dias <= 30 ? '#ef4444' : dias <= 90 ? '#f59e0b' : '#4ade80'}">${dias === null ? '📅' : dias}</div><div class="ml">${dias === null ? 'Data da prova a definir' : 'dias até a prova'}</div></div>`;
+  html += `<div class="meta-box"><div class="mv" style="color:var(--accent-light)">${diaPlano ? ciclosHoje : '—'}</div><div class="ml">${diaPlano ? 'Pomodoros hoje (' + hojeNome + ')' : hojeNome + ': descanso 😴'}</div></div>`;
+  if (ritmo) {
+    const cor = ritmo.delta >= 0 ? '#4ade80' : ritmo.delta >= -2 ? '#f59e0b' : '#ef4444';
+    const lbl = ritmo.delta > 0 ? ritmo.delta + ' aula(s) adiantado' : ritmo.delta === 0 ? 'Em dia com o plano' : Math.abs(ritmo.delta) + ' aula(s) atrás';
+    html += `<div class="meta-box"><div class="mv" style="color:${cor}">${ritmo.delta > 0 ? '▲' : ritmo.delta === 0 ? '✔' : '▼'}</div><div class="ml">${lbl}</div></div>`;
+    html += `<div class="meta-box"><div class="mv">${ritmo.done}/${ritmo.tot}</div><div class="ml">aulas concluídas (${ritmo.pct}%)</div></div>`;
+  }
+  html += '</div>';
+
+  /* — matérias de hoje + ação — */
+  if (diaPlano && matsHoje.length) {
+    html += `<div style="font-size:12px;color:var(--silver);margin-bottom:6px">Matérias de hoje no seu plano:</div><div style="margin-bottom:12px">${matsHoje.map(m => `<span class="mat-chip">${escHtml(m)}</span>`).join('')}</div>`;
+  }
+  if (ritmo && ritmo.prox) {
+    html += `<a href="aula.html?curso=${ritmo.cursoId}&aula=${ritmo.prox.id}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;text-decoration:none;margin-bottom:14px">▶ Próxima meta: Aula ${ritmo.prox.numero} — ${escHtml(ritmo.prox.titulo)}</a>`;
+  }
+
+  /* — lembretes e alertas personalizados — */
+  const lembretes = [];
+  if (dias !== null && dias <= 7)        lembretes.push(['urgente', '🚨 Semana da prova! Reduza conteúdo novo: só revisão, minissimulados e descanso de qualidade.']);
+  else if (dias !== null && dias <= 30)  lembretes.push(['urgente', '🔥 Reta final (' + dias + ' dias): priorize minissimulados, caderno de erros e os jogos dos assuntos que mais caem.']);
+  if (dias === null) lembretes.push(['alerta', '📅 Você ainda não definiu a data da prova — seu plano roda no modo Construção de Base. Quando o edital sair, refaça o plano com a data para eu calcular sua reta final.']);
+  if (ritmo && ritmo.delta < 0) lembretes.push(['alerta', '⏰ Você está ' + Math.abs(ritmo.delta) + ' aula(s) atrás do ritmo planejado. Um Pomodoro extra hoje (' + (lead.horasDia || 1) + 'h/dia previsto) já reduz a diferença.']);
+  if (ritmo && ritmo.delta > 0) lembretes.push(['ok', '🏆 Ritmo excelente: você está à frente do cronograma. Use a folga para refazer o minissimulado do último assunto.']);
+  if (/PMBA|CBMBA|CFO|SD/.test(lead.concurso || '')) {
+    if (hojeNome === 'Sábado' || hojeNome === 'Domingo') lembretes.push(['lembrete', '✍️ Meta da semana: 1 redação completa (20–30 linhas, cronometrada). Fim de semana é o momento ideal.']);
+    lembretes.push(['lembrete', '💪 TAF: mantenha 3 treinos físicos na semana — corrida, barra' + (/CFO/.test(lead.concurso) ? ' e natação' : '') + '. Consistência > intensidade.']);
+  }
+  if (diaPlano && matsHoje.some(m => /Matemática|Raciocínio/i.test(m)) && ritmo && ritmo.prox) {
+    lembretes.push(['lembrete', '🎯 Depois da videoaula, faça o Minissimulado — Revisão do assunto e o jogo correspondente: fixação em dose dupla.']);
+  }
+  if (lembretes.length) {
+    html += '<div style="font-size:12px;color:var(--silver);margin:4px 0 8px">Lembretes e alertas de hoje:</div>';
+    html += lembretes.map(([tipo, txt]) => `<div class="lembrete ${tipo === 'lembrete' ? '' : tipo}">${txt}</div>`).join('');
+  }
+
+  document.getElementById('missaoCard').innerHTML = html;
+  document.getElementById('missaoSub').textContent =
+    `${(_session.name || '').split(' ')[0]}, seu plano de ${lead.horasDia}h/dia × ${lead.diasSemana} dias — ${lead.concurso}`;
+  sec.style.display = '';
+}
+
+/* ── 🦁 Leão IA ── */
+function _coletarStatsIA() {
+  const lead = _meuLead();
+  const cursos = [];
+  Object.values(PL_CATALOG.cursos).forEach(c => {
+    const st = _statsCurso(c.id);
+    if (st && (st.done > 0)) cursos.push({ nome: c.nome, done: st.done, tot: st.tot, pct: st.pct });
+  });
+  const hist = (typeof PlQuestoes !== 'undefined') ? PlQuestoes.getHistory(_session.email) : [];
+  const simulados = hist.map(h => ({ titulo: h.titulo, percent: h.percent, acertos: h.acertos, total: h.total }));
+  const jogos = [];
+  if (typeof PL_Rankings !== 'undefined') {
+    PL_Rankings.ALL_GAME_IDS.forEach(gid => {
+      const best = PL_Rankings.getPlayerBest(gid, _session.email);
+      if (best) jogos.push({ jogo: gid, pontos: best.ws !== undefined ? best.ws : best.s });
+    });
+  }
+  const ritmo = lead ? _calcRitmo(lead) : null;
+  return {
+    nome: (_session.name || '').split(' ')[0],
+    concurso: lead ? lead.concurso : null,
+    diasProva: lead ? _diasParaProva(lead) : null,
+    ritmo: ritmo ? { concluidas: ritmo.done, total: ritmo.tot, pct: ritmo.pct, delta: ritmo.delta, proximaAula: ritmo.prox ? ritmo.prox.titulo : null } : null,
+    cursos, simulados, jogos,
+  };
+}
+
+function _leaoLocal(tipo, s) {
+  const n = s.nome || 'Aluno';
+  const mediaSim = s.simulados.length ? Math.round(s.simulados.reduce((a, x) => a + x.percent, 0) / s.simulados.length) : null;
+  const fracos = s.simulados.filter(x => x.percent < 70).map(x => x.titulo.replace('Minissimulado — Revisão: ', ''));
+  const fortes = s.simulados.filter(x => x.percent >= 80).map(x => x.titulo.replace('Minissimulado — Revisão: ', ''));
+
+  if (tipo === 'analise') {
+    let t = `📊 **Análise do seu desempenho, ${n}:**\n`;
+    if (s.ritmo) t += `\n• Aulas: ${s.ritmo.concluidas}/${s.ritmo.total} concluídas (${s.ritmo.pct}%) — ${s.ritmo.delta >= 0 ? 'você está EM DIA com o plano ✅' : 'você está ' + Math.abs(s.ritmo.delta) + ' aula(s) atrás do planejado ⏰'}.`;
+    else t += '\n• Você ainda não criou seu Plano de Estudos — crie para eu acompanhar seu ritmo.';
+    if (mediaSim !== null) t += `\n• Minissimulados: média de ${mediaSim}% em ${s.simulados.length} realizado(s)${mediaSim >= 75 ? ' — nível de aprovação (corte 60%, busque 75%+) 💪' : mediaSim >= 60 ? ' — acima do corte (60), mas dá para subir' : ' — abaixo do corte de 60%: hora de revisar com calma'}.`;
+    else t += '\n• Você ainda não finalizou nenhum Minissimulado — eles são o melhor termômetro do seu nível.';
+    if (s.jogos.length) t += `\n• Jogos: você já pontuou em ${s.jogos.length} de 12 — treino lúdico conta!`;
+    if (s.diasProva !== null) t += `\n\n⏳ Faltam ${s.diasProva} dias para a prova de ${s.concurso}.`;
+    return t;
+  }
+  if (tipo === 'estudar') {
+    let t = `🎯 **Plano de ataque agora, ${n}:**\n`;
+    if (fracos.length) t += `\n1. Revise ${fracos[0]} — seu pior resultado nos minissimulados. Reveja a aula, refaça o minissimulado e jogue o jogo do assunto.`;
+    else if (s.ritmo && s.ritmo.proximaAula) t += `\n1. Continue o cronograma: a próxima aula pendente é "${s.ritmo.proximaAula}".`;
+    else t += '\n1. Abra seu curso e siga a próxima aula do cronograma.';
+    t += '\n2. Feche com 1 Pomodoro de questões (Minissimulado — Revisão).';
+    t += '\n3. Anote os erros no caderno de erros — nenhum padrão sobrevive a 2 revisões.';
+    return t;
+  }
+  if (tipo === 'fracos') {
+    if (!s.simulados.length) return `🧩 ${n}, ainda não tenho dados dos seus Minissimulados. Finalize alguns (estão dentro das aulas) e volto com um diagnóstico preciso dos seus pontos fracos.`;
+    let t = '🧩 **Diagnóstico por assunto:**\n';
+    if (fracos.length) t += '\n⚠️ Reforçar (abaixo de 70%): ' + [...new Set(fracos)].join(' · ');
+    if (fortes.length) t += '\n✅ Dominados (80%+): ' + [...new Set(fortes)].join(' · ');
+    if (!fracos.length) t += '\nNenhum ponto crítico nos minissimulados feitos — agora aumente a dificuldade nos jogos (modo 🔥 Difícil).';
+    else t += '\n\nReceita: aula → minissimulado → jogo do assunto, nessa ordem, no próximo Pomodoro.';
+    return t;
+  }
+  if (tipo === 'projecao') {
+    if (!s.ritmo) return `🔮 ${n}, crie seu Plano de Estudos para eu projetar sua preparação até a prova.`;
+    const restantes = s.ritmo.total - s.ritmo.concluidas;
+    let t = `🔮 **Projeção, ${n}:**\n\n• Restam ${restantes} aula(s) com material no seu curso.`;
+    if (s.diasProva !== null && s.diasProva > 0) {
+      const porSemana = Math.ceil(restantes / Math.max(1, s.diasProva / 7));
+      t += `\n• Para concluir tudo antes da prova (${s.diasProva} dias), o ritmo necessário é de ~${porSemana} aula(s)/semana.`;
+      t += s.ritmo.delta >= 0 ? '\n• No ritmo atual, você chega pronto — mantenha a constância. ✅' : `\n• Você precisa recuperar ${Math.abs(s.ritmo.delta)} aula(s) para voltar à curva ideal. Um fim de semana focado resolve.`;
+    } else {
+      t += '\n• Sem a data da prova, projeto pelo horizonte base de 60 dias: ' + (s.ritmo.delta >= 0 ? 'você está dentro da curva. ✅' : 'acelere ' + Math.abs(s.ritmo.delta) + ' aula(s) para voltar à curva.');
+      t += '\n• Defina a data assim que o edital sair para eu calcular sua reta final exata.';
+    }
+    return t;
+  }
+  return 'Não entendi — use um dos botões abaixo. 🦁';
+}
+
+const _IA_LABELS = { analise: '📊 Como está meu desempenho?', estudar: '🎯 O que estudar agora?', fracos: '🧩 Meus pontos fracos', projecao: '🔮 Projeção até a prova' };
+
+function _iaBubble(texto, who) {
+  const chat = document.getElementById('iaChat');
+  const div = document.createElement('div');
+  div.className = 'ia-bubble ia-bubble--' + who;
+  div.innerHTML = escHtml(texto).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function leaoPerguntar(tipo) {
+  _iaBubble(_IA_LABELS[tipo] || tipo, 'user');
+  const stats = _coletarStatsIA();
+  /* Tenta a IA do servidor (LLM real, se configurada); senão usa o motor local */
+  try {
+    const res = await fetch('/api/ia', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pergunta: _IA_LABELS[tipo] || tipo, contexto: stats }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.texto) { _iaBubble('🦁 ' + data.texto, 'leao'); return; }
+    }
+  } catch (e) { /* sem backend — segue local */ }
+  _iaBubble(_leaoLocal(tipo, stats), 'leao');
+}
+
+function initLeaoIA() {
+  const s = _coletarStatsIA();
+  const saudacao = s.ritmo
+    ? `Olá, ${s.nome}! 🦁 Estou de olho no seu progresso: ${s.ritmo.concluidas}/${s.ritmo.total} aulas (${s.ritmo.pct}%)${s.diasProva !== null ? ' e faltam ' + s.diasProva + ' dias para a prova' : ''}. Pergunte algo abaixo!`
+    : `Olá, ${s.nome}! 🦁 Sou o Leão IA. Crie seu Plano de Estudos e finalize alguns Minissimulados para eu acompanhar seu desempenho de perto. Enquanto isso, posso te orientar pelos botões abaixo.`;
+  _iaBubble(saudacao, 'leao');
+}
+
+initMissao();
+initLeaoIA();
 </script>
 </body>
 </html>

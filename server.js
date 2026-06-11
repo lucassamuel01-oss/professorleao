@@ -382,6 +382,49 @@ app.put("/api/sync", requireAuthApi, (req, res) => {
   res.json({ success: true });
 });
 
+/* ── Leão IA (opcional) ───────────────────────────────────────
+   Se ANTHROPIC_API_KEY estiver configurada no ambiente, as
+   perguntas do aluno são respondidas por um LLM real com base
+   nos dados de desempenho. Sem a chave, responde 503 e o
+   frontend usa o motor de análise local. */
+
+app.post("/api/ia", requireAuthApi, async (req, res) => {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return res.status(503).json({ success: false, local: true });
+  try {
+    const pergunta = String(req.body.pergunta || "Análise geral do meu desempenho").slice(0, 300);
+    const contexto = req.body.contexto && typeof req.body.contexto === "object" ? req.body.contexto : {};
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: process.env.IA_MODEL || "claude-haiku-4-5-20251001",
+        max_tokens: 700,
+        system:
+          "Você é o Leão IA, assistente de estudos da plataforma Professor Leão (matemática para concursos PMBA, CBMBA e Correios). " +
+          "Analise os dados de desempenho do aluno fornecidos em JSON (aulas concluídas, ritmo vs. plano, minissimulados, jogos, dias até a prova) " +
+          "e responda em português do Brasil, de forma curta, prática e encorajadora, com recomendações concretas de estudo na plataforma " +
+          "(aulas, Minissimulado — Revisão, jogos, caderno de erros). Não invente dados que não estejam no JSON.",
+        messages: [{
+          role: "user",
+          content: `Dados do aluno (JSON):\n${JSON.stringify(contexto).slice(0, 6000)}\n\nPergunta do aluno: ${pergunta}`,
+        }],
+      }),
+    });
+    const data = await r.json();
+    const texto = data && Array.isArray(data.content) && data.content[0] && data.content[0].text;
+    if (!texto) throw new Error("resposta vazia da API");
+    res.json({ success: true, texto });
+  } catch (err) {
+    console.error("[IA]", err.message);
+    res.status(502).json({ success: false, local: true });
+  }
+});
+
 /* ── Rotas de admin: convites ───────────────────────────────── */
 
 app.get("/api/admin/invites", requireAuthApi, requireAdminApi, (req, res) => {
