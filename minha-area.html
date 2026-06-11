@@ -516,12 +516,22 @@
     <p>Acompanhamento inteligente do seu desempenho</p>
   </div>
   <div id="iaCard" style="background:var(--navy-2);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:20px 22px;margin-bottom:40px">
-    <div id="iaChat" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <span id="iaBadge" style="font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--silver)">⚙️ Motor local</span>
+    </div>
+    <div id="iaChat" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:420px;overflow-y:auto"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
       <button class="ia-chip" onclick="leaoPerguntar('analise')">📊 Como está meu desempenho?</button>
       <button class="ia-chip" onclick="leaoPerguntar('estudar')">🎯 O que estudar agora?</button>
       <button class="ia-chip" onclick="leaoPerguntar('fracos')">🧩 Meus pontos fracos</button>
       <button class="ia-chip" onclick="leaoPerguntar('projecao')">🔮 Projeção até a prova</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="iaInput" placeholder="Pergunte algo ao Leão IA… (ex.: como divido meu fim de semana?)" maxlength="500"
+        style="flex:1;padding:11px 14px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:13.5px;font-family:inherit;outline:none"
+        onkeydown="if(event.key==='Enter')leaoEnviar()" />
+      <button onclick="leaoEnviar()" id="iaSendBtn"
+        style="padding:11px 20px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;cursor:pointer">➤</button>
     </div>
   </div>
 
@@ -1584,6 +1594,8 @@ function _leaoLocal(tipo, s) {
 }
 
 const _IA_LABELS = { analise: '📊 Como está meu desempenho?', estudar: '🎯 O que estudar agora?', fracos: '🧩 Meus pontos fracos', projecao: '🔮 Projeção até a prova' };
+let _iaHistorico = [];   // [{role:'user'|'assistant', content}] enviado ao LLM real
+let _iaOcupado = false;
 
 function _iaBubble(texto, who) {
   const chat = document.getElementById('iaChat');
@@ -1592,32 +1604,90 @@ function _iaBubble(texto, who) {
   div.innerHTML = escHtml(texto).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
+  return div;
 }
 
-async function leaoPerguntar(tipo) {
-  _iaBubble(_IA_LABELS[tipo] || tipo, 'user');
+function _iaRegistrar(role, content) {
+  _iaHistorico.push({ role, content });
+  if (_iaHistorico.length > 12) _iaHistorico = _iaHistorico.slice(-12);
+}
+
+/* Roteia pergunta livre para o motor local por palavras-chave */
+function _leaoLocalLivre(pergunta, stats) {
+  const p = pergunta.toLowerCase();
+  if (/(fraco|dificuldade|pior|errando)/.test(p))            return _leaoLocal('fracos', stats);
+  if (/(estudar|come[cç]|agora|hoje|próxim)/.test(p))        return _leaoLocal('estudar', stats);
+  if (/(proje|prazo|tempo|prova|chegar|conseguir)/.test(p))  return _leaoLocal('projecao', stats);
+  if (/(desempenho|progresso|como estou|análise|nota)/.test(p)) return _leaoLocal('analise', stats);
+  return _leaoLocal('analise', stats) +
+    '\n\n💡 No modo local respondo melhor pelos botões acima. Para conversa livre completa, a IA real (Claude) precisa estar ativa no servidor.';
+}
+
+async function _leaoProcessar(pergunta, tipoLocal) {
+  if (_iaOcupado) return;
+  _iaOcupado = true;
+  _iaBubble(pergunta, 'user');
+  _iaRegistrar('user', pergunta);
+  const pensando = _iaBubble('🦁 pensando…', 'leao');
+  pensando.style.opacity = '.55';
   const stats = _coletarStatsIA();
-  /* Tenta a IA do servidor (LLM real, se configurada); senão usa o motor local */
+
+  let resposta = null;
   try {
     const res = await fetch('/api/ia', {
       method: 'POST', credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pergunta: _IA_LABELS[tipo] || tipo, contexto: stats }),
+      body: JSON.stringify({ pergunta, contexto: stats, historico: _iaHistorico.slice(0, -1) }),
     });
     if (res.ok) {
       const data = await res.json();
-      if (data.success && data.texto) { _iaBubble('🦁 ' + data.texto, 'leao'); return; }
+      if (data.success && data.texto) resposta = '🦁 ' + data.texto;
     }
   } catch (e) { /* sem backend — segue local */ }
-  _iaBubble(_leaoLocal(tipo, stats), 'leao');
+
+  if (!resposta) {
+    resposta = tipoLocal ? _leaoLocal(tipoLocal, stats) : _leaoLocalLivre(pergunta, stats);
+  }
+  pensando.remove();
+  _iaBubble(resposta, 'leao');
+  _iaRegistrar('assistant', resposta.replace(/^🦁 /, ''));
+  _iaOcupado = false;
 }
 
-function initLeaoIA() {
+function leaoPerguntar(tipo) {
+  _leaoProcessar(_IA_LABELS[tipo] || tipo, tipo);
+}
+
+function leaoEnviar() {
+  const el = document.getElementById('iaInput');
+  const pergunta = (el.value || '').trim();
+  if (!pergunta) return;
+  el.value = '';
+  _leaoProcessar(pergunta, null);
+}
+
+async function initLeaoIA() {
   const s = _coletarStatsIA();
   const saudacao = s.ritmo
-    ? `Olá, ${s.nome}! 🦁 Estou de olho no seu progresso: ${s.ritmo.concluidas}/${s.ritmo.total} aulas (${s.ritmo.pct}%)${s.diasProva !== null ? ' e faltam ' + s.diasProva + ' dias para a prova' : ''}. Pergunte algo abaixo!`
+    ? `Olá, ${s.nome}! 🦁 Estou de olho no seu progresso: ${s.ritmo.concluidas}/${s.ritmo.total} aulas (${s.ritmo.pct}%)${s.diasProva !== null ? ' e faltam ' + s.diasProva + ' dias para a prova' : ''}. Pergunte o que quiser abaixo!`
     : `Olá, ${s.nome}! 🦁 Sou o Leão IA. Crie seu Plano de Estudos e finalize alguns Minissimulados para eu acompanhar seu desempenho de perto. Enquanto isso, posso te orientar pelos botões abaixo.`;
   _iaBubble(saudacao, 'leao');
+  _iaRegistrar('assistant', saudacao);
+
+  /* Badge: IA real (LLM) ativa no servidor? */
+  try {
+    const res = await fetch('/api/ia/status', { credentials: 'same-origin' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.llm) {
+        const b = document.getElementById('iaBadge');
+        b.textContent = '⚡ IA real ativa (Claude)';
+        b.style.color = '#4ade80';
+        b.style.borderColor = 'rgba(34,197,94,.4)';
+        b.style.background = 'rgba(34,197,94,.1)';
+      }
+    }
+  } catch (e) { /* site estático — badge fica no motor local */ }
 }
 
 initMissao();

@@ -388,12 +388,48 @@ app.put("/api/sync", requireAuthApi, (req, res) => {
    nos dados de desempenho. Sem a chave, responde 503 e o
    frontend usa o motor de análise local. */
 
+const IA_LIMITE_DIA = parseInt(process.env.IA_LIMITE_DIA || "40", 10);
+const _iaUso = new Map(); // userId -> { dia: 'YYYY-MM-DD', usos: n }
+
+function iaDentroDoLimite(userId) {
+  const hoje = new Date().toISOString().slice(0, 10);
+  const reg = _iaUso.get(userId);
+  if (!reg || reg.dia !== hoje) { _iaUso.set(userId, { dia: hoje, usos: 1 }); return true; }
+  if (reg.usos >= IA_LIMITE_DIA) return false;
+  reg.usos++;
+  return true;
+}
+
 app.post("/api/ia", requireAuthApi, async (req, res) => {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return res.status(503).json({ success: false, local: true });
+  if (!iaDentroDoLimite(req.currentUser.id)) {
+    return res.json({
+      success: true,
+      texto: "Você atingiu o limite diário de perguntas ao Leão IA. 🦁 Volte amanhã — enquanto isso, que tal um Minissimulado — Revisão ou uma rodada nos jogos?",
+    });
+  }
   try {
-    const pergunta = String(req.body.pergunta || "Análise geral do meu desempenho").slice(0, 300);
+    const pergunta = String(req.body.pergunta || "Análise geral do meu desempenho").slice(0, 500);
     const contexto = req.body.contexto && typeof req.body.contexto === "object" ? req.body.contexto : {};
+
+    // Histórico de conversa (até 8 mensagens anteriores, alternadas)
+    const historico = Array.isArray(req.body.historico)
+      ? req.body.historico.slice(-8).filter(m =>
+          m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+        .map(m => ({ role: m.role, content: m.content.slice(0, 1200) }))
+      : [];
+
+    const messages = [
+      ...historico,
+      {
+        role: "user",
+        content: `Dados atualizados do aluno (JSON):\n${JSON.stringify(contexto).slice(0, 6000)}\n\nPergunta do aluno: ${pergunta}`,
+      },
+    ];
+    // A API exige que a primeira mensagem seja do usuário
+    while (messages.length && messages[0].role !== "user") messages.shift();
+
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -406,13 +442,14 @@ app.post("/api/ia", requireAuthApi, async (req, res) => {
         max_tokens: 700,
         system:
           "Você é o Leão IA, assistente de estudos da plataforma Professor Leão (matemática para concursos PMBA, CBMBA e Correios). " +
-          "Analise os dados de desempenho do aluno fornecidos em JSON (aulas concluídas, ritmo vs. plano, minissimulados, jogos, dias até a prova) " +
+          `O aluno se chama ${req.currentUser.name} e está na turma ${req.currentUser.curso || "(não definida)"}. ` +
+          "Analise os dados de desempenho fornecidos em JSON (aulas concluídas, ritmo vs. plano, minissimulados, jogos, dias até a prova) " +
           "e responda em português do Brasil, de forma curta, prática e encorajadora, com recomendações concretas de estudo na plataforma " +
-          "(aulas, Minissimulado — Revisão, jogos, caderno de erros). Não invente dados que não estejam no JSON.",
-        messages: [{
-          role: "user",
-          content: `Dados do aluno (JSON):\n${JSON.stringify(contexto).slice(0, 6000)}\n\nPergunta do aluno: ${pergunta}`,
-        }],
+          "(aulas, Minissimulado — Revisão, jogos, caderno de erros, plano Pomodoro). Não invente dados que não estejam no JSON. " +
+          "Se perguntarem algo fora de estudos/concursos, redirecione gentilmente para a preparação. " +
+          "Fatos dos editais que você pode citar: SD PMBA/CBMBA (FCC): 80 questões (50 gerais + 30 específicas), 1,25 ponto cada, corte 60, redação de 20 a 30 linhas. " +
+          "CFO PM/BM (UNEB): 80 questões em 5h, zerar qualquer disciplina elimina, Matemática tem 10 questões na PM e 15 na BM; TAF é 2ª etapa com natação.",
+        messages,
       }),
     });
     const data = await r.json();
@@ -423,6 +460,11 @@ app.post("/api/ia", requireAuthApi, async (req, res) => {
     console.error("[IA]", err.message);
     res.status(502).json({ success: false, local: true });
   }
+});
+
+/* Informa ao frontend se a IA real está configurada */
+app.get("/api/ia/status", requireAuthApi, (req, res) => {
+  res.json({ success: true, llm: !!process.env.ANTHROPIC_API_KEY });
 });
 
 /* ── Rotas de admin: convites ───────────────────────────────── */
