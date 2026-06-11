@@ -400,9 +400,86 @@ function iaDentroDoLimite(userId) {
   return true;
 }
 
+/* Provedores suportados (em ordem de preferência — os 2 primeiros têm
+   nível GRATUITO): Gemini (Google AI Studio), Groq, Anthropic (Claude). */
+function iaProvider() {
+  const forced = (process.env.IA_PROVIDER || "").toLowerCase();
+  if (forced === "gemini" && process.env.GEMINI_API_KEY) return "gemini";
+  if (forced === "groq" && process.env.GROQ_API_KEY) return "groq";
+  if (forced === "anthropic" && process.env.ANTHROPIC_API_KEY) return "anthropic";
+  if (process.env.GEMINI_API_KEY) return "gemini";
+  if (process.env.GROQ_API_KEY) return "groq";
+  if (process.env.ANTHROPIC_API_KEY) return "anthropic";
+  return null;
+}
+
+async function chamarGemini(system, messages) {
+  const model = process.env.IA_MODEL || "gemini-2.0-flash";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: system }] },
+      contents: messages.map(m => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      })),
+      generationConfig: { maxOutputTokens: 700, temperature: 0.7 },
+    }),
+  });
+  const data = await r.json();
+  const texto = data && data.candidates && data.candidates[0] &&
+    data.candidates[0].content && data.candidates[0].content.parts &&
+    data.candidates[0].content.parts.map(p => p.text || "").join("");
+  if (!texto) throw new Error("Gemini: " + JSON.stringify(data && data.error ? data.error.message : data).slice(0, 200));
+  return texto;
+}
+
+async function chamarGroq(system, messages) {
+  const model = process.env.IA_MODEL || "llama-3.3-70b-versatile";
+  const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 700,
+      messages: [{ role: "system", content: system }, ...messages],
+    }),
+  });
+  const data = await r.json();
+  const texto = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+  if (!texto) throw new Error("Groq: " + JSON.stringify(data && data.error ? data.error.message : data).slice(0, 200));
+  return texto;
+}
+
+async function chamarAnthropic(system, messages) {
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": process.env.ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: process.env.IA_MODEL || "claude-haiku-4-5-20251001",
+      max_tokens: 700,
+      system,
+      messages,
+    }),
+  });
+  const data = await r.json();
+  const texto = data && Array.isArray(data.content) && data.content[0] && data.content[0].text;
+  if (!texto) throw new Error("Anthropic: " + JSON.stringify(data && data.error ? data.error.message : data).slice(0, 200));
+  return texto;
+}
+
 app.post("/api/ia", requireAuthApi, async (req, res) => {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return res.status(503).json({ success: false, local: true });
+  const provider = iaProvider();
+  if (!provider) return res.status(503).json({ success: false, local: true });
   if (!iaDentroDoLimite(req.currentUser.id)) {
     return res.json({
       success: true,
@@ -427,44 +504,32 @@ app.post("/api/ia", requireAuthApi, async (req, res) => {
         content: `Dados atualizados do aluno (JSON):\n${JSON.stringify(contexto).slice(0, 6000)}\n\nPergunta do aluno: ${pergunta}`,
       },
     ];
-    // A API exige que a primeira mensagem seja do usuário
+    // A primeira mensagem precisa ser do usuário
     while (messages.length && messages[0].role !== "user") messages.shift();
 
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: process.env.IA_MODEL || "claude-haiku-4-5-20251001",
-        max_tokens: 700,
-        system:
-          "Você é o Leão IA, assistente de estudos da plataforma Professor Leão (matemática para concursos PMBA, CBMBA e Correios). " +
-          `O aluno se chama ${req.currentUser.name} e está na turma ${req.currentUser.curso || "(não definida)"}. ` +
-          "Analise os dados de desempenho fornecidos em JSON (aulas concluídas, ritmo vs. plano, minissimulados, jogos, dias até a prova) " +
-          "e responda em português do Brasil, de forma curta, prática e encorajadora, com recomendações concretas de estudo na plataforma " +
-          "(aulas, Minissimulado — Revisão, jogos, caderno de erros, plano Pomodoro). Não invente dados que não estejam no JSON. " +
-          "Se perguntarem algo fora de estudos/concursos, redirecione gentilmente para a preparação. " +
-          "Fatos dos editais que você pode citar: SD PMBA/CBMBA (FCC): 80 questões (50 gerais + 30 específicas), 1,25 ponto cada, corte 60, redação de 20 a 30 linhas. " +
-          "CFO PM/BM (UNEB): 80 questões em 5h, zerar qualquer disciplina elimina, Matemática tem 10 questões na PM e 15 na BM; TAF é 2ª etapa com natação.",
-        messages,
-      }),
-    });
-    const data = await r.json();
-    const texto = data && Array.isArray(data.content) && data.content[0] && data.content[0].text;
-    if (!texto) throw new Error("resposta vazia da API");
-    res.json({ success: true, texto });
+    const system =
+      "Você é o Leão IA, assistente de estudos da plataforma Professor Leão (matemática para concursos PMBA, CBMBA e Correios). " +
+      `O aluno se chama ${req.currentUser.name} e está na turma ${req.currentUser.curso || "(não definida)"}. ` +
+      "Analise os dados de desempenho fornecidos em JSON (aulas concluídas, ritmo vs. plano, minissimulados, jogos, dias até a prova) " +
+      "e responda em português do Brasil, de forma curta, prática e encorajadora, com recomendações concretas de estudo na plataforma " +
+      "(aulas, Minissimulado — Revisão, jogos, caderno de erros, plano Pomodoro). Não invente dados que não estejam no JSON. " +
+      "Se perguntarem algo fora de estudos/concursos, redirecione gentilmente para a preparação. " +
+      "Fatos dos editais que você pode citar: SD PMBA/CBMBA (FCC): 80 questões (50 gerais + 30 específicas), 1,25 ponto cada, corte 60, redação de 20 a 30 linhas. " +
+      "CFO PM/BM (UNEB): 80 questões em 5h, zerar qualquer disciplina elimina, Matemática tem 10 questões na PM e 15 na BM; TAF é 2ª etapa com natação.";
+
+    const chamar = { gemini: chamarGemini, groq: chamarGroq, anthropic: chamarAnthropic }[provider];
+    const texto = await chamar(system, messages);
+    res.json({ success: true, texto, provider });
   } catch (err) {
     console.error("[IA]", err.message);
     res.status(502).json({ success: false, local: true });
   }
 });
 
-/* Informa ao frontend se a IA real está configurada */
+/* Informa ao frontend se a IA real está configurada (e qual provedor) */
 app.get("/api/ia/status", requireAuthApi, (req, res) => {
-  res.json({ success: true, llm: !!process.env.ANTHROPIC_API_KEY });
+  const provider = iaProvider();
+  res.json({ success: true, llm: !!provider, provider });
 });
 
 /* ── Rotas de admin: convites ───────────────────────────────── */

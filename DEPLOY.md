@@ -21,15 +21,28 @@ No serviço criado, abra **Variables** e adicione:
 | Variável | Valor | Obrigatória? |
 |---|---|---|
 | `MONGODB_URI` | String de conexão do MongoDB Atlas (pode usar o mesmo cluster do Elite Feminina — o banco usado se chama `professor-leao`, não conflita) | ✅ Sim |
-| `ANTHROPIC_API_KEY` | Chave criada em [console.anthropic.com](https://console.anthropic.com/) → API Keys | Para o Leão IA real |
+| `GEMINI_API_KEY` | 🆓 **IA GRATUITA** — chave do Google AI Studio (veja abaixo) | Para o Leão IA real |
+| `GROQ_API_KEY` | 🆓 Alternativa gratuita — chave de [console.groq.com](https://console.groq.com) | Opcional |
+| `ANTHROPIC_API_KEY` | 💰 Alternativa paga (Claude) — [console.anthropic.com](https://console.anthropic.com/) | Opcional |
 | `SESSION_SECRET` | Qualquer texto longo aleatório | Recomendada |
-| `IA_MODEL` | Modelo do Leão IA (padrão: `claude-haiku-4-5-20251001`, rápido e barato) | Opcional |
-| `IA_LIMITE_DIA` | Perguntas por aluno/dia ao IA real (padrão: 40) | Opcional |
+| `IA_PROVIDER` | Força um provedor: `gemini`, `groq` ou `anthropic` (padrão: o primeiro com chave, nesta ordem) | Opcional |
+| `IA_MODEL` | Modelo (padrões: `gemini-2.0-flash` / `llama-3.3-70b-versatile` / `claude-haiku-4-5-20251001`) | Opcional |
+| `IA_LIMITE_DIA` | Perguntas por aluno/dia (padrão: 40 — com Gemini grátis, use ~20 se tiver muitos alunos) | Opcional |
 
-> ⚠️ **Crie e cole a `ANTHROPIC_API_KEY` você mesmo** — nunca compartilhe
-> a chave em chats, prints ou commits. Em
-> console.anthropic.com → **API Keys → Create Key**, copie e cole direto
-> no Railway.
+### 🆓 IA gratuita por aluno (Gemini — recomendado)
+
+O nível gratuito do Google Gemini não pede cartão de crédito e dá
+**~1.500 perguntas por dia** no total da plataforma — de graça:
+
+1. Acesse [aistudio.google.com](https://aistudio.google.com) com sua
+   conta Google.
+2. Clique em **Get API key → Create API key** e copie a chave.
+3. Cole no Railway como `GEMINI_API_KEY`. Pronto — sem fatura.
+
+> ⚠️ **Crie e cole as chaves você mesmo** — nunca compartilhe chave de
+> API em chats, prints ou commits. O servidor escolhe automaticamente:
+> Gemini (grátis) → Groq (grátis) → Claude (pago), o primeiro que tiver
+> chave configurada.
 
 ## Passo 3 — Gerar o domínio
 
@@ -45,7 +58,8 @@ Em **Settings → Networking → Generate Domain**. A URL gerada
 
 1. `https://SEU-DOMINIO/health` deve responder `{"ok":true,…,"db":true}`.
 2. Na **Minha Área**, o painel do Leão IA mostra o selo
-   **“⚡ IA real ativa (Claude)”** quando a chave está configurada.
+   **“⚡ IA real ativa (Gemini)”** (ou Groq/Claude) quando há chave
+   configurada.
 3. No admin, a faixa “⚠️ …sem backend” desaparece e os convites passam a
    ser gerados.
 
