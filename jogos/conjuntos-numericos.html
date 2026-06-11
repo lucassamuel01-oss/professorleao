@@ -168,7 +168,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
         <div class="rule-item">⚠️ <span>Erros = –15 pts · Não marcou = –8 pts</span></div>
         <div class="rule-item">🏆 <span><strong>10 questões</strong>, pontuação salva no ranking automaticamente</span></div>
       </div>
-      <input class="lobby__input" id="inputNome" placeholder="Seu nome (para o ranking)" autocomplete="name"/>
+      <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
       <br/>
       <div class="diff-row">
         <button class="diff-btn active" data-diff="facil"  onclick="setDiff(this)">😊 Fácil<br/><span style="font-size:10px;opacity:.65">×0.7 no ranking</span></button>
@@ -310,7 +310,7 @@ function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'di
 try {
   const sess = JSON.parse(localStorage.getItem('pl_session')||'null');
   if (sess) {
-    document.getElementById('inputNome').value = sess.name || '';
+    document.getElementById('inputNome').value = PL_Rankings.getCodename() || sess.name || '';
     playerEmail = sess.email || '';
   }
 } catch(e){}

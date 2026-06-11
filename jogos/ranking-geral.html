@@ -169,6 +169,15 @@ a{text-decoration:none;color:inherit}
     <div class="gchip" data-game="juros"                onclick="setFilter(this,'juros')">💰 Juros</div>
   </div>
 
+  <!-- Excluir minhas pontuações -->
+  <div style="text-align:center;margin:4px 0 20px">
+    <button onclick="excluirMinhasPontuacoes()"
+      style="padding:8px 18px;border-radius:8px;background:transparent;border:1px solid rgba(239,68,68,.35);color:#f87171;font-family:var(--fh);font-size:11.5px;font-weight:700;cursor:pointer;transition:.2s"
+      onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">
+      🗑️ Excluir minhas pontuações <span id="delScopeLbl">de todos os jogos</span>
+    </button>
+  </div>
+
   <!-- Podium -->
   <div class="podium" id="podium"></div>
 
@@ -227,6 +236,25 @@ function renderAll(){
   renderPodium(board);
   renderList(board);
   renderBreakdown();
+  const lbl = document.getElementById('delScopeLbl');
+  if (lbl) {
+    const g = GAME_DEFS.find(x => x.id === _filter);
+    lbl.textContent = _filter === 'all' ? 'de todos os jogos' : 'deste jogo (' + (g ? g.label : _filter) + ')';
+  }
+}
+
+/* ── Excluir as próprias pontuações ── */
+function excluirMinhasPontuacoes(){
+  const escopo = _filter === 'all'
+    ? 'de TODOS os jogos'
+    : 'do jogo selecionado';
+  if (!confirm('Excluir TODAS as suas pontuações ' + escopo + '? Suas entradas (identificadas pelo seu login ou codinome) serão removidas dos rankings. Esta ação não pode ser desfeita.')) return;
+  const ids = _filter === 'all' ? null : [_filter];
+  const n = PL_Rankings.removeMyScores(ids);
+  alert(n > 0
+    ? n + ' pontuação(ões) removida(s) do ranking.'
+    : 'Nenhuma pontuação sua foi encontrada.');
+  renderAll();
 }
 
 function renderHeroStats(board){

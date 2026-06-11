@@ -160,7 +160,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
         <div class="rule-item">⏱ <span><strong>Bônus de tempo:</strong> segundos restantes × 2 em cada fase perfeita</span></div>
         <div class="rule-item">⚡ <span><strong>Fase bônus:</strong> se acertar tudo em ≤10s, ganha +100 pts extras</span></div>
       </div>
-      <input class="lobby__input" id="inputNome" placeholder="Seu nome (para o ranking)" autocomplete="name"/>
+      <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
       <br/>
       <div class="diff-row">
         <button class="diff-btn active" data-diff="facil"  onclick="setDiff(this)">😊 Fácil<br/><span style="font-size:10px;opacity:.65">×0.7 no ranking</span></button>
@@ -347,7 +347,7 @@ let totalAcertos=0, totalPossible=0;
 // Session prefill
 try {
   const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
-  if(sess){document.getElementById('inputNome').value=sess.name||'';playerEmail=sess.email||'';}
+  if(sess){document.getElementById('inputNome').value=PL_Rankings.getCodename() || sess.name || '';playerEmail=sess.email||'';}
 }catch(e){}
 
 function setDiff(el){

@@ -140,7 +140,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
         <div class="rule-item">🔥 <span>Streak de acertos dá bônus de pontos</span></div>
         <div class="rule-item">⚖️ <span>Ranking = pontos × multiplicador de dificuldade</span></div>
       </div>
-      <input class="lobby__input" id="inputNome" placeholder="Seu nome (para o ranking)" autocomplete="name"/>
+      <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
       <div class="diff-row">
         <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">×0.7 · 70s</span></button>
         <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">×1.0 · 50s</span></button>
@@ -255,7 +255,7 @@ function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try{
   const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
-  if(sess){ document.getElementById('inputNome').value=sess.name||''; playerEmail=sess.email||''; }
+  if(sess){ document.getElementById('inputNome').value=PL_Rankings.getCodename() || sess.name || ''; playerEmail=sess.email||''; }
 }catch(e){}
 
 function setDiff(el){

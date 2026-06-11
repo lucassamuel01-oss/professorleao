@@ -61,6 +61,23 @@ const PL_Rankings = (() => {
     catch (e) { console.warn('[PL_Rankings] Erro ao salvar:', e); }
   }
 
+  /* ── Codinome do jogador ──────────────────────────────────
+     Nome de exibição escolhido pelo jogador para o ranking.
+     Fica salvo no navegador e é reutilizado em todos os jogos. */
+  const CODENAME_KEY = 'pl_codinome';
+
+  function getCodename() {
+    try { return (localStorage.getItem(CODENAME_KEY) || '').trim(); } catch { return ''; }
+  }
+
+  function setCodename(name) {
+    const v = String(name || '').trim().slice(0, 32);
+    try {
+      if (v) localStorage.setItem(CODENAME_KEY, v);
+      else   localStorage.removeItem(CODENAME_KEY);
+    } catch (e) { /* ignore */ }
+  }
+
   /* ── normaliza entrada ── */
   function _norm(entry) {
     const rawScore = Math.max(0, Math.round(Number(entry.score || entry.s) || 0));
@@ -92,7 +109,40 @@ const PL_Rankings = (() => {
       data[gameId] = data[gameId].slice(-MAX_PER_GAME);
     }
     _save(data);
+    // Lembra o nome/codinome usado para as próximas partidas
+    if (rec.n && rec.n !== 'Anônimo') setCodename(rec.n);
     return rec;
+  }
+
+  /**
+   * Remove as pontuações do PRÓPRIO jogador dos rankings.
+   * Identifica por e-mail da sessão (logado) e, para partidas sem
+   * e-mail, pelo codinome salvo neste navegador.
+   * @param {string[]} [gameIds] jogos a limpar (default: todos)
+   * @returns {number} quantidade de entradas removidas
+   */
+  function removeMyScores(gameIds) {
+    let email = '';
+    try {
+      const s = JSON.parse(localStorage.getItem('pl_session') || 'null');
+      if (s && s.email) email = String(s.email).toLowerCase().trim();
+    } catch (e) { /* ignore */ }
+    const cod = getCodename();
+    if (!email && !cod) return 0;
+
+    const ids = gameIds && gameIds.length ? gameIds : ALL_GAME_IDS;
+    const data = _load();
+    let removed = 0;
+    ids.forEach(gid => {
+      const arr = data[gid];
+      if (!arr || !arr.length) return;
+      const kept = arr.filter(e =>
+        !((email && e.e === email) || (!e.e && cod && e.n === cod)));
+      removed += arr.length - kept.length;
+      data[gid] = kept;
+    });
+    if (removed) _save(data);
+    return removed;
   }
 
   /**
@@ -228,9 +278,24 @@ const PL_Rankings = (() => {
       .map((e, i) => ({ ...e, rank: i + 1 }));
   }
 
+  /* Autopreenche o campo de nome do lobby dos jogos com o codinome salvo */
+  if (typeof document !== 'undefined') {
+    const _fillCodename = () => {
+      const el = document.getElementById('inputNome');
+      const cod = getCodename();
+      if (el && cod && !el.value) el.value = cod;
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', _fillCodename);
+    } else {
+      setTimeout(_fillCodename, 0);
+    }
+  }
+
   return {
     save, getBoard, getPlayerRank, getPlayerBest,
     getGameStats, getGlobalStats, getGlobalBoard,
+    getCodename, setCodename, removeMyScores,
     calcWeighted, timeAgo,
     DIFF_MULTIPLIER, DIFF_LABEL, DIFF_COLOR,
     ALL_GAME_IDS,
