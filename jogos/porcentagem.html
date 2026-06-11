@@ -259,7 +259,58 @@ function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=M
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  const pool=BANK.filter(q=>q.diff===diff);
+  
+  /* ══ Geração procedural — perguntas sempre novas (anti-decoreba) ══ */
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  function _mkOps(correto,errar){
+    const c=String(correto); const s=new Set([c]); let guard=0;
+    while(s.size<4&&guard++<80){const e=String(errar());if(e&&e!==c)s.add(e);}
+    while(s.size<4)s.add(c+' '+s.size); // salvaguarda improvável
+    const ops=[...s];
+    for(let i=ops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ops[i],ops[j]]=[ops[j],ops[i]];}
+    return {ops,g:ops.indexOf(c)};
+  }
+  function montarPool(d){
+    const dd=(d==='treino')?'normal':d;
+    const out=[];for(let i=0;i<30;i++)out.push(gerarQuestao(dd));
+    return out;
+  }
+
+
+  function gerarQuestao(d){
+    if(d==='facil'){
+      const p=_pk([10,20,25,50]), N=_ri(2,20)*20, v=N*p/100;
+      const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([5,10,Math.max(2,Math.round(v/5))])));
+      return {diff:d,tipo:'Cálculo direto',texto:'Quanto é '+p+'% de '+N+'?',ops:o.ops,g:o.g};
+    }
+    if(d==='normal'){
+      if(Math.random()<0.5){
+        const p=_pk([15,30,40,75]), N=_ri(2,15)*20, v=N*p/100;
+        const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([2,5,10,Math.round(N/10)])));
+        return {diff:d,tipo:'Cálculo direto',texto:'Quanto é '+p+'% de '+N+'?',ops:o.ops,g:o.g};
+      }
+      const p=_pk([10,25,50]), N=_ri(2,10)*40, novo=Math.round(N*(1+p/100));
+      const o=_mkOps('R$ '+novo,()=>'R$ '+Math.max(10,novo+_pk([-1,1])*_pk([10,20,Math.round(N*p/200)||10])));
+      return {diff:d,tipo:'Aumento percentual',texto:'Um produto custa R$ '+N+' e sofre aumento de '+p+'%. Qual o novo preço?',ops:o.ops,g:o.g};
+    }
+    const r=Math.random();
+    if(r<0.34){
+      const p=_pk([10,20,30]); const v=p*p/100;
+      const o=_mkOps('queda de '+v+'%',()=>_pk(['nenhuma variação','queda de '+p+'%','aumento de '+v+'%','queda de '+(v*2)+'%','queda de '+(v/2)+'%']));
+      return {diff:d,tipo:'Variação composta',texto:'Um valor sofre aumento de '+p+'% e, em seguida, desconto de '+p+'% sobre o novo valor. Em relação ao original, o resultado final é:',ops:o.ops,g:o.g};
+    }
+    if(r<0.67){
+      const p=_pk([20,25,50]), orig=_ri(2,12)*20, fim=Math.round(orig*(1+p/100));
+      const o=_mkOps('R$ '+orig,()=>'R$ '+Math.max(10,orig+_pk([-1,1])*_pk([10,20,fim-orig])));
+      return {diff:d,tipo:'Valor original',texto:'Após um aumento de '+p+'%, um produto passou a custar R$ '+fim+'. Qual era o preço original?',ops:o.ops,g:o.g};
+    }
+    const p=_pk([10,20,25,50]), de=_ri(4,15)*20, para=Math.round(de*(1-p/100));
+    const o=_mkOps(p+'%',()=>_pk([p/2,p*2,p+5,Math.max(1,p-5),100-p].filter(x=>x>0&&x!==p&&x===Math.round(x)))+'%');
+    return {diff:d,tipo:'Percentual de desconto',texto:'Um item caiu de R$ '+de+' para R$ '+para+'. O desconto foi de:',ops:o.ops,g:o.g};
+  }
+
+  const pool=montarPool(diff);
   questions=shuffle(pool).slice(0,Math.min(10,pool.length));
   qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
   const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';

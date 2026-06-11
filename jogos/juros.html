@@ -258,7 +258,53 @@ function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=M
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  const pool=BANK.filter(q=>q.diff===diff);
+  
+  /* ══ Geração procedural — perguntas sempre novas (anti-decoreba) ══ */
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  function _mkOps(correto,errar){
+    const c=String(correto); const s=new Set([c]); let guard=0;
+    while(s.size<4&&guard++<80){const e=String(errar());if(e&&e!==c)s.add(e);}
+    while(s.size<4)s.add(c+' '+s.size); // salvaguarda improvável
+    const ops=[...s];
+    for(let i=ops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ops[i],ops[j]]=[ops[j],ops[i]];}
+    return {ops,g:ops.indexOf(c)};
+  }
+  function montarPool(d){
+    const dd=(d==='treino')?'normal':d;
+    const out=[];for(let i=0;i<30;i++)out.push(gerarQuestao(dd));
+    return out;
+  }
+
+
+  const _fmtR=v=>{const int=v===Math.round(v);return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:int?0:2,maximumFractionDigits:2});};
+  function gerarQuestao(d){
+    if(d==='facil'){
+      const C=_pk([500,1000,1500,2000]), i=_ri(1,5), t=_ri(2,6), J=C*i/100*t;
+      const o=_mkOps(_fmtR(J),()=>_fmtR(Math.max(10,J+_pk([-1,1])*_pk([10,20,C*i/100]))));
+      return {diff:d,tipo:'Juros Simples',formula:'J = C × i × t',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule os Juros:',ops:o.ops,g:o.g};
+    }
+    if(d==='normal'){
+      if(Math.random()<0.5){
+        const C=_pk([800,1000,1200,2000]), i=_ri(2,5), t=_ri(3,8), M=C+C*i/100*t;
+        const o=_mkOps(_fmtR(M),()=>_fmtR(Math.max(100,M+_pk([-1,1])*_pk([20,50,C*i/100]))));
+        return {diff:d,tipo:'Montante Simples',formula:'M = C + J = C(1 + i×t)',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante:',ops:o.ops,g:o.g};
+      }
+      const i=_ri(2,4), t=_ri(4,8), C=_pk([500,1000,1500,2500]), J=C*i/100*t;
+      const o=_mkOps(_fmtR(C),()=>_fmtR(Math.max(100,C+_pk([-1,1])*_pk([100,200,500]))));
+      return {diff:d,tipo:'Capital Inicial',formula:'C = J / (i × t)',dados:['J = '+_fmtR(J),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Qual foi o capital aplicado?',ops:o.ops,g:o.g};
+    }
+    const C=_pk([1000,2000,5000]), i=_pk([10,20]), t=_pk([2,3]);
+    const M=Math.round(C*Math.pow(1+i/100,t)*100)/100;
+    const Msimples=C+C*i/100*t;
+    const o=_mkOps(_fmtR(M),()=>{
+      const errados=[Msimples,M+_pk([-1,1])*_pk([10,50,100]),C*Math.pow(1+i/100,t-1)];
+      return _fmtR(Math.round(_pk(errados)*100)/100);
+    });
+    return {diff:d,tipo:'Juros Compostos',formula:'M = C × (1 + i)ᵗ',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante (capitalização composta):',ops:o.ops,g:o.g};
+  }
+
+  const pool=montarPool(diff);
   questions=shuffle(pool).slice(0,Math.min(10,pool.length));
   qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
   const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';

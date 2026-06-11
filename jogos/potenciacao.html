@@ -263,7 +263,73 @@ function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=M
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  const pool=BANK.filter(q=>q.diff===diff);
+  
+  /* ══ Geração procedural — perguntas sempre novas (anti-decoreba) ══ */
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  function _mkOps(correto,errar){
+    const c=String(correto); const s=new Set([c]); let guard=0;
+    while(s.size<4&&guard++<80){const e=String(errar());if(e&&e!==c)s.add(e);}
+    while(s.size<4)s.add(c+' '+s.size); // salvaguarda improvável
+    const ops=[...s];
+    for(let i=ops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ops[i],ops[j]]=[ops[j],ops[i]];}
+    return {ops,g:ops.indexOf(c)};
+  }
+  function montarPool(d){
+    const dd=(d==='treino')?'normal':d;
+    const out=[];for(let i=0;i<30;i++)out.push(gerarQuestao(dd));
+    return out;
+  }
+
+
+  const _SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+  const _sup=n=>String(n).split('').map(c=>_SUP[c]).join('');
+  function gerarQuestao(d){
+    if(d==='facil'){
+      if(Math.random()<0.5){
+        const a=_ri(2,5), b=_ri(2,3), v=Math.pow(a,b);
+        const o=_mkOps(v,()=>_pk([a*b,v+a,v-a,Math.pow(a,b+1),v+1].filter(x=>x>0&&x!==v)));
+        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g};
+      }
+      const r=_ri(4,12), v=r;
+      const o=_mkOps(v,()=>_pk([r-1,r+1,r+2,r-2,Math.round(r*r/2)].filter(x=>x>0&&x!==v)));
+      return {diff:d,tipo:'Radiciação',expr:'√'+(r*r),texto:'Calcule a raiz quadrada:',ops:o.ops,g:o.g};
+    }
+    if(d==='normal'){
+      const m=Math.random();
+      if(m<0.4){
+        const a=_ri(2,7), b=_ri(2,4), v=Math.pow(a,b);
+        if(v>2500) return gerarQuestao(d);
+        const o=_mkOps(v,()=>_pk([a*b,v+a,v-a,v*2,Math.round(v/2)].filter(x=>x>0&&x!==v)));
+        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g};
+      }
+      if(m<0.7){
+        const r=_ri(2,7), v=r;
+        const o=_mkOps(v,()=>_pk([r-1,r+1,r+2,r*r,r*3].filter(x=>x>0&&x!==v)));
+        return {diff:d,tipo:'Raiz Cúbica',expr:'∛'+(r*r*r),texto:'Calcule a raiz cúbica:',ops:o.ops,g:o.g};
+      }
+      const a=_pk([2,3,5]), b=_ri(2,3), c=_ri(1,2), v=Math.pow(a,b+c);
+      const o=_mkOps(v,()=>_pk([Math.pow(a,b*c),Math.pow(a,b),v*a,Math.round(v/a)].filter(x=>x>0&&x!==v)));
+      return {diff:d,tipo:'Propriedades',expr:a+_sup(b)+' × '+a+_sup(c),texto:'Calcule o produto de potências:',ops:o.ops,g:o.g};
+    }
+    const m=Math.random();
+    if(m<0.4){
+      const a=_pk([2,3]), b=_ri(2,3), c=2, v=Math.pow(a,b*c);
+      const o=_mkOps(v,()=>_pk([Math.pow(a,b+c),v*a,Math.round(v/a),v+a].filter(x=>x>0&&x!==v)));
+      return {diff:d,tipo:'Potência de Potência',expr:'('+a+_sup(b)+')'+_sup(c),texto:'Calcule:',ops:o.ops,g:o.g};
+    }
+    if(m<0.7){
+      const a=_ri(2,9), s=_ri(5,12), v=1+s*s;
+      const o=_mkOps(v,()=>_pk([v-1,v+1,s*s,v+a]).valueOf?_pk([v-1,v+1,s*s,v+a]):v+1);
+      return {diff:d,tipo:'Expressão Mista',expr:a+'⁰ + √'+(s*s)+' × √'+(s*s),texto:'Calcule (lembre: a⁰ = 1):',ops:o.ops,g:o.g};
+    }
+    const a=_pk([2,4,5,10]), v1=1/a;
+    const correto=a===2?'1/2':a===4?'1/4':a===5?'1/5':'1/10';
+    const o=_mkOps(correto,()=>_pk(['-'+a, String(a), '1/'+(a*a), '-1/'+a, '0'].filter(x=>x!==correto)));
+    return {diff:d,tipo:'Expoente Negativo',expr:a+'⁻¹',texto:'Calcule:',ops:o.ops,g:o.g};
+  }
+
+  const pool=montarPool(diff);
   questions=shuffle(pool).slice(0,Math.min(10,pool.length));
   qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
   const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';

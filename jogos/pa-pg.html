@@ -259,7 +259,52 @@ function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=M
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  const pool=BANK.filter(q=>q.diff===diff);
+  
+  /* ══ Geração procedural — perguntas sempre novas (anti-decoreba) ══ */
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  function _mkOps(correto,errar){
+    const c=String(correto); const s=new Set([c]); let guard=0;
+    while(s.size<4&&guard++<80){const e=String(errar());if(e&&e!==c)s.add(e);}
+    while(s.size<4)s.add(c+' '+s.size); // salvaguarda improvável
+    const ops=[...s];
+    for(let i=ops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ops[i],ops[j]]=[ops[j],ops[i]];}
+    return {ops,g:ops.indexOf(c)};
+  }
+  function montarPool(d){
+    const dd=(d==='treino')?'normal':d;
+    const out=[];for(let i=0;i<30;i++)out.push(gerarQuestao(dd));
+    return out;
+  }
+
+
+  function gerarQuestao(d){
+    if(d==='facil'){
+      const a1=_ri(1,9), r=_ri(2,6), t=[a1,a1+r,a1+2*r,a1+3*r,null], v=a1+4*r;
+      const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([1,r,2*r])));
+      return {diff:d,tipo:'Progressão Aritmética — PA',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g};
+    }
+    if(d==='normal'){
+      if(Math.random()<0.5){
+        const a1=_ri(1,8), r=_ri(3,8), t=[a1,a1+r,null,a1+3*r,a1+4*r], v=a1+2*r;
+        const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([1,2,r])));
+        return {diff:d,tipo:'Progressão Aritmética — PA',terms:t,ask:'Qual é o termo que falta?',ops:o.ops,g:o.g};
+      }
+      const a1=_ri(1,4), q=_pk([2,3]), t=[a1,a1*q,a1*q*q,null], v=a1*q*q*q;
+      const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([a1*q,q,v/2]).map?v:Math.round(v+_pk([-1,1])*_pk([a1*q,q,Math.round(v/2)]))));
+      return {diff:d,tipo:'Progressão Geométrica — PG',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g};
+    }
+    if(Math.random()<0.5){
+      const a1=_ri(20,60), r=-_ri(3,9), t=[a1,a1+r,a1+2*r,null], v=a1+3*r;
+      const o=_mkOps(v,()=>v+_pk([-1,1])*_pk([1,2,Math.abs(r)]));
+      return {diff:d,tipo:'PA Decrescente',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g};
+    }
+    const q=_pk([2,3]), a4=_ri(2,4)*q*q*q, t=[null,a4/q/q,a4/q,a4], v=a4/q/q/q;
+    const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([1,q,v*q-v])));
+    return {diff:d,tipo:'Progressão Geométrica — PG',terms:t,ask:'Qual é o primeiro termo?',ops:o.ops,g:o.g};
+  }
+
+  const pool=montarPool(diff);
   questions=shuffle(pool).slice(0,Math.min(10,pool.length));
   qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
   const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';

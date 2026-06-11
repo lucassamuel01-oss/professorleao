@@ -266,7 +266,62 @@ function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=M
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  const pool=BANK.filter(q=>q.diff===diff);
+  
+  /* ══ Geração procedural — perguntas sempre novas (anti-decoreba) ══ */
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  function _mkOps(correto,errar){
+    const c=String(correto); const s=new Set([c]); let guard=0;
+    while(s.size<4&&guard++<80){const e=String(errar());if(e&&e!==c)s.add(e);}
+    while(s.size<4)s.add(c+' '+s.size); // salvaguarda improvável
+    const ops=[...s];
+    for(let i=ops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ops[i],ops[j]]=[ops[j],ops[i]];}
+    return {ops,g:ops.indexOf(c)};
+  }
+  function montarPool(d){
+    const dd=(d==='treino')?'normal':d;
+    const out=[];for(let i=0;i<30;i++)out.push(gerarQuestao(dd));
+    return out;
+  }
+
+
+  const _gcd=(a,b)=>b?_gcd(b,a%b):a;
+  function _red(p,q){const g=_gcd(p,q);return [p/g,q/g];}
+  function _ansForms(p,q){
+    const [a,b]=_red(p,q);
+    const forms=[a+'/'+b];
+    if(b===1)forms.push(String(a));
+    const dec=a/b;
+    if(Number.isFinite(dec)&&String(dec).length<=6&&dec===Math.round(dec*1000)/1000)forms.push(String(dec));
+    return forms;
+  }
+  function gerarQuestao(d){
+    if(d==='facil'){
+      if(Math.random()<0.5){
+        const [a,b]=_pk([[1,2],[1,3],[2,3],[1,4],[3,4],[2,5],[3,5]]), k=_ri(2,5);
+        return {diff:d,tipo:'Simplificação',expr:(a*k)+'/'+(b*k),texto:'Simplifique a fração:',ans:_ansForms(a,b),hints:['Divida numerador e denominador pelo MDC('+(a*k)+','+(b*k)+')='+k]};
+      }
+      const q=_ri(3,9), p1=_ri(1,q-2), p2=_ri(1,q-p1);
+      return {diff:d,tipo:'Adição de Frações',expr:p1+'/'+q+' + '+p2+'/'+q,texto:'Calcule:',ans:_ansForms(p1+p2,q),hints:['Denominadores iguais: some os numeradores']};
+    }
+    if(d==='normal'){
+      if(Math.random()<0.5){
+        const b1=_pk([2,3,4]), b2=_pk([3,4,6,8].filter(x=>x!==b1)), p1=_ri(1,b1-1)||1, p2=_ri(1,b2-1)||1;
+        const mmc=b1*b2/_gcd(b1,b2), num=p1*(mmc/b1)+p2*(mmc/b2);
+        return {diff:d,tipo:'Adição de Frações',expr:p1+'/'+b1+' + '+p2+'/'+b2,texto:'Calcule:',ans:_ansForms(num,mmc),hints:['MMC('+b1+','+b2+')='+mmc+' — iguale os denominadores']};
+      }
+      const a=_ri(1,5), b=_ri(2,6), c=_ri(1,5), e=_ri(2,6);
+      return {diff:d,tipo:'Multiplicação',expr:a+'/'+b+' × '+c+'/'+e,texto:'Calcule:',ans:_ansForms(a*c,b*e),hints:['Multiplique numeradores e denominadores; depois simplifique']};
+    }
+    if(Math.random()<0.5){
+      const a=_ri(1,5), b=_ri(2,6), c=_ri(1,5), e=_ri(2,6);
+      return {diff:d,tipo:'Divisão de Frações',expr:'('+a+'/'+b+') ÷ ('+c+'/'+e+')',texto:'Calcule:',ans:_ansForms(a*e,b*c),hints:['Dividir é multiplicar pelo inverso: '+a+'/'+b+' × '+e+'/'+c]};
+    }
+    const b=_pk([2,3,4,5]), a=_ri(1,b-1)||1, N=b*_ri(4,15);
+    return {diff:d,tipo:'Fração de um Número',expr:a+'/'+b+' de '+N,texto:'Calcule:',ans:[String(a*N/b)],hints:['Divida '+N+' por '+b+' e multiplique por '+a]};
+  }
+
+  const pool=montarPool(diff);
   questions=shuffle(pool).slice(0,Math.min(10,pool.length));
   qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
   const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';

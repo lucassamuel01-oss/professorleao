@@ -248,7 +248,82 @@ function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=M
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  const pool=BANK.filter(q=>q.diff===diff);
+  
+  /* ══ Geração procedural — perguntas sempre novas (anti-decoreba) ══ */
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  function _mkOps(correto,errar){
+    const c=String(correto); const s=new Set([c]); let guard=0;
+    while(s.size<4&&guard++<80){const e=String(errar());if(e&&e!==c)s.add(e);}
+    while(s.size<4)s.add(c+' '+s.size); // salvaguarda improvável
+    const ops=[...s];
+    for(let i=ops.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ops[i],ops[j]]=[ops[j],ops[i]];}
+    return {ops,g:ops.indexOf(c)};
+  }
+  function montarPool(d){
+    const dd=(d==='treino')?'normal':d;
+    const out=[];for(let i=0;i<30;i++)out.push(gerarQuestao(dd));
+    return out;
+  }
+
+
+  const _fat=n=>{let r=1;for(let i=2;i<=n;i++)r*=i;return r;};
+  const _gcd2=(a,b)=>b?_gcd2(b,a%b):a;
+  function _frac(p,q){const g=_gcd2(p,q);return (p/g)+'/'+(q/g);}
+  function gerarQuestao(d){
+    if(d==='facil'){
+      const m=Math.random();
+      if(m<0.34){
+        const n=_ri(4,6), v=_fat(n);
+        const o=_mkOps(v,()=>_pk([_fat(n)+n,_fat(n)-n,_fat(n+1),_fat(n-1),n*n].filter(x=>x>0&&x!==v)));
+        return {diff:d,tipo:'Fatorial',formula:'n! = n×(n−1)×...×1',texto:'Calcule '+n+'!',ops:o.ops,g:o.g};
+      }
+      if(m<0.67){
+        const ctx=_pk([['sabores de sorvete','tipos de casquinha'],['camisas','calças'],['rotas de ida','rotas de volta'],['entradas','pratos principais']]);
+        const n1=_ri(2,5), n2=_ri(2,6), v=n1*n2;
+        const o=_mkOps(v,()=>_pk([n1+n2,v+1,v-1,v+n1,v+n2].filter(x=>x>0&&x!==v)));
+        return {diff:d,tipo:'Princípio Multiplicativo',formula:'Total = n₁ × n₂',texto:'Há '+n1+' '+ctx[0]+' e '+n2+' '+ctx[1]+'. Quantas combinações são possíveis?',ops:o.ops,g:o.g};
+      }
+      const ev=_pk([['um número par',3],['um número maior que 4',2],['um múltiplo de 3',2],['o número 6',1]]);
+      const correto=_frac(ev[1],6);
+      const o=_mkOps(correto,()=>_pk(['1/6','1/3','1/2','2/3','5/6'].filter(x=>x!==correto)));
+      return {diff:d,tipo:'Probabilidade Simples',formula:'P(A) = favoráveis / total',texto:'Um dado comum é lançado. Qual a probabilidade de sair '+ev[0]+'?',ops:o.ops,g:o.g};
+    }
+    if(d==='normal'){
+      const m=Math.random();
+      if(m<0.34){
+        const n=_ri(5,8), k=_pk([2,3]), v=_fat(n)/(_fat(k)*_fat(n-k));
+        const o=_mkOps(v,()=>_pk([v+n,v-n,_fat(n)/_fat(n-k),v+1,v-1].filter(x=>x>0&&x!==v)));
+        return {diff:d,tipo:'Combinação',formula:'C(n,k) = n! / (k!(n−k)!)',texto:'De um grupo de '+n+' pessoas, quantas comissões de '+k+' podem ser formadas (a ordem NÃO importa)?',ops:o.ops,g:o.g};
+      }
+      if(m<0.67){
+        const n=_ri(4,8), v=n*(n-1);
+        const o=_mkOps(v,()=>_pk([v/2,n*n,v+n,v-n,v+1].filter(x=>x>0&&x!==v&&x===Math.round(x))));
+        return {diff:d,tipo:'Arranjo',formula:'A(n,2) = n × (n−1)',texto:'De '+n+' policiais, de quantas formas escolhemos 1 comandante e 1 motorista (funções diferentes — a ordem importa)?',ops:o.ops,g:o.g};
+      }
+      const w=_pk([['AMOR',4],['LIVRO',5],['PRATO',5],['MUNDO',5],['FUZIL',5]]);
+      const v=_fat(w[1]);
+      const o=_mkOps(v,()=>_pk([_fat(w[1]-1),_fat(w[1]+1),w[1]*w[1],v/2,v+w[1]].filter(x=>x>0&&x!==v&&x===Math.round(x))));
+      return {diff:d,tipo:'Permutação — Anagramas',formula:'P(n) = n!',texto:'Quantos anagramas tem a palavra '+w[0]+' (letras distintas)?',ops:o.ops,g:o.g};
+    }
+    const m=Math.random();
+    if(m<0.34){
+      const w=_pk([['BAHIA',5,2],['ARENA',5,2],['BANANA',6,3]]);
+      const v=w[0]==='BANANA'?_fat(6)/(_fat(3)*_fat(2)):_fat(w[1])/_fat(w[2]);
+      const o=_mkOps(v,()=>_pk([_fat(w[1]),v*2,v/2,v+w[1]].filter(x=>x>0&&x!==v&&x===Math.round(x))));
+      return {diff:d,tipo:'Anagramas com Repetição',formula:'P = n! / (rep!)',texto:'Quantos anagramas tem a palavra '+w[0]+'?',ops:o.ops,g:o.g};
+    }
+    if(m<0.67){
+      const k=_pk([2,3]), den=Math.pow(2,k), correto=_frac(den-1,den);
+      const o=_mkOps(correto,()=>_pk(['1/'+den,'1/2',_frac(1,den-1),'1/4','3/8'].filter(x=>x!==correto)));
+      return {diff:d,tipo:'Probabilidade — Complementar',formula:'P(pelo menos 1) = 1 − P(nenhum)',texto:'Lançando uma moeda '+k+' vezes, qual a probabilidade de sair PELO MENOS uma cara?',ops:o.ops,g:o.g};
+    }
+    const az=_ri(2,5), vm=_ri(3,7), correto=_frac(az,az+vm);
+    const o=_mkOps(correto,()=>_pk([_frac(vm,az+vm),_frac(az,vm),'1/2',_frac(1,az+vm)].filter(x=>x!==correto)));
+    return {diff:d,tipo:'Probabilidade — Urna',formula:'P(A) = favoráveis / total',texto:'Uma urna tem '+az+' bolas azuis e '+vm+' vermelhas. Retirando 1 ao acaso, qual a probabilidade de ser AZUL?',ops:o.ops,g:o.g};
+  }
+
+  const pool=montarPool(diff);
   questions=shuffle(pool).slice(0,Math.min(10,pool.length));
   qIdx=0; score=0; streak=0; maxStreak=0; acertos=0; answering=false;
   const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';

@@ -323,7 +323,35 @@ function shuffle(arr) {
 
 function startGame() {
   playerName = document.getElementById('inputNome').value.trim() || 'Anônimo';
-  questions = shuffle(BANK).slice(0, 10);
+  
+  const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const _pk=a=>a[Math.floor(Math.random()*a.length)];
+  const _NAOQUAD=[2,3,5,6,7,8,10,11,12,13,15,17,18,19,20];
+  function _gerarItemCN(){
+    const assinaturas=[...new Set(BANK.map(q=>q.sets.join('|')))];
+    const sig=_pk(assinaturas).split('|');
+    let n;
+    if(sig.includes('ℕ')) n=String(_ri(1,99));
+    else if(sig.includes('ℤ')) n='-'+_ri(1,80);
+    else if(sig.includes('ℚ')){
+      const q=_ri(2,9); let p=_ri(1,q*3); if(p%q===0)p++;
+      n=(Math.random()<0.5?'-':'')+p+'/'+q;
+    }
+    else if(sig.includes('ℝ')) n='√'+_pk(_NAOQUAD);
+    else n=_ri(1,9)+' + '+_ri(1,9)+'i';
+    return {n:n, sets:sig};
+  }
+  function montarPoolCN(){
+    const out=[]; const vistos=new Set();
+    let guard=0;
+    while(out.length<10&&guard++<200){
+      const it=_gerarItemCN();
+      if(!vistos.has(it.n)){vistos.add(it.n);out.push(it);}
+    }
+    return out;
+  }
+
+  questions = montarPoolCN();
   qIdx = 0; score = 0; streak = 0; maxStreak = 0; perfect = 0;
   totalAcertos = 0; totalPossible = 0;
   answering = false;
