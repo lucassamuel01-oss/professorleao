@@ -422,9 +422,7 @@
       btn.textContent = 'Entrando…';
       errEl.style.display = 'none';
 
-      // Simula delay de auth
-      setTimeout(() => {
-        const result = window.plAuth.login(email, pass);
+      window.plAuth.login(email, pass).then(result => {
         if (result.success) {
           window.location.href = result.role === 'admin' ? 'admin.html' : 'minha-area.html';
         } else {
@@ -433,7 +431,7 @@
           btn.disabled = false;
           btn.textContent = 'Entrar na plataforma';
         }
-      }, 600);
+      });
     });
   </script>
 </body>

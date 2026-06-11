@@ -1,0 +1,35 @@
+{
+  "name": "professor-leao",
+  "version": "1.0.0",
+  "description": "Plataforma Professor Leão — matemática para concursos (PMBA, CBMBA, Correios)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "lint": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "pmba",
+    "cbmba",
+    "correios",
+    "concurso",
+    "matematica",
+    "educacao"
+  ],
+  "author": "Professor Leão",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^1.20.5",
+    "express": "^4.22.2",
+    "express-session": "^1.19.0",
+    "mongodb": "^7.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

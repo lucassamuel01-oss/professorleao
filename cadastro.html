@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Criar minha conta – Professor Leão</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-branca.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0A1628; --navy-2: #0F1E38; --navy-3: #152545;
+      --accent: #4A6CF7; --accent-light: #6B89FF;
+      --silver: #8892B4; --white: #FFFFFF;
+      --font-h: 'Montserrat', sans-serif; --font-b: 'Open Sans', sans-serif;
+      --radius: 14px; --radius-sm: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-b); background: var(--navy); color: var(--white);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      background-image: radial-gradient(ellipse at 20% 0%, rgba(74,108,247,0.12), transparent 50%),
+                        radial-gradient(ellipse at 80% 100%, rgba(74,108,247,0.08), transparent 50%);
+    }
+    .card {
+      width: 100%; max-width: 460px;
+      background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px; padding: 36px 32px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 22px; }
+    .logo img { height: 38px; }
+    .logo-text { font-family: var(--font-h); font-weight: 900; font-size: 17px; }
+    .logo-text span { color: var(--accent-light); }
+    h1 { font-family: var(--font-h); font-size: 21px; font-weight: 900; text-align: center; margin-bottom: 6px; }
+    .sub { text-align: center; color: var(--silver); font-size: 13.5px; line-height: 1.6; margin-bottom: 24px; }
+    .sub b { color: var(--accent-light); }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; font-weight: 700; color: var(--silver); margin-bottom: 6px; letter-spacing: .3px; }
+    .field input {
+      width: 100%; padding: 12px 14px; border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05);
+      color: #fff; font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--accent); }
+    .field small { display: block; margin-top: 5px; font-size: 11.5px; color: var(--silver); }
+
+    .btn {
+      width: 100%; padding: 14px; margin-top: 8px;
+      border: none; border-radius: var(--radius-sm); cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: #fff; font-family: var(--font-h); font-size: 15px; font-weight: 800;
+      transition: filter .2s;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .msg { display: none; margin-bottom: 16px; padding: 12px 14px; border-radius: var(--radius-sm); font-size: 13px; line-height: 1.5; }
+    .msg.err { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #fca5a5; }
+    .msg.ok  { background: rgba(34,197,94,0.12);  border: 1px solid rgba(34,197,94,0.35);  color: #86efac; }
+
+    .footer-link { text-align: center; margin-top: 18px; font-size: 13px; color: var(--silver); }
+    .footer-link a { color: var(--accent-light); text-decoration: none; font-weight: 700; }
+
+    #invalidBox { display: none; text-align: center; }
+    #invalidBox .emoji { font-size: 44px; margin-bottom: 12px; }
+    #invalidBox p { color: var(--silver); font-size: 14px; line-height: 1.7; margin-bottom: 18px; }
+    #invalidBox a {
+      display: inline-block; padding: 12px 24px; border-radius: var(--radius-sm);
+      background: rgba(74,108,247,0.15); border: 1px solid rgba(74,108,247,0.35);
+      color: var(--accent-light); font-family: var(--font-h); font-weight: 800; font-size: 13px; text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <img src="assets/img/logo-branca.png" alt="Professor Leão" />
+    <div class="logo-text">PROF. <span>LEÃO</span></div>
+  </div>
+
+  <!-- Formulário de cadastro -->
+  <div id="formBox">
+    <h1>Criar minha conta</h1>
+    <p class="sub" id="welcomeSub">Bem-vindo(a)! Complete seus dados para ativar o seu acesso à plataforma.</p>
+
+    <div class="msg err" id="errMsg"></div>
+
+    <form id="cadastroForm" autocomplete="on">
+      <div class="field">
+        <label for="cName">Nome completo</label>
+        <input type="text" id="cName" autocomplete="name" placeholder="Seu nome completo" required minlength="3" />
+      </div>
+      <div class="field">
+        <label for="cEmail">E-mail</label>
+        <input type="email" id="cEmail" autocomplete="email" placeholder="voce@email.com" required />
+        <small>Será o seu login na plataforma.</small>
+      </div>
+      <div class="field">
+        <label for="cFone">WhatsApp (com DDD)</label>
+        <input type="tel" id="cFone" autocomplete="tel" inputmode="tel" placeholder="(77) 99999-9999" required />
+        <small>Usado pelo Professor Leão para avisos e suporte.</small>
+      </div>
+      <div class="field">
+        <label for="cPass">Senha</label>
+        <input type="password" id="cPass" autocomplete="new-password" placeholder="mínimo 6 caracteres" required minlength="6" />
+      </div>
+      <div class="field">
+        <label for="cPass2">Confirmar senha</label>
+        <input type="password" id="cPass2" autocomplete="new-password" placeholder="repita a senha" required minlength="6" />
+      </div>
+      <button class="btn" type="submit" id="btnCadastro">🚀 Criar conta e entrar</button>
+    </form>
+
+    <div class="footer-link">Já tem conta? <a href="login.html">Fazer login</a></div>
+  </div>
+
+  <!-- Convite inválido / usado / expirado -->
+  <div id="invalidBox">
+    <div class="emoji">🔒</div>
+    <h1 id="invalidTitle">Link inválido</h1>
+    <p id="invalidMsg">Este link de cadastro não é válido. Fale com o Professor Leão para receber o seu link exclusivo.</p>
+    <a href="https://wa.me/5577999229281" target="_blank" rel="noopener">💬 Falar com o Professor Leão</a>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const token  = params.get('convite') || '';
+
+  function showInvalid(title, msg) {
+    document.getElementById('formBox').style.display = 'none';
+    const box = document.getElementById('invalidBox');
+    document.getElementById('invalidTitle').textContent = title;
+    document.getElementById('invalidMsg').textContent   = msg;
+    box.style.display = 'block';
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* Valida o convite ao abrir a página */
+  (async function validarConvite() {
+    if (!token) {
+      showInvalid('Link incompleto', 'O cadastro na plataforma é feito por convite individual. Fale com o Professor Leão para receber o seu link exclusivo.');
+      return;
+    }
+    try {
+      const res  = await fetch('/api/invite/' + encodeURIComponent(token));
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        const msgs = {
+          usado:    ['Link já utilizado', 'Este link de cadastro já foi usado. Cada link vale para um único aluno. Se foi você, faça login normalmente.'],
+          expirado: ['Link expirado', 'Este link de cadastro expirou. Fale com o Professor Leão para receber um novo.'],
+        };
+        const [t, m] = msgs[data.status] || ['Link inválido', 'Este link de cadastro não é válido. Fale com o Professor Leão para receber o seu link exclusivo.'];
+        showInvalid(t, m);
+        return;
+      }
+      if (data.label) {
+        document.getElementById('welcomeSub').innerHTML =
+          `Bem-vindo(a), <b>${String(data.label).replace(/[<>&]/g, '')}</b>! Complete seus dados para ativar o seu acesso.`;
+      }
+    } catch {
+      showInvalid('Plataforma indisponível', 'Não foi possível validar o seu convite agora. Tente novamente em instantes ou fale com o Professor Leão.');
+    }
+  })();
+
+  /* Máscara simples de telefone */
+  document.getElementById('cFone').addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 6)      v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+    else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+    e.target.value = v;
+  });
+
+  /* Submit */
+  document.getElementById('cadastroForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    document.getElementById('errMsg').style.display = 'none';
+
+    const name  = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const fone  = document.getElementById('cFone').value.replace(/\D/g, '');
+    const pass  = document.getElementById('cPass').value;
+    const pass2 = document.getElementById('cPass2').value;
+
+    if (pass !== pass2) { showError('As senhas não coincidem.'); return; }
+    if (fone.length < 10) { showError('Informe um WhatsApp válido com DDD.'); return; }
+
+    const btn = document.getElementById('btnCadastro');
+    btn.disabled = true;
+    btn.textContent = '⏳ Criando sua conta...';
+
+    try {
+      const res  = await fetch('/api/cadastro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, name, email, telefone: fone, password: pass }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        // Espelha a sessão para o frontend (mesmo formato do auth.js)
+        localStorage.setItem('pl_session', JSON.stringify({
+          id: data.user.id, name: data.user.name, email: data.user.email,
+          telefone: data.user.telefone || '', role: data.user.role,
+          expiresAt: data.user.expiresAt || null, curso: data.user.curso || '',
+          via: 'api', loginAt: new Date().toISOString(),
+        }));
+        btn.textContent = '✅ Conta criada! Entrando...';
+        setTimeout(() => { window.location.href = 'minha-area.html'; }, 600);
+      } else {
+        showError(data.message || 'Não foi possível criar a conta. Tente novamente.');
+        btn.disabled = false;
+        btn.textContent = '🚀 Criar conta e entrar';
+      }
+    } catch {
+      showError('Plataforma indisponível no momento. Tente novamente em instantes.');
+      btn.disabled = false;
+      btn.textContent = '🚀 Criar conta e entrar';
+    }
+  });
+</script>
+</body>
+</html>

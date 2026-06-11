@@ -1,6 +1,10 @@
 # Materiais de fonte / arquivos locais de trabalho
 _fontes/
 
+# Backend local (dados e dependências)
+node_modules/
+data/
+
 # Projeto de referência (Elite Feminina — backend Node.js, não faz parte do site)
 elite-feminina-missao-farda-v6/
 

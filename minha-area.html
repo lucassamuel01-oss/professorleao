@@ -577,34 +577,13 @@
               </div>
             </div>
 
-            <p class="pf-section-title">📋 Dados Pessoais</p>
-
-            <!-- Nome + Email (pré-preenchidos do usuário logado) -->
-            <div class="pf-row">
-              <div class="pf-group">
-                <label>Seu nome *</label>
-                <input type="text" id="pubNome" name="nome" placeholder="João Silva" autocomplete="name" required />
-              </div>
-              <div class="pf-group">
-                <label>E-mail *</label>
-                <input type="email" id="pubEmail" name="email" placeholder="joao@email.com" autocomplete="email" required />
-              </div>
-            </div>
+            <p class="pf-section-title">⏰ Rotina de Estudos</p>
 
             <div class="pf-row">
-              <div class="pf-group">
-                <label>WhatsApp</label>
-                <input type="tel" id="pubTelefone" name="telefone" placeholder="(77) 99999-9999" autocomplete="tel" />
-              </div>
               <div class="pf-group">
                 <label>Data da prova *</label>
                 <input type="date" id="pubDataProva" name="dataProva" required />
               </div>
-            </div>
-
-            <p class="pf-section-title">⏰ Rotina de Estudos</p>
-
-            <div class="pf-row">
               <div class="pf-group">
                 <label>Horas por dia *</label>
                 <input type="number" id="pubHorasDia" min="1" max="16" placeholder="Ex: 3" inputmode="numeric" required />
@@ -882,11 +861,7 @@ function abrirModalPlano(refazer) {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // Pre-fill user data
-  const nome  = document.getElementById('pubNome');
-  const email = document.getElementById('pubEmail');
-  if (nome  && !nome.value)  nome.value  = _session.name || '';
-  if (email && !email.value) email.value = _session.email || '';
+  // Nome, e-mail e WhatsApp vêm do cadastro do aluno (_session) — sem campos repetidos
 
   // If refazer, show form; if view existing plan, show result
   if (!refazer && _currentLead && _currentPlano) {
@@ -922,13 +897,58 @@ function mostrarForm() {
   document.getElementById('planoModalTitle').textContent = '🗓️ Criar meu Plano de Estudos';
 }
 
+/* ── Integração plano ↔ aulas da plataforma ── */
+const CURSO_DO_CONCURSO = {
+  'CFO PMBA': 'cfo-pmba', 'CFO CBMBA': 'cfo-cbmba',
+  'SD PMBA': 'sd-pmba',   'SD CBMBA': 'sd-cbmba',
+  'Matemática Básica': 'mat-basica', 'Correios': 'correios',
+};
+
+function renderIntegracaoHTML(dados) {
+  const cursoId = CURSO_DO_CONCURSO[dados.concurso];
+  const curso   = cursoId ? PL_CATALOG.getCurso(cursoId) : null;
+  if (!curso) return '';
+
+  const primeiroNome = (_session.name || 'Aluno').split(' ')[0];
+  const prog = plAuth.getProgressV2()[cursoId] || {};
+  let prox = null, feitas = 0, comMat = 0;
+  (curso.aulas || []).forEach(a => {
+    const disp = PL_CATALOG.ATIVIDADES.filter(at => a.materiais[at.key] !== null);
+    if (!disp.length) return;
+    comMat++;
+    const pa = prog[a.id] || {};
+    if (disp.every(at => pa[at.key])) feitas++;
+    else if (!prox) prox = a;
+  });
+  const pct = comMat ? Math.round((feitas / comMat) * 100) : 0;
+
+  const btnProx = prox
+    ? `<a href="aula.html?curso=${cursoId}&aula=${prox.id}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;text-decoration:none">▶ Estudar agora: Aula ${prox.numero} — ${esc(prox.titulo)}</a>`
+    : `<span style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-family:var(--font-h);font-size:13px;font-weight:800">🏆 Todas as aulas disponíveis concluídas!</span>`;
+
+  return `<div style="margin-bottom:18px;padding:18px 20px;border-radius:14px;background:rgba(74,108,247,.08);border:1px solid rgba(74,108,247,.3)">
+    <div style="font-family:var(--font-h);font-weight:900;font-size:15px;margin-bottom:6px">🎯 ${esc(primeiroNome)}, seu plano está conectado às aulas</div>
+    <div style="font-size:12.5px;color:var(--silver);line-height:1.6;margin-bottom:12px">
+      Cada Pomodoro de matemática do cronograma corresponde a uma aula do curso
+      <strong style="color:#fff">${esc(curso.nome)}</strong> — você já concluiu
+      <strong style="color:var(--accent-light)">${feitas} de ${comMat} aulas (${pct}%)</strong>.
+      Siga o plano e marque as atividades dentro de cada aula.
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${btnProx}
+      <a href="curso.html?curso=${cursoId}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;text-decoration:none">📚 Ver todas as aulas</a>
+      <a href="jogos.html" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:800;text-decoration:none">🎮 Jogos</a>
+    </div>
+  </div>`;
+}
+
 function mostrarResultado(dados, plano) {
   document.getElementById('viewForm').style.display   = 'none';
   document.getElementById('viewResult').style.display = 'block';
   document.getElementById('planoModalTitle').textContent = `📋 Plano — ${dados.concurso}`;
   document.getElementById('resultTitle').textContent = `📋 Plano de Estudos — ${dados.concurso}`;
   const result = document.getElementById('pubPlanResult');
-  result.innerHTML = renderPlanoHTML(dados, plano);
+  result.innerHTML = renderIntegracaoHTML(dados) + renderPlanoHTML(dados, plano);
   // scroll to top of modal
   document.getElementById('modalPlano').scrollTop = 0;
 }
@@ -938,9 +958,6 @@ function voltarForm() { mostrarForm(); }
 function preencherFormComLead(lead) {
   const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
   set('pubConcurso', lead.concurso);
-  set('pubNome',     lead.nome);
-  set('pubEmail',    lead.email);
-  set('pubTelefone', lead.telefone || '');
   set('pubDataProva', lead.dataProva || '');
   set('pubHorasDia', lead.horasDia);
   set('pubDiasSemana', lead.diasSemana);
@@ -1041,22 +1058,14 @@ document.querySelectorAll('.switch-pub').forEach(btn => {
   if (el) { el.addEventListener('input', atualizarPreview); el.addEventListener('change', atualizarPreview); }
 });
 
-// Phone formatter
-document.getElementById('pubTelefone').addEventListener('input', e => {
-  const n = e.target.value.replace(/\D/g,'').slice(0,11);
-  if (n.length <= 2) e.target.value = n;
-  else if (n.length <= 6) e.target.value = `(${n.slice(0,2)}) ${n.slice(2)}`;
-  else if (n.length <= 10) e.target.value = `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
-  else e.target.value = `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`;
-});
-
 // Form submit
 document.getElementById('pubPlanForm').addEventListener('submit', e => {
   e.preventDefault();
   const concurso   = document.getElementById('pubConcurso').value || '';
-  const nome       = document.getElementById('pubNome').value      || '';
-  const email      = document.getElementById('pubEmail').value     || '';
-  const telefone   = document.getElementById('pubTelefone').value  || '';
+  // Dados pessoais vêm do cadastro do aluno logado
+  const nome       = _session.name  || '';
+  const email      = _session.email || '';
+  const telefone   = _session.telefone || '';
   const dataProva  = document.getElementById('pubDataProva').value  || '';
   const horasDia   = parseInt(document.getElementById('pubHorasDia').value)   || 2;
   const diasSemana = parseInt(document.getElementById('pubDiasSemana').value) || 5;
@@ -1079,10 +1088,11 @@ document.getElementById('pubPlanForm').addEventListener('submit', e => {
   try {
     const dados = { concurso, nome, email, telefone, dataProva, horasDia, diasSemana, nivel, trabalha, estudouAntes: estudou, notaAlvo, obs, diffs, facs };
 
-    // Save lead
+    // Save lead (local) + sincroniza no banco de dados quando há backend
     const leads = JSON.parse(localStorage.getItem('pl_leads') || '[]');
     leads.push({ ...dados, criadoEm: new Date().toISOString() });
     localStorage.setItem('pl_leads', JSON.stringify(leads));
+    if (plAuth.syncPlano) plAuth.syncPlano();
 
     const plano = gerarPlanoCompleto(dados);
     _currentLead  = dados;

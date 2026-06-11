@@ -381,27 +381,22 @@
         <div class="stat-box"><div class="n" id="sInativos">0</div><div class="l">Inativos</div></div>
       </div>
 
-      <!-- Criar usuário -->
+      <!-- Gerar link de cadastro (convite único) -->
       <div class="card">
-        <h2>➕ Criar novo acesso</h2>
-        <div class="form-grid">
+        <h2>🔗 Gerar link de cadastro por aluno</h2>
+        <p style="color:var(--silver,#8892B4);font-size:13px;margin-bottom:16px;line-height:1.6">
+          Cada link é <strong style="color:#fff">único e de uso único</strong>: o aluno cria o próprio login
+          (nome, e-mail, WhatsApp e senha) e o link é invalidado na hora — sem risco de compartilhamento.
+          Gere após confirmar o pagamento e envie pelo WhatsApp.
+        </p>
+        <div class="form-grid" style="margin-bottom:14px">
           <div class="field">
-            <label>Nome completo</label>
-            <input type="text" id="newName" placeholder="João Silva" />
+            <label>Identificação (nome do aluno)</label>
+            <input type="text" id="invLabel" placeholder="João Silva — pago em 10/06" />
           </div>
-          <div class="field">
-            <label>E-mail</label>
-            <input type="email" id="newEmail" placeholder="joao@email.com" />
-          </div>
-          <div class="field">
-            <label>Senha inicial</label>
-            <input type="password" id="newPassword" placeholder="mínimo 6 caracteres" />
-          </div>
-        </div>
-        <div class="form-grid-2">
           <div class="field">
             <label>Concurso / Turma</label>
-            <select id="newCurso">
+            <select id="invCurso">
               <option value="">Selecione...</option>
               <option value="CFO PMBA">CFO PMBA</option>
               <option value="CFO CBMBA">CFO CBMBA</option>
@@ -413,18 +408,89 @@
             </select>
           </div>
           <div class="field">
-            <label>Acesso expira em</label>
-            <input type="date" id="newExpires" />
-          </div>
-          <div class="field">
-            <label>Perfil</label>
-            <select id="newRole">
-              <option value="student">Aluno</option>
-              <option value="admin">Admin</option>
-            </select>
+            <label>Acesso do aluno expira em <span style="opacity:.5;font-weight:400">(opcional)</span></label>
+            <input type="date" id="invAccessExpires" />
           </div>
         </div>
-        <button class="btn-primary" id="createBtn">Criar acesso</button>
+        <button class="btn-primary" onclick="generateInvite()">🔗 Gerar link de cadastro</button>
+
+        <div id="invResult" style="display:none;margin-top:16px;padding:14px;border-radius:12px;border:1px solid rgba(74,108,247,.4);background:rgba(74,108,247,.08)">
+          <p style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-light,#6B89FF);margin-bottom:8px;font-weight:800">Link gerado — copie e envie pelo WhatsApp ✓</p>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input type="text" id="invUrl" readonly style="flex:1;min-width:200px;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#fff;font-size:13px" />
+            <button class="btn-primary" onclick="copyInviteUrl()" style="white-space:nowrap">Copiar</button>
+          </div>
+        </div>
+
+        <div id="invOffline" style="display:none;margin-top:16px;padding:14px;border-radius:12px;border:1px dashed rgba(255,255,255,.2);color:var(--silver,#8892B4);font-size:13px;line-height:1.6">
+          ⚠️ Os links de cadastro funcionam quando a plataforma está publicada no servidor (Railway + MongoDB).
+          Neste momento o site está rodando sem backend — use "Criar acesso manualmente" abaixo.
+        </div>
+
+        <div class="table-wrap" style="margin-top:20px">
+          <table>
+            <thead>
+              <tr><th>Identificação</th><th>Turma</th><th>Status</th><th>Criado</th><th>Usado por</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="invitesTable">
+              <tr><td class="empty-cell" colspan="6">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Criar acesso manualmente (fallback) -->
+      <div class="card">
+        <details>
+          <summary style="cursor:pointer;font-family:var(--font-h);font-weight:800;font-size:15px">➕ Criar acesso manualmente <span style="font-weight:400;opacity:.5;font-size:12px">(opcional)</span></summary>
+          <div style="margin-top:16px">
+            <div class="form-grid">
+              <div class="field">
+                <label>Nome completo</label>
+                <input type="text" id="newName" placeholder="João Silva" />
+              </div>
+              <div class="field">
+                <label>E-mail</label>
+                <input type="email" id="newEmail" placeholder="joao@email.com" />
+              </div>
+              <div class="field">
+                <label>WhatsApp (com DDD)</label>
+                <input type="tel" id="newFone" placeholder="77999999999" />
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Senha inicial</label>
+                <input type="password" id="newPassword" placeholder="mínimo 6 caracteres" />
+              </div>
+              <div class="field">
+                <label>Concurso / Turma</label>
+                <select id="newCurso">
+                  <option value="">Selecione...</option>
+                  <option value="CFO PMBA">CFO PMBA</option>
+                  <option value="CFO CBMBA">CFO CBMBA</option>
+                  <option value="SD PMBA">SD PMBA</option>
+                  <option value="SD CBMBA">SD CBMBA</option>
+                  <option value="Matemática Básica">Matemática Básica</option>
+                  <option value="Correios">Correios</option>
+                  <option value="Todos">Acesso Completo</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Acesso expira em</label>
+                <input type="date" id="newExpires" />
+              </div>
+              <div class="field">
+                <label>Perfil</label>
+                <select id="newRole">
+                  <option value="student">Aluno</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-primary" id="createBtn">Criar acesso</button>
+          </div>
+        </details>
       </div>
 
       <!-- Lista de alunos -->
@@ -437,8 +503,8 @@
           <table>
             <thead>
               <tr>
-                <th>Nome</th><th>E-mail</th><th>Turma</th><th>Perfil</th>
-                <th>Status</th><th>Expira em</th><th>Criado em</th><th>Ações</th>
+                <th>Nome</th><th>Contato</th><th>Turma</th><th>Progresso</th>
+                <th>Último acesso</th><th>Status</th><th>Expira</th><th>Ações</th>
               </tr>
             </thead>
             <tbody id="usersTable">
@@ -976,16 +1042,95 @@
       : '<span class="badge b-inactive">Aluno</span>';
   }
 
+  /* ════════════════════════════════════════
+     ALUNOS — API (banco de dados) com
+     fallback para o modo local (localStorage)
+  ════════════════════════════════════════ */
   let searchQuery = '';
-  function loadUsers() {
-    const all = window.plAuth.getUsers();
+  let _apiMode = null;   // null = ainda não detectado
+
+  async function _detectApi() {
+    if (_apiMode !== null) return _apiMode;
+    try {
+      const res = await fetch('/api/admin/alunos', { credentials: 'same-origin' });
+      _apiMode = res.ok;
+    } catch { _apiMode = false; }
+    document.getElementById('invOffline').style.display = _apiMode ? 'none' : 'block';
+    return _apiMode;
+  }
+
+  /* — Progresso geral do aluno a partir do progress sincronizado — */
+  function calcProgresso(progress) {
+    let total = 0, done = 0;
+    try {
+      Object.values(PL_CATALOG.cursos).forEach(c => (c.aulas || []).forEach(a => {
+        const disp = PL_CATALOG.ATIVIDADES.filter(at => a.materiais[at.key] !== null);
+        if (!disp.length) return;
+        total++;
+        const pa = ((progress || {})[c.id] || {})[a.id] || {};
+        if (disp.every(at => pa[at.key])) done++;
+      }));
+    } catch { /* catálogo indisponível */ }
+    return { total, done, pct: total ? Math.round((done / total) * 100) : 0 };
+  }
+
+  function progressoCell(u) {
+    if (!_apiMode) return '<span style="font-size:11px;color:var(--gray-mid)" title="Disponível com a plataforma no servidor">—</span>';
+    const p = calcProgresso(u.progress);
+    const cor = p.pct >= 70 ? '#22c55e' : p.pct >= 30 ? '#f59e0b' : '#6B89FF';
+    return `<div style="min-width:110px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span style="color:var(--gray-mid)">${p.done}/${p.total} aulas</span><strong style="color:${cor}">${p.pct}%</strong>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${p.pct}%;background:${cor};border-radius:99px"></div>
+      </div>
+    </div>`;
+  }
+
+  function ultimoAcessoCell(u) {
+    if (!_apiMode) return '<span style="font-size:11px;color:var(--gray-mid)">—</span>';
+    if (!u.lastAccessAt) return '<span style="font-size:12px;color:var(--gray-mid)">Nunca acessou</span>';
+    const dias = Math.floor((Date.now() - new Date(u.lastAccessAt).getTime()) / 86400000);
+    let txt, cor;
+    if (dias <= 0)      { txt = 'Hoje';          cor = '#22c55e'; }
+    else if (dias === 1){ txt = 'Ontem';         cor = '#22c55e'; }
+    else if (dias <= 7) { txt = `Há ${dias} dias`; cor = '#f59e0b'; }
+    else                { txt = `⚠️ Há ${dias} dias`; cor = '#ef4444'; }
+    return `<span style="font-size:12.5px;font-weight:700;color:${cor}">${txt}</span>`;
+  }
+
+  function waCell(u) {
+    let d = String(u.telefone || '').replace(/\D/g, '');
+    if (!d) return `<span style="font-size:12px;color:var(--gray-mid)">${esc(u.email)}</span>`;
+    if ((d.length === 10 || d.length === 11) && !d.startsWith('55')) d = '55' + d;
+    return `<div style="display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:12px;color:var(--gray-mid)">${esc(u.email)}</span>
+      <a href="https://wa.me/${d}" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:5px;width:max-content;padding:4px 10px;border-radius:99px;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.35);color:#4ade80;font-size:11.5px;font-weight:800;text-decoration:none">
+        💬 WhatsApp</a>
+    </div>`;
+  }
+
+  async function fetchAlunos() {
+    if (await _detectApi()) {
+      try {
+        const res = await fetch('/api/admin/alunos', { credentials: 'same-origin' });
+        if (res.ok) return await res.json();
+      } catch { /* cai no local */ }
+    }
+    return window.plAuth.getUsers().map(u => ({ ...u, progress: null, lastAccessAt: null }));
+  }
+
+  async function loadUsers() {
+    const all = await fetchAlunos();
     const now = Date.now();
     const students = all.filter(u => u.role !== 'admin');
     const active   = students.filter(u => u.active && (!u.expiresAt || new Date(u.expiresAt).getTime() >= now));
     const expired  = students.filter(u => u.active && u.expiresAt && new Date(u.expiresAt).getTime() < now);
     const inactive = students.filter(u => !u.active);
-    document.getElementById('sTotal').textContent    = students.length;
-    document.getElementById('sAtivos').textContent   = active.length;
+    document.getElementById('sTotal').textContent     = students.length;
+    document.getElementById('sAtivos').textContent    = active.length;
     document.getElementById('sExpirados').textContent = expired.length;
     document.getElementById('sInativos').textContent  = inactive.length;
 
@@ -1000,53 +1145,80 @@
     }
     tbody.innerHTML = filtered.map(u => {
       const exp = u.expiresAt ? new Date(u.expiresAt).toLocaleDateString('pt-BR') : '<span style="opacity:.4">Vitalício</span>';
-      const created = new Date(u.createdAt).toLocaleDateString('pt-BR');
-      const isAdmin = u.id === 'admin-001';
+      const isAdmin = u.role === 'admin';
       return `<tr>
-        <td><strong>${esc(u.name)}</strong></td>
-        <td style="color:var(--gray-mid)">${esc(u.email)}</td>
+        <td><strong>${esc(u.name)}</strong>${isAdmin ? ' ' + roleBadge(u) : ''}</td>
+        <td>${waCell(u)}</td>
         <td>${esc(u.curso || '—')}</td>
-        <td>${roleBadge(u)}</td>
+        <td>${isAdmin ? '<span style="opacity:.35">—</span>' : progressoCell(u)}</td>
+        <td>${ultimoAcessoCell(u)}</td>
         <td>${statusBadge(u)}</td>
         <td>${exp}</td>
-        <td style="color:var(--gray-mid)">${created}</td>
         <td>${isAdmin ? '<span style="font-size:11px;color:var(--gray-mid)">—</span>' : `
           <button class="action-btn" onclick="toggleUser('${u.id}',${u.active})">${u.active ? 'Desativar' : 'Ativar'}</button>
-          <button class="action-btn" onclick="openExtend('${u.id}')">Prazo</button>
+          <button class="action-btn" onclick="openExtend('${u.id}','${u.expiresAt ? u.expiresAt.slice(0,10) : ''}')">Prazo</button>
           <button class="action-btn danger" onclick="openConfirmDelete('${u.id}','${esc(u.name)}')">Remover</button>
         `}</td>
       </tr>`;
     }).join('');
   }
 
-  document.getElementById('createBtn').addEventListener('click', () => {
+  /* — mutações: API quando disponível, senão localStorage — */
+  async function _apiPatch(id, body) {
+    const res = await fetch('/api/admin/users/' + id, {
+      method: 'PATCH', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    return res.ok;
+  }
+
+  document.getElementById('createBtn').addEventListener('click', async () => {
     const name=document.getElementById('newName').value.trim(), email=document.getElementById('newEmail').value.trim();
+    const telefone=document.getElementById('newFone').value.trim();
     const password=document.getElementById('newPassword').value, curso=document.getElementById('newCurso').value;
     const expires=document.getElementById('newExpires').value, role=document.getElementById('newRole').value;
     if (!name||!email||!password) { toast('Preencha nome, e-mail e senha.','err'); return; }
     if (password.length < 6) { toast('Senha com mínimo 6 caracteres.','err'); return; }
-    const result = window.plAuth.createUser({ name, email, password, role, expiresAt: expires||null, curso });
-    if (result.success) {
-      toast('✅ Acesso criado!');
-      ['newName','newEmail','newPassword','newExpires'].forEach(id => document.getElementById(id).value='');
-      document.getElementById('newCurso').value=''; document.getElementById('newRole').value='student';
-      loadUsers();
-    } else { toast(result.message,'err'); }
+
+    if (await _detectApi()) {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, telefone, password, role, curso, expiresAt: expires ? new Date(expires).toISOString() : null }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) { toast('✅ Acesso criado no banco de dados!'); }
+      else { toast(data.message || 'Erro ao criar acesso.', 'err'); return; }
+    } else {
+      const result = window.plAuth.createUser({ name, email, password, role, expiresAt: expires||null, curso });
+      if (!result.success) { toast(result.message,'err'); return; }
+      toast('✅ Acesso criado (modo local).');
+    }
+    ['newName','newEmail','newFone','newPassword','newExpires'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('newCurso').value=''; document.getElementById('newRole').value='student';
+    loadUsers();
   });
 
-  function toggleUser(id, active) { window.plAuth.updateUser(id,{active:!active}); toast(active?'Usuário desativado.':'Usuário ativado.'); loadUsers(); }
+  async function toggleUser(id, active) {
+    if (_apiMode) { await _apiPatch(id, { active: !active }); }
+    else { window.plAuth.updateUser(id, { active: !active }); }
+    toast(active ? 'Usuário desativado.' : 'Usuário ativado.');
+    loadUsers();
+  }
+
   let extendId=null;
-  function openExtend(id) {
+  function openExtend(id, currentDate) {
     extendId=id;
-    const u = window.plAuth.getUsers().find(u=>u.id===id);
-    document.getElementById('extendDate').value = u?.expiresAt ? u.expiresAt.slice(0,10) : '';
+    document.getElementById('extendDate').value = currentDate || '';
     openModal('extendModal');
   }
   document.getElementById('extendCancel').addEventListener('click',()=>closeModal('extendModal'));
-  document.getElementById('extendOk').addEventListener('click',()=>{
+  document.getElementById('extendOk').addEventListener('click', async ()=>{
     if (!extendId) return;
     const date = document.getElementById('extendDate').value||null;
-    window.plAuth.updateUser(extendId,{expiresAt: date?new Date(date).toISOString():null});
+    const iso = date ? new Date(date).toISOString() : null;
+    if (_apiMode) { await _apiPatch(extendId, { expiresAt: iso }); }
+    else { window.plAuth.updateUser(extendId, { expiresAt: iso }); }
     toast('✅ Prazo atualizado.'); closeModal('extendModal'); loadUsers();
   });
 
@@ -1057,15 +1229,106 @@
     openModal('confirmModal');
   }
   document.getElementById('confirmCancel').addEventListener('click',()=>closeModal('confirmModal'));
-  document.getElementById('confirmOk').addEventListener('click',()=>{
+  document.getElementById('confirmOk').addEventListener('click', async ()=>{
     if (!deleteUserId) return;
-    const r=window.plAuth.deleteUser(deleteUserId);
-    if (r.success) { toast('Acesso removido.'); closeModal('confirmModal'); loadUsers(); }
-    else toast(r.message,'err');
+    if (_apiMode) {
+      const res = await fetch('/api/admin/users/' + deleteUserId, { method: 'DELETE', credentials: 'same-origin' });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) { toast('Acesso removido.'); closeModal('confirmModal'); loadUsers(); }
+      else toast(data.message || 'Erro ao remover.', 'err');
+    } else {
+      const r=window.plAuth.deleteUser(deleteUserId);
+      if (r.success) { toast('Acesso removido.'); closeModal('confirmModal'); loadUsers(); }
+      else toast(r.message,'err');
+    }
   });
+
+  /* ── Convites únicos (somente modo API) ── */
+  async function generateInvite() {
+    if (!(await _detectApi())) { toast('Convites exigem a plataforma no servidor (Railway).', 'err'); return; }
+    const label = document.getElementById('invLabel').value.trim();
+    const curso = document.getElementById('invCurso').value;
+    const accessExpires = document.getElementById('invAccessExpires').value || null;
+    const res = await fetch('/api/admin/invites', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ label, curso, accessExpiresAt: accessExpires ? new Date(accessExpires).toISOString() : null }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      document.getElementById('invUrl').value = data.invite.url;
+      document.getElementById('invResult').style.display = 'block';
+      document.getElementById('invLabel').value = '';
+      document.getElementById('invAccessExpires').value = '';
+      copyInviteUrl();
+      loadInvites();
+    } else {
+      toast(data.message || 'Erro ao gerar link.', 'err');
+    }
+  }
+
+  function copyInviteUrl() {
+    const input = document.getElementById('invUrl');
+    if (!input.value) return;
+    navigator.clipboard.writeText(input.value)
+      .then(() => toast('🔗 Link copiado! Cole no WhatsApp do aluno.'))
+      .catch(() => { input.select(); document.execCommand('copy'); toast('Link copiado!'); });
+  }
+
+  function copyText(t) {
+    navigator.clipboard.writeText(t).then(() => toast('🔗 Link copiado!')).catch(() => toast('Não foi possível copiar.', 'err'));
+  }
+
+  async function revokeInvite(id, label) {
+    if (!confirm(`Revogar o link "${label || id}"? O aluno não poderá mais se cadastrar por ele.`)) return;
+    const res = await fetch('/api/admin/invites/' + id, { method: 'DELETE', credentials: 'same-origin' });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) { toast('Link revogado.'); loadInvites(); }
+    else toast(data.message || 'Erro.', 'err');
+  }
+
+  async function loadInvites() {
+    const tbody = document.getElementById('invitesTable');
+    if (!(await _detectApi())) {
+      tbody.innerHTML = '<tr><td class="empty-cell" colspan="6">Disponível com a plataforma publicada no servidor.</td></tr>';
+      return;
+    }
+    let invites = [];
+    try {
+      const res = await fetch('/api/admin/invites', { credentials: 'same-origin' });
+      if (res.ok) invites = await res.json();
+    } catch { /* ignore */ }
+    if (!invites.length) {
+      tbody.innerHTML = '<tr><td class="empty-cell" colspan="6">Nenhum link gerado ainda.</td></tr>';
+      return;
+    }
+    const now = Date.now();
+    tbody.innerHTML = invites.slice().reverse().map(inv => {
+      const used = !!inv.usedAt;
+      const expired = !used && inv.expiresAt && new Date(inv.expiresAt).getTime() < now;
+      const badge = used
+        ? '<span class="badge b-inactive">Usado</span>'
+        : expired ? '<span class="badge b-expired">Expirado</span>'
+        : '<span class="badge b-active">Disponível</span>';
+      const url = location.origin + '/cadastro.html?convite=' + inv.token;
+      const acoes = used || expired
+        ? `<button class="action-btn danger" onclick="revokeInvite('${inv.id}','${esc(inv.label || '')}')">Remover</button>`
+        : `<button class="action-btn" onclick="copyText('${url}')">Copiar link</button>
+           <button class="action-btn danger" onclick="revokeInvite('${inv.id}','${esc(inv.label || '')}')">Revogar</button>`;
+      return `<tr>
+        <td>${esc(inv.label) || '<span style="opacity:.4">sem rótulo</span>'}</td>
+        <td>${esc(inv.curso || '—')}</td>
+        <td>${badge}</td>
+        <td style="color:var(--gray-mid)">${new Date(inv.createdAt).toLocaleDateString('pt-BR')}</td>
+        <td style="font-size:12px;color:var(--gray-mid)">${esc(inv.usedBy || '—')}</td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap">${acoes}</td>
+      </tr>`;
+    }).join('');
+  }
 
   document.getElementById('searchInput').addEventListener('input',e=>{ searchQuery=e.target.value.trim().toLowerCase(); loadUsers(); });
   loadUsers();
+  loadInvites();
 
   /* ═══════════════════════════════════════════
      CURSOS TAB
