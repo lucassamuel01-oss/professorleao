@@ -142,9 +142,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
       </div>
       <input class="lobby__input" id="inputNome" placeholder="Seu nome (para o ranking)" autocomplete="name"/>
       <div class="diff-row">
-        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">×0.7 · 25s</span></button>
-        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">×1.0 · 18s</span></button>
-        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">×1.5 · 12s</span></button>
+        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">×0.7 · 70s</span></button>
+        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">×1.0 · 50s</span></button>
+        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">×1.5 · 35s</span></button>
+        <button class="diff-btn"        data-diff="treino"  onclick="setDiff(this)">🎓 Treino<span class="diff-mult">sem tempo · ×0.5</span></button>
       </div>
       <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
     </div>
@@ -249,7 +250,7 @@ let streak=0, maxStreak=0, acertos=0;
 let timerSec=25, timerInterval=null, timerStarted;
 let answering=false, hintUsed=false;
 
-function getTimerSec(){ return diff==='dificil'?12:diff==='facil'?25:18; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 35 : diff === 'facil' ? 70 : 50; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try{

@@ -7,6 +7,77 @@
 
 window.BLOG_POSTS = [
   {
+    id: 'raio-x-edital-sd',
+    categoria: 'sd',
+    tag: '🪖 Soldado (SD)',
+    titulo: 'Raio-X do concurso de Soldado PMBA/CBMBA: o que diz o edital (FCC)',
+    resumo: 'Banca FCC, 80 questões, nota de corte 60, redação de 20 a 30 linhas. Os números exatos do último edital (SAEB/05/2022) para você treinar do jeito certo.',
+    data: '2026-06-10',
+    tempo: 7,
+    conteudo: `
+      <p>Quem estuda para Soldado precisa conhecer as regras do jogo. Abaixo, os dados oficiais do último edital publicado (SAEB/05/2022, organizado pela <strong>Fundação Carlos Chagas — FCC</strong>), que ofereceu <strong>2.000 vagas para a PMBA e 500 para o CBMBA</strong>.</p>
+      <h3>A prova objetiva em números</h3>
+      <ul>
+        <li><strong>80 questões</strong> de múltipla escolha com <strong>5 alternativas</strong>: 50 de Conhecimentos Gerais + 30 de Conhecimentos Específicos.</li>
+        <li>Cada questão vale <strong>1,25 ponto</strong> (escala de 0 a 100).</li>
+        <li><strong>Nota de corte: 60 pontos</strong> — abaixo disso, eliminação automática.</li>
+        <li>Duração total: <strong>4h30</strong>, já incluindo a redação, aplicada no mesmo dia.</li>
+      </ul>
+      <h3>As matérias — PM e BM não são iguais!</h3>
+      <p><strong>Soldado PMBA</strong> — Gerais: Língua Portuguesa, <strong>Matemática</strong>, História do Brasil, Geografia do Brasil, Atualidades e Informática. Específicos: Direito Constitucional, Direitos Humanos, Direito Administrativo, Direito Penal, Igualdade Racial e de Gênero e Direito Penal Militar.</p>
+      <p><strong>Soldado CBMBA</strong> — Gerais: Língua Portuguesa, <strong>Matemática</strong>, <strong>Ciências Naturais</strong> (no lugar de História e Geografia), Atualidades e Informática. Específicos: Igualdade Racial e de Gênero, Direito Constitucional, Direito Administrativo, Direito Penal Militar e Direitos Humanos.</p>
+      <h3>A redação (2ª etapa)</h3>
+      <ul>
+        <li>Você recebe <strong>3 temas e escolhe 1</strong> — texto dissertativo-argumentativo sobre assunto de interesse geral.</li>
+        <li>Entre <strong>20 e 30 linhas</strong>, sob pena de perder pontos.</li>
+        <li>Critérios oficiais: <strong>Conteúdo (40 pts)</strong>, <strong>Estrutura (30 pts)</strong> e <strong>Expressão (30 pts)</strong>. Corte: 60.</li>
+        <li>Só são corrigidas as redações dos mais bem classificados na objetiva (até 3× o número de vagas).</li>
+      </ul>
+      <h3>Requisitos e carreira</h3>
+      <ul>
+        <li>Idade entre <strong>18 e 30 anos</strong>; estatura mínima 1,60 m (masc.) e 1,55 m (fem.); ensino médio completo; <strong>CNH categoria B</strong>.</li>
+        <li>Durante o Curso de Formação: bolsa de um salário mínimo. Como Soldado: soldo + gratificação que podem chegar a <strong>R$ 4.012,11</strong> (valores do edital de 2022).</li>
+        <li><strong>Atenção:</strong> TAF, exames médicos, avaliação psicológica e investigação social são <strong>exames pré-admissionais</strong> — acontecem DEPOIS do resultado final do concurso, e não são etapas da prova.</li>
+      </ul>
+      <p><em>Confira sempre o edital vigente — os números acima são do último certame publicado e servem de referência de treino.</em></p>
+    `,
+  },
+  {
+    id: 'raio-x-edital-cfo',
+    categoria: 'cfo',
+    tag: '🎖️ Oficial (CFO)',
+    titulo: 'Raio-X do CFO PM/BM: o que diz o edital 2024 (UNEB)',
+    resumo: 'Banca UNEB, 80 questões em 5 horas, e uma regra que derruba muita gente: zerar qualquer disciplina elimina. Veja a distribuição exata de questões.',
+    data: '2026-06-09',
+    tempo: 7,
+    conteudo: `
+      <p>O concurso de Oficiais é outro jogo. O edital CFOPM/CFOBM-2024 (Edital n.º 001-CG/2024), executado pela <strong>UNEB</strong>, ofereceu <strong>130 vagas: 100 para a PM</strong> (em duas turmas de 50) <strong>e 30 para o CBM</strong>.</p>
+      <h3>A distribuição exata das 80 questões</h3>
+      <p><strong>CFOPM:</strong> Língua Portuguesa 20 · Língua Inglesa 5 · Ciências Humanas 20 · <strong>Matemática 10</strong> · Informática 5 · Direito 20.</p>
+      <p><strong>CFOBM:</strong> Língua Portuguesa 20 · Língua Inglesa 5 · Ciências Humanas e Naturais 25 · <strong>Matemática 15</strong> · Informática 5 · Direito 10.</p>
+      <ul>
+        <li>Cada questão vale <strong>1,25 ponto</strong>; corte de <strong>60 pontos</strong>; duração de <strong>5 horas</strong> (objetiva + redação).</li>
+        <li><strong>A regra que elimina os despreparados: nota ZERO em qualquer disciplina = eliminação</strong>, mesmo com 60+ pontos no total. Com apenas 5 questões de Inglês e 5 de Informática, ignorar essas matérias é correr risco real.</li>
+        <li>No CFOBM, a Matemática inclui <strong>Lógica Matemática</strong> (proposições, tabelas-verdade) — e o programa do CFOPM inclui <strong>Proporcionalidade e Finanças</strong> (porcentagem, juros).</li>
+      </ul>
+      <h3>A redação no estilo UNEB</h3>
+      <p>Uma questão dissertativa sobre <strong>tema da realidade histórico-cultural contemporânea</strong>. Barema oficial: <strong>Conteúdo 30 pts · Estrutura 25 pts · Expressão 25 pts · Clareza, Coesão e Concisão 20 pts</strong>.</p>
+      <h3>2ª etapa: aqui o TAF É etapa do concurso</h3>
+      <p>Diferente do concurso de Soldado, no CFO a 2ª etapa (eliminatória) faz parte do certame: <strong>Avaliação Psicológica, TAF, Exame Médico-Odontológico, Investigação Social e Exame Documental</strong>.</p>
+      <ul>
+        <li><strong>TAF CFOPM:</strong> barra fixa (masc. 3 repetições dinâmicas / fem. 10s isometria), corrida de 50 m (masc. 8,00 s / fem. 9,20 s), corrida de 2.400 m (masc. 13 min / fem. 15 min) e <strong>natação de 25 m</strong>.</li>
+        <li><strong>TAF CFOBM:</strong> apoio de frente, abdominal remador, 50 m, 2.400 m e <strong>natação de 100 m</strong>.</li>
+        <li>Quem não atinge um índice tem <strong>uma única chance</strong> de refazer o teste após 72h.</li>
+      </ul>
+      <h3>Requisitos e carreira</h3>
+      <ul>
+        <li>Idade entre 18 e 30 anos; estatura mínima 1,60 m (masc.) / 1,55 m (fem.); ensino médio; CNH categoria B.</li>
+        <li>O Curso de Formação de Oficiais é em <strong>regime de internato com dedicação exclusiva</strong>, com bolsa de estudo. Ao concluir: Aspirante a Oficial.</li>
+      </ul>
+      <p><em>Use a distribuição de questões para calibrar seu plano: no CFO, Português + Direito + Humanas somam 60 das 80 questões da PM — mas é a matemática que costuma desempatar quem briga pelas primeiras posições.</em></p>
+    `,
+  },
+  {
     id: 'estude-pelo-peso-da-prova',
     categoria: 'metodologia',
     tag: '📊 Metodologia',
@@ -16,8 +87,9 @@ window.BLOG_POSTS = [
     tempo: 5,
     conteudo: `
       <p>Um dos erros mais comuns de quem começa a estudar para concursos como PMBA, CBMBA ou Correios é abrir o edital e seguir tópico por tópico, na ordem em que aparecem, dedicando o mesmo tempo a tudo. Parece organizado — mas é a rota mais lenta para a aprovação.</p>
-      <h3>A banca tem personalidade</h3>
-      <p>Cada banca examinadora tem um padrão de cobrança que se repete prova após prova. Em matemática, alguns assuntos aparecem em praticamente toda edição — razão e proporção, porcentagem, conjuntos — enquanto outros, listados no mesmo edital, rendem uma questão a cada vários anos. Quem analisa provas anteriores descobre onde está o maior retorno por hora de estudo.</p>
+      <h3>A banca tem personalidade — e o edital tem números</h3>
+      <p>Cada banca tem um padrão de cobrança que se repete prova após prova. Em matemática, alguns assuntos aparecem em praticamente toda edição — conjuntos, funções, porcentagem, combinatória — enquanto outros rendem uma questão a cada vários anos. Quem analisa provas anteriores descobre onde está o maior retorno por hora de estudo.</p>
+      <p>E os pesos estão escritos no edital: no <strong>CFO PM (UNEB)</strong> a Matemática tem <strong>10 das 80 questões</strong>; no <strong>CFO BM, 15 das 80</strong>; no <strong>SD (FCC)</strong>, ela integra as 50 questões de Conhecimentos Gerais. No CFO ainda vale a regra de ouro: <strong>zerar qualquer disciplina elimina</strong> — então até Inglês e Informática (5 questões cada) precisam de um mínimo de atenção.</p>
       <h3>Como aplicar hoje</h3>
       <ul>
         <li><strong>Liste os assuntos pela frequência</strong> com que caem nas provas anteriores da mesma banca — esse é o primeiro filtro de prioridade.</li>
@@ -57,54 +129,70 @@ window.BLOG_POSTS = [
     id: 'redacao-estrutura-que-aprova',
     categoria: 'redacao',
     tag: '✍️ Redação',
-    titulo: 'Redação para concursos: a estrutura que aprova (sem decoreba de citações)',
-    resumo: 'Você não precisa citar filósofos. Precisa de clareza, estrutura dissertativa impecável e uma proposta de intervenção completa.',
+    titulo: 'Redação para PMBA e CBMBA: o que as bancas avaliam de verdade',
+    resumo: 'FCC (SD) e UNEB (CFO) publicam os critérios no edital — e não são os do ENEM. Veja o barema real de cada banca e a estrutura que pontua.',
     data: '2026-06-01',
     tempo: 7,
     conteudo: `
-      <p>Diferente do ENEM, a redação de concursos como o da PMBA valoriza menos o repertório enciclopédico e mais a <strong>clareza, a objetividade e a estrutura</strong>. Quem domina o esqueleto dissertativo-argumentativo consegue desenvolver qualquer tema proposto.</p>
-      <h3>Introdução em 4 movimentos</h3>
+      <p>Muita gente treina redação para concurso militar usando o modelo do ENEM — e perde pontos por isso. As bancas dos concursos da Bahia publicam <strong>critérios próprios no edital</strong>. Conhecê-los é o primeiro passo para escrever o texto que o corretor procura.</p>
+      <h3>SD PMBA/CBMBA — critérios da FCC (edital SAEB/05/2022)</h3>
       <ul>
-        <li><strong>Contextualização:</strong> apresente o tema com um repertório legítimo — a Constituição Federal é sempre uma porta de entrada segura.</li>
-        <li><strong>Problematização:</strong> mostre o contraste entre o que a lei garante e o que acontece na prática.</li>
-        <li><strong>Tese:</strong> seu posicionamento claro sobre o problema.</li>
-        <li><strong>Direcionamento:</strong> anuncie os argumentos que virão no desenvolvimento.</li>
+        <li><strong>Conteúdo — até 40 pontos:</strong> perspectiva adotada, capacidade de análise e senso crítico, consistência dos argumentos.</li>
+        <li><strong>Estrutura — até 30 pontos:</strong> respeito ao gênero dissertativo-argumentativo, progressão textual e coesão entre frases e parágrafos.</li>
+        <li><strong>Expressão — até 30 pontos:</strong> norma culta — concordância, regência, pontuação, grafia e acentuação.</li>
       </ul>
-      <h3>Desenvolvimento: um esqueleto por parágrafo</h3>
-      <p>Cada parágrafo precisa de três peças: <strong>tópico frasal</strong> (a ideia central em uma frase direta), <strong>explicação</strong> (o porquê analítico) e <strong>consequência</strong> (o impacto real na sociedade). Dois parágrafos bem construídos valem mais do que quatro confusos.</p>
-      <h3>Conclusão: o mnemônico que garante pontos</h3>
-      <p>A proposta de intervenção precisa responder a quatro perguntas: <strong>QUEM faz + O QUE faz + COMO faz + PARA QUÊ faz</strong>. Exemplo de moldura: "cabe ao Estado [ação prática], por meio de [instrumento], com o objetivo de [finalidade]". Feche com o efeito social desejado.</p>
-      <h3>Argumentos coringa</h3>
-      <p>Algumas causas servem para quase qualquer tema social: desigualdade social, carência de políticas públicas eficientes, fragilidade da educação de base. Tenha-as prontas e adapte ao tema do dia.</p>
-      <p><em>Treine uma redação por semana desde o início da preparação — estrutura só vira reflexo com repetição.</em></p>
+      <p>Regras práticas: você escolhe <strong>1 entre 3 temas</strong> de interesse geral, escreve entre <strong>20 e 30 linhas</strong> e precisa de <strong>60 pontos</strong> para não ser eliminado. Abordagem tangencial ao tema derruba a nota de Conteúdo — fidelidade ao tema vale mais que frase de efeito.</p>
+      <h3>CFO PM/BM — barema da UNEB (edital 2024)</h3>
+      <ul>
+        <li><strong>Conteúdo — 30 pontos:</strong> fidelidade à questão, relevância argumentativa, progressão temática e senso crítico.</li>
+        <li><strong>Estrutura — 25 pontos:</strong> texto predominantemente dissertativo-argumentativo, ideias articuladas ao tema.</li>
+        <li><strong>Expressão — 25 pontos:</strong> adequação vocabular e registro culto da língua.</li>
+        <li><strong>Clareza, Coesão e Concisão — 20 pontos:</strong> conexão lógica entre palavras e ideias, sem enrolação.</li>
+      </ul>
+      <p>O tema na UNEB versa sobre a <strong>realidade histórico-cultural contemporânea</strong> — leitura de atualidades pesa aqui.</p>
+      <h3>A estrutura que atende às duas bancas</h3>
+      <ul>
+        <li><strong>Introdução:</strong> contextualize o tema, mostre o problema e deixe sua tese clara.</li>
+        <li><strong>Desenvolvimento (2 parágrafos):</strong> cada um com tópico frasal direto, explicação analítica e consequência real. Dois parágrafos bem amarrados valem mais que quatro confusos.</li>
+        <li><strong>Conclusão:</strong> retome a tese e aponte caminhos — sem precisar do formato engessado de "proposta de intervenção" do ENEM, que não é exigido por nenhuma das duas bancas.</li>
+      </ul>
+      <p><em>Treine uma redação por semana, sempre contando linhas e cronometrando — na prova, ela divide o tempo com 80 questões objetivas.</em></p>
     `,
   },
   {
     id: 'taf-pmba-treino',
     categoria: 'taf',
     tag: '💪 TAF',
-    titulo: 'TAF da PMBA e CBMBA: por que começar a treinar antes da aprovação',
-    resumo: 'O Teste de Aptidão Física é eliminatório — e condicionamento não se constrói em duas semanas. Índices para homens e mulheres e a lógica da progressão.',
+    titulo: 'TAF da PMBA e CBMBA: índices oficiais e por que treinar desde já',
+    resumo: 'No CFO o TAF é etapa do concurso (com natação!); no SD, exame pré-admissional. Índices oficiais do edital CFO 2024 para homens e mulheres.',
     data: '2026-05-28',
-    tempo: 5,
+    tempo: 6,
     conteudo: `
-      <p>Muitos candidatos e candidatas tratam o Teste de Aptidão Física como um problema para "depois da objetiva". É um erro que elimina gente bem preparada intelectualmente todos os anos: o condicionamento físico exige <strong>tempo, adaptação progressiva e constância</strong>.</p>
-      <h3>O que o TAF costuma exigir — índices de referência (PMBA)</h3>
-      <p><strong>Feminino:</strong></p>
+      <p>Muitos candidatos e candidatas tratam o Teste de Aptidão Física como um problema para "depois da objetiva". É um erro que elimina gente bem preparada intelectualmente: o condicionamento físico exige <strong>tempo, adaptação progressiva e constância</strong>.</p>
+      <h3>Primeiro, entenda QUANDO o TAF acontece</h3>
       <ul>
-        <li><strong>Corrida de velocidade:</strong> 50 metros em até 9,2 segundos.</li>
-        <li><strong>Barra fixa:</strong> sustentação isométrica por pelo menos 10 segundos.</li>
-        <li><strong>Corrida de resistência:</strong> 2.400 metros em até 15 minutos.</li>
+        <li><strong>CFO PM/BM (UNEB):</strong> o TAF é a <strong>2ª etapa do concurso</strong>, eliminatória, junto com avaliação psicológica, exames médicos, investigação social e exame documental.</li>
+        <li><strong>Soldado (FCC):</strong> o TAF é <strong>exame pré-admissional</strong> — acontece depois do resultado final, conforme portaria da corporação. Não é etapa da prova, mas reprova do mesmo jeito.</li>
       </ul>
-      <p><strong>Masculino:</strong></p>
+      <h3>Índices oficiais — edital CFO 2024 (Anexo V)</h3>
+      <p><strong>CFOPM Masculino:</strong></p>
       <ul>
-        <li><strong>Corrida de velocidade:</strong> 50 metros em até 8,2 segundos.</li>
-        <li><strong>Barra fixa:</strong> no mínimo 4 flexões dinâmicas (puxadas completas).</li>
-        <li><strong>Corrida de resistência:</strong> 2.400 metros em até 13 minutos.</li>
+        <li><strong>Barra fixa dinâmica:</strong> mínimo de 3 repetições completas.</li>
+        <li><strong>Corrida de 50 m:</strong> até 8,00 segundos.</li>
+        <li><strong>Corrida de 2.400 m:</strong> até 13 minutos.</li>
+        <li><strong>Natação:</strong> 25 metros.</li>
       </ul>
-      <p>Esses são os índices praticados nos últimos certames — <strong>confira sempre o edital vigente</strong>, pois os valores podem mudar a cada concurso.</p>
+      <p><strong>CFOPM Feminino:</strong></p>
+      <ul>
+        <li><strong>Barra fixa estática:</strong> sustentação por pelo menos 10 segundos.</li>
+        <li><strong>Corrida de 50 m:</strong> até 9,20 segundos.</li>
+        <li><strong>Corrida de 2.400 m:</strong> até 15 minutos.</li>
+        <li><strong>Natação:</strong> 25 metros.</li>
+      </ul>
+      <p><strong>CFOBM (ambos os sexos):</strong> apoio de frente sobre o solo, abdominal remador, corrida de 50 m, corrida de 2.400 m e <strong>natação de 100 m</strong>.</p>
+      <p>Detalhe que poucos sabem: quem falha em um índice tem <strong>uma única chance de refazer o teste após 72 horas</strong>. Para o SD, os índices saem na portaria de convocação — historicamente na mesma faixa. <strong>Confira sempre o edital vigente.</strong></p>
       <h3>A lógica da progressão</h3>
-      <p>Treinos eficazes seguem fases: <strong>adaptação</strong> (caminhadas, trotes leves, primeiras tentativas na barra), <strong>evolução</strong> (volume crescente), <strong>intensidade</strong> (ritmos variados e tiros curtos) e <strong>simulação</strong> (executar o teste completo nos padrões da banca, cronometrado). Duas regras inegociáveis: nunca treine tiros de velocidade sem aquecer muito bem, e respeite os dias de descanso — é neles que o corpo evolui.</p>
+      <p>Treinos eficazes seguem fases: <strong>adaptação</strong> (caminhadas, trotes leves, primeiras tentativas na barra), <strong>evolução</strong> (volume crescente), <strong>intensidade</strong> (ritmos variados e tiros curtos) e <strong>simulação</strong> (teste completo nos padrões da banca, cronometrado). E se o seu concurso tem natação, ela entra na rotina desde o início — técnica de nado não se improvisa. Duas regras inegociáveis: nunca treine tiros de velocidade sem aquecer, e respeite os dias de descanso.</p>
       <h3>Bônus: treinar melhora seu estudo</h3>
       <p>Exercício regular melhora foco, reduz ansiedade e otimiza o sono. O treino físico não rouba tempo da matemática — ele potencializa cada Pomodoro estudado.</p>
     `,
@@ -190,23 +278,26 @@ window.BLOG_POSTS = [
     id: 'fases-do-concurso-militar',
     categoria: 'noticias',
     tag: '📰 Concursos & Editais',
-    titulo: 'A aprovação não termina na objetiva: o ciclo completo de fases',
-    resumo: 'Prova escrita, redação, TAF, exames médicos e investigação social — entenda cada fase dos concursos militares e por que preparar tudo em paralelo.',
+    titulo: 'A aprovação não termina na objetiva: as fases reais de SD e CFO',
+    resumo: 'Os dois concursos têm caminhos diferentes depois da prova escrita. Veja, conforme os editais, o que vem pela frente em cada carreira — e por que preparar tudo em paralelo.',
     data: '2026-04-30',
     tempo: 5,
     conteudo: `
-      <p>Passar na prova objetiva é a fase mais concorrida — mas não é a última. Concursos militares como PMBA e CBMBA são um funil com várias etapas eliminatórias, e cada uma derruba candidatos e candidatas que negligenciaram a preparação completa.</p>
-      <h3>O funil típico do certame</h3>
+      <p>Passar na prova objetiva é a fase mais concorrida — mas não é a última. E aqui muita gente se confunde: <strong>o caminho do Soldado e o do Oficial são diferentes</strong>. Veja como cada edital organiza o funil.</p>
+      <h3>Soldado PMBA/CBMBA (edital FCC)</h3>
       <ul>
-        <li><strong>Prova objetiva:</strong> conhecimentos gerais e específicos — matemática tem peso decisivo. É o grande filtro inicial.</li>
-        <li><strong>Redação:</strong> estrutura dissertativa, norma culta e proposta de intervenção. Treine semanalmente desde o início.</li>
-        <li><strong>Teste de Aptidão Física (TAF):</strong> índices eliminatórios de corrida e barra. Condicionamento se constrói com meses de antecedência.</li>
-        <li><strong>Avaliação médica e odontológica:</strong> exames conforme o edital — organize seus documentos e cuide da saúde ao longo da preparação.</li>
-        <li><strong>Avaliação psicológica:</strong> perfil compatível com a função.</li>
-        <li><strong>Investigação social:</strong> análise da vida pregressa e da documentação. Mantenha tudo em dia.</li>
+        <li><strong>1ª etapa:</strong> Prova Objetiva — 80 questões, corte 60.</li>
+        <li><strong>2ª etapa:</strong> Prova Discursiva (Redação) — corrigida só para os mais bem classificados (até 3× as vagas).</li>
+        <li><strong>Depois do resultado final</strong>, vêm os <strong>exames pré-admissionais</strong> (não são etapas do concurso): avaliação psicológica, exames médico-odontológicos, TAF, exame documental e investigação social. Para o CBMBA há ainda o Teste de Habilidade Específica.</li>
+      </ul>
+      <h3>CFO PM/BM (edital UNEB)</h3>
+      <ul>
+        <li><strong>1ª etapa:</strong> Prova de Conhecimentos — objetiva (80 questões, sem zerar nenhuma disciplina) + redação.</li>
+        <li><strong>2ª etapa (do próprio concurso, eliminatória):</strong> Avaliação Psicológica, <strong>TAF (com natação)</strong>, Exame Médico-Odontológico, Investigação Social e Exame Documental.</li>
+        <li>Aprovado? Curso de Formação de Oficiais em <strong>regime de internato com dedicação exclusiva</strong>.</li>
       </ul>
       <h3>Por que preparar em paralelo</h3>
-      <p>O intervalo entre a objetiva e as fases seguintes costuma ser curto. Quem deixa o TAF, a saúde e a documentação para depois da aprovação na escrita corre contra um relógio impiedoso. A preparação inteligente distribui pequenas doses de cada frente ao longo de toda a jornada: estudo diário, treino físico 3x por semana, redação semanal e documentação organizada.</p>
+      <p>O intervalo entre a objetiva e as fases seguintes costuma ser curto. Quem deixa o TAF, a saúde e a documentação para depois da aprovação na escrita corre contra um relógio impiedoso. A preparação inteligente distribui pequenas doses de cada frente ao longo de toda a jornada: estudo diário, treino físico 3x por semana, redação semanal e documentação organizada (certidões, CNH categoria B em dia!).</p>
       <p><em>Aprovação de verdade é a soma do conhecimento na prova com a prontidão do corpo e da vida pessoal para assumir a farda.</em></p>
     `,
   },

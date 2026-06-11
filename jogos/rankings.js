@@ -19,14 +19,17 @@ const PL_Rankings = (() => {
   const KEY = 'pl_rankings';
   const MAX_PER_GAME = 1000;
 
-  /* ══ Multiplicadores de dificuldade ══ */
-  const DIFF_MULTIPLIER = { facil: 0.7, normal: 1.0, dificil: 1.5 };
+  /* ══ Multiplicadores de dificuldade ══
+     treino = modo sem tempo (estudo): vale menos no ranking */
+  const DIFF_MULTIPLIER = { treino: 0.5, facil: 0.7, normal: 1.0, dificil: 1.5 };
   const DIFF_LABEL = {
+    treino:  '🎓 Treino ×0.5',
     facil:   '😊 Fácil ×0.7',
     normal:  '⚡ Normal ×1.0',
     dificil: '🔥 Difícil ×1.5'
   };
   const DIFF_COLOR = {
+    treino:  '#38bdf8',
     facil:   '#22c55e',
     normal:  '#f59e0b',
     dificil: '#ef4444'

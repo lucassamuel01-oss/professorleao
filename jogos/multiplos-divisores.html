@@ -166,6 +166,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
         <button class="diff-btn active" data-diff="facil"  onclick="setDiff(this)">😊 Fácil<br/><span style="font-size:10px;opacity:.65">×0.7 no ranking</span></button>
         <button class="diff-btn"        data-diff="normal" onclick="setDiff(this)">⚡ Normal<br/><span style="font-size:10px;opacity:.65">×1.0 no ranking</span></button>
         <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<br/><span style="font-size:10px;opacity:.65">×1.5 no ranking</span></button>
+        <button class="diff-btn"        data-diff="treino" onclick="setDiff(this)">🎓 Treino<br/><span style="font-size:10px;opacity:.65">sem tempo · ×0.5</span></button>
       </div>
       <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
     </div>
@@ -354,7 +355,7 @@ function setDiff(el){
   el.classList.add('active'); diff=el.dataset.diff;
 }
 
-function getTimerSec(){return diff==='dificil'?20:diff==='facil'?35:25;}
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 20 : diff === 'facil' ? 40 : 30; }
 
 function genNumbers(phase){
   const maxN = diff==='dificil'?70:diff==='facil'?30:50;
@@ -474,8 +475,9 @@ function submitPhase(timeout=false){
   let pts=Math.max(0,acertos*20-erros*15-faltantes*8);
   let bonus=0;
   if(isPerfect){
-    bonus=Math.round(timeLeft*2);
-    if(timeLeft>=getTimerSec()-10)bonus+=100; // ultra-fast bonus
+    /* No modo treino (sem tempo) nao ha bonus de velocidade */
+    bonus=diff==='treino'?0:Math.round(timeLeft*2);
+    if(diff!=='treino'&&timeLeft>=getTimerSec()-10)bonus+=100; // ultra-fast bonus
     pts+=bonus; totalBonus+=bonus; perfectPhases++;
   }
   score+=pts;
