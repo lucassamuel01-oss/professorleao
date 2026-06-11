@@ -7,6 +7,114 @@
 
 window.BLOG_POSTS = [
   {
+    id: 'metodo-professor-leao',
+    categoria: 'metodologia',
+    tag: '📊 Metodologia',
+    titulo: 'Como estudar com o Método do Professor Leão: o guia completo',
+    resumo: 'Pomodoro de 25 minutos, trio aula→minissimulado→jogo, plano guiado pelo edital e acompanhamento por IA. O passo a passo de como a plataforma foi desenhada para te aprovar.',
+    data: '2026-06-12',
+    tempo: 9,
+    conteudo: `
+      <p>A plataforma do Professor Leão não é um amontoado de videoaulas: cada peça existe por um motivo pedagógico. Este guia mostra como usar o método inteiro — quem segue o ciclo completo estuda menos horas e retém mais.</p>
+      <h3>1. A base: constância vence intensidade</h3>
+      <p>O método aposta em <strong>blocos curtos todos os dias</strong>, não em maratonas. A ciência da aprendizagem é clara: a atenção despenca depois de ~25 minutos e a memória se consolida com repetição espaçada. Por isso <strong>toda aula da plataforma cabe em exatamente 1 Pomodoro (25 min)</strong> — você assiste com atenção máxima do início ao fim, sem fadiga.</p>
+      <h3>2. O ciclo Pomodoro tático</h3>
+      <ul>
+        <li><strong>25 min de foco total</strong> em uma única atividade — celular em outro cômodo.</li>
+        <li><strong>5 min de pausa real</strong>: levantar, água, alongar. Pausa não é rolar feed.</li>
+        <li>A cada 4 ciclos, <strong>pausa longa de 15 min</strong>.</li>
+      </ul>
+      <p>Com 3h/dia você tem 6 Pomodoros — o suficiente para 2 aulas completas com fixação, ou 1 aula + revisão + redação.</p>
+      <h3>3. O trio de fixação: aula → minissimulado → jogo</h3>
+      <p>Esse é o coração do método. Para cada assunto:</p>
+      <ul>
+        <li><strong>Pomodoro 1 — Aula:</strong> assista a videoaula do assunto e marque as atividades como concluídas.</li>
+        <li><strong>Pomodoro 2 — Minissimulado — Revisão:</strong> 10 questões no estilo da banca (FCC/UNEB) dentro da própria aula, com gabarito comentado. É o seu termômetro: abaixo de 70%, reveja a aula antes de avançar.</li>
+        <li><strong>Fechamento — Jogo do assunto:</strong> o treino lúdico cria repetições rápidas sem desgaste. As perguntas são geradas na hora — nunca se repetem — e o modo 🎓 Treino tira o cronômetro para estudar sem pressão.</li>
+      </ul>
+      <h3>4. O plano que segue o SEU edital e a SUA rotina</h3>
+      <p>O Plano de Estudos cruza três coisas: o <strong>peso real das matérias no edital escolhido</strong> (CFO, SD, Correios), as <strong>suas dificuldades declaradas</strong> e a <strong>sua rotina honesta</strong> (horas/dia e dias/semana que você realmente tem, inclusive trabalhando). O cronograma alterna matérias dentro do mesmo dia — o famoso rodízio (<em>interleaving</em>) que força o cérebro a recuperar a informação ativamente em vez de "morar" num assunto só.</p>
+      <p>Não sabe a data da prova? Marque <strong>"ainda não sei"</strong> e o plano roda no modo Construção de Base; quando o edital sair, refaça com a data e ele calcula sua reta final.</p>
+      <h3>5. Missão de Hoje: metas e alertas automáticos</h3>
+      <p>Na sua área, o painel 🎯 mostra <strong>o que fazer hoje</strong>: quantos Pomodoros, quais matérias (pelo dia da semana do seu cronograma), a próxima aula pendente e se você está adiantado ou atrasado em relação à curva do plano — com lembretes de redação semanal e treino físico.</p>
+      <h3>6. Caderno de erros: nenhum padrão sobrevive a 2 revisões</h3>
+      <p>Toda questão errada (minissimulado, jogo ou prova antiga) vira registro: assunto exato, tipo de erro, armadilha da banca e a regra certa com suas palavras. Releia 1x por semana e refaça — quando acertar duas revisões seguidas, o erro "sai" do caderno.</p>
+      <h3>7. Acompanhamento com o Leão IA</h3>
+      <p>O 🦁 Leão IA cruza suas aulas concluídas, o ritmo do plano, os resultados dos minissimulados e os jogos para responder: <em>como estou? o que estudar agora? quais meus pontos fracos? chego pronto na prova?</em> Use-o como um treinador de bolso ao fim de cada semana.</p>
+      <h3>Um dia-modelo (3h, quem trabalha)</h3>
+      <ul>
+        <li>🍅 1–2: aula nova + minissimulado do assunto</li>
+        <li>🍅 3: jogo do assunto (fixação) + caderno de erros</li>
+        <li>🍅 4: questões de outra matéria do dia (rodízio)</li>
+        <li>🍅 5–6: segunda matéria do cronograma + revisão rápida do dia anterior</li>
+      </ul>
+      <p><em>No fim de semana: 1 redação cronometrada (20–30 linhas) e o simulado da semana. Constância no método ≥ talento sem método.</em></p>
+    `,
+  },
+  {
+    id: 'treino-eficiente-taf',
+    categoria: 'taf',
+    tag: '💪 TAF',
+    titulo: 'Como treinar de forma eficiente para o TAF: o guia completo',
+    resumo: 'Periodização em 4 fases, treinos de corrida, barra e natação com progressões reais, os erros que lesionam — e o simulado nos padrões da banca.',
+    data: '2026-06-12',
+    tempo: 9,
+    conteudo: `
+      <p>TAF não se passa na base do susto: se constrói com <strong>progressão, especificidade e recuperação</strong>. Este guia organiza o treino para os testes reais dos concursos da Bahia — corrida de 50 m, corrida de 2.400 m, barra fixa e, no CFO, natação.</p>
+      <h3>Os 3 princípios inegociáveis</h3>
+      <ul>
+        <li><strong>Especificidade:</strong> treine exatamente o que a banca cobra, nos padrões dela. Musculação genérica ajuda, mas não substitui correr, puxar na barra e nadar.</li>
+        <li><strong>Progressão:</strong> aumente UMA variável por vez (volume OU intensidade), no máximo ~10% por semana.</li>
+        <li><strong>Recuperação:</strong> é no descanso que o corpo evolui. Treino físico pesado todo dia = lesão antes da prova.</li>
+      </ul>
+      <h3>Periodização em 4 fases</h3>
+      <ul>
+        <li><strong>Fase 1 — Adaptação (2–4 semanas):</strong> caminhada + trote leve 20–30 min, 3x/semana; primeiras tentativas na barra (ou progressões); mobilidade diária.</li>
+        <li><strong>Fase 2 — Evolução (4–8 semanas):</strong> corrida contínua subindo para 30–40 min; força 2x/semana; técnica de nado se seu concurso tem natação.</li>
+        <li><strong>Fase 3 — Intensidade (4–6 semanas):</strong> intervalados de corrida, tiros de velocidade, séries de barra próximas do índice.</li>
+        <li><strong>Fase 4 — Simulação (2–3 semanas antes):</strong> executar o TAF completo cronometrado, na sequência da banca, 1x/semana — e reduzir o volume na última semana (taper).</li>
+      </ul>
+      <h3>Corrida de 2.400 m: a matemática do pace</h3>
+      <p>Os índices de referência (CFO 2024): <strong>13 min (masc.) / 15 min (fem.)</strong>. Isso dá um ritmo-alvo por volta de pista (400 m): <strong>~2:10 masc. / ~2:30 fem.</strong> Treine assim:</p>
+      <ul>
+        <li><strong>1x/semana — intervalado:</strong> 6 a 8 tiros de 400 m no ritmo-alvo, com 90 s de trote entre eles.</li>
+        <li><strong>1x/semana — rodagem:</strong> 30–40 min contínuos, confortável (consegue conversar).</li>
+        <li><strong>A cada 2–3 semanas:</strong> 2.400 m cronometrado para medir a evolução.</li>
+      </ul>
+      <h3>Corrida de 50 m: velocidade é técnica + aquecimento</h3>
+      <p>Índices: <strong>8,00 s (masc.) / 9,20 s (fem.)</strong>. Faça 4 a 6 tiros de 30–50 m com <strong>recuperação completa</strong> (2–3 min andando) entre eles, 1x/semana. Trabalhe a largada: tronco inclinado, primeiros 10 m com passos curtos e potentes. <strong>JAMAIS faça tiros sem 15 min de aquecimento</strong> — é o teste que mais lesiona quem treina frio.</p>
+      <h3>Barra fixa: a progressão que funciona</h3>
+      <p>Índices CFO: <strong>3 repetições dinâmicas (masc.) / 10 s de isometria (fem.)</strong>. Se hoje você não faz nenhuma:</p>
+      <ul>
+        <li><strong>Nível 0 — Remada australiana</strong> (barra baixa, corpo inclinado): 3x8–10.</li>
+        <li><strong>Nível 1 — Negativas:</strong> suba com salto/apoio e DESÇA o mais lento possível (5 s): 3x4–5.</li>
+        <li><strong>Nível 2 — Isometria:</strong> queixo acima da barra, segure o máximo: 3 tentativas (este é o próprio teste feminino!).</li>
+        <li><strong>Nível 3 — Elástico:</strong> repetições completas com banda de assistência, reduzindo a banda a cada 2 semanas.</li>
+      </ul>
+      <p>Treine barra 2–3x/semana em dias alternados, sempre antes da corrida do dia (força antes de cansaço).</p>
+      <h3>Natação (CFO): não dá para improvisar</h3>
+      <p><strong>25 m (CFOPM) / 100 m (CFOBM)</strong>. Quem não nada com técnica afunda no dia: respiração lateral, braçada longa e pernada constante se aprendem em 8–12 sessões — começe JÁ, 1x/semana. Para os 100 m do bombeiro, treine também o ritmo: não saia em sprint.</p>
+      <h3>Semana-modelo (fase de intensidade)</h3>
+      <ul>
+        <li><strong>Seg:</strong> barra + intervalado 6x400 m</li>
+        <li><strong>Qua:</strong> rodagem 35 min + mobilidade</li>
+        <li><strong>Sex:</strong> barra + tiros de 50 m (bem aquecido!)</li>
+        <li><strong>Sáb:</strong> natação (se CFO) ou rodagem leve</li>
+        <li><strong>Dom:</strong> descanso total — inegociável</li>
+      </ul>
+      <h3>Os 5 erros que reprovam</h3>
+      <ul>
+        <li>Deixar o TAF para depois da objetiva (no CFO ele é a 2ª etapa do concurso; no SD, pré-admissional — mas reprova igual).</li>
+        <li>Treinar só corrida e ignorar a barra (ou vice-versa).</li>
+        <li>Tiros de velocidade sem aquecer.</li>
+        <li>Aumentar volume e intensidade ao mesmo tempo.</li>
+        <li>Cortar o sono — é nele que o treino vira resultado.</li>
+      </ul>
+      <p>Lembrete final: no CFO, quem falha em um índice tem <strong>uma única repescagem após 72 h</strong>. Chegue com folga, não no limite do índice.</p>
+      <p style="margin-top:16px"><a href="assets/editais/edital-cfo-pm-bm-2024.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px">⬇️ Edital CFO 2024 — índices e protocolos oficiais no Anexo V</a></p>
+    `,
+  },
+  {
     id: 'raio-x-edital-sd',
     categoria: 'sd',
     tag: '🪖 Soldado (SD)',
