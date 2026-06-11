@@ -33,12 +33,21 @@ window.BLOG_POSTS = [
         <li>Critérios oficiais: <strong>Conteúdo (40 pts)</strong>, <strong>Estrutura (30 pts)</strong> e <strong>Expressão (30 pts)</strong>. Corte: 60.</li>
         <li>Só são corrigidas as redações dos mais bem classificados na objetiva (até 3× o número de vagas).</li>
       </ul>
+      <h3>Inscrição, vagas e cotas</h3>
+      <ul>
+        <li>Inscrição de <strong>R$ 90,00</strong>, com <strong>isenção para inscritos no CadÚnico</strong> (família de baixa renda) — o pedido tem prazo próprio, logo no início das inscrições.</li>
+        <li>As vagas são divididas por <strong>região de classificação</strong> (Salvador + 8 regiões do interior para a PM; 10 regiões para o BM) <strong>e por sexo</strong> — você concorre apenas dentro da sua região e não pode trocar depois. Exemplo do último edital: Salvador teve 1.012 vagas masculinas e 172 femininas na PM.</li>
+        <li><strong>30% das vagas são reservadas para candidatos negros</strong> (autodeclaração + procedimento de heteroidentificação por comissão).</li>
+        <li>Desempate (nesta ordem): maior nota em Conhecimentos Gerais → maior nota na Redação → maior nota em Específicos → função de jurado → maior idade.</li>
+      </ul>
       <h3>Requisitos e carreira</h3>
       <ul>
         <li>Idade entre <strong>18 e 30 anos</strong>; estatura mínima 1,60 m (masc.) e 1,55 m (fem.); ensino médio completo; <strong>CNH categoria B</strong>.</li>
         <li>Durante o Curso de Formação: bolsa de um salário mínimo. Como Soldado: soldo + gratificação que podem chegar a <strong>R$ 4.012,11</strong> (valores do edital de 2022).</li>
         <li><strong>Atenção:</strong> TAF, exames médicos, avaliação psicológica e investigação social são <strong>exames pré-admissionais</strong> — acontecem DEPOIS do resultado final do concurso, e não são etapas da prova.</li>
+        <li>Ritmo do último certame: edital em 28/09/2022 → inscrições 13/10 a 11/11/2022 → <strong>prova em 22/01/2023</strong>. Ou seja: do edital à prova foram menos de 4 meses — quem espera o edital para começar, começa perdendo.</li>
       </ul>
+      <p style="margin-top:18px"><a href="assets/editais/edital-sd-pmba-cbmba-saeb-05-2022.pdf" download style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;background:#4A6CF7;color:#fff;font-weight:800;text-decoration:none">⬇️ Baixar o edital completo — SD PMBA/CBMBA (SAEB/05/2022)</a></p>
       <p><em>Confira sempre o edital vigente — os números acima são do último certame publicado e servem de referência de treino.</em></p>
     `,
   },
@@ -69,12 +78,80 @@ window.BLOG_POSTS = [
         <li><strong>TAF CFOBM:</strong> apoio de frente, abdominal remador, 50 m, 2.400 m e <strong>natação de 100 m</strong>.</li>
         <li>Quem não atinge um índice tem <strong>uma única chance</strong> de refazer o teste após 72h.</li>
       </ul>
-      <h3>Requisitos e carreira</h3>
+      <h3>Requisitos, regras de prova e carreira</h3>
       <ul>
-        <li>Idade entre 18 e 30 anos; estatura mínima 1,60 m (masc.) / 1,55 m (fem.); ensino médio; CNH categoria B.</li>
+        <li>Idade entre 18 e 30 anos; estatura mínima 1,60 m (masc.) / 1,55 m (fem.); ensino médio; CNH categoria B; <strong>30% das vagas reservadas para candidatos negros</strong>.</li>
+        <li>No dia da prova: você só pode sair da sala após <strong>4h30</strong> do início e só leva o caderno de questões após <strong>5h completas</strong>.</li>
+        <li>Os 100 aprovados da PM entram em <strong>duas turmas de 50</strong>, por ordem de classificação; o BM em turma única. Validade do concurso: 6 meses, prorrogável uma vez.</li>
         <li>O Curso de Formação de Oficiais é em <strong>regime de internato com dedicação exclusiva</strong>, com bolsa de estudo. Ao concluir: Aspirante a Oficial.</li>
+        <li>Ritmo do certame 2024: edital em 29/11/2024 → inscrições 05/12/2024 a 05/01/2025 → <strong>prova em 16/02/2025</strong>. Menos de 3 meses do edital à prova.</li>
       </ul>
+      <p style="margin-top:18px"><a href="assets/editais/edital-cfo-pm-bm-2024.pdf" download style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;background:#4A6CF7;color:#fff;font-weight:800;text-decoration:none">⬇️ Baixar o edital completo — CFO PM/BM 2024 (UNEB)</a></p>
       <p><em>Use a distribuição de questões para calibrar seu plano: no CFO, Português + Direito + Humanas somam 60 das 80 questões da PM — mas é a matemática que costuma desempatar quem briga pelas primeiras posições.</em></p>
+    `,
+  },
+  {
+    id: 'cotas-e-heteroidentificacao',
+    categoria: 'noticias',
+    tag: '📰 Concursos & Editais',
+    titulo: 'Cotas para negros nos concursos da Bahia: como funciona a reserva de 30%',
+    resumo: 'Os editais de SD e CFO reservam 30% das vagas para candidatos negros, com heteroidentificação por comissão. Entenda as regras e os direitos.',
+    data: '2026-06-11',
+    tempo: 6,
+    conteudo: `
+      <p>Tanto o concurso de Soldado (FCC) quanto o de Oficial (UNEB) aplicam a <strong>Lei estadual nº 13.182/2014</strong>: <strong>30% das vagas são reservadas para candidatos negros</strong> (pretos e pardos). As regras são parecidas nos dois editais — e conhecê-las evita sustos.</p>
+      <h3>Como concorrer</h3>
+      <ul>
+        <li>A opção é feita <strong>no ato da inscrição</strong>, por autodeclaração (critérios de cor/raça do IBGE). É facultativa — sem a opção, você concorre só à ampla concorrência.</li>
+        <li>O candidato cotista concorre <strong>às duas listas ao mesmo tempo</strong>: se a nota alcançar a ampla concorrência, ele entra por ela e <strong>não consome vaga reservada</strong>.</li>
+        <li>No SD, a reserva vale por região de classificação e por sexo; vagas reservadas não preenchidas voltam para a ampla concorrência.</li>
+      </ul>
+      <h3>O procedimento de heteroidentificação</h3>
+      <ul>
+        <li>Os habilitados nas provas passam por uma <strong>comissão de 5 membros</strong> que confirma a autodeclaração pela análise do <strong>fenótipo</strong> (características visíveis) — ascendência, fotos antigas e certidões de outros concursos <strong>não contam</strong>.</li>
+        <li>O procedimento é <strong>filmado</strong>; recusar a filmagem ou faltar elimina o candidato da reserva.</li>
+        <li>Quem não é confirmado, mas agiu de boa-fé, <strong>continua no concurso pela ampla concorrência</strong> (se a nota alcançar). Má-fé comprovada = exclusão e responsabilização.</li>
+        <li>Cabe recurso do resultado provisório, analisado por uma comissão recursal distinta.</li>
+      </ul>
+      <h3>Na prática</h3>
+      <p>A nota de corte da lista reservada costuma ser diferente da ampla — mas a prova é <strong>idêntica para todos</strong>: mesmas questões, mesmo corte mínimo de 60 pontos, mesma redação. A cota muda a concorrência, não o conteúdo. Seu plano de estudos continua o mesmo: dominar matemática e as matérias de maior peso.</p>
+      <p style="margin-top:16px">
+        <a href="assets/editais/edital-sd-pmba-cbmba-saeb-05-2022.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px;margin-right:8px">⬇️ Edital SD (Cap. 6)</a>
+        <a href="assets/editais/edital-cfo-pm-bm-2024.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px">⬇️ Edital CFO (item 3.1)</a>
+      </p>
+    `,
+  },
+  {
+    id: 'matematica-no-edital',
+    categoria: 'metodologia',
+    tag: '📊 Metodologia',
+    titulo: 'A Matemática dos editais, tópico por tópico — e onde estudar cada um',
+    resumo: 'O programa oficial de Matemática de SD e CFO destrinchado, com o mapa de qual aula, minissimulado e jogo da plataforma cobre cada tópico.',
+    data: '2026-06-11',
+    tempo: 7,
+    conteudo: `
+      <p>O conteúdo programático de Matemática é <strong>praticamente o mesmo</strong> nos editais de SD (FCC) e CFO (UNEB) — com duas diferenças que valem nota no fim do artigo. Veja o programa oficial e onde treinar cada tópico na plataforma:</p>
+      <h3>O programa oficial (7 blocos)</h3>
+      <ul>
+        <li><strong>1. Conjuntos numéricos:</strong> N, Z, Q, R e Complexos (forma algébrica e trigonométrica), sequências, PA e PG → aulas de Conjuntos Numéricos, PA e PG + jogos 🔢 e 📊 + minissimulados do assunto.</li>
+        <li><strong>2. Álgebra:</strong> expressões, polinômios, equações e inequações → aula de Álgebra e Polinômios.</li>
+        <li><strong>3. Funções:</strong> 1º grau, 2º grau, modular, exponencial e logarítmica → aulas de Funções + jogo 📐 + minissimulado de Funções.</li>
+        <li><strong>4. Sistemas lineares, Matrizes e Determinantes</strong> → aula específica do curso.</li>
+        <li><strong>5. Análise Combinatória:</strong> arranjos, permutações, combinações, Binômio de Newton e probabilidade → aulas + jogo 🎲 + minissimulado de Combinatória.</li>
+        <li><strong>6. Geometria e Medidas:</strong> plana (congruência, semelhança, áreas), espacial (prisma, pirâmide, cilindro, cone, esfera) e analítica (retas, circunferência, distâncias) → 4 aulas de geometria + jogo 🔺 + minissimulado de Geometria Plana.</li>
+        <li><strong>7. Trigonometria:</strong> razões, funções, transformações, equações e triângulos → aula de Trigonometria.</li>
+      </ul>
+      <h3>As diferenças entre os editais</h3>
+      <ul>
+        <li><strong>CFO PM</strong> acrescenta o bloco <strong>"Proporcionalidade e Finanças"</strong>: grandezas proporcionais, porcentagem, acréscimos/descontos e juros — treine com os jogos ⚖️ Regra de Três, 📈 Porcentagem e 💰 Juros.</li>
+        <li><strong>CFO BM</strong> acrescenta <strong>Lógica Matemática</strong> (proposições, valores lógicos, negação, quantificadores) — tem aula exclusiva no curso CFO CBMBA.</li>
+      </ul>
+      <h3>Como usar este mapa</h3>
+      <p>Não estude o programa em ordem: cruze com a frequência da banca (artigo "Estude pelo peso da prova"). Conjuntos, funções, porcentagem, combinatória e geometria plana são os blocos que mais aparecem — comece por eles, sempre no trio <strong>aula → minissimulado → jogo</strong>.</p>
+      <p style="margin-top:16px">
+        <a href="assets/editais/edital-sd-pmba-cbmba-saeb-05-2022.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px;margin-right:8px">⬇️ Programa completo — Edital SD (Anexo II)</a>
+        <a href="assets/editais/edital-cfo-pm-bm-2024.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px">⬇️ Programa completo — Edital CFO (Anexos II/III)</a>
+      </p>
     `,
   },
   {
@@ -157,6 +234,10 @@ window.BLOG_POSTS = [
         <li><strong>Conclusão:</strong> retome a tese e aponte caminhos — sem precisar do formato engessado de "proposta de intervenção" do ENEM, que não é exigido por nenhuma das duas bancas.</li>
       </ul>
       <p><em>Treine uma redação por semana, sempre contando linhas e cronometrando — na prova, ela divide o tempo com 80 questões objetivas.</em></p>
+      <p style="margin-top:16px">
+        <a href="assets/editais/edital-sd-pmba-cbmba-saeb-05-2022.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px;margin-right:8px">⬇️ Edital SD (critérios no Cap. 10)</a>
+        <a href="assets/editais/edital-cfo-pm-bm-2024.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px">⬇️ Edital CFO (barema no item 9.2)</a>
+      </p>
     `,
   },
   {
@@ -195,6 +276,7 @@ window.BLOG_POSTS = [
       <p>Treinos eficazes seguem fases: <strong>adaptação</strong> (caminhadas, trotes leves, primeiras tentativas na barra), <strong>evolução</strong> (volume crescente), <strong>intensidade</strong> (ritmos variados e tiros curtos) e <strong>simulação</strong> (teste completo nos padrões da banca, cronometrado). E se o seu concurso tem natação, ela entra na rotina desde o início — técnica de nado não se improvisa. Duas regras inegociáveis: nunca treine tiros de velocidade sem aquecer, e respeite os dias de descanso.</p>
       <h3>Bônus: treinar melhora seu estudo</h3>
       <p>Exercício regular melhora foco, reduz ansiedade e otimiza o sono. O treino físico não rouba tempo da matemática — ele potencializa cada Pomodoro estudado.</p>
+      <p style="margin-top:16px"><a href="assets/editais/edital-cfo-pm-bm-2024.pdf" download style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(74,108,247,.15);border:1px solid rgba(74,108,247,.4);color:#6B89FF;font-weight:800;text-decoration:none;font-size:13px">⬇️ Baixar o edital CFO 2024 (índices completos no Anexo V)</a></p>
     `,
   },
   {

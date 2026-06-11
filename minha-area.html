@@ -535,6 +535,13 @@
     </div>
   </div>
 
+  <!-- 📰 Blog do Professor Leão -->
+  <div class="sec-header">
+    <h2>📰 Blog do Professor Leão</h2>
+    <a href="blog.html" style="font-size:13px;color:var(--accent-light)">Ver todos os artigos →</a>
+  </div>
+  <div id="blogAlunoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:40px"></div>
+
   <!-- Quadro de Avisos -->
   <div class="sec-header" id="avisosSec" style="display:none">
     <h2>📣 Quadro de Avisos</h2>
@@ -768,6 +775,7 @@
 <script src="questoes.js"></script>
 <script src="avisos-data.js"></script>
 <script src="jogos/rankings.js"></script>
+<script src="blog-data.js"></script>
 <script>
 /* ── Auth ── */
 const _session = plAuth.requireAuth();
@@ -1690,8 +1698,27 @@ async function initLeaoIA() {
   } catch (e) { /* site estático — badge fica no motor local */ }
 }
 
+/* ── 📰 Blog na área do aluno ── */
+function initBlogAluno() {
+  const grid = document.getElementById('blogAlunoGrid');
+  if (!grid || !window.BLOG_POSTS) return;
+  const posts = window.BLOG_POSTS.slice()
+    .sort((a, b) => new Date(b.data) - new Date(a.data))
+    .slice(0, 4);
+  grid.innerHTML = posts.map(p => `
+    <a href="blog.html#${p.id}" style="display:flex;flex-direction:column;gap:8px;padding:16px;background:var(--navy-2);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);text-decoration:none;transition:border-color .2s,transform .2s"
+       onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform=''">
+      <span style="width:max-content;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;background:rgba(74,108,247,.14);color:var(--accent-light);border:1px solid rgba(74,108,247,.3)">${p.tag}</span>
+      <strong style="font-family:var(--font-h);font-size:13.5px;color:#fff;line-height:1.4">${escHtml(p.titulo)}</strong>
+      <span style="font-size:12px;color:var(--silver);line-height:1.55">${escHtml(p.resumo)}</span>
+      <span style="margin-top:auto;font-family:var(--font-h);font-size:12px;font-weight:800;color:var(--accent-light)">Ler artigo →</span>
+    </a>`).join('');
+}
+
 initMissao();
 initLeaoIA();
+initBlogAluno();
 </script>
 </body>
 </html>
