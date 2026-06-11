@@ -413,27 +413,48 @@ function iaProvider() {
   return null;
 }
 
+/* Tenta os modelos em ordem e memoriza o que funcionar — nomes de
+   modelo do Gemini mudam com o tempo (2.5 → 2.0 → 1.5). */
+const GEMINI_MODELS = [
+  process.env.IA_MODEL,
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-flash-latest",
+].filter(Boolean);
+let _geminiModelOk = null;
+
 async function chamarGemini(system, messages) {
-  const model = process.env.IA_MODEL || "gemini-2.0-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
-  const r = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: system }] },
-      contents: messages.map(m => ({
-        role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: m.content }],
-      })),
-      generationConfig: { maxOutputTokens: 700, temperature: 0.7 },
-    }),
-  });
-  const data = await r.json();
-  const texto = data && data.candidates && data.candidates[0] &&
-    data.candidates[0].content && data.candidates[0].content.parts &&
-    data.candidates[0].content.parts.map(p => p.text || "").join("");
-  if (!texto) throw new Error("Gemini: " + JSON.stringify(data && data.error ? data.error.message : data).slice(0, 200));
-  return texto;
+  const modelos = _geminiModelOk ? [_geminiModelOk] : GEMINI_MODELS;
+  let lastErr = null;
+  for (const model of modelos) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+      const r = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: system }] },
+          contents: messages.map(m => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: m.content }],
+          })),
+          generationConfig: { maxOutputTokens: 700, temperature: 0.7 },
+        }),
+      });
+      const data = await r.json();
+      const texto = data && data.candidates && data.candidates[0] &&
+        data.candidates[0].content && data.candidates[0].content.parts &&
+        data.candidates[0].content.parts.map(p => p.text || "").join("");
+      if (!texto) {
+        throw new Error(`Gemini(${model}): ` +
+          String(data && data.error ? data.error.message : JSON.stringify(data)).slice(0, 200));
+      }
+      _geminiModelOk = model;
+      return texto;
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("Gemini indisponível");
 }
 
 async function chamarGroq(system, messages) {
@@ -519,17 +540,23 @@ app.post("/api/ia", requireAuthApi, async (req, res) => {
 
     const chamar = { gemini: chamarGemini, groq: chamarGroq, anthropic: chamarAnthropic }[provider];
     const texto = await chamar(system, messages);
+    _iaUltimoErro = null;
     res.json({ success: true, texto, provider });
   } catch (err) {
     console.error("[IA]", err.message);
+    _iaUltimoErro = err.message;
     res.status(502).json({ success: false, local: true });
   }
 });
 
-/* Informa ao frontend se a IA real está configurada (e qual provedor) */
+/* Informa ao frontend se a IA real está configurada (e qual provedor).
+   Para admins, expõe o último erro do provedor (debug sem logs). */
+let _iaUltimoErro = null;
 app.get("/api/ia/status", requireAuthApi, (req, res) => {
   const provider = iaProvider();
-  res.json({ success: true, llm: !!provider, provider });
+  const out = { success: true, llm: !!provider, provider };
+  if (req.currentUser.role === "admin" && _iaUltimoErro) out.ultimoErro = _iaUltimoErro;
+  res.json(out);
 });
 
 /* ── Rotas de admin: convites ───────────────────────────────── */
