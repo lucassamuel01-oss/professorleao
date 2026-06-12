@@ -568,6 +568,28 @@ function _nextAssunto(state, mat) {
 
 function _limitePorDia(h) { return h <= 1 ? 1 : h <= 3 ? 2 : 3; }
 
+/* períodos do dia disponíveis para estudo (opcional no formulário) */
+const PERIODOS_PL = {
+  manha:     { label: '🌅 Manhã',     faixa: '5h–12h',  dica: 'a manhã é o melhor momento para matéria NOVA — comece o 1º Pomodoro revisando os erros de ontem' },
+  tarde:     { label: '☀️ Tarde',     faixa: '12h–18h', dica: 'na tarde, alterne teoria com questões para não cair na sonolência pós-almoço' },
+  noite:     { label: '🌙 Noite',     faixa: '18h–23h', dica: 'à noite, priorize QUESTÕES e revisão — conteúdo novo pesado rende menos no fim do dia' },
+  madrugada: { label: '🦉 Madrugada', faixa: '23h–5h',  dica: 'na madrugada, proteja seu sono: sessões curtas e pare no horário combinado' },
+};
+const _ORDEM_PERIODOS = ['manha', 'tarde', 'noite', 'madrugada'];
+
+/* divide os blocos pomodoro do dia entre os períodos escolhidos */
+function _atribuirPeriodos(blocos, periodos) {
+  if (!periodos || !periodos.length) return;
+  const ordenados = _ORDEM_PERIODOS.filter(p => periodos.includes(p));
+  const poms = blocos.filter(b => b.tipo === 'pomodoro');
+  const porPeriodo = Math.ceil(poms.length / ordenados.length);
+  poms.forEach((b, i) => {
+    b.periodo = ordenados[Math.min(Math.floor(i / porPeriodo), ordenados.length - 1)];
+  });
+  /* simulado/revisão do dia herda o último período */
+  blocos.forEach(b => { if (b.tipo === 'simulado') b.periodo = ordenados[ordenados.length - 1]; });
+}
+
 function _selecionarDia(materias, state, ctx, limite) {
   const escolhidas = [];
   let guard = 0;
@@ -606,7 +628,7 @@ function _tarefa(perfil, etapa, retaFinal) {
   return perfil.revisao;
 }
 
-function _gerarDia({ horasDia, materias, state, weekCounts, globalCounts, seed, retaFinal, diaNome, nivel }) {
+function _gerarDia({ horasDia, materias, state, weekCounts, globalCounts, seed, retaFinal, diaNome, nivel, periodos }) {
   const perfil = _perfilNivel(nivel);
   let ciclos   = Math.max(2, Math.min(Math.floor((horasDia * 60) / 30), 10));
 
@@ -648,6 +670,8 @@ function _gerarDia({ horasDia, materias, state, weekCounts, globalCounts, seed, 
     });
   }
 
+  _atribuirPeriodos(blocos, periodos);
+
   return { blocos, matsDay };
 }
 
@@ -661,6 +685,7 @@ function gerarPlanoCompleto(dados) {
 
   const difs  = _toArr(dados.diffs);
   const facs  = _toArr(dados.facs);
+  const periodos = _ORDEM_PERIODOS.filter(p => _toArr(dados.periodos).includes(p));
   const state = _buildState(edital, difs, facs, dados.nivel);
   const mats  = Object.keys(edital.pesos).sort((a, b) => state[b].score - state[a].score);
   const DIAS  = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -675,7 +700,7 @@ function gerarPlanoCompleto(dados) {
 
     for (let d = 0; d < diasSemana; d++) {
       const diaNome = DIAS[d] || `Dia ${d + 1}`;
-      const dia     = _gerarDia({ horasDia, materias: mats, state, weekCounts, globalCounts, seed: s * 17 + d * 7, retaFinal, diaNome, nivel: dados.nivel });
+      const dia     = _gerarDia({ horasDia, materias: mats, state, weekCounts, globalCounts, seed: s * 17 + d * 7, retaFinal, diaNome, nivel: dados.nivel, periodos });
       dias.push({ dia: diaNome, matsDay: dia.matsDay, blocos: dia.blocos });
     }
 
@@ -696,24 +721,31 @@ function gerarPlanoCompleto(dados) {
 
   const totalPoms = agenda.reduce((a, s) => a + s.dias.reduce((b, d) => b + d.blocos.filter(bl => bl.tipo === 'pomodoro').length, 0), 0);
 
+  const alertas = [
+    dados.trabalha === 'Sim'
+      ? 'Como você trabalha, o plano usa Pomodoros para reduzir atrito e manter constância.'
+      : 'Use sua disponibilidade para elevar o volume de questões sem abandonar revisão.',
+    String(dados.nivel || '').toLowerCase().includes('iniciante')
+      ? 'Como iniciante, o sistema reforça base, leitura ativa e questões fundamentais.'
+      : 'Como você já tem base, o plano aumenta questões, correção ativa e simulados curtos.',
+    'A distribuição prioriza os assuntos em que você declarou mais dificuldade.',
+    'Inclua treino físico fora do cronograma teórico, especialmente 2 a 4 vezes por semana.',
+  ];
+  /* alertas personalizados pelos horários disponíveis */
+  periodos.forEach(p => alertas.push('Nos seus horários: ' + PERIODOS_PL[p].dica + '.'));
+  if (diasRest !== null && diasRest <= 45 && cargaSem < 8) {
+    alertas.push('Atenção: faltam ' + diasRest + ' dias e sua carga é de ' + cargaSem + 'h/semana — se puder, suba para pelo menos 8h/semana nesta reta.');
+  }
+
   return {
-    edital, diasRest, semanas, cargaSem, intensidade, prioridades, agenda, totalPoms,
+    edital, diasRest, semanas, cargaSem, intensidade, prioridades, agenda, totalPoms, periodos,
     revisoes: [
       'Revisão 24h: o primeiro Pomodoro do dia seguinte retoma erros e marcações do estudo anterior.',
       'Revisão 7 dias: no encerramento da semana, refaça questões erradas e registre padrões de erro.',
       'Revisão 15 dias: aplique mini-simulado dos assuntos acumulados e reorganize prioridades.',
-      'Caderno de erros: toda questão errada deve virar anotação objetiva com o motivo do erro.',
+      'Caderno de erros: toda questão errada vira revisão automática na plataforma — refaça até acertar 2 vezes.',
     ],
-    alertas: [
-      dados.trabalha === 'Sim'
-        ? 'Como você trabalha, o plano usa Pomodoros para reduzir atrito e manter constância.'
-        : 'Use sua disponibilidade para elevar o volume de questões sem abandonar revisão.',
-      String(dados.nivel || '').toLowerCase().includes('iniciante')
-        ? 'Como iniciante, o sistema reforça base, leitura ativa e questões fundamentais.'
-        : 'Como você já tem base, o plano aumenta questões, correção ativa e simulados curtos.',
-      'A distribuição prioriza os assuntos em que você declarou mais dificuldade.',
-      'Inclua treino físico fora do cronograma teórico, especialmente 2 a 4 vezes por semana.',
-    ],
+    alertas,
   };
 }
 
@@ -783,16 +815,27 @@ function renderPlanoHTML(dados, plano) {
                   </div>
                 </div>
                 <ul style="margin:0;padding:0;list-style:none;">
-                  ${poms.map(b => `
+                  ${(() => {
+                    let ultimo = null;
+                    return poms.map(b => {
+                      let header = '';
+                      if (b.periodo && b.periodo !== ultimo) {
+                        ultimo = b.periodo;
+                        const pi = PERIODOS_PL[b.periodo];
+                        header = `<li style="font-size:10.5px;font-weight:800;color:#fbbf24;margin:7px 0 4px;letter-spacing:.4px;">${pi.label} <span style="color:#8892B4;font-weight:400">(${pi.faixa})</span></li>`;
+                      }
+                      return header + `
                     <li style="font-size:12px;margin-bottom:4px;padding:4px 8px;background:rgba(255,255,255,0.02);border-radius:6px;border-left:2px solid rgba(74,108,247,0.35);">
                       <span style="color:#8892B4">⏱ 25min</span>
                       <strong style="color:#fff;margin:0 4px;">${esc(b.mat)}</strong>
                       <span style="color:#a8b4d0;">— ${esc(b.assunto)}</span>
                       <em style="color:#4A6CF7;font-size:11px;"> [${esc(b.tarefa)}]</em>
-                    </li>`).join('')}
+                    </li>`;
+                    }).join('');
+                  })()}
                   ${sims.map(b => `
                     <li style="font-size:12px;color:#fbbf24;margin-top:4px;padding:4px 8px;background:rgba(245,158,11,0.06);border-radius:6px;border-left:2px solid rgba(245,158,11,0.4);">
-                      ⭐ <strong>${esc(b.titulo)}</strong>: ${esc(b.assunto)}
+                      ⭐ <strong>${esc(b.titulo)}</strong>: ${esc(b.assunto)}${b.periodo && PERIODOS_PL[b.periodo] ? ` <span style="font-size:10px;color:#8892B4">· ${PERIODOS_PL[b.periodo].label}</span>` : ''}
                     </li>`).join('')}
                 </ul>
               </div>`;
@@ -822,6 +865,11 @@ function renderPlanoHTML(dados, plano) {
             <div style="text-align:center;"><div style="font-size:20px;font-weight:800;color:#34d399;font-family:'Montserrat',sans-serif;line-height:1;">${plano.semanas}</div><div style="font-size:9px;color:#8892B4;text-transform:uppercase;margin-top:2px;">semanas</div></div>
           </div>
         </div>
+        ${plano.periodos && plano.periodos.length ? `
+        <div style="margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#8892B4;">⏰ Seus horários:</span>
+          ${plano.periodos.map(p => `<span style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:20px;padding:2px 9px;font-size:10.5px;color:#fbbf24;">${PERIODOS_PL[p].label} ${PERIODOS_PL[p].faixa}</span>`).join('')}
+        </div>` : ''}
         ${dados.concurso !== 'Matemática Básica' && plano.edital.estrategia ? `
         <p style="font-size:11px;color:#8892B4;margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);">💡 <em>${esc(plano.edital.estrategia)}</em></p>` : ''}
       </div>

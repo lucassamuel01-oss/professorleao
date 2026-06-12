@@ -227,6 +227,15 @@
     .switch-pub.active { background: rgba(74,108,247,0.18); border-color: rgba(74,108,247,0.45); color: var(--accent-light); }
     .switch-pub:hover { border-color: rgba(74,108,247,0.4); color: var(--white); }
 
+    /* Chips de horários disponíveis (multi-seleção, independente do seletor de concurso) */
+    .periodo-pub {
+      padding: 7px 14px; border-radius: 8px; font-family: var(--font-h); font-size: 12px;
+      font-weight: 700; border: 1px solid rgba(251,146,60,0.25); color: rgba(255,255,255,0.6);
+      background: var(--navy-3); cursor: pointer; transition: var(--tr);
+    }
+    .periodo-pub.active { background: rgba(251,146,60,0.16); border-color: rgba(251,146,60,0.55); color: #fdba74; }
+    .periodo-pub:hover { border-color: rgba(251,146,60,0.5); color: var(--white); }
+
     /* Checkboxes */
     .pub-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; margin-top: 8px; }
     .pub-cb-label {
@@ -742,6 +751,16 @@
               </div>
             </div>
 
+            <div class="pf-group" style="margin-top:4px">
+              <label>Em quais horários do dia você consegue estudar? <span style="opacity:.5;font-weight:400;text-transform:none">(opcional — marque um ou mais)</span></label>
+              <div class="switch-row-pub" id="pubPeriodosBox" style="margin-top:8px">
+                <button type="button" class="periodo-pub" data-p="manha">🌅 Manhã · 5h–12h</button>
+                <button type="button" class="periodo-pub" data-p="tarde">☀️ Tarde · 12h–18h</button>
+                <button type="button" class="periodo-pub" data-p="noite">🌙 Noite · 18h–23h</button>
+                <button type="button" class="periodo-pub" data-p="madrugada">🦉 Madrugada · 23h–5h</button>
+              </div>
+            </div>
+
             <div class="pf-row">
               <div class="pf-group">
                 <label>Trabalha atualmente?</label>
@@ -892,9 +911,11 @@ function carregarPlanoExistente() {
   document.getElementById('planoEmpty').style.display   = 'none';
   document.getElementById('planoSummary').style.display = 'flex';
   document.getElementById('planoSummTitle').textContent = `Plano — ${lead.concurso}`;
-  document.getElementById('planoSummDesc').textContent  = diasLeft !== null
+  const _perLbl = { manha: '🌅 manhã', tarde: '☀️ tarde', noite: '🌙 noite', madrugada: '🦉 madrugada' };
+  const _pers = (lead.periodos || []).map(p => _perLbl[p]).filter(Boolean).join(', ');
+  document.getElementById('planoSummDesc').textContent  = (diasLeft !== null
     ? `${diasLeft} dias até a prova · ${lead.horasDia}h/dia · ${lead.diasSemana} dias/semana`
-    : `${lead.concurso} · ${lead.horasDia}h/dia`;
+    : `${lead.concurso} · ${lead.horasDia}h/dia`) + (_pers ? ` · ${_pers}` : '');
 
   const chips = document.getElementById('planoChips');
   chips.innerHTML = '';
@@ -1172,6 +1193,9 @@ function preencherFormComLead(lead) {
   set('pubEstudouAntes', lead.estudouAntes || '');
   set('pubNotaAlvo', lead.notaAlvo || '');
   set('pubObservacoes', lead.obs || '');
+  /* restaura horários disponíveis */
+  document.querySelectorAll('.periodo-pub').forEach(b =>
+    b.classList.toggle('active', (lead.periodos || []).includes(b.dataset.p)));
   if (lead.concurso) {
     preencherMaterias(lead.concurso);
     // restore selections after a tick
@@ -1282,6 +1306,10 @@ document.querySelectorAll('.switch-pub').forEach(btn => {
   if (el) { el.addEventListener('input', atualizarPreview); el.addEventListener('change', atualizarPreview); }
 });
 
+/* chips de horários disponíveis (multi-seleção opcional) */
+document.querySelectorAll('.periodo-pub').forEach(btn =>
+  btn.addEventListener('click', () => btn.classList.toggle('active')));
+
 // Form submit
 document.getElementById('pubPlanForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -1300,6 +1328,7 @@ document.getElementById('pubPlanForm').addEventListener('submit', e => {
   const obs        = document.getElementById('pubObservacoes').value  || '';
   const diffs = [...document.querySelectorAll('[name=pubDificuldade]:checked')].map(c => c.value);
   const facs  = [...document.querySelectorAll('[name=pubFacilidade]:checked')].map(c => c.value);
+  const periodos = [...document.querySelectorAll('.periodo-pub.active')].map(b => b.dataset.p);
 
   const semData = document.getElementById('pubSemData')?.checked;
   if (!concurso) { alert('Por favor, selecione o concurso.'); return; }
@@ -1309,7 +1338,7 @@ document.getElementById('pubPlanForm').addEventListener('submit', e => {
   btn.disabled = true; btn.textContent = '⏳ Gerando plano...';
 
   try {
-    const dados = { concurso, nome, email, telefone, dataProva, horasDia, diasSemana, nivel, trabalha, estudouAntes: estudou, notaAlvo, obs, diffs, facs };
+    const dados = { concurso, nome, email, telefone, dataProva, horasDia, diasSemana, nivel, trabalha, estudouAntes: estudou, notaAlvo, obs, diffs, facs, periodos };
 
     // Save lead (local) + sincroniza no banco de dados quando há backend
     const leads = JSON.parse(localStorage.getItem('pl_leads') || '[]');
