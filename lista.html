@@ -410,6 +410,7 @@
   function init() {
     const params = new URLSearchParams(location.search);
     const modoCaderno = params.get('caderno');
+    const modoSimulado = params.get('simulado');
 
     if (modoCaderno) {
       /* 📕 lista virtual com as questões LIBERADAS do Caderno de Erros
@@ -417,13 +418,25 @@
       const itens = PlQuestoes.errosParaRevisar(_session.email);
       if (!itens.length) { showCadernoVazio(); return; }
       _lista = {
-        id: '__caderno', _caderno: true,
+        id: '__caderno', _caderno: true, _virtual: true,
         titulo: '📕 Caderno de Erros — ' + (modoCaderno === 'semana' ? 'Revisão da semana' : 'Refazer questões pendentes'),
         materia: 'Revisão dos seus erros',
         fonte: 'Acerte cada questão 2 vezes seguidas para dominá-la',
         dificuldade: '',
         questoes: itens.map((it, i) => ({ ...it.questao, num: i + 1, _orig: { listaId: it.listaId, num: it.num } }))
       };
+    } else if (modoSimulado) {
+      /* 🎯 Minissimulado da Semana — questões reais de banca dos
+         assuntos que o aluno estudou (montagem automática semanal) */
+      _lista = PlQuestoes.simuladoSemana(_session.email);
+      if (!_lista) { showSimuladoVazio(); return; }
+      const prev = PlQuestoes.getResp(_lista.id, _session.email);
+      if (prev && prev.respostas && !prev.finalizadoEm) {
+        _respostas = { ...prev.respostas };
+      } else if (prev && prev.finalizadoEm) {
+        _respostas = { ...prev.respostas };
+        _finalizado = true;
+      }
     } else {
       const id = params.get('id');
       if (!id) { showNotFound(); return; }
@@ -457,6 +470,14 @@
   function showNotFound() {
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('notFoundScreen').style.display = 'flex';
+  }
+
+  function showSimuladoVazio() {
+    const scr = document.getElementById('notFoundScreen');
+    scr.querySelector('.icon').textContent = '📚';
+    scr.querySelector('h2').textContent = 'Seu minissimulado ainda não foi montado';
+    scr.querySelector('p').textContent = 'O Minissimulado da Semana é criado com questões reais de banca dos assuntos que VOCÊ estudou. Estude uma ou mais aulas nesta semana e volte aqui — de preferência no fim de semana.';
+    showNotFound();
   }
 
   function showCadernoVazio() {
@@ -647,8 +668,8 @@
     document.getElementById('progressWrap').style.display = 'none';
     document.getElementById('resultScreen').style.display = 'block';
 
-    /* o caderno é uma lista virtual — calcula o score localmente */
-    const score = _lista._caderno
+    /* listas virtuais (caderno/simulado) — calcula o score localmente */
+    const score = _lista._virtual
       ? (() => {
           const total   = _lista.questoes.length;
           const acertos = _lista.questoes.filter(q => _respostas[q.num] === q.gabarito).length;

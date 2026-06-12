@@ -667,16 +667,10 @@
 
   <!-- ── Listas de Questões ── -->
   <div class="sec-header" id="listasSec" style="margin-top:16px">
-    <h2>🎯 Minissimulados — Revisão</h2>
-    <p>10 questões por assunto, no estilo da banca do seu concurso · 📅 <b style="color:#fdba74">faça aos fins de semana</b> para consolidar o que estudou na semana</p>
+    <h2>🎯 Minissimulado da Semana</h2>
+    <p>Montado automaticamente com <b>questões reais de banca</b> dos assuntos que você estudou na semana · 📅 <b style="color:#fdba74">faça no fim de semana</b> para consolidar</p>
   </div>
-  <div id="listasEmpty" style="display:none;margin-bottom:32px">
-    <div style="background:var(--navy-2);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:28px 24px;text-align:center;color:var(--silver)">
-      <div style="font-size:36px;margin-bottom:10px">📭</div>
-      <p style="font-size:14px">Nenhuma lista disponível ainda. O professor irá publicar listas em breve.</p>
-    </div>
-  </div>
-  <div class="listas-grid" id="listasGrid" style="display:none"></div>
+  <div id="simuladoCard" style="margin-bottom:40px"></div>
 
   <!-- 📕 Caderno de Erros -->
   <div id="cadernoSec" style="display:none;margin-top:8px">
@@ -931,72 +925,56 @@ function carregarPlanoExistente() {
 carregarPlanoExistente();
 
 /* ════════════════════════════════════════
-   LISTAS DE QUESTÕES
+   🎯 MINISSIMULADO DA SEMANA
+   Questões reais de banca dos assuntos que o
+   aluno estudou — montagem automática semanal
 ════════════════════════════════════════ */
-function carregarListas() {
-  /* o painel mostra apenas os minissimulados — as listas de exercícios
-     (tipoLista 'lista') ficam integradas dentro de cada aula, por assunto */
-  const lists = PlQuestoes.getLists().filter(l => l.tipoLista !== 'lista');
-  const grid  = document.getElementById('listasGrid');
-  const empty = document.getElementById('listasEmpty');
-  const sec   = document.getElementById('listasSec');
+function carregarSimuladoSemana() {
+  const box = document.getElementById('simuladoCard');
+  const sim = PlQuestoes.simuladoSemana(_session.email);
 
-  if (!lists.length) {
-    grid.style.display  = 'none';
-    empty.style.display = 'block';
-    sec.style.display   = 'flex';
+  if (!sim) {
+    box.innerHTML = `<div style="background:var(--navy-2);border:1px dashed rgba(255,255,255,0.15);border-radius:var(--radius);padding:26px 24px;text-align:center;color:var(--silver)">
+      <div style="font-size:36px;margin-bottom:10px">📚</div>
+      <p style="font-size:14px;max-width:520px;margin:0 auto">Estude uma ou mais aulas nesta semana e o sistema monta seu minissimulado automaticamente, com questões reais de banca dos assuntos estudados.</p>
+    </div>`;
     return;
   }
 
-  sec.style.display   = 'flex';
-  empty.style.display = 'none';
-  grid.style.display  = 'grid';
+  const prev = PlQuestoes.getResp(sim.id, _session.email);
+  let cta = '▶ Resolver agora', scoreHtml = '';
+  if (prev && prev.finalizadoEm) {
+    const acertos = sim.questoes.filter(q => prev.respostas[q.num] === q.gabarito).length;
+    const pct = Math.round(acertos / sim.questoes.length * 100);
+    const cls = pct >= 70 ? 'good' : pct >= 50 ? 'ok' : 'bad';
+    scoreHtml = `<span class="lista-card__score ${cls}">${pct}%</span>`;
+    cta = '🔄 Refazer';
+  } else if (prev && Object.keys(prev.respostas || {}).length) {
+    cta = `▶ Continuar (${Object.keys(prev.respostas).length}/${sim.total})`;
+  }
 
-  const difInfo = {
-    facil:   { label:'🟢 Fácil',   cls:'lpill-green'  },
-    medio:   { label:'🟡 Médio',   cls:'lpill-yellow' },
-    dificil: { label:'🔴 Difícil', cls:'lpill-red'    }
-  };
+  const chips = sim.assuntos.map(a =>
+    `<span style="font-size:11.5px;padding:3px 10px;border-radius:99px;background:rgba(74,108,247,.12);border:1px solid rgba(74,108,247,.25);color:#a8b4d0">${escHtml(a)}</span>`).join(' ');
 
-  grid.innerHTML = lists.map(l => {
-    const prev  = PlQuestoes.getResp(l.id, _session.email);
-    const score = prev && prev.finalizadoEm ? PlQuestoes.calcScore(l.id, prev.respostas) : null;
-    const dif   = difInfo[l.dificuldade] || difInfo.medio;
-    const link  = `lista.html?id=${encodeURIComponent(l.id)}`;
-
-    let scoreHtml = '';
-    let ctaText   = '▶ Resolver';
-    if (score) {
-      const cls = score.percent >= 70 ? 'good' : score.percent >= 50 ? 'ok' : 'bad';
-      scoreHtml = `<span class="lista-card__score ${cls}">${score.percent}%</span>`;
-      ctaText   = '🔄 Refazer';
-    } else if (prev && !prev.finalizadoEm) {
-      const answered = Object.keys(prev.respostas || {}).length;
-      ctaText = `▶ Continuar (${answered}/${l.total})`;
-    }
-
-    return `<a class="lista-card" href="${link}">
-      <div class="lista-card__top">
-        <div class="lista-card__title">${escHtml(l.titulo)}</div>
-      </div>
-      ${l.materia || l.fonte ? `<div class="lista-card__meta">${[l.materia, l.fonte].filter(Boolean).join(' · ')}</div>` : ''}
-      <div class="lista-card__pills">
-        <span class="lpill lpill-blue">${l.total} questões</span>
-        <span class="lpill ${dif.cls}">${dif.label}</span>
-      </div>
-      <div class="lista-card__footer">
-        <span class="lista-card__cta">${ctaText}</span>
-        ${scoreHtml}
-      </div>
-    </a>`;
-  }).join('');
+  box.innerHTML = `<a href="lista.html?simulado=semana" style="display:flex;flex-direction:column;gap:12px;padding:22px 24px;border-radius:var(--radius);background:linear-gradient(135deg,var(--navy-2),#15254a);border:1px solid rgba(74,108,247,.35);text-decoration:none;color:inherit">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <strong style="font-family:var(--font-h);font-size:16px">🎯 Simulado da semana pronto — ${sim.total} questões reais de banca</strong>
+      <span style="font-size:11px;padding:3px 9px;border-radius:99px;background:rgba(251,146,60,.18);color:#fdba74;white-space:nowrap">📅 ideal para o fim de semana</span>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">${chips}</div>
+    <div style="font-size:12.5px;color:var(--silver)">${escHtml(sim.fonte)} · FCC, UNEB, IBFC e CONSULTEC · os erros entram no Caderno de Erros</div>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-family:var(--font-h);font-weight:800;font-size:14px;color:var(--accent-light)">${cta}</span>
+      ${scoreHtml}
+    </div>
+  </a>`;
 }
 
 function escHtml(s) {
   return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-carregarListas();
+carregarSimuladoSemana();
 
 /* ════════════════════════════════════════
    📕 CADERNO DE ERROS + GUIA DO MÉTODO
@@ -1909,7 +1887,7 @@ const TOUR_PASSOS = [
   { sel: '#missaoSec',     t: '🎯 Missão de Hoje',     d: 'Suas metas diárias: quantos Pomodoros, quais matérias e se você está no ritmo — com lembretes automáticos.' },
   { sel: '#avisosSec',     t: '📣 Quadro de Avisos',   d: 'Aulas ao vivo, novidades de concursos e editais publicados pelo professor aparecem aqui.' },
   { sel: '#jogosSec',      t: '🎮 Arena de Jogos',     d: 'Treine se divertindo! As perguntas são geradas na hora (nunca se repetem) e o modo Treino não tem cronômetro.' },
-  { sel: '#listasSec',     t: '📝 Minissimulados',     d: '10 questões no estilo da banca por assunto, com gabarito comentado. Faça aos FINS DE SEMANA para consolidar o que estudou na semana.' },
+  { sel: '#listasSec',     t: '🎯 Minissimulado da Semana', d: 'Montado AUTOMATICAMENTE com questões reais de banca dos assuntos que você estudou na semana. Faça no FIM DE SEMANA para consolidar.' },
   { sel: '#cadernoSec',    t: '📕 Caderno de Erros',   d: 'Toda questão errada entra aqui na SEMANA SEGUINTE ao erro (revisão espaçada). Refaça até acertar 2 vezes seguidas — toda semana o Leão te lembra.' },
   { sel: '#iaCard',        t: '🦁 Leão IA',            d: 'Seu treinador pessoal: pergunte como está seu desempenho, o que estudar agora e seus pontos fracos. Ele também te acompanha pelas outras páginas (botão 🦁 flutuante).' },
   { sel: '#blogAlunoGrid', t: '📰 Blog',               d: 'Método de estudo, raio-X dos editais (com download) e dicas de TAF. Pronto! Bons estudos 💪' },

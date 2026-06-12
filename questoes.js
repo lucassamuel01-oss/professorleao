@@ -223,6 +223,90 @@ const PlQuestoes = (() => {
   }
 
   /* ═══════════════════════════════════════════════
+     MINISSIMULADO DA SEMANA
+     Montado automaticamente com ~10 questões REAIS de
+     banca (listas tipoLista 'banco') dos assuntos que o
+     aluno estudou na semana. Seleção determinística por
+     semana (refazer = mesmas questões até segunda-feira).
+     localStorage: pl_estudo_<email> → { 'AAAA-MM-DD'(segunda): [aulaIds] }
+  ═══════════════════════════════════════════════ */
+  function _wkKey() { return _inicioSemana().toISOString().slice(0, 10); }
+
+  /* chamada pela página da aula — registra que o aluno estudou a aula */
+  function estudoRegistrar(aulaId, email) {
+    if (!aulaId || !email) return;
+    const k = 'pl_estudo_' + _safeMail(email);
+    let log; try { log = JSON.parse(localStorage.getItem(k) || '{}'); } catch { log = {}; }
+    const wk = _wkKey();
+    log[wk] = log[wk] || [];
+    if (log[wk].indexOf(aulaId) === -1) log[wk].push(aulaId);
+    const chaves = Object.keys(log).sort().slice(-6); /* guarda 6 semanas */
+    const novo = {}; chaves.forEach(x => { novo[x] = log[x]; });
+    localStorage.setItem(k, JSON.stringify(novo));
+  }
+
+  function _aulasEstudadas(email) {
+    let log; try { log = JSON.parse(localStorage.getItem('pl_estudo_' + _safeMail(email)) || '{}'); } catch { log = {}; }
+    const wk = _wkKey();
+    if (log[wk] && log[wk].length) return { aulas: log[wk], semana: 'atual' };
+    /* sem estudo nesta semana: usa a última semana com registro */
+    const prev = Object.keys(log).filter(x => x < wk).sort().pop();
+    if (prev && log[prev].length) return { aulas: log[prev], semana: 'anterior' };
+    return { aulas: [], semana: null };
+  }
+
+  function simuladoSemana(email) {
+    const est = _aulasEstudadas(email);
+    if (!est.aulas.length) return null;
+    const bancos = getLists().filter(l => l.tipoLista === 'banco');
+    const casam = bancos.filter(b => (b.aulaIds || []).some(s =>
+      est.aulas.some(a => a === s || a.endsWith('-' + s))));
+    if (!casam.length) return null;
+
+    const wk = _wkKey();
+    let seed = 0; for (let i = 0; i < wk.length; i++) seed = (seed * 31 + wk.charCodeAt(i)) >>> 0;
+
+    const fontes = casam.map(b => {
+      const full = getList(b.id) || {};
+      return { id: b.id, assunto: (b.titulo || '').replace(/^Banco de Questões — /, ''), qs: full.questoes || [] };
+    }).filter(f => f.qs.length);
+
+    const totalDisp = fontes.reduce((a, f) => a + f.qs.length, 0);
+    const alvo = Math.min(totalDisp, casam.length > 3 ? 12 : 10); /* ~10, podendo variar */
+
+    /* round-robin entre os assuntos, com rotação semanal (determinística) */
+    const escolhidas = [];
+    let rodada = 0;
+    while (escolhidas.length < alvo) {
+      let pegou = false;
+      for (let i = 0; i < fontes.length && escolhidas.length < alvo; i++) {
+        const f = fontes[i];
+        if (rodada < f.qs.length) {
+          const idx = (seed + i + rodada) % f.qs.length;
+          /* percorre sem repetir: desloca a partir do offset semanal */
+          const q = f.qs[(((seed + i) % f.qs.length) + rodada) % f.qs.length];
+          escolhidas.push({ ...q, _orig: { listaId: f.id, num: q.num }, _assunto: f.assunto });
+          pegou = true;
+        }
+      }
+      rodada++;
+      if (!pegou) break;
+    }
+
+    return {
+      id: '__simulado-' + wk,
+      _virtual: true, _simulado: true, tipoLista: 'simulado',
+      titulo: '🎯 Minissimulado da Semana',
+      materia: 'Revisão semanal',
+      fonte: 'Questões reais de banca dos assuntos que você estudou' + (est.semana === 'anterior' ? ' (última semana de estudo)' : ' nesta semana'),
+      dificuldade: 'medio',
+      assuntos: fontes.map(f => f.assunto),
+      total: escolhidas.length,
+      questoes: escolhidas.map((q, i) => ({ ...q, num: i + 1 })),
+    };
+  }
+
+  /* ═══════════════════════════════════════════════
      PDF PARSER
   ═══════════════════════════════════════════════ */
 
@@ -403,6 +487,7 @@ const PlQuestoes = (() => {
     getResp, saveResp, calcScore, getHistory,
     errosRegistrar, errosPendentes, errosParaRevisar, errosStats,
     errosPrecisaLembrete, errosMarcarLembrete,
+    estudoRegistrar, simuladoSemana,
     parsePDFText, extractTextFromPDF
   };
 

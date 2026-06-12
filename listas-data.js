@@ -19,9 +19,9 @@ window.PL_SEED_LISTAS = [
   /* ── 1. Conjuntos Numéricos ─────────────────────────────── */
   {
     id: 'seed-conjuntos-numericos',
-    titulo: 'Minissimulado — Revisão: Conjuntos Numéricos',
+    titulo: 'Lista de Questões — Conjuntos Numéricos',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'facil',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-01', 'mat-02', 'mb-01'],
     total: 10,
     questoes: [
@@ -101,9 +101,9 @@ window.PL_SEED_LISTAS = [
   /* ── 2. Teoria dos Conjuntos ────────────────────────────── */
   {
     id: 'seed-teoria-conjuntos',
-    titulo: 'Minissimulado — Revisão: Teoria dos Conjuntos',
+    titulo: 'Lista de Questões — Teoria dos Conjuntos',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-08', 'mat-09', 'mb-07'],
     total: 10,
     questoes: [
@@ -183,9 +183,9 @@ window.PL_SEED_LISTAS = [
   /* ── 3. Frações e Números Racionais ─────────────────────── */
   {
     id: 'seed-fracoes-racionais',
-    titulo: 'Minissimulado — Revisão: Frações e Números Racionais',
+    titulo: 'Lista de Questões — Frações e Números Racionais',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'facil',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-06', 'mb-03', 'cr-02'],
     total: 10,
     questoes: [
@@ -265,9 +265,9 @@ window.PL_SEED_LISTAS = [
   /* ── 4. Razão, Proporção e Porcentagem ──────────────────── */
   {
     id: 'seed-razao-proporcao-pct',
-    titulo: 'Minissimulado — Revisão: Razão, Proporção e Porcentagem',
+    titulo: 'Lista de Questões — Razão, Proporção e Porcentagem',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-14', 'mat-15', 'mb-05', 'cr-03'],
     total: 10,
     questoes: [
@@ -347,9 +347,9 @@ window.PL_SEED_LISTAS = [
   /* ── 5. PA, PG e Juros ──────────────────────────────────── */
   {
     id: 'seed-pa-pg-juros',
-    titulo: 'Minissimulado — Revisão: PA, PG e Juros',
+    titulo: 'Lista de Questões — PA, PG e Juros',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-03', 'mat-04', 'mat-25', 'mb-06'],
     total: 10,
     questoes: [
@@ -429,9 +429,9 @@ window.PL_SEED_LISTAS = [
   /* ── 6. Geometria Plana ─────────────────────────────────── */
   {
     id: 'seed-geometria-plana',
-    titulo: 'Minissimulado — Revisão: Geometria Plana',
+    titulo: 'Lista de Questões — Geometria Plana',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-19', 'mat-20', 'cr-05'],
     total: 10,
     questoes: [
@@ -511,9 +511,9 @@ window.PL_SEED_LISTAS = [
   /* ── 7. Combinatória e Probabilidade ────────────────────── */
   {
     id: 'seed-combinatoria-prob',
-    titulo: 'Minissimulado — Revisão: Combinatória e Probabilidade',
+    titulo: 'Lista de Questões — Combinatória e Probabilidade',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'dificil',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-17', 'mat-18'],
     total: 10,
     questoes: [
@@ -593,9 +593,9 @@ window.PL_SEED_LISTAS = [
   /* ── 8. Funções do 1° e 2° Graus ────────────────────────── */
   {
     id: 'seed-funcoes',
-    titulo: 'Minissimulado — Revisão: Funções do 1° e 2° Graus',
+    titulo: 'Lista de Questões — Funções do 1° e 2° Graus',
     materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
-    tipoLista: 'mini',
+    tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ['mat-11', 'mat-12'],
     total: 10,
     questoes: [
@@ -675,9 +675,9 @@ window.PL_SEED_LISTAS = [
   /* ── 9. Lista de Exercícios — Lógica: Proposições e Equivalências (questões reais de prova) ── */
   {
     id: 'seed-lq-logica-proposicoes',
-    titulo: "Lista de Exercícios — Lógica: Proposições e Equivalências",
+    titulo: "Banco de Questões — Lógica: Proposições e Equivalências",
     materia: 'Raciocínio Lógico', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
     total: 14,
     questoes: [
@@ -785,9 +785,9 @@ window.PL_SEED_LISTAS = [
   /* ── 10. Lista de Exercícios — Lógica: Argumentos e Problemas Lógicos (questões reais de prova) ── */
   {
     id: 'seed-lq-logica-argumentos',
-    titulo: "Lista de Exercícios — Lógica: Argumentos e Problemas Lógicos",
+    titulo: "Banco de Questões — Lógica: Argumentos e Problemas Lógicos",
     materia: 'Raciocínio Lógico', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
     total: 12,
     questoes: [
@@ -881,9 +881,9 @@ window.PL_SEED_LISTAS = [
   /* ── 11. Lista de Exercícios — Sequências e Lógica Aplicada (questões reais de prova) ── */
   {
     id: 'seed-lq-logica-sequencias',
-    titulo: "Lista de Exercícios — Sequências e Lógica Aplicada",
+    titulo: "Banco de Questões — Sequências e Lógica Aplicada",
     materia: 'Raciocínio Lógico', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
     total: 9,
     questoes: [
@@ -956,9 +956,9 @@ window.PL_SEED_LISTAS = [
   /* ── 12. Lista de Exercícios — Números: Operações e Problemas (questões reais de prova) ── */
   {
     id: 'seed-lq-numeros-operacoes',
-    titulo: "Lista de Exercícios — Números: Operações e Problemas",
+    titulo: "Banco de Questões — Números: Operações e Problemas",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-01", "mat-02", "mat-05", "mb-01", "mb-02", "cr-01"],
     total: 6,
     questoes: [
@@ -1010,9 +1010,9 @@ window.PL_SEED_LISTAS = [
   /* ── 13. Lista de Exercícios — Teoria dos Conjuntos (questões reais de prova) ── */
   {
     id: 'seed-lq-teoria-conjuntos',
-    titulo: "Lista de Exercícios — Teoria dos Conjuntos",
+    titulo: "Banco de Questões — Teoria dos Conjuntos",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-08", "mat-09", "mb-07"],
     total: 4,
     questoes: [
@@ -1050,9 +1050,9 @@ window.PL_SEED_LISTAS = [
   /* ── 14. Lista de Exercícios — Frações e Números Racionais (questões reais de prova) ── */
   {
     id: 'seed-lq-fracoes',
-    titulo: "Lista de Exercícios — Frações e Números Racionais",
+    titulo: "Banco de Questões — Frações e Números Racionais",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-06", "mb-03", "cr-02"],
     total: 2,
     questoes: [
@@ -1076,9 +1076,9 @@ window.PL_SEED_LISTAS = [
   /* ── 15. Lista de Exercícios — Porcentagem, Regra de Três e Juros (questões reais de prova) ── */
   {
     id: 'seed-lq-proporcao-financeira',
-    titulo: "Lista de Exercícios — Porcentagem, Regra de Três e Juros",
+    titulo: "Banco de Questões — Porcentagem, Regra de Três e Juros",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-14", "mat-15", "mat-25", "mb-05", "cr-03"],
     total: 8,
     questoes: [
@@ -1144,9 +1144,9 @@ window.PL_SEED_LISTAS = [
   /* ── 16. Lista de Exercícios — Equações e Polinômios (questões reais de prova) ── */
   {
     id: 'seed-lq-equacoes-polinomios',
-    titulo: "Lista de Exercícios — Equações e Polinômios",
+    titulo: "Banco de Questões — Equações e Polinômios",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-10"],
     total: 5,
     questoes: [
@@ -1191,9 +1191,9 @@ window.PL_SEED_LISTAS = [
   /* ── 17. Lista de Exercícios — Funções do 1° e 2° Graus (questões reais de prova) ── */
   {
     id: 'seed-lq-funcoes',
-    titulo: "Lista de Exercícios — Funções do 1° e 2° Graus",
+    titulo: "Banco de Questões — Funções do 1° e 2° Graus",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-11", "mat-12"],
     total: 3,
     questoes: [
@@ -1224,9 +1224,9 @@ window.PL_SEED_LISTAS = [
   /* ── 18. Lista de Exercícios — Sistemas, Matrizes e Determinantes (questões reais de prova) ── */
   {
     id: 'seed-lq-sistemas-matrizes',
-    titulo: "Lista de Exercícios — Sistemas, Matrizes e Determinantes",
+    titulo: "Banco de Questões — Sistemas, Matrizes e Determinantes",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-16"],
     total: 3,
     questoes: [
@@ -1257,9 +1257,9 @@ window.PL_SEED_LISTAS = [
   /* ── 19. Lista de Exercícios — Exponencial e Logaritmos (questões reais de prova) ── */
   {
     id: 'seed-lq-exponencial-log',
-    titulo: "Lista de Exercícios — Exponencial e Logaritmos",
+    titulo: "Banco de Questões — Exponencial e Logaritmos",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-13"],
     total: 6,
     questoes: [
@@ -1311,9 +1311,9 @@ window.PL_SEED_LISTAS = [
   /* ── 20. Lista de Exercícios — Progressões: PA e PG (questões reais de prova) ── */
   {
     id: 'seed-lq-progressoes',
-    titulo: "Lista de Exercícios — Progressões: PA e PG",
+    titulo: "Banco de Questões — Progressões: PA e PG",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-03", "mat-04", "mb-06"],
     total: 7,
     questoes: [
@@ -1372,9 +1372,9 @@ window.PL_SEED_LISTAS = [
   /* ── 21. Lista de Exercícios — Geometria Plana (questões reais de prova) ── */
   {
     id: 'seed-lq-geo-plana',
-    titulo: "Lista de Exercícios — Geometria Plana",
+    titulo: "Banco de Questões — Geometria Plana",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-19", "mat-20"],
     total: 2,
     questoes: [
@@ -1398,9 +1398,9 @@ window.PL_SEED_LISTAS = [
   /* ── 22. Lista de Exercícios — Geometria Espacial (questões reais de prova) ── */
   {
     id: 'seed-lq-geo-espacial',
-    titulo: "Lista de Exercícios — Geometria Espacial",
+    titulo: "Banco de Questões — Geometria Espacial",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-21", "mat-22", "cr-05"],
     total: 6,
     questoes: [
@@ -1452,9 +1452,9 @@ window.PL_SEED_LISTAS = [
   /* ── 23. Lista de Exercícios — Trigonometria e Geometria Analítica (questões reais de prova) ── */
   {
     id: 'seed-lq-trigonometria',
-    titulo: "Lista de Exercícios — Trigonometria e Geometria Analítica",
+    titulo: "Banco de Questões — Trigonometria e Geometria Analítica",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-23", "mat-24"],
     total: 5,
     questoes: [
@@ -1499,9 +1499,9 @@ window.PL_SEED_LISTAS = [
   /* ── 24. Lista de Exercícios — Análise Combinatória (questões reais de prova) ── */
   {
     id: 'seed-lq-combinatoria',
-    titulo: "Lista de Exercícios — Análise Combinatória",
+    titulo: "Banco de Questões — Análise Combinatória",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-17"],
     total: 5,
     questoes: [
@@ -1546,9 +1546,9 @@ window.PL_SEED_LISTAS = [
   /* ── 25. Lista de Exercícios — Probabilidade e Estatística (questões reais de prova) ── */
   {
     id: 'seed-lq-probabilidade-estatistica',
-    titulo: "Lista de Exercícios — Probabilidade e Estatística",
+    titulo: "Banco de Questões — Probabilidade e Estatística",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
-    tipoLista: 'lista',
+    tipoLista: 'banco',
     cursoId: '', aulaId: '', aulaIds: ["mat-18", "mat-26"],
     total: 6,
     questoes: [
@@ -1593,6 +1593,826 @@ window.PL_SEED_LISTAS = [
         opcoes: { A: "48%", B: "51%", C: "53%", D: "57%", E: "60%" },
         gabarito: 'E',
         explicacao: "CFOPM tem 4 consoantes e 1 vogal. Começar e terminar com consoante: 4 · 3 · 3! = 72 dos 120 anagramas → 72/120 = 60%."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Primos, MMC e MDC (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-primos-mmc-mdc',
+    titulo: "Lista de Questões — Primos, MMC e MDC",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'facil',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-05", "mb-02", "cr-01"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "Qual é o menor número primo?",
+        opcoes: { A: "0", B: "1", C: "2", D: "3", E: "5" },
+        gabarito: 'C',
+        explicacao: "O 2 é o menor primo (e o único primo PAR). Lembre: 1 não é primo, pois tem um único divisor."
+      },
+      {
+        num: 2,
+        enunciado: "A fatoração em primos de 60 é:",
+        opcoes: { A: "2 · 3 · 5", B: "2² · 3 · 5", C: "2² · 3² · 5", D: "2³ · 5", E: "2 · 3² · 5" },
+        gabarito: 'B',
+        explicacao: "60 = 2 · 30 = 2 · 2 · 15 = 2² · 3 · 5. Confira: 4 · 3 · 5 = 60 ✓"
+      },
+      {
+        num: 3,
+        enunciado: "O MMC de 12 e 18 é:",
+        opcoes: { A: "6", B: "24", C: "36", D: "54", E: "72" },
+        gabarito: 'C',
+        explicacao: "12 = 2²·3 e 18 = 2·3². MMC = todos os fatores com maior expoente: 2²·3² = 36."
+      },
+      {
+        num: 4,
+        enunciado: "O MDC de 84 e 60 é:",
+        opcoes: { A: "6", B: "12", C: "18", D: "24", E: "4" },
+        gabarito: 'B',
+        explicacao: "84 = 2²·3·7 e 60 = 2²·3·5. MDC = fatores comuns com menor expoente: 2²·3 = 12."
+      },
+      {
+        num: 5,
+        enunciado: "Dois ônibus saem juntos do terminal: um a cada 15 min, outro a cada 20 min. Voltarão a sair juntos depois de:",
+        opcoes: { A: "35 min", B: "45 min", C: "60 min", D: "40 min", E: "30 min" },
+        gabarito: 'C',
+        explicacao: "“Voltar a coincidir” = MMC(15, 20) = 60 minutos."
+      },
+      {
+        num: 6,
+        enunciado: "Quantos divisores naturais tem o número 36?",
+        opcoes: { A: "6", B: "7", C: "8", D: "9", E: "10" },
+        gabarito: 'D',
+        explicacao: "36 = 2²·3². Quantidade de divisores: (2+1)·(2+1) = 9. São eles: 1, 2, 3, 4, 6, 9, 12, 18, 36."
+      },
+      {
+        num: 7,
+        enunciado: "Duas cordas, de 24 m e 36 m, serão cortadas em pedaços iguais do MAIOR tamanho possível. Cada pedaço terá:",
+        opcoes: { A: "6 m", B: "8 m", C: "12 m", D: "18 m", E: "4 m" },
+        gabarito: 'C',
+        explicacao: "“Maior pedaço igual” = MDC(24, 36) = 12 m (2 pedaços de uma e 3 da outra)."
+      },
+      {
+        num: 8,
+        enunciado: "Qual destes números é primo?",
+        opcoes: { A: "51", B: "87", C: "91", D: "93", E: "97" },
+        gabarito: 'E',
+        explicacao: "51 = 3·17, 87 = 3·29, 91 = 7·13 e 93 = 3·31 são compostos. 97 não tem divisores além de 1 e ele mesmo."
+      },
+      {
+        num: 9,
+        enunciado: "O MDC de dois números é 4 e o MMC é 24. Se um deles é 8, o outro é:",
+        opcoes: { A: "10", B: "12", C: "16", D: "6", E: "20" },
+        gabarito: 'B',
+        explicacao: "MMC × MDC = produto dos números: 24 · 4 = 96 → o outro = 96 ÷ 8 = 12."
+      },
+      {
+        num: 10,
+        enunciado: "No número 4□52, quantos algarismos podem ocupar o □ para que ele seja divisível por 3?",
+        opcoes: { A: "1", B: "2", C: "3", D: "4", E: "5" },
+        gabarito: 'C',
+        explicacao: "Soma: 4+□+5+2 = 11+□ deve ser múltiplo de 3 → □ ∈ {1, 4, 7}: 3 valores."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Potenciação e Radiciação (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-potenciacao',
+    titulo: "Lista de Questões — Potenciação e Radiciação",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'facil',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-07", "mb-04"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "O valor de 2⁵ é:",
+        opcoes: { A: "10", B: "16", C: "25", D: "32", E: "64" },
+        gabarito: 'D',
+        explicacao: "2⁵ = 2·2·2·2·2 = 32."
+      },
+      {
+        num: 2,
+        enunciado: "O valor de (−2)⁴ + (−2)³ é:",
+        opcoes: { A: "−24", B: "−8", C: "8", D: "24", E: "0" },
+        gabarito: 'C',
+        explicacao: "(−2)⁴ = +16 (expoente par) e (−2)³ = −8 (ímpar): 16 − 8 = 8."
+      },
+      {
+        num: 3,
+        enunciado: "O valor de 5⁰ + 5¹ é:",
+        opcoes: { A: "0", B: "1", C: "5", D: "6", E: "25" },
+        gabarito: 'D',
+        explicacao: "Todo número (≠0) elevado a zero vale 1: 1 + 5 = 6."
+      },
+      {
+        num: 4,
+        enunciado: "O valor de 2⁻³ é:",
+        opcoes: { A: "−8", B: "−6", C: "1/6", D: "1/8", E: "8" },
+        gabarito: 'D',
+        explicacao: "Expoente negativo = inverso: 2⁻³ = 1/2³ = 1/8. Não é número negativo!"
+      },
+      {
+        num: 5,
+        enunciado: "O valor de (2³)² é:",
+        opcoes: { A: "12", B: "32", C: "36", D: "64", E: "128" },
+        gabarito: 'D',
+        explicacao: "Potência de potência multiplica os expoentes: 2⁶ = 64."
+      },
+      {
+        num: 6,
+        enunciado: "√144 vale:",
+        opcoes: { A: "10", B: "11", C: "12", D: "13", E: "14" },
+        gabarito: 'C',
+        explicacao: "12 · 12 = 144 → √144 = 12."
+      },
+      {
+        num: 7,
+        enunciado: "O valor de ³√27 + √49 é:",
+        opcoes: { A: "8", B: "9", C: "10", D: "11", E: "12" },
+        gabarito: 'C',
+        explicacao: "³√27 = 3 (3³ = 27) e √49 = 7 → 3 + 7 = 10."
+      },
+      {
+        num: 8,
+        enunciado: "O valor de 10⁴ · 10⁻² é:",
+        opcoes: { A: "10", B: "100", C: "1.000", D: "10.000", E: "1" },
+        gabarito: 'B',
+        explicacao: "Mesma base: soma os expoentes: 10⁴⁻² = 10² = 100."
+      },
+      {
+        num: 9,
+        enunciado: "O número 0,0006 em notação científica é:",
+        opcoes: { A: "6 × 10⁻³", B: "6 × 10⁻⁴", C: "0,6 × 10⁻³", D: "6 × 10⁴", E: "60 × 10⁻⁵" },
+        gabarito: 'B',
+        explicacao: "A vírgula anda 4 casas para a direita até o 6: 6 × 10⁻⁴ (entre 1 e 10 × potência de 10)."
+      },
+      {
+        num: 10,
+        enunciado: "O valor de 8^(2/3) é:",
+        opcoes: { A: "2", B: "4", C: "6", D: "8", E: "16" },
+        gabarito: 'B',
+        explicacao: "Expoente fracionário: 8^(2/3) = (³√8)² = 2² = 4."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Álgebra e Polinômios (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-algebra',
+    titulo: "Lista de Questões — Álgebra e Polinômios",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-10"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "O desenvolvimento de (x + 3)² é:",
+        opcoes: { A: "x² + 9", B: "x² + 3x + 9", C: "x² + 6x + 9", D: "x² + 6x + 6", E: "x² + 9x + 6" },
+        gabarito: 'C',
+        explicacao: "Quadrado da soma: a² + 2ab + b² = x² + 6x + 9. O termo 2ab é o que a banca espera que você esqueça."
+      },
+      {
+        num: 2,
+        enunciado: "O produto (2x − 5)(2x + 5) é igual a:",
+        opcoes: { A: "4x² + 25", B: "4x² − 25", C: "4x² − 10x − 25", D: "2x² − 25", E: "4x² − 20x + 25" },
+        gabarito: 'B',
+        explicacao: "Produto da soma pela diferença: a² − b² = 4x² − 25, direto."
+      },
+      {
+        num: 3,
+        enunciado: "A forma fatorada de x² − 16 é:",
+        opcoes: { A: "(x − 4)²", B: "(x + 4)²", C: "(x − 4)(x + 4)", D: "(x − 8)(x + 2)", E: "x(x − 16)" },
+        gabarito: 'C',
+        explicacao: "Diferença de quadrados: x² − 4² = (x − 4)(x + 4)."
+      },
+      {
+        num: 4,
+        enunciado: "Para P(x) = x³ − 2x² + 3x − 1, o valor de P(2) é:",
+        opcoes: { A: "3", B: "4", C: "5", D: "7", E: "9" },
+        gabarito: 'C',
+        explicacao: "P(2) = 8 − 8 + 6 − 1 = 5."
+      },
+      {
+        num: 5,
+        enunciado: "A soma dos coeficientes de (2x − 1)³ é:",
+        opcoes: { A: "−1", B: "0", C: "1", D: "3", E: "8" },
+        gabarito: 'C',
+        explicacao: "Soma dos coeficientes = P(1) = (2·1 − 1)³ = 1³ = 1. Atalho que dispensa expandir o cubo."
+      },
+      {
+        num: 6,
+        enunciado: "O resto da divisão de P(x) = x² + 3x − 2 por (x − 1) é:",
+        opcoes: { A: "0", B: "1", C: "2", D: "3", E: "−2" },
+        gabarito: 'C',
+        explicacao: "Teorema do resto: resto = P(1) = 1 + 3 − 2 = 2."
+      },
+      {
+        num: 7,
+        enunciado: "Simplificando (x² − 25)/(x + 5), para x ≠ −5, obtém-se:",
+        opcoes: { A: "x − 5", B: "x + 5", C: "x − 25", D: "5 − x", E: "x²" },
+        gabarito: 'A',
+        explicacao: "x² − 25 = (x+5)(x−5); corta o (x+5): sobra x − 5."
+      },
+      {
+        num: 8,
+        enunciado: "Fatorando 6x² + 9x pelo fator comum, obtém-se:",
+        opcoes: { A: "3(2x² + 3x)", B: "3x(2x + 3)", C: "x(6x + 9)", D: "6x(x + 9)", E: "3x(2x + 9)" },
+        gabarito: 'B',
+        explicacao: "O maior fator comum é 3x: 6x² + 9x = 3x(2x + 3). A alternativa A fatora só o 3 (incompleto)."
+      },
+      {
+        num: 9,
+        enunciado: "O grau do polinômio (x² + 1)(x³ − x) é:",
+        opcoes: { A: "2", B: "3", C: "5", D: "6", E: "4" },
+        gabarito: 'C',
+        explicacao: "O grau do produto é a soma dos graus: 2 + 3 = 5."
+      },
+      {
+        num: 10,
+        enunciado: "Para que x² + bx + 16 seja um quadrado perfeito com b > 0, o valor de b é:",
+        opcoes: { A: "2", B: "4", C: "8", D: "16", E: "32" },
+        gabarito: 'C',
+        explicacao: "Quadrado perfeito: (x + 4)² = x² + 8x + 16 → b = 8 (b = 2·4)."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Exponencial e Logaritmos (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-exp-log',
+    titulo: "Lista de Questões — Exponencial e Logaritmos",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-13"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "Se 3ˣ = 81, então x vale:",
+        opcoes: { A: "2", B: "3", C: "4", D: "5", E: "27" },
+        gabarito: 'C',
+        explicacao: "81 = 3⁴ → x = 4 (iguale as bases)."
+      },
+      {
+        num: 2,
+        enunciado: "O valor de log₂ 32 é:",
+        opcoes: { A: "4", B: "5", C: "6", D: "8", E: "16" },
+        gabarito: 'B',
+        explicacao: "“2 elevado a quanto dá 32?” → 2⁵ = 32 → log₂ 32 = 5."
+      },
+      {
+        num: 3,
+        enunciado: "Resolvendo 2^(x−1) = 16, encontra-se x igual a:",
+        opcoes: { A: "3", B: "4", C: "5", D: "6", E: "8" },
+        gabarito: 'C',
+        explicacao: "16 = 2⁴ → x − 1 = 4 → x = 5."
+      },
+      {
+        num: 4,
+        enunciado: "O valor de log 1000 (base 10) é:",
+        opcoes: { A: "2", B: "3", C: "10", D: "100", E: "4" },
+        gabarito: 'B',
+        explicacao: "10³ = 1000 → log 1000 = 3."
+      },
+      {
+        num: 5,
+        enunciado: "O valor de log₅ 1 é:",
+        opcoes: { A: "0", B: "1", C: "5", D: "1/5", E: "não existe" },
+        gabarito: 'A',
+        explicacao: "Logaritmo de 1 é SEMPRE zero, em qualquer base válida (b⁰ = 1)."
+      },
+      {
+        num: 6,
+        enunciado: "Para f(x) = 2ˣ, o valor de f(0) + f(3) é:",
+        opcoes: { A: "6", B: "8", C: "9", D: "10", E: "12" },
+        gabarito: 'C',
+        explicacao: "f(0) = 2⁰ = 1 e f(3) = 8 → 1 + 8 = 9."
+      },
+      {
+        num: 7,
+        enunciado: "O valor de log₂(8 · 4) é:",
+        opcoes: { A: "3", B: "4", C: "5", D: "6", E: "12" },
+        gabarito: 'C',
+        explicacao: "log do produto = soma: log₂8 + log₂4 = 3 + 2 = 5. (Ou direto: 8·4 = 32 = 2⁵.)"
+      },
+      {
+        num: 8,
+        enunciado: "Se 5^(x+1) = 125, então x vale:",
+        opcoes: { A: "1", B: "2", C: "3", D: "4", E: "5" },
+        gabarito: 'B',
+        explicacao: "125 = 5³ → x + 1 = 3 → x = 2."
+      },
+      {
+        num: 9,
+        enunciado: "O valor de log₃(81 ÷ 3) é:",
+        opcoes: { A: "2", B: "3", C: "4", D: "9", E: "27" },
+        gabarito: 'B',
+        explicacao: "log da divisão = diferença: log₃81 − log₃3 = 4 − 1 = 3. (81/3 = 27 = 3³ ✓)"
+      },
+      {
+        num: 10,
+        enunciado: "Uma cultura de bactérias DOBRA a cada hora. Começando com 100, depois de quantas horas passará de 1.600?",
+        opcoes: { A: "3", B: "4", C: "5", D: "6", E: "16" },
+        gabarito: 'C',
+        explicacao: "100·2ⁿ > 1600 → 2ⁿ > 16 = 2⁴ → n = 5 horas (com 4 horas chega exatamente a 1.600, sem passar)."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Sistemas, Matrizes e Determinantes (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-sistemas-matrizes',
+    titulo: "Lista de Questões — Sistemas, Matrizes e Determinantes",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-16"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "No sistema x + y = 12 e x − y = 4, o valor de x é:",
+        opcoes: { A: "4", B: "6", C: "8", D: "10", E: "12" },
+        gabarito: 'C',
+        explicacao: "Somando as equações: 2x = 16 → x = 8 (e y = 4)."
+      },
+      {
+        num: 2,
+        enunciado: "Duas camisas e uma calça custam R$ 110; uma camisa e uma calça custam R$ 80. O preço da camisa é:",
+        opcoes: { A: "R$ 25", B: "R$ 30", C: "R$ 35", D: "R$ 40", E: "R$ 50" },
+        gabarito: 'B',
+        explicacao: "Subtraindo as equações: (2c + p) − (c + p) = 110 − 80 → c = 30."
+      },
+      {
+        num: 3,
+        enunciado: "O determinante da matriz de linhas (3, 1) e (5, 2) é:",
+        opcoes: { A: "0", B: "1", C: "2", D: "6", E: "11" },
+        gabarito: 'B',
+        explicacao: "det = ad − bc = 3·2 − 1·5 = 6 − 5 = 1."
+      },
+      {
+        num: 4,
+        enunciado: "Uma matriz 2×3 possui quantos elementos?",
+        opcoes: { A: "5", B: "6", C: "8", D: "9", E: "12" },
+        gabarito: 'B',
+        explicacao: "2 linhas × 3 colunas = 6 elementos."
+      },
+      {
+        num: 5,
+        enunciado: "Se aᵢⱼ = 2i + j, o elemento a₂₁ vale:",
+        opcoes: { A: "3", B: "4", C: "5", D: "6", E: "7" },
+        gabarito: 'C',
+        explicacao: "i = 2 (linha), j = 1 (coluna): 2·2 + 1 = 5."
+      },
+      {
+        num: 6,
+        enunciado: "O sistema x + y = 5 e 2x + 2y = 10 possui:",
+        opcoes: { A: "nenhuma solução", B: "uma única solução", C: "duas soluções", D: "infinitas soluções", E: "cinco soluções" },
+        gabarito: 'D',
+        explicacao: "A 2ª equação é o dobro da 1ª — mesma reta → SPI: infinitas soluções."
+      },
+      {
+        num: 7,
+        enunciado: "O determinante da matriz de linhas (2, 4) e (3, 6) é:",
+        opcoes: { A: "0", B: "2", C: "6", D: "12", E: "24" },
+        gabarito: 'A',
+        explicacao: "As linhas são proporcionais (a 2ª é 1,5× a 1ª) → det = 0. (Conta: 12 − 12 = 0.)"
+      },
+      {
+        num: 8,
+        enunciado: "Somando as matrizes de linhas (1, 2),(3, 4) e (0, 1),(1, 0), o MAIOR elemento da matriz resultante é:",
+        opcoes: { A: "3", B: "4", C: "5", D: "6", E: "7" },
+        gabarito: 'B',
+        explicacao: "Soma elemento a elemento: (1, 3),(4, 4) → maior = 4."
+      },
+      {
+        num: 9,
+        enunciado: "No sistema x + 2y = 7 e x = y + 1, o produto x·y vale:",
+        opcoes: { A: "4", B: "5", C: "6", D: "8", E: "10" },
+        gabarito: 'C',
+        explicacao: "Substituindo: (y + 1) + 2y = 7 → y = 2 → x = 3 → x·y = 6."
+      },
+      {
+        num: 10,
+        enunciado: "O sistema x + y = 3 e x + y = 5 é classificado como:",
+        opcoes: { A: "possível e determinado", B: "possível e indeterminado", C: "impossível", D: "homogêneo", E: "equivalente" },
+        gabarito: 'C',
+        explicacao: "A mesma soma não pode dar 3 E 5 — retas paralelas distintas → sistema impossível (SI)."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Geometria Espacial (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-geo-espacial',
+    titulo: "Lista de Questões — Geometria Espacial",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-21", "mat-22"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "O volume de um cubo de aresta 4 cm é:",
+        opcoes: { A: "12 cm³", B: "16 cm³", C: "48 cm³", D: "64 cm³", E: "256 cm³" },
+        gabarito: 'D',
+        explicacao: "V = a³ = 4³ = 64 cm³."
+      },
+      {
+        num: 2,
+        enunciado: "Um paralelepípedo mede 5 cm × 3 cm × 2 cm. Seu volume é:",
+        opcoes: { A: "10 cm³", B: "15 cm³", C: "30 cm³", D: "60 cm³", E: "25 cm³" },
+        gabarito: 'C',
+        explicacao: "V = comprimento × largura × altura = 5·3·2 = 30 cm³."
+      },
+      {
+        num: 3,
+        enunciado: "Uma caixa d’água de 2 m × 2 m × 1,5 m comporta quantos litros?",
+        opcoes: { A: "600 L", B: "6.000 L", C: "60.000 L", D: "3.000 L", E: "1.500 L" },
+        gabarito: 'B',
+        explicacao: "V = 6 m³ e 1 m³ = 1.000 L → 6.000 litros."
+      },
+      {
+        num: 4,
+        enunciado: "Um cilindro tem raio 2 cm e altura 7 cm. Com π = 3,14, seu volume é:",
+        opcoes: { A: "43,96 cm³", B: "87,92 cm³", C: "28 cm³", D: "175,84 cm³", E: "94,2 cm³" },
+        gabarito: 'B',
+        explicacao: "V = πr²h = 3,14 · 4 · 7 = 87,92 cm³."
+      },
+      {
+        num: 5,
+        enunciado: "A área total de um cubo de aresta 3 cm é:",
+        opcoes: { A: "27 cm²", B: "36 cm²", C: "54 cm²", D: "18 cm²", E: "9 cm²" },
+        gabarito: 'C',
+        explicacao: "São 6 faces de 3² = 9 cm²: 6 · 9 = 54 cm²."
+      },
+      {
+        num: 6,
+        enunciado: "Uma pirâmide tem base de área 9 cm² e altura 4 cm. Seu volume é:",
+        opcoes: { A: "6 cm³", B: "12 cm³", C: "18 cm³", D: "36 cm³", E: "27 cm³" },
+        gabarito: 'B',
+        explicacao: "V = (1/3) · A_base · h = (1/3) · 9 · 4 = 12 cm³. Não esqueça o ÷3!"
+      },
+      {
+        num: 7,
+        enunciado: "Um cone tem raio 3 e altura 4. Seu volume é:",
+        opcoes: { A: "12π", B: "36π", C: "24π", D: "16π", E: "48π" },
+        gabarito: 'A',
+        explicacao: "V = (1/3)πr²h = (1/3)π·9·4 = 12π."
+      },
+      {
+        num: 8,
+        enunciado: "O volume de uma esfera de raio 3 é:",
+        opcoes: { A: "9π", B: "18π", C: "27π", D: "36π", E: "12π" },
+        gabarito: 'D',
+        explicacao: "V = (4/3)πr³ = (4/3)π·27 = 36π."
+      },
+      {
+        num: 9,
+        enunciado: "Dobrando a aresta de um cubo, seu volume fica multiplicado por:",
+        opcoes: { A: "2", B: "4", C: "6", D: "8", E: "16" },
+        gabarito: 'D',
+        explicacao: "Volume varia com o CUBO da razão: 2³ = 8."
+      },
+      {
+        num: 10,
+        enunciado: "Um prisma reto tem base quadrada de lado 5 cm e altura 10 cm. Sua área LATERAL é:",
+        opcoes: { A: "50 cm²", B: "100 cm²", C: "200 cm²", D: "250 cm²", E: "150 cm²" },
+        gabarito: 'C',
+        explicacao: "Lateral = perímetro da base × altura = 20 · 10 = 200 cm²."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Geometria Analítica (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-geo-analitica',
+    titulo: "Lista de Questões — Geometria Analítica",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-23"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "A distância entre a origem (0, 0) e o ponto (3, 4) é:",
+        opcoes: { A: "3", B: "4", C: "5", D: "7", E: "12" },
+        gabarito: 'C',
+        explicacao: "d = √(3² + 4²) = √25 = 5 — o terno 3-4-5."
+      },
+      {
+        num: 2,
+        enunciado: "O ponto médio do segmento de extremos (2, 4) e (6, 8) é:",
+        opcoes: { A: "(3, 5)", B: "(4, 6)", C: "(5, 7)", D: "(4, 5)", E: "(8, 12)" },
+        gabarito: 'B',
+        explicacao: "Média dos x: (2+6)/2 = 4; média dos y: (4+8)/2 = 6 → (4, 6)."
+      },
+      {
+        num: 3,
+        enunciado: "O coeficiente angular da reta pelos pontos (1, 2) e (3, 6) é:",
+        opcoes: { A: "1", B: "2", C: "3", D: "4", E: "1/2" },
+        gabarito: 'B',
+        explicacao: "m = Δy/Δx = (6−2)/(3−1) = 4/2 = 2."
+      },
+      {
+        num: 4,
+        enunciado: "A reta y = 2x + 1 corta o eixo y no ponto:",
+        opcoes: { A: "(0, 1)", B: "(1, 0)", C: "(0, 2)", D: "(2, 1)", E: "(−1, 0)" },
+        gabarito: 'A',
+        explicacao: "No eixo y, x = 0 → y = 1 → (0, 1). O “+1” é o coeficiente linear."
+      },
+      {
+        num: 5,
+        enunciado: "Uma reta PARALELA a y = 3x − 2 tem coeficiente angular:",
+        opcoes: { A: "−3", B: "−1/3", C: "1/3", D: "2", E: "3" },
+        gabarito: 'E',
+        explicacao: "Paralelas têm o MESMO coeficiente angular: m = 3."
+      },
+      {
+        num: 6,
+        enunciado: "A distância entre (1, 1) e (4, 5) é:",
+        opcoes: { A: "3", B: "4", C: "5", D: "6", E: "7" },
+        gabarito: 'C',
+        explicacao: "Δx = 3, Δy = 4 → d = √(9+16) = 5."
+      },
+      {
+        num: 7,
+        enunciado: "O centro da circunferência x² + y² − 4x − 6y + 9 = 0 é:",
+        opcoes: { A: "(4, 6)", B: "(2, 3)", C: "(−2, −3)", D: "(−4, −6)", E: "(2, −3)" },
+        gabarito: 'B',
+        explicacao: "Centro = (−D/2, −E/2) = (4/2, 6/2) = (2, 3)."
+      },
+      {
+        num: 8,
+        enunciado: "O raio da circunferência x² + y² − 4x − 6y + 9 = 0 é:",
+        opcoes: { A: "1", B: "2", C: "3", D: "4", E: "9" },
+        gabarito: 'B',
+        explicacao: "r = √(a² + b² − F) = √(4 + 9 − 9) = √4 = 2."
+      },
+      {
+        num: 9,
+        enunciado: "Para que (0,0), (1,2) e (2,k) fiquem alinhados, k deve valer:",
+        opcoes: { A: "2", B: "3", C: "4", D: "5", E: "6" },
+        gabarito: 'C',
+        explicacao: "A reta pela origem com m = 2 é y = 2x → em x = 2, y = 4."
+      },
+      {
+        num: 10,
+        enunciado: "Uma reta PERPENDICULAR a outra de coeficiente angular 2 tem coeficiente:",
+        opcoes: { A: "2", B: "−2", C: "1/2", D: "−1/2", E: "0" },
+        gabarito: 'D',
+        explicacao: "Perpendiculares: m₁ · m₂ = −1 → m₂ = −1/2."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Trigonometria (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-trigonometria',
+    titulo: "Lista de Questões — Trigonometria",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-24"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "O valor de sen 30° é:",
+        opcoes: { A: "1/2", B: "√2/2", C: "√3/2", D: "1", E: "√3/3" },
+        gabarito: 'A',
+        explicacao: "Valor notável: sen 30° = 1/2 (decore a tabelinha 30°-45°-60°)."
+      },
+      {
+        num: 2,
+        enunciado: "O valor de tg 45° é:",
+        opcoes: { A: "0", B: "1/2", C: "1", D: "√2", E: "√3" },
+        gabarito: 'C',
+        explicacao: "tg 45° = sen/cos = (√2/2)/(√2/2) = 1."
+      },
+      {
+        num: 3,
+        enunciado: "Uma escada de 8 m faz 30° com o CHÃO. A altura que ela alcança na parede é:",
+        opcoes: { A: "2 m", B: "4 m", C: "6 m", D: "8 m", E: "4√3 m" },
+        gabarito: 'B',
+        explicacao: "Altura = oposto ao ângulo; escada = hipotenusa: h = 8 · sen 30° = 8 · 0,5 = 4 m."
+      },
+      {
+        num: 4,
+        enunciado: "O valor de cos 60° é:",
+        opcoes: { A: "1/2", B: "√2/2", C: "√3/2", D: "1", E: "0" },
+        gabarito: 'A',
+        explicacao: "cos 60° = sen 30° = 1/2 (o cosseno “espelha” o seno)."
+      },
+      {
+        num: 5,
+        enunciado: "Para qualquer ângulo x, sen²x + cos²x vale:",
+        opcoes: { A: "0", B: "1/2", C: "1", D: "2", E: "depende de x" },
+        gabarito: 'C',
+        explicacao: "Identidade fundamental da trigonometria: sempre 1."
+      },
+      {
+        num: 6,
+        enunciado: "Quando o sol está a 45°, uma torre projeta sombra de 50 m. A altura da torre é:",
+        opcoes: { A: "25 m", B: "50 m", C: "50√2 m", D: "100 m", E: "25√3 m" },
+        gabarito: 'B',
+        explicacao: "tg 45° = altura/sombra = 1 → altura = sombra = 50 m."
+      },
+      {
+        num: 7,
+        enunciado: "Num triângulo retângulo, o cateto oposto a θ mede 6 e a hipotenusa 10. Então sen θ vale:",
+        opcoes: { A: "0,3", B: "0,6", C: "0,8", D: "6/8", E: "10/6" },
+        gabarito: 'B',
+        explicacao: "sen θ = oposto/hipotenusa = 6/10 = 0,6."
+      },
+      {
+        num: 8,
+        enunciado: "Uma rampa de 5 m de comprimento atinge 2,5 m de altura. O ângulo da rampa com o chão é:",
+        opcoes: { A: "15°", B: "30°", C: "45°", D: "60°", E: "75°" },
+        gabarito: 'B',
+        explicacao: "sen θ = 2,5/5 = 0,5 → θ = 30°."
+      },
+      {
+        num: 9,
+        enunciado: "O valor de sen 60° + cos 30° é:",
+        opcoes: { A: "1", B: "√3/2", C: "√3", D: "2", E: "√2" },
+        gabarito: 'C',
+        explicacao: "Os dois valem √3/2 → soma = √3."
+      },
+      {
+        num: 10,
+        enunciado: "O valor de tg 30° é:",
+        opcoes: { A: "√3", B: "√3/3", C: "1/2", D: "√2/2", E: "1" },
+        gabarito: 'B',
+        explicacao: "tg 30° = (1/2)/(√3/2) = 1/√3 = √3/3 (racionalizado)."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Estatística (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-estatistica',
+    titulo: "Lista de Questões — Estatística",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'facil',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-26", "cr-05"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "A média de 4, 6, 8, 10 e 12 é:",
+        opcoes: { A: "6", B: "7", C: "8", D: "9", E: "10" },
+        gabarito: 'C',
+        explicacao: "Soma = 40, dividido por 5 = 8."
+      },
+      {
+        num: 2,
+        enunciado: "A mediana do conjunto 3, 7, 8, 12, 15 é:",
+        opcoes: { A: "7", B: "8", C: "9", D: "12", E: "45" },
+        gabarito: 'B',
+        explicacao: "Já está ordenado; com 5 valores, a mediana é o 3º: 8."
+      },
+      {
+        num: 3,
+        enunciado: "A moda do conjunto 2, 3, 3, 5, 7, 3 é:",
+        opcoes: { A: "2", B: "3", C: "5", D: "7", E: "não tem" },
+        gabarito: 'B',
+        explicacao: "Moda = o valor que MAIS se repete: o 3 aparece três vezes."
+      },
+      {
+        num: 4,
+        enunciado: "Um aluno tirou 6 (peso 1) e 8 (peso 3). Sua média ponderada é:",
+        opcoes: { A: "7,0", B: "7,2", C: "7,5", D: "7,8", E: "8,0" },
+        gabarito: 'C',
+        explicacao: "(6·1 + 8·3)/(1+3) = 30/4 = 7,5."
+      },
+      {
+        num: 5,
+        enunciado: "A mediana de 2, 4, 6, 8 é:",
+        opcoes: { A: "4", B: "5", C: "6", D: "7", E: "20" },
+        gabarito: 'B',
+        explicacao: "Quantidade PAR: média dos dois centrais: (4+6)/2 = 5."
+      },
+      {
+        num: 6,
+        enunciado: "Somando 2 pontos a TODAS as notas de uma turma:",
+        opcoes: { A: "média e desvio padrão aumentam", B: "média aumenta e desvio padrão não muda", C: "nada muda", D: "média não muda e desvio aumenta", E: "os dois diminuem" },
+        gabarito: 'B',
+        explicacao: "Somar constante desloca a média (+2), mas o “espalhamento” (desvio padrão) fica igual."
+      },
+      {
+        num: 7,
+        enunciado: "A média de 5 notas é 7. Se quatro delas somam 26, a quinta nota é:",
+        opcoes: { A: "7", B: "8", C: "9", D: "10", E: "6" },
+        gabarito: 'C',
+        explicacao: "Soma total = 5 × 7 = 35 → quinta = 35 − 26 = 9."
+      },
+      {
+        num: 8,
+        enunciado: "A amplitude do conjunto 4, 7, 11, 15, 19 é:",
+        opcoes: { A: "4", B: "11", C: "15", D: "19", E: "23" },
+        gabarito: 'C',
+        explicacao: "Amplitude = maior − menor = 19 − 4 = 15."
+      },
+      {
+        num: 9,
+        enunciado: "De 200 unidades vendidas, 40 foram do produto X. O percentual de X nas vendas é:",
+        opcoes: { A: "10%", B: "15%", C: "20%", D: "25%", E: "40%" },
+        gabarito: 'C',
+        explicacao: "40/200 = 0,20 = 20%."
+      },
+      {
+        num: 10,
+        enunciado: "Numa empresa, um único salário altíssimo distorce a análise. A medida MENOS afetada por esse valor extremo é:",
+        opcoes: { A: "a média", B: "a mediana", C: "a amplitude", D: "a soma", E: "o máximo" },
+        gabarito: 'B',
+        explicacao: "A mediana depende só da POSIÇÃO central — valores extremos quase não a movem (a média, sim)."
+      }
+    ]
+  },
+
+  /* ── Lista de Questões — Lógica Matemática (autoral · 10 questões da aula) ── */
+  {
+    id: 'seed-lqa-logica',
+    titulo: "Lista de Questões — Lógica Matemática",
+    materia: 'Matemática', fonte: 'Professor Leão · estilo FCC/UNEB', dificuldade: 'medio',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
+    total: 10,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "A negação de “Todos os soldados gostam de treinar” é:",
+        opcoes: { A: "Nenhum soldado gosta de treinar", B: "Todos os soldados não gostam de treinar", C: "Pelo menos um soldado não gosta de treinar", D: "Alguns soldados gostam de treinar", E: "Ninguém treina" },
+        gabarito: 'C',
+        explicacao: "Negação de “todo” = “pelo menos um não”. “Nenhum gosta” é muito mais forte que a negação."
+      },
+      {
+        num: 2,
+        enunciado: "Se p é VERDADEIRA e q é FALSA, então p ∧ q (p e q) é:",
+        opcoes: { A: "verdadeira", B: "falsa", C: "indeterminada", D: "verdadeira ou falsa", E: "tautologia" },
+        gabarito: 'B',
+        explicacao: "A conjunção (E) exige as DUAS verdadeiras. Com q falsa, p ∧ q é falsa."
+      },
+      {
+        num: 3,
+        enunciado: "A proposição “se p, então q” (p → q) é FALSA somente quando:",
+        opcoes: { A: "p V e q V", B: "p V e q F", C: "p F e q V", D: "p F e q F", E: "nunca é falsa" },
+        gabarito: 'B',
+        explicacao: "O condicional só falha na “promessa quebrada”: antecedente V com consequente F."
+      },
+      {
+        num: 4,
+        enunciado: "A negação de “chove e venta” é:",
+        opcoes: { A: "não chove e não venta", B: "não chove ou não venta", C: "chove ou venta", D: "não chove e venta", E: "chove e não venta" },
+        gabarito: 'B',
+        explicacao: "De Morgan: nega os dois e troca E por OU."
+      },
+      {
+        num: 5,
+        enunciado: "A contrapositiva de “se estudo, então passo” é:",
+        opcoes: { A: "se passo, então estudei", B: "se não estudo, então não passo", C: "se não passo, então não estudei", D: "estudo e não passo", E: "passo ou estudo" },
+        gabarito: 'C',
+        explicacao: "Contrapositiva: nega os dois lados E inverte a ordem: ~q → ~p."
+      },
+      {
+        num: 6,
+        enunciado: "A negação de “Nenhum policial é covarde” é:",
+        opcoes: { A: "Todos os policiais são covardes", B: "Algum policial é covarde", C: "Nenhum covarde é policial", D: "Algum policial não é covarde", E: "Todos são corajosos" },
+        gabarito: 'B',
+        explicacao: "Negação de “nenhum A é B” = “algum A é B” (basta UM exemplo)."
+      },
+      {
+        num: 7,
+        enunciado: "A proposição “3 > 2 ou 1 > 5” é:",
+        opcoes: { A: "falsa", B: "verdadeira", C: "indeterminada", D: "contradição", E: "aberta" },
+        gabarito: 'B',
+        explicacao: "O OU precisa de apenas UMA verdadeira: 3 > 2 é verdade, então a disjunção é verdadeira."
+      },
+      {
+        num: 8,
+        enunciado: "Uma proposição equivalente a p → q é:",
+        opcoes: { A: "p ∧ ~q", B: "~p ∨ q", C: "p ∨ q", D: "~p ∧ ~q", E: "q → ~p" },
+        gabarito: 'B',
+        explicacao: "Equivalência clássica: “se p então q” = “não-p OU q”."
+      },
+      {
+        num: 9,
+        enunciado: "“Todo soldado é forte. João é soldado.” Conclui-se que:",
+        opcoes: { A: "João pode ser forte", B: "João é forte", C: "algum soldado é fraco", D: "João não é forte", E: "nada se conclui" },
+        gabarito: 'B',
+        explicacao: "Silogismo direto: se TODOS são fortes e João pertence ao grupo, João é forte."
+      },
+      {
+        num: 10,
+        enunciado: "Na sequência 2, 6, 12, 20, 30, …, o próximo termo é:",
+        opcoes: { A: "36", B: "40", C: "42", D: "44", E: "48" },
+        gabarito: 'C',
+        explicacao: "As diferenças crescem: +4, +6, +8, +10 → próxima é +12: 30 + 12 = 42."
       }
     ]
   }

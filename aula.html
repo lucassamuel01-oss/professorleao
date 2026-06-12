@@ -614,7 +614,7 @@ KEYS.forEach(key => {
         const scoreHtml = score
           ? `<span style="font-family:var(--font-h);font-weight:900;color:${score.percent >= 70 ? '#22c55e' : score.percent >= 50 ? '#f59e0b' : '#ef4444'}">· ${score.percent}% ✓</span>`
           : '';
-        infoHtml = `<div style="font-size:12.5px;color:var(--silver);margin-bottom:10px">${escA(listaObj.titulo)} — ${(listaObj.questoes || []).length} questões de prova com gabarito comentado ${scoreHtml}</div>`;
+        infoHtml = `<div style="font-size:12.5px;color:var(--silver);margin-bottom:10px">${escA(listaObj.titulo)} — ${(listaObj.questoes || []).length} questões criadas para esta aula, com gabarito comentado ${scoreHtml}</div>`;
       }
       contentHtml = `
         ${infoHtml}
@@ -667,57 +667,45 @@ KEYS.forEach(key => {
 /* ═══════════════════════════════════════════════════
    LISTAS DE QUESTÕES INTERATIVAS (vinculadas via admin)
 ═══════════════════════════════════════════════════ */
-(function _renderListasInterativas() {
-  if (typeof PlQuestoes === 'undefined') return;
-  const todas = PlQuestoes.getLists();
-  /* listas integradas usam aulaIds (sufixo do id da aula): 'mat-06'
-     casa com sd-pmba-mat-06, cfo-cbmba-mat-06, mb-06 (igualdade) etc. */
-  const matchIds = l => Array.isArray(l.aulaIds) &&
-    l.aulaIds.some(s => _aulaId === s || _aulaId.endsWith('-' + s));
-  const daAula  = todas.filter(l => (l.aulaId && l.aulaId === _aulaId) || matchIds(l));
-  const doCurso = todas.filter(l =>
-    !l.aulaId && !(Array.isArray(l.aulaIds) && l.aulaIds.length) && l.cursoId === _cursoId);
-  /* minissimulado do assunto + listas EXTRAS que casam com a aula
-     (a primeira lista já aparece como atividade "Lista de Exercícios";
-     se houver outras do mesmo assunto — ex.: as 3 de lógica — elas
-     aparecem aqui para não ficarem invisíveis) */
-  const cand     = [...daAula, ...doCurso];
-  const ehLista  = l => l.tipoLista === 'lista';
-  const noCard   = decodeURIComponent(String(_aula.materiais.lista || '').split('=')[1] || '');
-  const mini     = cand.find(l => !ehLista(l));
-  const extras   = cand.filter(l => ehLista(l) && l.id !== noCard);
-  const listas   = [mini, ...extras].filter(Boolean);
-  if (!listas.length) return;
+(function _renderSimuladoSemana() {
+  if (typeof PlQuestoes === 'undefined' || !PlQuestoes.simuladoSemana) return;
+  /* visitar a aula registra o estudo — alimenta o simulado da semana */
+  try { PlQuestoes.estudoRegistrar(_aulaId, _session.email); } catch (e) { /* */ }
 
+  const sim  = PlQuestoes.simuladoSemana(_session.email);
+  const grid = document.getElementById('listasIntGrid');
   const escL = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  document.getElementById('listasIntGrid').innerHTML = listas.map(l => {
-    const prev  = PlQuestoes.getResp(l.id, _session.email);
-    const score = prev && prev.finalizadoEm ? PlQuestoes.calcScore(l.id, prev.respostas) : null;
-    let cta = '▶ Resolver';
-    let scoreHtml = '';
-    if (score) {
-      const cor = score.percent >= 70 ? '#22c55e' : score.percent >= 50 ? '#f59e0b' : '#ef4444';
-      scoreHtml = `<span style="font-family:var(--font-h);font-weight:900;color:${cor}">${score.percent}%</span>`;
+  if (!sim) {
+    grid.innerHTML = `<div style="grid-column:1/-1;padding:16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);font-size:13px;color:var(--silver)">
+      📚 O Minissimulado da Semana é montado com questões reais de banca dos assuntos que você estudar. Continue estudando — ele se monta sozinho.</div>`;
+  } else {
+    const prev  = PlQuestoes.getResp(sim.id, _session.email);
+    let cta = '▶ Resolver', scoreHtml = '';
+    if (prev && prev.finalizadoEm) {
+      const acertos = sim.questoes.filter(q => prev.respostas[q.num] === q.gabarito).length;
+      const pct = Math.round(acertos / sim.questoes.length * 100);
+      const cor = pct >= 70 ? '#22c55e' : pct >= 50 ? '#f59e0b' : '#ef4444';
+      scoreHtml = `<span style="font-family:var(--font-h);font-weight:900;color:${cor}">${pct}%</span>`;
       cta = '🔄 Refazer';
-    } else if (prev && !prev.finalizadoEm) {
-      cta = `▶ Continuar (${Object.keys(prev.respostas || {}).length}/${l.total})`;
+    } else if (prev && Object.keys(prev.respostas || {}).length) {
+      cta = `▶ Continuar (${Object.keys(prev.respostas).length}/${sim.total})`;
     }
-    const badge = ehLista(l)
-      ? '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(251,146,60,.18);color:#fdba74;white-space:nowrap">📝 Lista de Exercícios</span>'
-      : '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(74,108,247,.18);color:#8ea4f8;white-space:nowrap">🎯 Minissimulado</span>';
-    return `<a href="lista.html?id=${encodeURIComponent(l.id)}" style="display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);text-decoration:none;color:inherit">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-        <strong style="font-family:var(--font-h);font-size:14px">${escL(l.titulo)}</strong>
-        ${badge}
+    const chips = sim.assuntos.slice(0, 4).map(a =>
+      `<span style="font-size:11px;padding:2px 9px;border-radius:99px;background:rgba(74,108,247,.12);border:1px solid rgba(74,108,247,.25);color:#a8b4d0">${escL(a)}</span>`).join(' ');
+    grid.innerHTML = `<a href="lista.html?simulado=semana" style="grid-column:1/-1;display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(74,108,247,.3);text-decoration:none;color:inherit">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <strong style="font-family:var(--font-h);font-size:15px">🎯 Minissimulado da Semana — ${sim.total} questões reais de banca</strong>
+        <span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(251,146,60,.18);color:#fdba74;white-space:nowrap">📅 faça no fim de semana</span>
       </div>
-      <div style="font-size:12px;color:var(--silver)">${l.total} questões${l.materia ? ' · ' + escL(l.materia) : ''}${l.fonte ? ' · ' + escL(l.fonte) : ''}</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${chips}${sim.assuntos.length > 4 ? `<span style="font-size:11px;color:var(--silver)">+${sim.assuntos.length - 4}</span>` : ''}</div>
+      <div style="font-size:12px;color:var(--silver)">${escL(sim.fonte)}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
         <span style="font-family:var(--font-h);font-weight:800;font-size:13px;color:var(--accent)">${cta}</span>
         ${scoreHtml}
       </div>
     </a>`;
-  }).join('');
+  }
 
   document.getElementById('listasIntSec').style.display = 'block';
 })();
