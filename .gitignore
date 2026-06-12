@@ -37,3 +37,7 @@ WhatsApp Image*.jpeg
 *.tmp
 Thumbs.db
 .DS_Store
+
+# Uploads temporários do chat
+*.jpg
+!assets/**/*.jpg
