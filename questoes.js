@@ -306,6 +306,33 @@ const PlQuestoes = (() => {
     };
   }
 
+  /* ── Lembrete semanal do minissimulado ─────────────────────
+     1× por semana, a partir do dia preferido do aluno (padrão:
+     sábado), enquanto o simulado da semana não for feito. */
+  function simuladoLembreteDia(email, set) {
+    const k = 'pl_simulado_dia_' + _safeMail(email);
+    if (set !== undefined) { localStorage.setItem(k, String(set)); return set; }
+    const v = parseInt(localStorage.getItem(k), 10);
+    return (v >= 1 && v <= 7) ? v : 6; /* ISO: 1=seg … 6=sáb, 7=dom */
+  }
+
+  function simuladoPrecisaLembrete(email) {
+    const wk = _wkKey();
+    if (localStorage.getItem('pl_simulado_visto_' + _safeMail(email)) === wk) return null;
+    const dow = new Date().getDay();
+    const hojeIso = dow === 0 ? 7 : dow;
+    if (hojeIso < simuladoLembreteDia(email)) return null; /* ainda não chegou o dia */
+    const sim = simuladoSemana(email);
+    if (!sim) return null;
+    const resp = getResp(sim.id, email);
+    if (resp && resp.finalizadoEm) return null; /* já fez o desta semana */
+    return sim;
+  }
+
+  function simuladoLembreteDispensar(email) {
+    localStorage.setItem('pl_simulado_visto_' + _safeMail(email), _wkKey());
+  }
+
   /* ═══════════════════════════════════════════════
      PDF PARSER
   ═══════════════════════════════════════════════ */
@@ -488,6 +515,7 @@ const PlQuestoes = (() => {
     errosRegistrar, errosPendentes, errosParaRevisar, errosStats,
     errosPrecisaLembrete, errosMarcarLembrete,
     estudoRegistrar, simuladoSemana,
+    simuladoLembreteDia, simuladoPrecisaLembrete, simuladoLembreteDispensar,
     parsePDFText, extractTextFromPDF
   };
 
