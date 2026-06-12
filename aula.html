@@ -88,8 +88,21 @@
     .btn-course:hover { background: rgba(255,255,255,0.2); }
 
     /* ── Activity cards grid ── */
-    .acts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-    @media (max-width: 600px) { .acts-grid { grid-template-columns: 1fr; } }
+    /* coluna única na ordem de estudo — cards largos, sem tela dividida */
+    .acts-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .act-passo {
+      font-family: var(--font-h); font-size: 10.5px; font-weight: 900; letter-spacing: .6px;
+      padding: 3px 10px; border-radius: 99px; background: rgba(74,108,247,0.18);
+      border: 1px solid rgba(74,108,247,0.4); color: var(--accent-light); white-space: nowrap;
+    }
+    .ordem-estudo {
+      display: flex; align-items: center; gap: 8px 14px; flex-wrap: wrap;
+      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.2);
+      border-radius: 12px; padding: 12px 18px; margin-bottom: 18px;
+      font-family: var(--font-h); font-size: 12.5px; font-weight: 700; color: var(--silver);
+    }
+    .ordem-estudo b { color: var(--white); }
+    .ordem-estudo .seta { color: var(--accent-light); }
 
     /* ── Activity card ── */
     .act-card {
@@ -262,11 +275,22 @@
   </div>
 
   <!-- Activities grid -->
+  <!-- Ordem de estudo recomendada -->
+  <div class="ordem-estudo">
+    <span style="color:var(--accent-light)">📋 Como estudar esta aula:</span>
+    <b>1º Videoaula</b> <span class="seta">→</span>
+    <b>2º Material da aula</b> <span class="seta">→</span>
+    <b>3º Questões do assunto</b> <span class="seta">→</span>
+    <b>4º Jogo</b>
+    <span style="margin-left:auto;color:#fdba74">🎯 Minissimulado: guarde para o fim de semana</span>
+  </div>
+
   <div class="acts-grid" id="actsGrid"><!-- JS-rendered --></div>
 
   <!-- Listas de questões interativas vinculadas à aula/curso -->
   <section id="listasIntSec" style="display:none;margin-top:28px">
-    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px">🎯 Minissimulado — Revisão</h2>
+    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px">🎯 Minissimulado — Revisão</h2>
+    <p style="font-size:13px;color:#fdba74;margin-bottom:14px">📅 Faça preferencialmente no <b>fim de semana</b> — ele consolida o que você estudou durante a semana.</p>
     <div id="listasIntGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
   </section>
 
@@ -363,12 +387,13 @@ function _getProgAula() {
 /* ═══════════════════════════════════════════════════
    ACTIVITY CONFIG
 ═══════════════════════════════════════════════════ */
+/* ordem de estudo: videoaula → material → questões do assunto → jogo */
 const ACT_CFG = {
-  video:     { icon: '🎥', label: 'Vídeo da Aula',         cor: '#60a5fa', type: 'video' },
-  pdf:       { icon: '📚', label: 'Material da Aula (PDF)',  cor: '#34d399', type: 'pdf'   },
-  jogo:      { icon: '🎮', label: 'Jogo Interativo',        cor: '#a78bfa', type: 'game'  },
-  lista:     { icon: '📝', label: 'Lista de Exercícios',       cor: '#fb923c', type: 'pdf'   },
-  resolucao: { icon: '✏️',  label: 'Resolução de Questões',  cor: '#f472b6', type: 'video' }
+  video:     { icon: '🎥', label: 'Vídeo da Aula',           cor: '#60a5fa', type: 'video', passo: '1º PASSO' },
+  pdf:       { icon: '📚', label: 'Material da Aula (PDF)',  cor: '#34d399', type: 'pdf',   passo: '2º PASSO' },
+  lista:     { icon: '📝', label: 'Lista de Exercícios',     cor: '#fb923c', type: 'pdf',   passo: '3º PASSO' },
+  jogo:      { icon: '🎮', label: 'Jogo Interativo',         cor: '#a78bfa', type: 'game',  passo: '4º PASSO' },
+  resolucao: { icon: '✏️',  label: 'Resolução de Questões',   cor: '#f472b6', type: 'video', passo: 'EXTRA' }
 };
 
 /* ═══════════════════════════════════════════════════
@@ -496,7 +521,7 @@ function _toggleFrame(frameId, url, btnId) {
    RENDER ACTIVITY CARDS
 ═══════════════════════════════════════════════════ */
 const grid = document.getElementById('actsGrid');
-const KEYS = ['video', 'pdf', 'jogo', 'lista', 'resolucao'];
+const KEYS = ['video', 'pdf', 'lista', 'jogo', 'resolucao'];
 
 KEYS.forEach(key => {
   const cfg = ACT_CFG[key];
@@ -630,6 +655,7 @@ KEYS.forEach(key => {
     <div class="act-card__head">
       <div class="act-card__icon-wrap" style="background:${cfg.cor}22">${cfg.icon}</div>
       <div class="act-card__label">${cfg.label}</div>
+      ${cfg.passo && isAvail ? `<span class="act-passo">${cfg.passo}</span>` : ''}
       <span class="act-card__status act-card__status--${statusClass}" id="chip-${key}">${statusLabel}</span>
     </div>
     <div class="act-card__body">${bodyHtml}</div>

@@ -412,10 +412,9 @@
     const modoCaderno = params.get('caderno');
 
     if (modoCaderno) {
-      /* 📕 lista virtual montada com as questões do Caderno de Erros */
-      const itens = modoCaderno === 'semana'
-        ? PlQuestoes.errosParaRevisar(_session.email)
-        : PlQuestoes.errosPendentes(_session.email);
+      /* 📕 lista virtual com as questões LIBERADAS do Caderno de Erros
+         (lapso de 1 semana: erradas nesta semana só entram na próxima) */
+      const itens = PlQuestoes.errosParaRevisar(_session.email);
       if (!itens.length) { showCadernoVazio(); return; }
       _lista = {
         id: '__caderno', _caderno: true,
@@ -462,9 +461,12 @@
 
   function showCadernoVazio() {
     const scr = document.getElementById('notFoundScreen');
+    const aguardando = (PlQuestoes.errosStats(_session.email) || {}).aguardando || 0;
     scr.querySelector('.icon').textContent = '🎉';
     scr.querySelector('h2').textContent = 'Caderno de erros em dia!';
-    scr.querySelector('p').textContent = 'Nenhuma questão pendente para refazer agora. Continue resolvendo listas e minissimulados — o que você errar aparece aqui.';
+    scr.querySelector('p').textContent = aguardando > 0
+      ? aguardando + ' questão(ões) errada(s) nesta semana entram no caderno na próxima segunda-feira — é o tempo certo para a revisão valer mais.'
+      : 'Nenhuma questão pendente para refazer agora. Continue resolvendo listas e minissimulados — o que você errar aparece aqui na semana seguinte.';
     showNotFound();
   }
 

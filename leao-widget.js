@@ -148,11 +148,11 @@
   /* ── resposta local (sem servidor) ──────────────────────── */
   function respostaLocal(pergunta, ctx, s) {
     const dicas = {
-      aula: 'Siga o trio do método: termine a aula, faça o Minissimulado — Revisão logo abaixo e feche com o jogo do assunto. Anote os erros no caderno de erros.',
+      aula: 'Siga a ordem do método: videoaula → material da aula → questões do assunto → jogo. O Minissimulado — Revisão fica para o FIM DE SEMANA, consolidando o que você estudou na semana.',
       curso: 'Vá pela ordem do curso, mas priorize os assuntos do seu plano de hoje. Aula sem o minissimulado depois é estudo pela metade.',
       jogo: 'Use o modo 🎓 Treino para aprender sem pressão e o 🔥 Difícil para valer mais pontos no ranking. As perguntas mudam a cada partida!',
       blog: 'Os artigos de raio-X dos editais (SD e CFO) têm os números exatos da sua prova — vale a leitura com o caderno do lado.',
-      minissimulado: 'Abaixo de 70%? Reveja a aula do assunto antes de seguir. 70%+? Avance e volte neste minissimulado em 1 semana.',
+      minissimulado: 'Minissimulado rende mais no fim de semana, fechando a semana de estudo. Abaixo de 70%? Reveja a aula do assunto. 70%+? Os erros entram no caderno e voltam na próxima semana.',
       material: 'Leia o material na ordem: ideia central → fórmulas → exemplo resolvido → pegadinhas. Depois faça o Treine Agora sem olhar a resposta e feche com o minissimulado da aula.',
       geral: 'Abra sua Minha Área para ver a Missão de Hoje — metas e lembretes do seu plano.',
     };

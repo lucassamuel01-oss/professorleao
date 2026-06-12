@@ -668,7 +668,7 @@
   <!-- ── Listas de Questões ── -->
   <div class="sec-header" id="listasSec" style="margin-top:16px">
     <h2>🎯 Minissimulados — Revisão</h2>
-    <p>10 questões por assunto, no estilo da banca do seu concurso</p>
+    <p>10 questões por assunto, no estilo da banca do seu concurso · 📅 <b style="color:#fdba74">faça aos fins de semana</b> para consolidar o que estudou na semana</p>
   </div>
   <div id="listasEmpty" style="display:none;margin-bottom:32px">
     <div style="background:var(--navy-2);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius);padding:28px 24px;text-align:center;color:var(--silver)">
@@ -1004,30 +1004,32 @@ carregarListas();
 function initCaderno() {
   const stats = PlQuestoes.errosStats(_session.email);
   const sec = document.getElementById('cadernoSec');
-  if (stats.pendentes || stats.dominadas) {
+  if (stats.pendentes || stats.aguardando || stats.dominadas) {
     sec.style.display = 'block';
     document.getElementById('cadernoPendentes').textContent = stats.pendentes;
     document.getElementById('cadernoDominadas').textContent = stats.dominadas;
-    document.getElementById('cadernoMsg').textContent = stats.pendentes
-      ? 'Refazer os próprios erros é o caminho mais rápido para subir a nota: acerte 2 vezes seguidas e a questão sai do caderno.'
-      : 'Caderno zerado — você dominou tudo o que tinha errado. 👏';
+    let msg;
+    if (stats.pendentes) {
+      msg = 'Refazer os próprios erros é o caminho mais rápido para subir a nota: acerte 2 vezes seguidas e a questão sai do caderno.';
+    } else if (stats.aguardando) {
+      msg = '⏳ ' + stats.aguardando + ' questão(ões) errada(s) nesta semana entram no caderno na próxima segunda-feira — revisar com esse intervalo fixa muito mais.';
+    } else {
+      msg = 'Caderno zerado — você dominou tudo o que tinha errado. 👏';
+    }
+    if (stats.pendentes && stats.aguardando) {
+      msg += ' (+' + stats.aguardando + ' desta semana entram na próxima segunda.)';
+    }
+    document.getElementById('cadernoMsg').textContent = msg;
     document.getElementById('cadernoBtn').style.display = stats.pendentes ? '' : 'none';
   }
-  /* destaque semanal do caderno (1× por semana enquanto houver pendentes) */
+  /* destaque semanal do caderno (1× por semana, com questões liberadas) */
   const dest = PlQuestoes.errosPrecisaLembrete(_session.email);
   if (dest) {
-    const titulo = document.getElementById('cadernoLembreteTitulo');
-    const texto  = document.getElementById('cadernoLembreteTexto');
-    const cta    = document.getElementById('cadernoLembreteCTA');
-    if (dest.paraRevisar > 0) {
-      titulo.textContent = 'Revisão semanal: ' + dest.paraRevisar + ' questão(ões) para refazer';
-      texto.textContent  = 'Antes de começar as aulas desta semana, refaça o que você errou na semana passada. Cada questão sai do caderno depois de 2 acertos seguidos.';
-      cta.href = 'lista.html?caderno=semana';
-    } else {
-      titulo.textContent = '📕 Destaque da semana: Caderno de Erros';
-      texto.textContent  = 'Você tem ' + dest.pendentes + ' questão(ões) esperando para virar acerto. Dominar os próprios erros é a revisão que mais aprova.';
-      cta.href = 'lista.html?caderno=1';
-    }
+    document.getElementById('cadernoLembreteTitulo').textContent =
+      'Revisão semanal: ' + dest.paraRevisar + ' questão(ões) para refazer';
+    document.getElementById('cadernoLembreteTexto').textContent =
+      'Antes de começar as aulas desta semana, refaça o que você errou na semana passada. Cada questão sai do caderno depois de 2 acertos seguidos.';
+    document.getElementById('cadernoLembreteCTA').href = 'lista.html?caderno=semana';
     document.getElementById('cadernoLembrete').style.display = 'flex';
     /* brilho na seção do caderno durante a semana de destaque */
     const cardCaderno = document.querySelector('#cadernoSec > div:last-child');
@@ -1907,8 +1909,8 @@ const TOUR_PASSOS = [
   { sel: '#missaoSec',     t: '🎯 Missão de Hoje',     d: 'Suas metas diárias: quantos Pomodoros, quais matérias e se você está no ritmo — com lembretes automáticos.' },
   { sel: '#avisosSec',     t: '📣 Quadro de Avisos',   d: 'Aulas ao vivo, novidades de concursos e editais publicados pelo professor aparecem aqui.' },
   { sel: '#jogosSec',      t: '🎮 Arena de Jogos',     d: 'Treine se divertindo! As perguntas são geradas na hora (nunca se repetem) e o modo Treino não tem cronômetro.' },
-  { sel: '#listasSec',     t: '📝 Minissimulados',     d: '10 questões no estilo da banca por assunto, com gabarito comentado. Eles também aparecem dentro de cada aula.' },
-  { sel: '#cadernoSec',    t: '📕 Caderno de Erros',   d: 'Toda questão que você errar entra aqui automaticamente. Refaça até acertar 2 vezes seguidas — e toda semana o Leão te lembra de revisar.' },
+  { sel: '#listasSec',     t: '📝 Minissimulados',     d: '10 questões no estilo da banca por assunto, com gabarito comentado. Faça aos FINS DE SEMANA para consolidar o que estudou na semana.' },
+  { sel: '#cadernoSec',    t: '📕 Caderno de Erros',   d: 'Toda questão errada entra aqui na SEMANA SEGUINTE ao erro (revisão espaçada). Refaça até acertar 2 vezes seguidas — toda semana o Leão te lembra.' },
   { sel: '#iaCard',        t: '🦁 Leão IA',            d: 'Seu treinador pessoal: pergunte como está seu desempenho, o que estudar agora e seus pontos fracos. Ele também te acompanha pelas outras páginas (botão 🦁 flutuante).' },
   { sel: '#blogAlunoGrid', t: '📰 Blog',               d: 'Método de estudo, raio-X dos editais (com download) e dicas de TAF. Pronto! Bons estudos 💪' },
 ];

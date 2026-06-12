@@ -187,7 +187,9 @@ const PlQuestoes = (() => {
     return dt;
   }
 
-  /* pendentes erradas ANTES da semana atual — alvo do lembrete semanal */
+  /* LAPSO DE 1 SEMANA: a questão errada só "entra" no caderno na semana
+     SEGUINTE ao erro (revisão espaçada). Erradas nesta semana ficam
+     aguardando e são liberadas na segunda-feira. */
   function errosParaRevisar(email) {
     const corte = _inicioSemana().getTime();
     return errosPendentes(email)
@@ -195,18 +197,25 @@ const PlQuestoes = (() => {
   }
 
   function errosStats(email) {
-    const data = _errosLoad(email);
-    return { pendentes: Object.keys(data.itens).length, dominadas: data.dominadas || 0 };
+    const todos     = errosPendentes(email);
+    const corte     = _inicioSemana().getTime();
+    const liberadas = todos.filter(i => new Date(i.ultimoErro || i.addedAt).getTime() < corte).length;
+    const data      = _errosLoad(email);
+    return {
+      pendentes: liberadas,                       /* visíveis no caderno  */
+      aguardando: todos.length - liberadas,       /* entram na próxima 2ª */
+      dominadas: data.dominadas || 0,
+    };
   }
 
-  /* destaque semanal: 1× por semana, sempre que houver QUALQUER pendente.
-     Retorna { paraRevisar, pendentes } ou null (sem pendências / já visto). */
+  /* destaque semanal: 1× por semana, quando houver questões LIBERADAS
+     (erradas em semanas anteriores). Retorna { paraRevisar } ou null. */
   function errosPrecisaLembrete(email) {
     const wk = _inicioSemana().toISOString().slice(0, 10);
     if (localStorage.getItem('pl_erros_lembrete_' + _safeMail(email)) === wk) return null;
-    const pend = errosPendentes(email);
-    if (!pend.length) return null;
-    return { paraRevisar: errosParaRevisar(email).length, pendentes: pend.length };
+    const aRever = errosParaRevisar(email);
+    if (!aRever.length) return null;
+    return { paraRevisar: aRever.length };
   }
   function errosMarcarLembrete(email) {
     const wk = _inicioSemana().toISOString().slice(0, 10);
