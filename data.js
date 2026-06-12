@@ -553,92 +553,76 @@ const PL_CATALOG = {
 
     /* ────────────────────────────────────────────────────────
        SD PMBA — SAEB/05/2022 (Banca FCC)
-       40 aulas: LP(5) + Mat(24) + Hist(4) + Atu(1) + Inf(2) + Dir(4)
+       24 aulas de Matemática (edital completo da disciplina)
     ──────────────────────────────────────────────────────── */
     'sd-pmba': {
       id: 'sd-pmba',
       nome: 'SD PMBA',
       subtitulo: 'Soldado da Polícia Militar da Bahia',
-      descricao: 'Preparação completa para o SD PMBA (SAEB/05/2022 — Banca FCC). Todas as disciplinas do edital em aulas Pomodoro de 25 minutos.',
+      descricao: 'Matemática completa para o SD PMBA (SAEB/05/2022 — Banca FCC): todo o conteúdo da disciplina em aulas Pomodoro de 25 minutos.',
       icon: '🚔',
       cor: '#60a5fa',
       corBg: 'rgba(96,165,250,0.12)',
       aulas: [
-        ..._lpSD('sdpm', 0),
-        ..._matSD('sdpm', 5),
-        ..._histPMBA('sdpm', 29),
-        ..._atuSD('sdpm', 34),
-        ..._infSD('sdpm', 34),
-        ..._dirSDPM('sdpm', 36)
+        /* Plataforma 100% Matemática — demais disciplinas removidas */
+        ..._matSD('sdpm', 0)
       ]
     },
 
     /* ────────────────────────────────────────────────────────
        SD CBMBA — SAEB/05/2022 (Banca FCC)
-       40 aulas: LP(5) + Mat(24) + CN(4) + Atu(1) + Inf(2) + Dir(4)
+       24 aulas de Matemática (edital completo da disciplina)
     ──────────────────────────────────────────────────────── */
     'sd-cbmba': {
       id: 'sd-cbmba',
       nome: 'SD CBMBA',
       subtitulo: 'Soldado do Corpo de Bombeiros Militar da Bahia',
-      descricao: 'Preparação para o SD CBMBA (SAEB/05/2022 — Banca FCC). Disciplinas do edital BM em aulas Pomodoro de 25 minutos.',
+      descricao: 'Matemática completa para o SD CBMBA (SAEB/05/2022 — Banca FCC) em aulas Pomodoro de 25 minutos.',
       icon: '🔴',
       cor: '#f87171',
       corBg: 'rgba(248,113,113,0.12)',
       aulas: [
-        ..._lpSD('sdbm', 0),
-        ..._matSD('sdbm', 5),
-        ..._cnCBMBA('sdbm', 29),
-        ..._atuSD('sdbm', 34),
-        ..._infSD('sdbm', 34),
-        ..._dirSDBM('sdbm', 36)
+        /* Plataforma 100% Matemática — demais disciplinas removidas */
+        ..._matSD('sdbm', 0)
       ]
     },
 
     /* ────────────────────────────────────────────────────────
        CFO PMBA — CFOPM/2024 (Banca UNEB)
-       51 aulas: LP(6) + LI(4) + Mat(26) + Inf(3) + Hum(5) + Dir(7)
+       26 aulas de Matemática (edital completo da disciplina)
     ──────────────────────────────────────────────────────── */
     'cfo-pmba': {
       id: 'cfo-pmba',
       nome: 'CFO PMBA',
       subtitulo: 'Curso de Formação de Oficiais — Polícia Militar da Bahia',
-      descricao: 'Preparação completa para o CFO PMBA (CFOPM/2024 — Banca UNEB). Do básico ao avançado em aulas Pomodoro de 25 minutos.',
+      descricao: 'Matemática do CFO PMBA (CFOPM/2024 — Banca UNEB), do básico ao avançado, em aulas Pomodoro de 25 minutos.',
       icon: '🎖️',
       cor: '#fcd34d',
       corBg: 'rgba(252,211,77,0.12)',
       aulas: [
-        ..._lpCFO('cfopm', 0),
-        ..._liCFO('cfopm', 6),
-        ..._matSD('cfopm', 10),
-        ..._matCFOExtra('cfopm', 35, 36),
-        ..._infCFO('cfopm', 36),
-        ..._humPMBA('cfopm', 39),
-        ..._dirCFOPM('cfopm', 44)
+        /* Plataforma 100% Matemática — demais disciplinas removidas */
+        ..._matSD('cfopm', 0),
+        ..._matCFOExtra('cfopm', 25, 26)
       ]
     },
 
     /* ────────────────────────────────────────────────────────
        CFO CBMBA — CFOPM/2024 (Banca UNEB)
-       53 aulas: LP(6) + LI(4) + Mat(27) + Inf(3) + HumNat(6) + Dir(7)
+       27 aulas de Matemática (incl. Lógica Matemática)
     ──────────────────────────────────────────────────────── */
     'cfo-cbmba': {
       id: 'cfo-cbmba',
       nome: 'CFO CBMBA',
       subtitulo: 'Curso de Formação de Oficiais — Corpo de Bombeiros Militar da Bahia',
-      descricao: 'Preparação para o CFO CBMBA (CFOPM/2024 — Banca UNEB). Edital BM com Ciências Naturais e Lógica Matemática — 25 min por aula.',
+      descricao: 'Matemática do CFO CBMBA (CFOPM/2024 — Banca UNEB), incluindo Lógica Matemática do edital BM — 25 min por aula.',
       icon: '🚒',
       cor: '#fb923c',
       corBg: 'rgba(251,146,60,0.12)',
       aulas: [
-        ..._lpCFO('cfobm', 0),
-        ..._liCFO('cfobm', 6),
-        _aulaLogica('cfobm', 11),
-        ..._matSD('cfobm', 11),
-        ..._matCFOExtra('cfobm', 36, 37),
-        ..._infCFO('cfobm', 37),
-        ..._humnatCBMBA('cfobm', 40),
-        ..._dirCFOBM('cfobm', 46)
+        /* Plataforma 100% Matemática (incl. Lógica Matemática do edital BM) */
+        _aulaLogica('cfobm', 1),
+        ..._matSD('cfobm', 1),
+        ..._matCFOExtra('cfobm', 26, 27)
       ]
     },
 
@@ -867,7 +851,9 @@ const PL_CATALOG = {
   /* Aula está completa? */
   aulaCompleta(materiais, progAula = {}) {
     const disponiveis = this.ATIVIDADES.filter(a => materiais[a.key] !== null);
-    if (disponiveis.length === 0) return true; // sem material = auto-completa
+    // Aula sem material ("Em produção") não conta como concluída —
+    // evitava progresso fantasma no primeiro acesso do aluno.
+    if (disponiveis.length === 0) return false;
     return disponiveis.every(a => progAula[a.key]);
   }
 

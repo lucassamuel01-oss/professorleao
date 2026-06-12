@@ -935,7 +935,11 @@ Object.values(PL_CATALOG.cursos).forEach(c => {
   const prog  = _prog[c.id] || {};
   const total = c.aulas.length;
   let done = 0;
-  c.aulas.forEach(a => { if (PL_CATALOG.aulaCompleta(a.materiais, prog[a.id]||{})) done++; });
+  let comMaterial = 0;
+  c.aulas.forEach(a => {
+    if (Object.values(a.materiais).some(v => v !== null)) comMaterial++;
+    if (PL_CATALOG.aulaCompleta(a.materiais, prog[a.id]||{})) done++;
+  });
   const pct    = total ? Math.round((done/total)*100) : 0;
   const status = done===0 ? 'new' : done===total ? 'done' : 'active';
   const labels = { new:'Novo', done:'Completo ✓', active:'Em andamento' };

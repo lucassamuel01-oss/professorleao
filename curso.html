@@ -240,11 +240,14 @@ const _progCurso = _prog[_cursoId] || {};
 
 /* ── Calc stats ── */
 const total = _curso.aulas.length;
-let feitas  = 0;
+let feitas = 0, totalDisp = 0;
 _curso.aulas.forEach(a => {
+  const temMaterial = Object.values(a.materiais).some(v => v !== null);
+  if (temMaterial) totalDisp++;
   if (PL_CATALOG.aulaCompleta(a.materiais, _progCurso[a.id] || {})) feitas++;
 });
-const pct = total ? Math.round((feitas / total) * 100) : 0;
+/* percentual sobre as aulas que TEM material (as "Em produção" não contam) */
+const pct = totalDisp ? Math.round((feitas / totalDisp) * 100) : 0;
 
 /* ── Hero ── */
 document.getElementById('breadCurso').textContent = _curso.nome;
@@ -257,7 +260,7 @@ document.getElementById('statFeitas').textContent = feitas;
 document.getElementById('statPct').textContent    = pct + '%';
 document.getElementById('progTxt').textContent    = pct + '%';
 document.getElementById('progFill').style.width   = pct + '%';
-document.getElementById('lessonsMeta').textContent = `${feitas} de ${total} aulas concluídas`;
+document.getElementById('lessonsMeta').textContent = `${feitas} de ${totalDisp} aulas disponíveis concluídas`;
 
 /* ── Apostilas do curso ── */
 (function _renderApostilas() {
