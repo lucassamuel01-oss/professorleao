@@ -947,3 +947,24 @@ const PL_CATALOG = {
     });
   });
 })();
+
+/* ── Aulas ocultas (admin) ─────────────────────────────────
+   O admin pode ocultar uma aula da Área do Aluno (flag
+   aula.oculta = true, salva no catálogo customizado). No
+   painel admin a aula continua visível para ser gerenciada;
+   nas demais páginas ela é removida do catálogo em tempo de
+   execução e as restantes são renumeradas em sequência. ──── */
+(function _ocultarAulas() {
+  try {
+    const path = (location.pathname || '').toLowerCase();
+    if (path.indexOf('admin') !== -1) return; /* admin vê tudo */
+    Object.values(PL_CATALOG.cursos || {}).forEach(curso => {
+      if (!Array.isArray(curso.aulas)) return;
+      const visiveis = curso.aulas.filter(a => !a.oculta);
+      if (visiveis.length !== curso.aulas.length) {
+        visiveis.forEach((a, i) => { a.numero = i + 1; });
+        curso.aulas = visiveis;
+      }
+    });
+  } catch (e) { /* silently ignore */ }
+})();

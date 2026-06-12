@@ -1430,9 +1430,12 @@
         `<span class="mat-icon ${aula.materiais[k] ? 'has' : ''}" title="${MAT_ICONS[k]} ${k}">${MAT_ICONS[k]}</span>`
       ).join('');
       const isFirst = idx === 0, isLast = idx === c.aulas.length - 1;
-      return `<tr>
+      const ocultaBadge = aula.oculta
+        ? ' <span style="font-size:10.5px;padding:2px 7px;border-radius:99px;background:rgba(239,68,68,.15);color:#fca5a5;font-weight:700;white-space:nowrap">🙈 oculta p/ alunos</span>'
+        : '';
+      return `<tr${aula.oculta ? ' style="opacity:.55"' : ''}>
         <td class="aulas-table-num">${aula.numero || idx+1}</td>
-        <td><strong style="color:var(--white);font-size:13.5px">${esc(aula.titulo)}</strong></td>
+        <td><strong style="color:var(--white);font-size:13.5px">${esc(aula.titulo)}</strong>${ocultaBadge}</td>
         <td style="color:var(--gray-mid);font-size:12.5px;max-width:220px">${esc((aula.descricao||'').slice(0,80))}${(aula.descricao||'').length>80?'…':''}</td>
         <td style="color:var(--gray-mid);font-size:12.5px">${esc(aula.duracao||'—')}</td>
         <td><div class="aulas-table-icons">${matIcons}</div></td>
@@ -1442,6 +1445,7 @@
               <button class="order-btn" ${isFirst?'disabled':''} onclick="moveAula(${idx},-1)" title="Subir">↑</button>
               <button class="order-btn" ${isLast?'disabled':''} onclick="moveAula(${idx},1)" title="Descer">↓</button>
             </div>
+            <button class="action-btn" onclick="toggleOcultaAula(${idx})" title="${aula.oculta ? 'Mostrar na Área do Aluno' : 'Ocultar da Área do Aluno'}">${aula.oculta ? '🙈' : '👁'}</button>
             <button class="action-btn" onclick="openEditAula(${idx})">✏ Editar</button>
             <button class="action-btn danger" onclick="openDelAula(${idx},'${esc(aula.titulo)}')">✕</button>
           </div>
@@ -1458,6 +1462,17 @@
     [c.aulas[idx], c.aulas[newIdx]] = [c.aulas[newIdx], c.aulas[idx]];
     // renumber
     c.aulas.forEach((a,i) => a.numero = i+1);
+    renderAulas();
+  }
+
+  /* ─── Ocultar/mostrar aula na Área do Aluno ─── */
+  function toggleOcultaAula(idx) {
+    const c = getActiveCurso(); if (!c) return;
+    const a = c.aulas[idx]; if (!a) return;
+    if (a.oculta) delete a.oculta; else a.oculta = true;
+    toast(a.oculta
+      ? '🙈 Aula marcada como oculta — os alunos não a verão. Clique em "Salvar Alterações" para persistir.'
+      : '👁 Aula visível novamente para os alunos. Clique em "Salvar Alterações" para persistir.', 'ok');
     renderAulas();
   }
 

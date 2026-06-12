@@ -43,6 +43,7 @@ const PlQuestoes = (() => {
         total: (s.questoes || []).length,
         cursoId: s.cursoId || '', aulaId: s.aulaId || '',
         aulaIds: Array.isArray(s.aulaIds) ? s.aulaIds : [],
+        tipoLista: s.tipoLista || '',
         seed: true,
         criadoEm: s.criadoEm || ''
       }));
@@ -64,6 +65,8 @@ const PlQuestoes = (() => {
       fonte: lista.fonte || '', dificuldade: lista.dificuldade || 'medio',
       total: (lista.questoes || []).length,
       cursoId: lista.cursoId || '', aulaId: lista.aulaId || '',
+      aulaIds: Array.isArray(lista.aulaIds) ? lista.aulaIds : [],
+      tipoLista: lista.tipoLista || '',
       criadoEm: lista.criadoEm || new Date().toISOString()
     };
     localStorage.setItem('pl_lista_' + id, JSON.stringify(full));

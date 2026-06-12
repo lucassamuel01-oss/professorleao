@@ -266,7 +266,7 @@
 
   <!-- Listas de questões interativas vinculadas à aula/curso -->
   <section id="listasIntSec" style="display:none;margin-top:28px">
-    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px">🎯 Minissimulado — Revisão</h2>
+    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px">🎯 Pratique este assunto</h2>
     <div id="listasIntGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
   </section>
 
@@ -353,7 +353,7 @@ const ACT_CFG = {
   video:     { icon: '🎥', label: 'Vídeo da Aula',         cor: '#60a5fa', type: 'video' },
   pdf:       { icon: '📄', label: 'PDF da Aula',            cor: '#34d399', type: 'pdf'   },
   jogo:      { icon: '🎮', label: 'Jogo Interativo',        cor: '#a78bfa', type: 'game'  },
-  lista:     { icon: '📋', label: 'Lista de Questões',      cor: '#fb923c', type: 'pdf'   },
+  lista:     { icon: '📋', label: 'Lista de Exercícios (PDF)', cor: '#fb923c', type: 'pdf'   },
   resolucao: { icon: '✏️',  label: 'Resolução de Questões',  cor: '#f472b6', type: 'video' }
 };
 
@@ -595,8 +595,12 @@ KEYS.forEach(key => {
   const daAula  = todas.filter(l => (l.aulaId && l.aulaId === _aulaId) || matchIds(l));
   const doCurso = todas.filter(l =>
     !l.aulaId && !(Array.isArray(l.aulaIds) && l.aulaIds.length) && l.cursoId === _cursoId);
-  /* apenas UMA lista interativa por aula — prioridade: vinculada à aula > do curso */
-  const listas  = [...daAula, ...doCurso].slice(0, 1);
+  /* por aula: 1 minissimulado + 1 lista de exercícios (prioridade: vinculada à aula > do curso) */
+  const cand    = [...daAula, ...doCurso];
+  const ehLista = l => l.tipoLista === 'lista';
+  const mini    = cand.find(l => !ehLista(l));
+  const listaEx = cand.find(ehLista);
+  const listas  = [mini, listaEx].filter(Boolean);
   if (!listas.length) return;
 
   const escL = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -613,9 +617,9 @@ KEYS.forEach(key => {
     } else if (prev && !prev.finalizadoEm) {
       cta = `▶ Continuar (${Object.keys(prev.respostas || {}).length}/${l.total})`;
     }
-    const badge = l.aulaId
-      ? '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(74,108,247,.18);color:#8ea4f8;white-space:nowrap">Desta aula</span>'
-      : '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--silver);white-space:nowrap">Do curso</span>';
+    const badge = ehLista(l)
+      ? '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(251,146,60,.18);color:#fdba74;white-space:nowrap">📝 Lista de Exercícios</span>'
+      : '<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(74,108,247,.18);color:#8ea4f8;white-space:nowrap">🎯 Minissimulado</span>';
     return `<a href="lista.html?id=${encodeURIComponent(l.id)}" style="display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);text-decoration:none;color:inherit">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
         <strong style="font-family:var(--font-h);font-size:14px">${escL(l.titulo)}</strong>

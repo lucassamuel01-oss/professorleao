@@ -867,7 +867,9 @@ carregarPlanoExistente();
    LISTAS DE QUESTÕES
 ════════════════════════════════════════ */
 function carregarListas() {
-  const lists = PlQuestoes.getLists();
+  /* o painel mostra apenas os minissimulados — as listas de exercícios
+     (tipoLista 'lista') ficam integradas dentro de cada aula, por assunto */
+  const lists = PlQuestoes.getLists().filter(l => l.tipoLista !== 'lista');
   const grid  = document.getElementById('listasGrid');
   const empty = document.getElementById('listasEmpty');
   const sec   = document.getElementById('listasSec');
@@ -1785,22 +1787,29 @@ function _tourMostrar(i) {
   const el = document.querySelector(passo.sel);
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   setTimeout(() => {
+    /* o overlay é position:fixed — todas as coordenadas aqui são de
+       viewport (getBoundingClientRect), SEM somar window.scrollX/Y.
+       Somar o scroll empurrava o tooltip para fora da tela quando a
+       página estava rolada (só aparecia com o zoom reduzido). */
     const r = el.getBoundingClientRect();
     const spot = document.getElementById('tourSpot');
     const tip  = document.getElementById('tourTip');
-    spot.style.left   = (r.left + window.scrollX - 8) + 'px';
-    spot.style.top    = (r.top + window.scrollY - 8) + 'px';
+    spot.style.left   = (r.left - 8) + 'px';
+    spot.style.top    = (r.top - 8) + 'px';
     spot.style.width  = (r.width + 16) + 'px';
     spot.style.height = (r.height + 16) + 'px';
     tip.querySelector('h4').textContent = passo.t;
     tip.querySelector('p').textContent  = passo.d;
     tip.querySelector('.tour-passo').textContent = (i + 1) + ' de ' + _tourAtivos.length;
     tip.querySelector('.tour-prox').textContent = i === _tourAtivos.length - 1 ? 'Concluir ✓' : 'Próximo →';
-    const abaixo = r.bottom + window.scrollY + 14;
-    const acima  = r.top + window.scrollY - 14 - 170;
-    const usarAcima = r.bottom + 190 > window.scrollY + window.innerHeight + window.scrollY - window.scrollY && acima > window.scrollY;
-    tip.style.top  = ((r.bottom + 190 < window.scrollY + window.innerHeight || acima < 0) ? abaixo : acima) + 'px';
-    tip.style.left = Math.max(12, Math.min(r.left + window.scrollX, window.innerWidth - 340)) + 'px';
+    const tipH = tip.offsetHeight || 190;
+    const tipW = tip.offsetWidth  || 320;
+    let top;
+    if (r.bottom + 22 + tipH <= window.innerHeight - 12)  top = r.bottom + 22;            /* abaixo do destaque */
+    else if (r.top - 22 - tipH >= 12)                     top = r.top - 22 - tipH;        /* acima do destaque  */
+    else                                                  top = window.innerHeight - tipH - 18; /* rente à base   */
+    tip.style.top  = Math.max(12, top) + 'px';
+    tip.style.left = Math.max(12, Math.min(r.left, window.innerWidth - tipW - 12)) + 'px';
   }, 420);
 }
 

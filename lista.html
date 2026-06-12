@@ -70,6 +70,13 @@
     .meta-pill { font-family: var(--font-h); font-size: 11px; font-weight: 700; padding: 3px 10px;
       border-radius: 99px; background: rgba(74,108,247,0.15); border: 1px solid rgba(74,108,247,0.3); color: var(--accent-light); }
     .lista-header__stats { display: flex; gap: 20px; flex-shrink: 0; }
+    .btn-pdf {
+      margin-top: 12px; padding: 8px 16px; border-radius: 8px;
+      background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.4);
+      color: #fdba74; font-family: var(--font-h); font-size: 12px; font-weight: 800;
+      transition: var(--tr); display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-pdf:hover { background: rgba(251,146,60,0.26); border-color: rgba(251,146,60,0.6); }
     .hstat { text-align: center; }
     .hstat__val { font-family: var(--font-h); font-size: 26px; font-weight: 900; color: var(--accent-light); line-height: 1; }
     .hstat__lbl { font-size: 11px; color: var(--silver); margin-top: 3px; }
@@ -294,6 +301,7 @@
         <div class="lista-header__info">
           <h1 id="listaTitulo">—</h1>
           <div class="meta" id="listaMeta"></div>
+          <button class="btn-pdf" onclick="gerarPdfLista()" title="Baixar esta lista em PDF organizado para imprimir">📄 Gerar PDF</button>
         </div>
         <div class="lista-header__stats" id="listaStats"></div>
       </div>
@@ -350,6 +358,7 @@
 
       <div style="display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap">
         <button class="btn-primary" id="btnRefazer" onclick="location.reload()">🔄 Refazer Lista</button>
+        <button class="btn-pdf" onclick="gerarPdfLista()" style="margin-top:0" title="Baixar esta lista em PDF organizado para imprimir">📄 Gerar PDF</button>
         <a href="minha-area.html" class="btn-nav" style="text-decoration:none;display:inline-flex;align-items:center">← Minha Área</a>
       </div>
 
@@ -687,6 +696,86 @@
   }
   function linkify(s) { return s; } // placeholder
   function truncate(s, n) { return s.length <= n ? s : s.slice(0, n) + '…'; }
+
+  /* ────── Gerar PDF (janela de impressão personalizada) ────── */
+  function gerarPdfLista() {
+    if (!_lista) return;
+    const logo = new URL('assets/img/logo-azul.png', location.href).href;
+    const difLabels = { facil: 'Fácil', medio: 'Médio', media: 'Médio', dificil: 'Difícil' };
+    const meta = [
+      _lista.materia,
+      _lista.fonte,
+      _lista.dificuldade ? 'Nível: ' + (difLabels[_lista.dificuldade] || _lista.dificuldade) : '',
+      _lista.questoes.length + ' questões'
+    ].filter(Boolean).join('  ·  ');
+
+    const brQ = s => escHtml(s).replace(/\n/g, '<br>');
+    const questoesHtml = _lista.questoes.map((q, i) => `
+      <div class="q">
+        <p><span class="num">Questão ${i + 1}.</span> ${brQ(q.enunciado)}</p>
+        <div class="ops">
+          ${['A','B','C','D','E'].filter(l => q.opcoes && q.opcoes[l] !== undefined)
+            .map(l => `<div><strong>${l})</strong> ${brQ(q.opcoes[l])}</div>`).join('')}
+        </div>
+      </div>`).join('');
+
+    const gabGrid = _lista.questoes.map((q, i) =>
+      `<span><strong>${i + 1}</strong> — ${escHtml(q.gabarito || '?')}</span>`).join('');
+
+    const comentarios = _lista.questoes
+      .filter(q => q.explicacao)
+      .map((q, i) => `<div class="coment"><strong>Questão ${_lista.questoes.indexOf(q) + 1} (${escHtml(q.gabarito)}):</strong> ${brQ(q.explicacao)}</div>`)
+      .join('');
+
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>${escHtml(_lista.titulo)} — Professor Leão</title>
+<style>
+  @page { margin: 16mm 14mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1a2235; font-size: 12.5px; line-height: 1.55; padding: 8px; }
+  .cab { display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #0F1E38; padding-bottom: 12px; }
+  .cab img { height: 54px; }
+  .cab h1 { font-family: Arial, Helvetica, sans-serif; font-size: 17px; color: #0F1E38; line-height: 1.3; }
+  .cab .sub { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #56607a; margin-top: 3px; }
+  .info { font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; color: #56607a; padding: 7px 0; border-bottom: 1px solid #d7dbe6; margin-bottom: 10px; }
+  .campos { font-family: Arial, Helvetica, sans-serif; font-size: 11.5px; margin: 4px 0 18px; color: #1a2235; }
+  .campos span { margin-right: 26px; }
+  .q { margin-bottom: 15px; page-break-inside: avoid; }
+  .q .num { font-weight: bold; color: #0F1E38; }
+  .ops { margin: 6px 0 0 16px; }
+  .ops div { margin-bottom: 2.5px; }
+  .gab-page { page-break-before: always; }
+  h2.sec { font-family: Arial, Helvetica, sans-serif; font-size: 14.5px; color: #0F1E38; border-bottom: 2px solid #0F1E38; padding-bottom: 6px; margin-bottom: 12px; }
+  .gab-grid { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 12.5px; margin-bottom: 22px; }
+  .coment { margin-bottom: 9px; font-size: 11.5px; page-break-inside: avoid; }
+  .rodape { margin-top: 26px; padding-top: 8px; border-top: 1px solid #d7dbe6; font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #8892a8; text-align: center; }
+</style></head><body>
+  <div class="cab">
+    <img src="${logo}" alt="Professor Leão">
+    <div>
+      <h1>${escHtml(_lista.titulo)}</h1>
+      <div class="sub">Plataforma Professor Leão · Matemática e Raciocínio Lógico para Concursos</div>
+    </div>
+  </div>
+  <div class="info">${escHtml(meta)} · Gerado em ${hoje}</div>
+  <div class="campos"><span>Nome: ______________________________________</span><span>Data: ____/____/______</span><span>Acertos: ____/${_lista.questoes.length}</span></div>
+  ${questoesHtml}
+  <div class="gab-page">
+    <h2 class="sec">✔ Gabarito</h2>
+    <div class="gab-grid">${gabGrid}</div>
+    ${comentarios ? '<h2 class="sec">💡 Gabarito comentado</h2>' + comentarios : ''}
+    <div class="rodape">Professor Leão — material de uso exclusivo dos alunos da plataforma. Bons estudos! 🦁</div>
+  </div>
+  <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); }<\/script>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    if (!win) { toast('⚠️ Libere pop-ups para gerar o PDF.', 'err'); return; }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  }
 
   /* ────── Boot ────── */
   init();
