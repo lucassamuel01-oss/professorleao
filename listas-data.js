@@ -1525,3 +1525,27 @@ window.PL_SEED_LISTAS = [
     ]
   }
 ];
+
+/* ════════════════════════════════════════════════════════════
+   INTEGRAÇÃO COM AS AULAS
+   A Lista de Exercícios do assunto passa a ser o material
+   "lista" da aula (substitui os antigos PDFs estáticos).
+   Requer data.js carregado ANTES deste arquivo.
+   ════════════════════════════════════════════════════════════ */
+(function _integrarListasNasAulas() {
+  if (typeof PL_CATALOG === 'undefined' || !PL_CATALOG.cursos) return;
+  const listas = (window.PL_SEED_LISTAS || []).filter(l => l.tipoLista === 'lista');
+  Object.values(PL_CATALOG.cursos).forEach(curso => {
+    (curso.aulas || []).forEach(aula => {
+      if (!aula.materiais) return;
+      const m = listas.find(l => Array.isArray(l.aulaIds) &&
+        l.aulaIds.some(s => aula.id === s || aula.id.endsWith('-' + s)));
+      if (m) {
+        aula.materiais.lista = 'lista.html?id=' + m.id;
+      } else if (typeof aula.materiais.lista === 'string' && aula.materiais.lista.indexOf('assets/listas/') === 0) {
+        /* PDF antigo sem lista integrada correspondente — remove */
+        aula.materiais.lista = null;
+      }
+    });
+  });
+})();

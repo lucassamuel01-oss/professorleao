@@ -266,7 +266,7 @@
 
   <!-- Listas de questões interativas vinculadas à aula/curso -->
   <section id="listasIntSec" style="display:none;margin-top:28px">
-    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px">🎯 Pratique este assunto</h2>
+    <h2 style="font-family:var(--font-h);font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px">🎯 Minissimulado — Revisão</h2>
     <div id="listasIntGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
   </section>
 
@@ -353,7 +353,7 @@ const ACT_CFG = {
   video:     { icon: '🎥', label: 'Vídeo da Aula',         cor: '#60a5fa', type: 'video' },
   pdf:       { icon: '📄', label: 'PDF da Aula',            cor: '#34d399', type: 'pdf'   },
   jogo:      { icon: '🎮', label: 'Jogo Interativo',        cor: '#a78bfa', type: 'game'  },
-  lista:     { icon: '📋', label: 'Lista de Exercícios (PDF)', cor: '#fb923c', type: 'pdf'   },
+  lista:     { icon: '📝', label: 'Lista de Exercícios',       cor: '#fb923c', type: 'pdf'   },
   resolucao: { icon: '✏️',  label: 'Resolução de Questões',  cor: '#f472b6', type: 'video' }
 };
 
@@ -545,6 +545,30 @@ KEYS.forEach(key => {
           <iframe allowfullscreen></iframe>
         </div>
       `;
+    } else if (key === 'lista' && /^lista\.html\?id=/.test(url)) {
+      /* ── LISTA DE EXERCÍCIOS INTERATIVA (integrada por assunto) ── */
+      const listaId  = decodeURIComponent(url.split('=')[1] || '');
+      const listaObj = (typeof PlQuestoes !== 'undefined') ? PlQuestoes.getList(listaId) : null;
+      const escA = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      let infoHtml = '';
+      if (listaObj) {
+        const prev  = PlQuestoes.getResp(listaId, _session.email);
+        const score = prev && prev.finalizadoEm ? PlQuestoes.calcScore(listaId, prev.respostas) : null;
+        const scoreHtml = score
+          ? `<span style="font-family:var(--font-h);font-weight:900;color:${score.percent >= 70 ? '#22c55e' : score.percent >= 50 ? '#f59e0b' : '#ef4444'}">· ${score.percent}% ✓</span>`
+          : '';
+        infoHtml = `<div style="font-size:12.5px;color:var(--silver);margin-bottom:10px">${escA(listaObj.titulo)} — ${(listaObj.questoes || []).length} questões de prova com gabarito comentado ${scoreHtml}</div>`;
+      }
+      contentHtml = `
+        ${infoHtml}
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-open btn-primary" id="${btnToggleId}" data-open-label="📝 Resolver Lista" style="flex:1" onclick="_toggleFrame('${frameId}','${url}','${btnToggleId}')">📝 Resolver Lista</button>
+          <a class="btn-open" href="${url}" style="flex:0 0 auto;padding:10px 12px" title="Abrir em tela cheia">↗</a>
+        </div>
+        <div class="frame-toggle" id="${frameId}">
+          <iframe></iframe>
+        </div>
+      `;
     } else {
       /* PDF / lista */
       const openLabel = key === 'lista' ? '📋 Abrir Lista' : '📄 Abrir PDF';
@@ -595,12 +619,11 @@ KEYS.forEach(key => {
   const daAula  = todas.filter(l => (l.aulaId && l.aulaId === _aulaId) || matchIds(l));
   const doCurso = todas.filter(l =>
     !l.aulaId && !(Array.isArray(l.aulaIds) && l.aulaIds.length) && l.cursoId === _cursoId);
-  /* por aula: 1 minissimulado + 1 lista de exercícios (prioridade: vinculada à aula > do curso) */
+  /* apenas o minissimulado do assunto — a Lista de Exercícios aparece
+     como atividade da aula (card "Lista de Exercícios" acima) */
   const cand    = [...daAula, ...doCurso];
   const ehLista = l => l.tipoLista === 'lista';
-  const mini    = cand.find(l => !ehLista(l));
-  const listaEx = cand.find(ehLista);
-  const listas  = [mini, listaEx].filter(Boolean);
+  const listas  = [cand.find(l => !ehLista(l))].filter(Boolean);
   if (!listas.length) return;
 
   const escL = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

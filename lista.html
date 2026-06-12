@@ -741,73 +741,117 @@
   /* ────── Gerar PDF (janela de impressão personalizada) ────── */
   function gerarPdfLista() {
     if (!_lista) return;
-    const logo = new URL('assets/img/logo-azul.png', location.href).href;
-    const difLabels = { facil: 'Fácil', medio: 'Médio', media: 'Médio', dificil: 'Difícil' };
-    const meta = [
-      _lista.materia,
-      _lista.fonte,
-      _lista.dificuldade ? 'Nível: ' + (difLabels[_lista.dificuldade] || _lista.dificuldade) : '',
-      _lista.questoes.length + ' questões'
-    ].filter(Boolean).join('  ·  ');
+    const logoBranca = new URL('assets/img/logo-branca.png', location.href).href;
+    const logoAzul   = new URL('assets/img/logo-azul.png', location.href).href;
+    const difLabels  = { facil: '🟢 Fácil', medio: '🟡 Médio', media: '🟡 Médio', dificil: '🔴 Difícil' };
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const nQ   = _lista.questoes.length;
+    const pad  = n => String(n).padStart(2, '0');
+    const brQ  = s => escHtml(s).replace(/\n/g, '<br>');
 
-    const brQ = s => escHtml(s).replace(/\n/g, '<br>');
+    const pills = [
+      _lista.materia,
+      _lista.dificuldade ? (difLabels[_lista.dificuldade] || _lista.dificuldade) : '',
+      nQ + ' questões',
+      'Gerado em ' + hoje
+    ].filter(Boolean).map(p => `<span class="pill">${escHtml(p)}</span>`).join('');
+
     const questoesHtml = _lista.questoes.map((q, i) => `
       <div class="q">
-        <p><span class="num">Questão ${i + 1}.</span> ${brQ(q.enunciado)}</p>
+        <span class="qnum">QUESTÃO ${pad(i + 1)}</span>
+        <div class="en">${brQ(q.enunciado)}</div>
         <div class="ops">
-          ${['A','B','C','D','E'].filter(l => q.opcoes && q.opcoes[l] !== undefined)
-            .map(l => `<div><strong>${l})</strong> ${brQ(q.opcoes[l])}</div>`).join('')}
+          ${['A','B','C','D','E'].filter(l => q.opcoes && q.opcoes[l] !== undefined).map(l => `
+            <div class="op"><span class="letra">${l}</span><span>${brQ(q.opcoes[l])}</span></div>`).join('')}
         </div>
       </div>`).join('');
 
     const gabGrid = _lista.questoes.map((q, i) =>
-      `<span><strong>${i + 1}</strong> — ${escHtml(q.gabarito || '?')}</span>`).join('');
+      `<span class="gab-cel">${pad(i + 1)} <b>${escHtml(q.gabarito || '?')}</b></span>`).join('');
 
     const comentarios = _lista.questoes
       .filter(q => q.explicacao)
-      .map((q, i) => `<div class="coment"><strong>Questão ${_lista.questoes.indexOf(q) + 1} (${escHtml(q.gabarito)}):</strong> ${brQ(q.explicacao)}</div>`)
+      .map(q => `<div class="coment"><strong>Questão ${pad(_lista.questoes.indexOf(q) + 1)} — gabarito ${escHtml(q.gabarito)}.</strong> ${brQ(q.explicacao)}</div>`)
       .join('');
 
-    const hoje = new Date().toLocaleDateString('pt-BR');
     const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
 <title>${escHtml(_lista.titulo)} — Professor Leão</title>
 <style>
-  @page { margin: 16mm 14mm; }
+  @page { margin: 13mm 12mm 17mm; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, 'Times New Roman', serif; color: #1a2235; font-size: 12.5px; line-height: 1.55; padding: 8px; }
-  .cab { display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #0F1E38; padding-bottom: 12px; }
-  .cab img { height: 54px; }
-  .cab h1 { font-family: Arial, Helvetica, sans-serif; font-size: 17px; color: #0F1E38; line-height: 1.3; }
-  .cab .sub { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #56607a; margin-top: 3px; }
-  .info { font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; color: #56607a; padding: 7px 0; border-bottom: 1px solid #d7dbe6; margin-bottom: 10px; }
-  .campos { font-family: Arial, Helvetica, sans-serif; font-size: 11.5px; margin: 4px 0 18px; color: #1a2235; }
-  .campos span { margin-right: 26px; }
-  .q { margin-bottom: 15px; page-break-inside: avoid; }
-  .q .num { font-weight: bold; color: #0F1E38; }
-  .ops { margin: 6px 0 0 16px; }
-  .ops div { margin-bottom: 2.5px; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1c2438; font-size: 12.5px; line-height: 1.6; padding-bottom: 34px; }
+  .cab {
+    background: #0A1628; color: #fff; border-radius: 14px; padding: 18px 22px;
+    display: flex; align-items: center; gap: 18px; border-bottom: 5px solid #4A6CF7;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .cab img { height: 58px; }
+  .cab h1 { font-family: Arial, Helvetica, sans-serif; font-size: 18px; line-height: 1.3; }
+  .cab .sub { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #9fb0e8; margin-top: 4px; letter-spacing: .4px; }
+  .pills { margin: 12px 0 4px; display: flex; gap: 8px; flex-wrap: wrap; font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; }
+  .pill { border: 1.3px solid #c2cbe6; color: #3c4a78; border-radius: 99px; padding: 3px 13px; font-weight: bold; }
+  .campos {
+    border: 1.6px dashed #aeb9d8; border-radius: 10px; padding: 11px 16px;
+    font-family: Arial, Helvetica, sans-serif; font-size: 11.5px; color: #1c2438;
+    margin: 12px 0 22px; display: flex; gap: 26px; flex-wrap: wrap;
+  }
+  .q { margin-bottom: 19px; page-break-inside: avoid; }
+  .qnum {
+    display: inline-block; background: #0A1628; color: #fff;
+    font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 10px;
+    padding: 3px 13px; border-radius: 99px; letter-spacing: .8px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .q .en { margin-top: 8px; }
+  .ops { margin: 9px 0 0 4px; }
+  .op { display: flex; gap: 9px; margin-bottom: 5px; align-items: flex-start; }
+  .op .letra {
+    flex: 0 0 auto; width: 19px; height: 19px; border: 1.6px solid #0A1628; border-radius: 50%;
+    font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 10.5px;
+    display: flex; align-items: center; justify-content: center; color: #0A1628; margin-top: 2px;
+  }
   .gab-page { page-break-before: always; }
-  h2.sec { font-family: Arial, Helvetica, sans-serif; font-size: 14.5px; color: #0F1E38; border-bottom: 2px solid #0F1E38; padding-bottom: 6px; margin-bottom: 12px; }
-  .gab-grid { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 12.5px; margin-bottom: 22px; }
-  .coment { margin-bottom: 9px; font-size: 11.5px; page-break-inside: avoid; }
-  .rodape { margin-top: 26px; padding-top: 8px; border-top: 1px solid #d7dbe6; font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #8892a8; text-align: center; }
+  h2.sec {
+    font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #0A1628;
+    border-left: 5px solid #4A6CF7; padding-left: 11px; margin: 8px 0 14px;
+  }
+  .gab-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+  .gab-cel {
+    border: 1.5px solid #0A1628; border-radius: 9px; padding: 5px 11px;
+    font-family: Arial, Helvetica, sans-serif; font-size: 12px; min-width: 56px; text-align: center;
+  }
+  .gab-cel b { color: #4A6CF7; }
+  .coment {
+    border-left: 4px solid #4A6CF7; background: #f2f5ff; border-radius: 0 10px 10px 0;
+    padding: 9px 13px; margin-bottom: 9px; font-size: 11.5px; page-break-inside: avoid;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .marca { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: -1; }
+  .marca img { width: 62%; opacity: .05; transform: rotate(-12deg); }
+  .rodape {
+    position: fixed; left: 0; right: 0; bottom: 0; text-align: center;
+    font-family: Arial, Helvetica, sans-serif; font-size: 9.5px; color: #7c87a8;
+    border-top: 1px solid #d8deee; padding: 5px 0 1px; background: #fff;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
 </style></head><body>
+  <div class="marca"><img src="${logoAzul}" alt=""></div>
   <div class="cab">
-    <img src="${logo}" alt="Professor Leão">
+    <img src="${logoBranca}" alt="Professor Leão">
     <div>
       <h1>${escHtml(_lista.titulo)}</h1>
-      <div class="sub">Plataforma Professor Leão · Matemática e Raciocínio Lógico para Concursos</div>
+      <div class="sub">PROFESSOR LEÃO · A MATEMÁTICA QUE APROVA — PM BA · CBM BA · CORREIOS</div>
     </div>
   </div>
-  <div class="info">${escHtml(meta)} · Gerado em ${hoje}</div>
-  <div class="campos"><span>Nome: ______________________________________</span><span>Data: ____/____/______</span><span>Acertos: ____/${_lista.questoes.length}</span></div>
+  <div class="pills">${pills}</div>
+  <div class="campos"><span>👤 Nome: ____________________________________</span><span>📅 Data: ____/____/______</span><span>🎯 Acertos: ______ de ${nQ}</span></div>
   ${questoesHtml}
   <div class="gab-page">
     <h2 class="sec">✔ Gabarito</h2>
     <div class="gab-grid">${gabGrid}</div>
     ${comentarios ? '<h2 class="sec">💡 Gabarito comentado</h2>' + comentarios : ''}
-    <div class="rodape">Professor Leão — material de uso exclusivo dos alunos da plataforma. Bons estudos! 🦁</div>
   </div>
+  <div class="rodape">🦁 Professor Leão — A matemática que aprova · material de uso exclusivo dos alunos da plataforma · Bons estudos!</div>
   <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); }<\/script>
 </body></html>`;
 

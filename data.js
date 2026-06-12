@@ -33,7 +33,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-01-conjuntos-numericos.mp4',
         pdf:      _AP + 'aula-01-conjuntos-numericos.pdf',
         jogo:     'jogos/conjuntos-numericos.html',
-        lista:    _LP + 'lista-conjuntos-numericos.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-conjuntos-numericos.mp4'
       }
     },
@@ -59,7 +59,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-13-sequencias-pa.mp4',
         pdf:      _AP + 'aula-06-pa.pdf',
         jogo:     'jogos/pa-pg.html',
-        lista:    _LP + 'lista-juros-pa-pg.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
       }
     },
@@ -72,7 +72,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-14-pg.mp4',
         pdf:      _AP + 'aula-07-pg.pdf',
         jogo:     'jogos/pa-pg.html',
-        lista:    _LP + 'lista-juros-pa-pg.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
       }
     },
@@ -85,7 +85,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-02-numeros-primos-mmc-mdc.mp4',
         pdf:      _AP + 'aula-04-mmc-mdc.pdf',
         jogo:     'jogos/multiplos-divisores.html',
-        lista:    _LP + 'lista-matematica-basica.pdf',
+        lista:    null,
         resolucao: null
       }
     },
@@ -98,7 +98,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-03-numeros-racionais.mp4',
         pdf:      _AP + 'aula-02-numeros-racionais.pdf',
         jogo:     'jogos/fracoes.html',
-        lista:    _LP + 'lista-numeros-racionais.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-racionais.mp4'
       }
     },
@@ -111,7 +111,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-11-potenciacao.mp4',
         pdf:      _AP + 'aula-03-dizimas-potenciacao.pdf',
         jogo:     'jogos/potenciacao.html',
-        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        lista:    null,
         resolucao: null
       }
     },
@@ -124,7 +124,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-06-teoria-conjuntos-p1.mp4',
         pdf:      null,
         jogo:     'jogos/conjuntos-operacoes.html',
-        lista:    _LP + 'lista-teoria-conjuntos.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-teoria-conjuntos.mp4'
       }
     },
@@ -137,7 +137,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-07-teoria-conjuntos-p2.mp4',
         pdf:      null,
         jogo:     'jogos/conjuntos-operacoes.html',
-        lista:    _LP + 'lista-teoria-conjuntos.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-teoria-conjuntos.mp4'
       }
     },
@@ -163,7 +163,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-15-funcao-1grau.mp4',
         pdf:      null,
         jogo:     'jogos/funcoes.html',
-        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-funcoes-exp-log.mp4'
       }
     },
@@ -176,7 +176,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-16-funcao-2grau.mp4',
         pdf:      null,
         jogo:     'jogos/funcoes.html',
-        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-funcoes-exp-log.mp4'
       }
     },
@@ -189,7 +189,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-18-funcoes-exp-log.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    _LP + 'lista-funcoes-exp-log.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-funcoes-exp-log.mp4'
       }
     },
@@ -202,7 +202,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-08-razao-proporcao.mp4',
         pdf:      null,
         jogo:     'jogos/regra-de-tres.html',
-        lista:    _LP + 'lista-razao-proporcao.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-razao-proporcao.mp4'
       }
     },
@@ -215,7 +215,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-10-porcentagem.mp4',
         pdf:      null,
         jogo:     'jogos/porcentagem.html',
-        lista:    _LP + 'lista-razao-proporcao-porcentagem.pdf',
+        lista:    null,
         resolucao: null
       }
     },
@@ -241,7 +241,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-19-combinatoria.mp4',
         pdf:      null,
         jogo:     'jogos/combinatoria.html',
-        lista:    _LP + 'lista-combinatoria-probabilidade.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-combinatoria.mp4'
       }
     },
@@ -254,7 +254,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-20-probabilidade.mp4',
         pdf:      null,
         jogo:     'jogos/combinatoria.html',
-        lista:    _LP + 'lista-combinatoria-probabilidade.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-combinatoria.mp4'
       }
     },
@@ -267,7 +267,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-24-geom-plana-triangulo.mp4',
         pdf:      null,
         jogo:     'jogos/geometria-plana.html',
-        lista:    _LP + 'lista-geometria-plana.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-geometria-plana-v1.mp4'
       }
     },
@@ -280,7 +280,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-25-geom-plana-quadrilateros.mp4',
         pdf:      null,
         jogo:     'jogos/geometria-plana.html',
-        lista:    _LP + 'lista-geometria-plana-2.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-geometria-plana-v2.mp4'
       }
     },
@@ -293,7 +293,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-27-geom-espacial-intro.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    _LP + 'lista-geometria-espacial.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-geometria-espacial.mp4'
       }
     },
@@ -306,7 +306,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-29-geom-espacial-corpos.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    _LP + 'lista-geometria-espacial.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-geometria-espacial.mp4'
       }
     },
@@ -319,7 +319,7 @@ function _matSD(pfx, offset) {
         video:    _V  + 'aula-30-geometria-analitica.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    _LP + 'lista-geometria-analitica.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-geometria-analitica.mp4'
       }
     },
@@ -332,7 +332,7 @@ function _matSD(pfx, offset) {
         video:    _VG + 'aula-21-geom-analitica-trig.mp4',
         pdf:      null,
         jogo:     null,
-        lista:    _LP + 'lista-geometria-analitica.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-geometria-analitica.mp4'
       }
     }
@@ -351,7 +351,7 @@ function _matCFOExtra(pfx, offset25, offset26) {
         video:    _VG + 'aula-08-juros-pa-pg-v1.mp4',
         pdf:      null,
         jogo:     'jogos/juros.html',
-        lista:    _LP + 'lista-juros-pa-pg.pdf',
+        lista:    null,
         resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
       }
     },
@@ -647,7 +647,7 @@ const PL_CATALOG = {
             video:    _V  + 'aula-01-conjuntos-numericos.mp4',
             pdf:      _AP + 'aula-01-conjuntos-numericos.pdf',
             jogo:     'jogos/conjuntos-numericos.html',
-            lista:    _LP + 'lista-conjuntos-numericos.pdf',
+            lista:    null,
             resolucao: _VQ + 'questoes-conjuntos-numericos.mp4'
           }
         },
@@ -673,7 +673,7 @@ const PL_CATALOG = {
             video:    _V  + 'aula-03-numeros-racionais.mp4',
             pdf:      _AP + 'aula-02-numeros-racionais.pdf',
             jogo:     'jogos/fracoes.html',
-            lista:    _LP + 'lista-numeros-racionais.pdf',
+            lista:    null,
             resolucao: _VQ + 'questoes-racionais.mp4'
           }
         },
@@ -699,7 +699,7 @@ const PL_CATALOG = {
             video:    _V  + 'aula-08-razao-proporcao.mp4',
             pdf:      null,
             jogo:     'jogos/regra-de-tres.html',
-            lista:    _LP + 'lista-razao-proporcao.pdf',
+            lista:    null,
             resolucao: _VQ + 'questoes-razao-proporcao.mp4'
           }
         },
@@ -712,7 +712,7 @@ const PL_CATALOG = {
             video:    _V  + 'aula-13-sequencias-pa.mp4',
             pdf:      _AP + 'aula-06-pa.pdf',
             jogo:     'jogos/pa-pg.html',
-            lista:    _LP + 'lista-juros-pa-pg.pdf',
+            lista:    null,
             resolucao: _VQ + 'questoes-juros-pa-pg.mp4'
           }
         },
@@ -725,7 +725,7 @@ const PL_CATALOG = {
             video:    _V  + 'aula-06-teoria-conjuntos-p1.mp4',
             pdf:      null,
             jogo:     'jogos/conjuntos-operacoes.html',
-            lista:    _LP + 'lista-teoria-conjuntos.pdf',
+            lista:    null,
             resolucao: _VQ + 'questoes-teoria-conjuntos.mp4'
           }
         }
@@ -753,7 +753,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      'assets/aulas/correios/aula-01-inteiros-multiplos.pdf',
             jogo:     'jogos/multiplos-divisores.html',
-            lista:    _LP + 'lista-matematica-basica.pdf',
+            lista:    null,
             resolucao: null
           }
         },
@@ -766,7 +766,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      'assets/aulas/correios/aula-02-numeros-racionais.pdf',
             jogo:     'jogos/fracoes.html',
-            lista:    _LP + 'lista-numeros-racionais.pdf',
+            lista:    null,
             resolucao: null
           }
         },
@@ -779,7 +779,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      null,
             jogo:     'jogos/porcentagem.html',
-            lista:    _LP + 'lista-razao-proporcao-porcentagem.pdf',
+            lista:    null,
             resolucao: null
           }
         },
@@ -805,7 +805,7 @@ const PL_CATALOG = {
             video:    null,
             pdf:      null,
             jogo:     'jogos/geometria-plana.html',
-            lista:    _LP + 'lista-geometria-plana.pdf',
+            lista:    null,
             resolucao: null
           }
         }
@@ -895,11 +895,11 @@ const PL_CATALOG = {
    Aplicado após o override do admin para que catálogos salvos
    antes deste recurso também recebam as apostilas. ─────────── */
 (function _addApostilas() {
+  /* cada curso recebe APENAS os materiais do seu próprio edital —
+     materiais da mentoria (cronograma/revisão) não pertencem aos cursos */
   const APOSTILAS_MILITAR = [
     { titulo: 'Apostila Completa de Matemática — CFO/SD', desc: 'Teoria completa de todos os assuntos do edital de matemática.', url: 'assets/apostila-cfo.pdf' },
     { titulo: 'Conteúdo Programático — CFO/SD',           desc: 'O que cai na prova: edital de matemática detalhado.',          url: 'assets/conteudo-cfo.pdf' },
-    { titulo: 'Cronograma da Mentoria',                   desc: 'Planejamento de estudos semana a semana da mentoria.',         url: 'assets/cronograma-mentoria.pdf' },
-    { titulo: 'Mentoria de Matemática — Revisão',         desc: 'Material de revisão geral usado na mentoria.',                 url: 'assets/mentoria.pdf' },
   ];
   const APOSTILAS_POR_CURSO = {
     'sd-pmba':   APOSTILAS_MILITAR,
@@ -907,8 +907,7 @@ const PL_CATALOG = {
     'cfo-pmba':  APOSTILAS_MILITAR,
     'cfo-cbmba': APOSTILAS_MILITAR,
     'mat-basica': [
-      { titulo: 'Apostila de Matemática Básica',    desc: 'Fundamentos completos — do zero ao nível de concurso.', url: 'assets/apostila-basica.pdf' },
-      { titulo: 'Mentoria de Matemática — Revisão', desc: 'Material de revisão geral usado na mentoria.',          url: 'assets/mentoria.pdf' },
+      { titulo: 'Apostila de Matemática Básica', desc: 'Fundamentos completos — do zero ao nível de concurso.', url: 'assets/apostila-basica.pdf' },
     ],
     'correios': [
       { titulo: 'Apostila de Matemática — Correios',  desc: 'Teoria focada no edital dos Correios.',            url: 'assets/apostila-correios.pdf' },
@@ -917,7 +916,9 @@ const PL_CATALOG = {
   };
   Object.entries(APOSTILAS_POR_CURSO).forEach(([id, aps]) => {
     const curso = PL_CATALOG.cursos[id];
-    if (curso && !Array.isArray(curso.apostilas)) curso.apostilas = aps;
+    /* sobrescreve sempre — catálogos antigos salvos pelo admin podem
+       conter materiais que não pertencem ao curso */
+    if (curso) curso.apostilas = aps;
   });
 })();
 
