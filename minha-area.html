@@ -517,15 +517,25 @@
     </div>
   </div>
 
+  <!-- 📣 Quadro de Avisos (faixa compacta — expande ao tocar) -->
+  <div id="avisosSec" style="display:none;background:var(--navy-2);border:1px solid rgba(74,108,247,.3);border-left:4px solid var(--accent);border-radius:var(--radius);padding:11px 16px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;cursor:pointer" onclick="toggleAvisos()">
+      <strong style="font-family:var(--font-h);font-size:13px;white-space:nowrap">📣 Avisos</strong>
+      <span id="avisoResumo" style="flex:1;min-width:180px;font-size:13px;color:var(--silver);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <span id="avisosToggleLbl" style="font-family:var(--font-h);font-size:12px;font-weight:800;color:var(--accent-light);white-space:nowrap">ver todos ▾</span>
+    </div>
+    <div id="avisosBoard" style="display:none;flex-direction:column;gap:12px;margin-top:12px"></div>
+  </div>
+
   <!-- 📕 Lembrete semanal do Caderno de Erros -->
   <div id="cadernoLembrete" style="display:none;background:linear-gradient(135deg,#3b2415,#4a2c12);border:1px solid rgba(251,146,60,.45);border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;align-items:center;gap:16px;flex-wrap:wrap">
     <div style="font-size:30px">🔔</div>
     <div style="flex:1;min-width:220px">
-      <strong style="font-family:var(--font-h);font-size:15px">Revisão semanal: <span id="cadernoLembreteN">0</span> questão(ões) para refazer</strong>
-      <p style="font-size:13px;color:#fcd9b6;margin-top:3px">Antes de começar as aulas desta semana, refaça o que você errou na semana passada. Cada questão sai do caderno depois de 2 acertos seguidos.</p>
+      <strong style="font-family:var(--font-h);font-size:15px" id="cadernoLembreteTitulo">Revisão semanal do Caderno de Erros</strong>
+      <p style="font-size:13px;color:#fcd9b6;margin-top:3px" id="cadernoLembreteTexto"></p>
     </div>
     <div style="display:flex;gap:10px">
-      <a href="lista.html?caderno=semana" style="padding:10px 18px;border-radius:10px;background:#fb923c;color:#1a1109;font-family:var(--font-h);font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap">Refazer agora ▶</a>
+      <a href="lista.html?caderno=semana" id="cadernoLembreteCTA" style="padding:10px 18px;border-radius:10px;background:#fb923c;color:#1a1109;font-family:var(--font-h);font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap">Refazer agora ▶</a>
       <button onclick="adiarLembreteCaderno()" style="padding:10px 14px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--silver);font-family:var(--font-h);font-weight:700;font-size:12.5px;cursor:pointer">Depois</button>
     </div>
   </div>
@@ -598,13 +608,6 @@
     <a href="blog.html" style="font-size:13px;color:var(--accent-light)">Ver todos os artigos →</a>
   </div>
   <div id="blogAlunoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:40px"></div>
-
-  <!-- Quadro de Avisos -->
-  <div class="sec-header" id="avisosSec" style="display:none">
-    <h2>📣 Quadro de Avisos</h2>
-    <p>Aulas ao vivo · concursos · editais</p>
-  </div>
-  <div id="avisosBoard" style="display:none;flex-direction:column;gap:12px;margin-bottom:40px"></div>
 
   <!-- ── Plano de Estudos ── -->
   <div class="plano-section">
@@ -1010,11 +1013,27 @@ function initCaderno() {
       : 'Caderno zerado — você dominou tudo o que tinha errado. 👏';
     document.getElementById('cadernoBtn').style.display = stats.pendentes ? '' : 'none';
   }
-  /* lembrete semanal: erros da(s) semana(s) anterior(es) ainda pendentes */
-  const n = PlQuestoes.errosPrecisaLembrete(_session.email);
-  if (n > 0) {
-    document.getElementById('cadernoLembreteN').textContent = n;
+  /* destaque semanal do caderno (1× por semana enquanto houver pendentes) */
+  const dest = PlQuestoes.errosPrecisaLembrete(_session.email);
+  if (dest) {
+    const titulo = document.getElementById('cadernoLembreteTitulo');
+    const texto  = document.getElementById('cadernoLembreteTexto');
+    const cta    = document.getElementById('cadernoLembreteCTA');
+    if (dest.paraRevisar > 0) {
+      titulo.textContent = 'Revisão semanal: ' + dest.paraRevisar + ' questão(ões) para refazer';
+      texto.textContent  = 'Antes de começar as aulas desta semana, refaça o que você errou na semana passada. Cada questão sai do caderno depois de 2 acertos seguidos.';
+      cta.href = 'lista.html?caderno=semana';
+    } else {
+      titulo.textContent = '📕 Destaque da semana: Caderno de Erros';
+      texto.textContent  = 'Você tem ' + dest.pendentes + ' questão(ões) esperando para virar acerto. Dominar os próprios erros é a revisão que mais aprova.';
+      cta.href = 'lista.html?caderno=1';
+    }
     document.getElementById('cadernoLembrete').style.display = 'flex';
+    /* brilho na seção do caderno durante a semana de destaque */
+    const cardCaderno = document.querySelector('#cadernoSec > div:last-child');
+    if (cardCaderno) {
+      cardCaderno.style.boxShadow = '0 0 0 1px rgba(251,146,60,.45), 0 8px 32px rgba(251,146,60,.18)';
+    }
   }
 }
 function adiarLembreteCaderno() {
@@ -1546,9 +1565,22 @@ function buildPrintHTML(dados, plano) {
     </div>`;
   }).join('');
 
+  /* faixa compacta: mostra só o aviso mais importante; expande ao tocar */
+  const destaque = avisos[0];
+  const catD = CAT[destaque.categoria] || CAT.aviso;
+  document.getElementById('avisoResumo').innerHTML =
+    `<span style="color:${catD.cor};font-weight:800">${catD.label}</span> · ${escAv(destaque.titulo)}` +
+    (avisos.length > 1 ? ` <span style="opacity:.6">+${avisos.length - 1}</span>` : '');
   document.getElementById('avisosSec').style.display = '';
-  board.style.display = 'flex';
 })();
+
+function toggleAvisos() {
+  const board = document.getElementById('avisosBoard');
+  const lbl   = document.getElementById('avisosToggleLbl');
+  const aberto = board.style.display !== 'none';
+  board.style.display = aberto ? 'none' : 'flex';
+  lbl.textContent = aberto ? 'ver todos ▾' : 'recolher ▴';
+}
 
 /* ════════════════════════════════════════
    🎯 MISSÃO DE HOJE + 🦁 LEÃO IA
@@ -1898,36 +1930,69 @@ function _tourMontar() {
   document.body.appendChild(ov);
 }
 
+/* elemento destacado no passo atual — o spot SEGUE este elemento:
+   é reposicionado em todo scroll/resize enquanto o tour está ativo,
+   então o destaque fica realmente preso ao lugar certo. */
+let _tourEl = null;
+
+function _tourPosicionar(suave) {
+  const ov = document.getElementById('tourOverlay');
+  if (!_tourEl || !ov || !ov.classList.contains('ativo')) return;
+  /* overlay é position:fixed → coordenadas de viewport, sem somar scroll */
+  const r    = _tourEl.getBoundingClientRect();
+  const spot = document.getElementById('tourSpot');
+  const tip  = document.getElementById('tourTip');
+  /* na troca de passo a animação é bonita; acompanhando a rolagem ela
+     atrasa o destaque — então fica instantânea */
+  const trans = suave === true ? 'all .35s ease' : 'none';
+  spot.style.transition = trans;
+  tip.style.transition  = trans;
+  spot.style.left   = (r.left - 8) + 'px';
+  spot.style.top    = (r.top - 8) + 'px';
+  spot.style.width  = (r.width + 16) + 'px';
+  spot.style.height = (r.height + 16) + 'px';
+  const tipH = tip.offsetHeight || 190;
+  const tipW = tip.offsetWidth  || 320;
+  let top;
+  if (r.bottom + 22 + tipH <= window.innerHeight - 12)  top = r.bottom + 22;            /* abaixo do destaque */
+  else if (r.top - 22 - tipH >= 12)                     top = r.top - 22 - tipH;        /* acima do destaque  */
+  else                                                  top = window.innerHeight - tipH - 18; /* rente à base   */
+  tip.style.top  = Math.max(12, top) + 'px';
+  tip.style.left = Math.max(12, Math.min(r.left, window.innerWidth - tipW - 12)) + 'px';
+}
+
 function _tourMostrar(i) {
   const passo = _tourAtivos[i];
-  const el = document.querySelector(passo.sel);
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setTimeout(() => {
-    /* o overlay é position:fixed — todas as coordenadas aqui são de
-       viewport (getBoundingClientRect), SEM somar window.scrollX/Y.
-       Somar o scroll empurrava o tooltip para fora da tela quando a
-       página estava rolada (só aparecia com o zoom reduzido). */
-    const r = el.getBoundingClientRect();
-    const spot = document.getElementById('tourSpot');
-    const tip  = document.getElementById('tourTip');
-    spot.style.left   = (r.left - 8) + 'px';
-    spot.style.top    = (r.top - 8) + 'px';
-    spot.style.width  = (r.width + 16) + 'px';
-    spot.style.height = (r.height + 16) + 'px';
-    tip.querySelector('h4').textContent = passo.t;
-    tip.querySelector('p').textContent  = passo.d;
-    tip.querySelector('.tour-passo').textContent = (i + 1) + ' de ' + _tourAtivos.length;
-    tip.querySelector('.tour-prox').textContent = i === _tourAtivos.length - 1 ? 'Concluir ✓' : 'Próximo →';
-    const tipH = tip.offsetHeight || 190;
-    const tipW = tip.offsetWidth  || 320;
-    let top;
-    if (r.bottom + 22 + tipH <= window.innerHeight - 12)  top = r.bottom + 22;            /* abaixo do destaque */
-    else if (r.top - 22 - tipH >= 12)                     top = r.top - 22 - tipH;        /* acima do destaque  */
-    else                                                  top = window.innerHeight - tipH - 18; /* rente à base   */
-    tip.style.top  = Math.max(12, top) + 'px';
-    tip.style.left = Math.max(12, Math.min(r.left, window.innerWidth - tipW - 12)) + 'px';
-  }, 420);
+  _tourEl = document.querySelector(passo.sel);
+  if (!_tourEl) { proximoPassoTour(); return; }
+
+  const tip = document.getElementById('tourTip');
+  tip.querySelector('h4').textContent = passo.t;
+  tip.querySelector('p').textContent  = passo.d;
+  tip.querySelector('.tour-passo').textContent = (i + 1) + ' de ' + _tourAtivos.length;
+  tip.querySelector('.tour-prox').textContent = i === _tourAtivos.length - 1 ? 'Concluir ✓' : 'Próximo →';
+
+  _tourEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  /* espera a rolagem suave ASSENTAR (posição estável por alguns frames)
+     em vez de um timer fixo — distâncias longas demoravam mais que o
+     timer e o destaque era calculado no meio do caminho. */
+  let ultimo = null, estaveis = 0, tentativas = 0;
+  (function aguardaAssentar() {
+    if (!_tourEl) return;
+    const topo = _tourEl.getBoundingClientRect().top;
+    if (ultimo !== null && Math.abs(topo - ultimo) < 0.5) estaveis++; else estaveis = 0;
+    ultimo = topo;
+    tentativas++;
+    if (estaveis >= 3 || tentativas > 180) { _tourPosicionar(true); return; }
+    _tourPosicionar(); /* acompanha já durante a rolagem, sem animação */
+    requestAnimationFrame(aguardaAssentar);
+  })();
 }
+
+/* o destaque acompanha o elemento se o aluno rolar/redimensionar */
+window.addEventListener('scroll', () => _tourPosicionar(), { passive: true });
+window.addEventListener('resize', () => _tourPosicionar());
 
 function iniciarTour(forcar) {
   const chave = 'pl_tour_v1_' + (_session.id || 'x');
@@ -1950,6 +2015,7 @@ function proximoPassoTour() {
 function encerrarTour() {
   const ov = document.getElementById('tourOverlay');
   if (ov) ov.classList.remove('ativo');
+  _tourEl = null;
   try { localStorage.setItem('pl_tour_v1_' + (_session.id || 'x'), new Date().toISOString()); } catch(e) {}
 }
 

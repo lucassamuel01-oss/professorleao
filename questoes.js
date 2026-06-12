@@ -199,13 +199,14 @@ const PlQuestoes = (() => {
     return { pendentes: Object.keys(data.itens).length, dominadas: data.dominadas || 0 };
   }
 
-  /* lembrete: 1× por semana, enquanto houver questões da(s) semana(s) anterior(es) */
+  /* destaque semanal: 1× por semana, sempre que houver QUALQUER pendente.
+     Retorna { paraRevisar, pendentes } ou null (sem pendências / já visto). */
   function errosPrecisaLembrete(email) {
-    const aRever = errosParaRevisar(email);
-    if (!aRever.length) return 0;
     const wk = _inicioSemana().toISOString().slice(0, 10);
-    if (localStorage.getItem('pl_erros_lembrete_' + _safeMail(email)) === wk) return 0;
-    return aRever.length;
+    if (localStorage.getItem('pl_erros_lembrete_' + _safeMail(email)) === wk) return null;
+    const pend = errosPendentes(email);
+    if (!pend.length) return null;
+    return { paraRevisar: errosParaRevisar(email).length, pendentes: pend.length };
   }
   function errosMarcarLembrete(email) {
     const wk = _inicioSemana().toISOString().slice(0, 10);
