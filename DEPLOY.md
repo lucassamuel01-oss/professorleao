@@ -7,8 +7,7 @@ repositório no Railway. Leva ~10 minutos.
 
 ## Passo 1 — Criar o serviço
 
-1. Acesse [railway.app](https://railway.app) e faça login (mesma conta do
-   Elite Feminina).
+1. Acesse [railway.app](https://railway.app) e faça login.
 2. **New Project → Deploy from GitHub repo** → escolha
    `lucassamuel01-oss/professorleao`.
 3. O Railway detecta o `railway.json` e roda `node server.js`
@@ -20,7 +19,7 @@ No serviço criado, abra **Variables** e adicione:
 
 | Variável | Valor | Obrigatória? |
 |---|---|---|
-| `MONGODB_URI` | String de conexão do MongoDB Atlas (pode usar o mesmo cluster do Elite Feminina — o banco usado se chama `professor-leao`, não conflita) | ✅ Sim |
+| `MONGODB_URI` | String de conexão do MongoDB Atlas (o banco usado se chama `professor-leao`) | ✅ Sim |
 | `GEMINI_API_KEY` | 🆓 **IA GRATUITA** — chave do Google AI Studio (veja abaixo) | Para o Leão IA real |
 | `GROQ_API_KEY` | 🆓 Alternativa gratuita — chave de [console.groq.com](https://console.groq.com) | Opcional |
 | `ANTHROPIC_API_KEY` | 💰 Alternativa paga (Claude) — [console.anthropic.com](https://console.anthropic.com/) | Opcional |
