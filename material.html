@@ -92,6 +92,18 @@
     }
     .sec-card summary::-webkit-details-marker { display: none; }
     .sec-card details[open] summary { opacity: .55; margin-bottom: 10px; }
+    /* passo a passo (receita de bolo) */
+    .sec-card ol.passos { list-style: none; padding-left: 0; counter-reset: passo; display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
+    .sec-card ol.passos li {
+      counter-increment: passo; position: relative; padding: 10px 14px 10px 46px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+    }
+    .sec-card ol.passos li::before {
+      content: counter(passo); position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff;
+      font-family: var(--font-h); font-weight: 900; font-size: 12.5px;
+      display: flex; align-items: center; justify-content: center;
+    }
     /* tabelas didáticas (ex.: tabela-verdade) */
     .sec-card table.tab { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 14px; }
     .sec-card table.tab th, .sec-card table.tab td {
@@ -139,6 +151,7 @@
         <button class="btn-pdf" onclick="gerarPdfMaterial()" title="Baixar este material em PDF organizado para imprimir">📄 Gerar PDF</button>
         <a class="btn-orig" id="btnOriginal" style="display:none" target="_blank" rel="noopener">⬇️ Apostila original da aula (PDF)</a>
         <button class="btn-orig" onclick="perguntarLeao()" title="Abrir o Leão IA com uma pergunta sobre este assunto">🦁 Tirar dúvida com o Leão</button>
+        <a class="btn-orig" id="btnProfessor" target="_blank" rel="noopener" title="Mandar a dúvida direto para o professor no WhatsApp">💬 Perguntar ao professor</a>
       </div>
     </div>
     <div id="secoes"></div>
@@ -176,6 +189,8 @@ if (!_mat) {
     b.href = _mat.pdfOriginal;
     b.style.display = 'inline-flex';
   }
+  document.getElementById('btnProfessor').href =
+    'https://wa.me/5577999229281?text=' + encodeURIComponent('Olá, professor! Estou estudando "' + _mat.titulo + '" e tenho uma dúvida: ');
   document.getElementById('secoes').innerHTML = _mat.secoes.map(s => `
     <div class="sec-card">
       <h2><span>${s.ic}</span> ${escHtml(s.t)}</h2>
@@ -243,6 +258,11 @@ function gerarPdfMaterial() {
   .sec .resposta {
     border-left: 4px solid #34d399; background: #f0fbf6; border-radius: 0 10px 10px 0;
     padding: 9px 13px; margin-top: 6px; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .sec ol.passos { padding-left: 22px; }
+  .sec ol.passos li {
+    margin-bottom: 6px; padding: 6px 10px; border: 1px solid #d3daee; border-radius: 8px;
+    list-style-position: inside;
   }
   .sec .figura {
     background: #0c1a31; border-radius: 12px; padding: 14px 10px; margin: 6px 0;

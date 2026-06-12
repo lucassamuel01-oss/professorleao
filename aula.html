@@ -270,6 +270,19 @@
     <div id="listasIntGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
   </section>
 
+  <!-- ❓ Dúvidas da aula: Leão IA + contato do professor -->
+  <section style="margin-top:28px;background:linear-gradient(135deg,var(--navy-2),#15254a);border:1px solid rgba(74,108,247,.25);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+    <div style="font-size:32px">❓</div>
+    <div style="flex:1;min-width:220px">
+      <strong style="font-family:var(--font-h);font-size:15px">Surgiu alguma dúvida nesta aula?</strong>
+      <p style="font-size:13px;color:var(--silver);margin-top:3px">Pergunte ao Leão IA — ele já sabe qual assunto você está estudando — ou mande sua dúvida direto para o professor.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="duvidaLeao()" style="padding:11px 18px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:var(--font-h);font-weight:800;font-size:13px;cursor:pointer">🦁 Perguntar ao Leão IA</button>
+      <a id="duvidaProfessor" href="https://wa.me/5577999229281" target="_blank" rel="noopener" style="padding:11px 18px;border-radius:10px;border:1px solid rgba(34,197,94,.5);background:rgba(34,197,94,.12);color:#4ade80;font-family:var(--font-h);font-weight:800;font-size:13px;text-decoration:none">💬 Falar com o professor</a>
+    </div>
+  </section>
+
   <!-- Prev / Next navigation -->
   <div class="lesson-nav">
     <a class="nav-btn prev disabled" id="navPrev" href="#">
@@ -681,6 +694,20 @@ KEYS.forEach(key => {
   }).join('');
 
   document.getElementById('listasIntSec').style.display = 'block';
+})();
+
+/* ═══════════════════════════════════════════════════
+   DÚVIDAS DA AULA — Leão IA + WhatsApp do professor
+═══════════════════════════════════════════════════ */
+function duvidaLeao() {
+  const q = 'Estou na aula "' + _aula.titulo + '" (' + _curso.nome + ') e tenho uma dúvida sobre esse assunto. Pode me explicar os pontos principais de um jeito simples?';
+  if (window.LeaoWidget) window.LeaoWidget.abrir(q);
+  else alert('O assistente está carregando — tente novamente em instantes.');
+}
+(function _prepararDuvidaProfessor() {
+  const msg = encodeURIComponent('Olá, professor! Estou na aula "' + _aula.titulo + '" (' + _curso.nome + ') e tenho uma dúvida: ');
+  const a = document.getElementById('duvidaProfessor');
+  if (a) a.href = 'https://wa.me/5577999229281?text=' + msg;
 })();
 
 /* ═══════════════════════════════════════════════════
