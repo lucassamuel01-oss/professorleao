@@ -443,6 +443,31 @@
     .ia-bubble--user { align-self: flex-end; background: rgba(74,108,247,0.18); border: 1px solid rgba(74,108,247,0.35); }
     .ia-bubble--leao { align-self: flex-start; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #D6DCEC; }
     .ia-bubble--leao strong { color: var(--accent-light); }
+  
+    /* ── Tour de boas-vindas ─────────── */
+    #tourOverlay { position: fixed; inset: 0; z-index: 9998; display: none; }
+    #tourOverlay.ativo { display: block; }
+    #tourSpot {
+      position: absolute; border-radius: 14px; pointer-events: none;
+      box-shadow: 0 0 0 9999px rgba(4,10,22,0.82), 0 0 0 3px var(--accent);
+      transition: all .35s ease;
+    }
+    #tourTip {
+      position: absolute; max-width: 320px; min-width: 240px;
+      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.5);
+      border-radius: 14px; padding: 16px 18px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6); transition: all .35s ease;
+    }
+    #tourTip h4 { font-family: var(--font-h); font-size: 15px; font-weight: 900; margin-bottom: 6px; }
+    #tourTip p { font-size: 13px; color: #D6DCEC; line-height: 1.6; margin-bottom: 12px; }
+    #tourTip .tour-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    #tourTip .tour-passo { font-size: 11px; color: var(--silver); }
+    #tourTip button {
+      padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer;
+      font-family: var(--font-h); font-size: 12px; font-weight: 800;
+    }
+    #tourTip .tour-prox { background: var(--accent); color: #fff; }
+    #tourTip .tour-pular { background: transparent; color: var(--silver); }
   </style>
 </head>
 <body>
@@ -497,7 +522,7 @@
   <!-- Cursos -->
   <div class="sec-header">
     <h2>📚 Seus Cursos</h2>
-    <p>Escolha um curso para ver as aulas disponíveis</p>
+    <p>Escolha um curso para ver as aulas disponíveis · <a href="#" onclick="iniciarTour(true);return false" style="color:var(--accent-light)">🎓 rever o tour</a></p>
   </div>
   <div class="courses-grid" id="coursesGrid" style="margin-bottom:40px"></div>
 
@@ -580,7 +605,7 @@
   </div>
 
   <!-- Jogos -->
-  <div class="sec-header" style="margin-top:16px">
+  <div class="sec-header" id="jogosSec" style="margin-top:16px">
     <h2>🎮 Arena de Jogos</h2>
     <a href="jogos.html" style="font-size:13px;color:var(--accent-light)">Ver todos os rankings →</a>
   </div>
@@ -1719,6 +1744,88 @@ function initBlogAluno() {
 initMissao();
 initLeaoIA();
 initBlogAluno();
+
+/* ════════════════════════════════════════
+   🎓 TOUR DE BOAS-VINDAS (primeiro acesso)
+════════════════════════════════════════ */
+const TOUR_PASSOS = [
+  { sel: '#coursesGrid',   t: '📚 Seus Cursos',        d: 'Aqui ficam suas aulas — cada uma cabe em 1 Pomodoro (25 min) e tem vídeo, PDF, jogo e minissimulado. É o coração da plataforma.' },
+  { sel: '.plano-section', t: '🗓️ Plano de Estudos',  d: 'Gere seu cronograma personalizado pelo edital do SEU concurso e pela SUA rotina. Comece por aqui: tudo na plataforma se conecta a ele.' },
+  { sel: '#missaoSec',     t: '🎯 Missão de Hoje',     d: 'Suas metas diárias: quantos Pomodoros, quais matérias e se você está no ritmo — com lembretes automáticos.' },
+  { sel: '#avisosSec',     t: '📣 Quadro de Avisos',   d: 'Aulas ao vivo, novidades de concursos e editais publicados pelo professor aparecem aqui.' },
+  { sel: '#jogosSec',      t: '🎮 Arena de Jogos',     d: 'Treine se divertindo! As perguntas são geradas na hora (nunca se repetem) e o modo Treino não tem cronômetro.' },
+  { sel: '#listasSec',     t: '📝 Minissimulados',     d: '10 questões no estilo da banca por assunto, com gabarito comentado. Eles também aparecem dentro de cada aula.' },
+  { sel: '#iaCard',        t: '🦁 Leão IA',            d: 'Seu treinador pessoal: pergunte como está seu desempenho, o que estudar agora e seus pontos fracos. Ele também te acompanha pelas outras páginas (botão 🦁 flutuante).' },
+  { sel: '#blogAlunoGrid', t: '📰 Blog',               d: 'Método de estudo, raio-X dos editais (com download) e dicas de TAF. Pronto! Bons estudos 💪' },
+];
+let _tourIdx = 0, _tourAtivos = [];
+
+function _tourVisivel(el) {
+  if (!el) return false;
+  const st = getComputedStyle(el);
+  if (st.display === 'none' || st.visibility === 'hidden') return false;
+  const sec = el.closest('[id]');
+  return el.getBoundingClientRect().height > 0 || el.offsetParent !== null;
+}
+
+function _tourMontar() {
+  if (document.getElementById('tourOverlay')) return;
+  const ov = document.createElement('div');
+  ov.id = 'tourOverlay';
+  ov.innerHTML = '<div id="tourSpot"></div><div id="tourTip"><h4></h4><p></p><div class="tour-foot"><span class="tour-passo"></span><span><button class="tour-pular" onclick="encerrarTour()">Pular</button> <button class="tour-prox" onclick="proximoPassoTour()">Próximo →</button></span></div></div>';
+  document.body.appendChild(ov);
+}
+
+function _tourMostrar(i) {
+  const passo = _tourAtivos[i];
+  const el = document.querySelector(passo.sel);
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => {
+    const r = el.getBoundingClientRect();
+    const spot = document.getElementById('tourSpot');
+    const tip  = document.getElementById('tourTip');
+    spot.style.left   = (r.left + window.scrollX - 8) + 'px';
+    spot.style.top    = (r.top + window.scrollY - 8) + 'px';
+    spot.style.width  = (r.width + 16) + 'px';
+    spot.style.height = (r.height + 16) + 'px';
+    tip.querySelector('h4').textContent = passo.t;
+    tip.querySelector('p').textContent  = passo.d;
+    tip.querySelector('.tour-passo').textContent = (i + 1) + ' de ' + _tourAtivos.length;
+    tip.querySelector('.tour-prox').textContent = i === _tourAtivos.length - 1 ? 'Concluir ✓' : 'Próximo →';
+    const abaixo = r.bottom + window.scrollY + 14;
+    const acima  = r.top + window.scrollY - 14 - 170;
+    const usarAcima = r.bottom + 190 > window.scrollY + window.innerHeight + window.scrollY - window.scrollY && acima > window.scrollY;
+    tip.style.top  = ((r.bottom + 190 < window.scrollY + window.innerHeight || acima < 0) ? abaixo : acima) + 'px';
+    tip.style.left = Math.max(12, Math.min(r.left + window.scrollX, window.innerWidth - 340)) + 'px';
+  }, 420);
+}
+
+function iniciarTour(forcar) {
+  const chave = 'pl_tour_v1_' + (_session.id || 'x');
+  if (!forcar && localStorage.getItem(chave)) return;
+  _tourAtivos = TOUR_PASSOS.filter(p => _tourVisivel(document.querySelector(p.sel)));
+  if (!_tourAtivos.length) return;
+  _tourMontar();
+  _tourIdx = 0;
+  document.getElementById('tourOverlay').classList.add('ativo');
+  document.body.style.overflow = '';
+  _tourMostrar(0);
+}
+
+function proximoPassoTour() {
+  _tourIdx++;
+  if (_tourIdx >= _tourAtivos.length) { encerrarTour(); return; }
+  _tourMostrar(_tourIdx);
+}
+
+function encerrarTour() {
+  const ov = document.getElementById('tourOverlay');
+  if (ov) ov.classList.remove('ativo');
+  try { localStorage.setItem('pl_tour_v1_' + (_session.id || 'x'), new Date().toISOString()); } catch(e) {}
+}
+
+/* primeiro acesso: inicia sozinho após a página montar */
+setTimeout(() => iniciarTour(false), 900);
 </script>
 </body>
 </html>

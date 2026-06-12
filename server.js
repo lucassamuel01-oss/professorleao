@@ -382,6 +382,53 @@ app.put("/api/sync", requireAuthApi, (req, res) => {
   res.json({ success: true });
 });
 
+/* ── Estatísticas de leitura do Blog ──────────────────────────
+   Contagem pública de leituras por artigo (para "mais lidos").
+   Persistida no MongoDB (app_data/blog_stats) com fallback em
+   data/blog-stats.json. O dedup fica no cliente (1/navegador/dia). */
+
+const BLOG_STATS_JSON = path.join(DATA_DIR, "blog-stats.json");
+let _blogStats = {};
+
+async function loadBlogStats() {
+  if (_mongoDb) {
+    try {
+      const doc = await _mongoDb.collection("app_data").findOne({ _id: "blog_stats" });
+      return (doc && doc.counts) || {};
+    } catch (err) { console.error("[DB] blog_stats:", err.message); }
+  }
+  try { return JSON.parse(fs.readFileSync(BLOG_STATS_JSON, "utf8") || "{}"); } catch { return {}; }
+}
+
+let _blogStatsTimer = null;
+function persistBlogStats() {
+  clearTimeout(_blogStatsTimer);
+  _blogStatsTimer = setTimeout(() => {
+    if (_mongoDb) {
+      _mongoDb.collection("app_data")
+        .replaceOne({ _id: "blog_stats" }, { _id: "blog_stats", counts: _blogStats }, { upsert: true })
+        .catch(err => console.error("[DB] blog_stats:", err.message));
+    } else {
+      try { ensureDataDir(); fs.writeFileSync(BLOG_STATS_JSON, JSON.stringify(_blogStats), "utf8"); }
+      catch (err) { console.error("[DB] blog_stats arquivo:", err.message); }
+    }
+  }, 1500);
+}
+
+app.get("/api/blog/stats", (req, res) => {
+  res.json({ success: true, counts: _blogStats });
+});
+
+app.post("/api/blog/leitura", (req, res) => {
+  const id = String(req.body.artigoId || "").trim().slice(0, 80);
+  if (!/^[a-z0-9-]+$/.test(id)) {
+    return res.status(400).json({ success: false });
+  }
+  _blogStats[id] = (_blogStats[id] || 0) + 1;
+  persistBlogStats();
+  res.json({ success: true, total: _blogStats[id] });
+});
+
 /* ── Leão IA (opcional) ───────────────────────────────────────
    Se ANTHROPIC_API_KEY estiver configurada no ambiente, as
    perguntas do aluno são respondidas por um LLM real com base
@@ -707,6 +754,7 @@ app.use((req, res) => {
   await connectMongo();
   _usersCache = await loadDoc("users", "users");
   _invitesCache = await loadDoc("invites", "invites");
+  _blogStats = await loadBlogStats();
   seedAdminUser();
   app.listen(PORT, () => {
     console.log(`Professor Leão rodando em http://localhost:${PORT}`);
