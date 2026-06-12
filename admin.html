@@ -2022,8 +2022,11 @@ const PL_CATALOG = {
       const difClass = 'qdif-badge qdif-' + dif;
       const date = new Date(l.criadoEm).toLocaleDateString('pt-BR');
       const link = `lista.html?id=${encodeURIComponent(l.id)}`;
+      const tipoBadge = l.tipoLista === 'banco'
+        ? '<span style="font-size:10px;padding:2px 7px;border-radius:99px;background:rgba(96,165,250,.15);color:#93c5fd;font-weight:700;white-space:nowrap">🎯 banco do simulado</span>'
+        : '<span style="font-size:10px;padding:2px 7px;border-radius:99px;background:rgba(251,146,60,.15);color:#fdba74;font-weight:700;white-space:nowrap">📝 lista da aula</span>';
       return `<tr>
-        <td><strong>${esc(l.titulo)}</strong></td>
+        <td><strong>${esc(l.titulo)}</strong><br>${tipoBadge}</td>
         <td style="color:var(--gray-mid)">${esc(l.materia||'—')}</td>
         <td style="color:var(--gray-mid)">${esc(l.fonte||'—')}</td>
         <td><span class="${difClass}">${difLabel}</span></td>

@@ -98,6 +98,10 @@ const PlQuestoes = (() => {
     localStorage.setItem(_respKey(listaId, email), JSON.stringify(obj));
     if (finalizado) _saveToHistory(listaId, email, respostas);
   }
+  /* apaga a tentativa salva — usado pelo botão "Refazer" */
+  function limparResp(listaId, email) {
+    localStorage.removeItem(_respKey(listaId, email));
+  }
   function _saveToHistory(listaId, email, respostas) {
     const lista = getList(listaId);
     if (!lista) return;
@@ -114,6 +118,20 @@ const PlQuestoes = (() => {
   function getHistory(email) {
     const key = 'pl_hist_' + _safeMail(email);
     try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
+  }
+  /* registra resultado de listas VIRTUAIS (simulado da semana) no histórico —
+     o _saveToHistory padrão depende de getList e não enxerga listas virtuais */
+  function historicoRegistrar(email, rec) {
+    const record = {
+      listaId: rec.listaId, titulo: rec.titulo,
+      acertos: rec.acertos, total: rec.total,
+      percent: rec.total > 0 ? Math.round(rec.acertos / rec.total * 100) : 0,
+      data: new Date().toISOString(),
+    };
+    const key  = 'pl_hist_' + _safeMail(email);
+    const hist = (() => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } })();
+    hist.unshift(record);
+    localStorage.setItem(key, JSON.stringify(hist.slice(0, 200)));
   }
   function calcScore(listaId, respostas) {
     const lista = getList(listaId);
@@ -248,19 +266,30 @@ const PlQuestoes = (() => {
   function _aulasEstudadas(email) {
     let log; try { log = JSON.parse(localStorage.getItem('pl_estudo_' + _safeMail(email)) || '{}'); } catch { log = {}; }
     const wk = _wkKey();
-    if (log[wk] && log[wk].length) return { aulas: log[wk], semana: 'atual' };
-    /* sem estudo nesta semana: usa a última semana com registro */
     const prev = Object.keys(log).filter(x => x < wk).sort().pop();
-    if (prev && log[prev].length) return { aulas: log[prev], semana: 'anterior' };
-    return { aulas: [], semana: null };
+    const daAnterior = (prev && log[prev]) || [];
+    if (log[wk] && log[wk].length) {
+      return { aulas: log[wk], extras: daAnterior, semana: 'atual' };
+    }
+    /* sem estudo nesta semana: usa a última semana com registro */
+    if (daAnterior.length) return { aulas: daAnterior, extras: [], semana: 'anterior' };
+    return { aulas: [], extras: [], semana: null };
   }
 
   function simuladoSemana(email) {
     const est = _aulasEstudadas(email);
     if (!est.aulas.length) return null;
     const bancos = getLists().filter(l => l.tipoLista === 'banco');
-    const casam = bancos.filter(b => (b.aulaIds || []).some(s =>
-      est.aulas.some(a => a === s || a.endsWith('-' + s))));
+    const casaCom = aulas => bancos.filter(b => (b.aulaIds || []).some(s =>
+      aulas.some(a => a === s || a.endsWith('-' + s))));
+    let casam = casaCom(est.aulas);
+    /* balanceamento: se os assuntos da semana rendem poucas questões,
+       reforça com os assuntos da semana anterior (revisão) */
+    const contar = ls => ls.reduce((a, b) => a + ((getList(b.id) || {}).questoes || []).length, 0);
+    if (contar(casam) < 6 && est.extras.length) {
+      const reforco = casaCom(est.extras).filter(b => !casam.some(c => c.id === b.id));
+      casam = [...casam, ...reforco];
+    }
     if (!casam.length) return null;
 
     const wk = _wkKey();
@@ -511,7 +540,7 @@ const PlQuestoes = (() => {
   /* API pública */
   return {
     getLists, getList, saveList, deleteList,
-    getResp, saveResp, calcScore, getHistory,
+    getResp, saveResp, limparResp, calcScore, getHistory, historicoRegistrar,
     errosRegistrar, errosPendentes, errosParaRevisar, errosStats,
     errosPrecisaLembrete, errosMarcarLembrete,
     estudoRegistrar, simuladoSemana,

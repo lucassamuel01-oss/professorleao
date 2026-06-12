@@ -357,7 +357,7 @@
       </div>
 
       <div style="display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap">
-        <button class="btn-primary" id="btnRefazer" onclick="location.reload()">🔄 Refazer Lista</button>
+        <button class="btn-primary" id="btnRefazer" onclick="refazerLista()">🔄 Refazer Lista</button>
         <button class="btn-pdf" onclick="gerarPdfLista()" style="margin-top:0" title="Baixar esta lista em PDF organizado para imprimir">📄 Gerar PDF</button>
         <a href="minha-area.html" class="btn-nav" style="text-decoration:none;display:inline-flex;align-items:center">← Minha Área</a>
       </div>
@@ -647,10 +647,24 @@
     finalize();
   });
 
+  /* ────── Refazer (zera a tentativa salva e recomeça) ────── */
+  function refazerLista() {
+    if (_lista && !_lista._caderno) PlQuestoes.limparResp(_lista.id, _session.email);
+    location.reload();
+  }
+
   /* ────── Finalize ────── */
   function finalize() {
     _finalizado = true;
     if (!_lista._caderno) PlQuestoes.saveResp(_lista.id, _session.email, _respostas, true);
+    /* simulado da semana: registra no histórico (alimenta a média da IA) */
+    if (_lista._simulado && PlQuestoes.historicoRegistrar) {
+      const acertos = _lista.questoes.filter(q => _respostas[q.num] === q.gabarito).length;
+      PlQuestoes.historicoRegistrar(_session.email, {
+        listaId: _lista.id, titulo: _lista.titulo,
+        acertos, total: _lista.questoes.length,
+      });
+    }
     /* 📕 Caderno de Erros: registra cada questão desta tentativa.
        Errou (ou deixou em branco) → entra/permanece no caderno;
        acertou → conta acerto seguido (2 seguidos = dominada). */
