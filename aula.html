@@ -638,11 +638,16 @@ KEYS.forEach(key => {
   const daAula  = todas.filter(l => (l.aulaId && l.aulaId === _aulaId) || matchIds(l));
   const doCurso = todas.filter(l =>
     !l.aulaId && !(Array.isArray(l.aulaIds) && l.aulaIds.length) && l.cursoId === _cursoId);
-  /* apenas o minissimulado do assunto — a Lista de Exercícios aparece
-     como atividade da aula (card "Lista de Exercícios" acima) */
-  const cand    = [...daAula, ...doCurso];
-  const ehLista = l => l.tipoLista === 'lista';
-  const listas  = [cand.find(l => !ehLista(l))].filter(Boolean);
+  /* minissimulado do assunto + listas EXTRAS que casam com a aula
+     (a primeira lista já aparece como atividade "Lista de Exercícios";
+     se houver outras do mesmo assunto — ex.: as 3 de lógica — elas
+     aparecem aqui para não ficarem invisíveis) */
+  const cand     = [...daAula, ...doCurso];
+  const ehLista  = l => l.tipoLista === 'lista';
+  const noCard   = decodeURIComponent(String(_aula.materiais.lista || '').split('=')[1] || '');
+  const mini     = cand.find(l => !ehLista(l));
+  const extras   = cand.filter(l => ehLista(l) && l.id !== noCard);
+  const listas   = [mini, ...extras].filter(Boolean);
   if (!listas.length) return;
 
   const escL = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

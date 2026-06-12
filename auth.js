@@ -16,7 +16,7 @@ const PL_SESSION_KEY = 'pl_session';
 /* ---------- Admin padrão (modo local) ---------- */
 const DEFAULT_ADMIN = {
   id: 'admin-001',
-  name: 'Lucas Samuel Leão',
+  name: 'Lucas Leão',
   email: 'samuel@professorleao.com',
   password: 'leao2024',
   role: 'admin',

@@ -953,14 +953,68 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 12. Lista de Exercícios — Conjuntos, Naturais e Frações (questões reais de prova) ── */
+  /* ── 12. Lista de Exercícios — Números: Operações e Problemas (questões reais de prova) ── */
   {
-    id: 'seed-lq-aritmetica',
-    titulo: "Lista de Exercícios — Conjuntos, Naturais e Frações",
+    id: 'seed-lq-numeros-operacoes',
+    titulo: "Lista de Exercícios — Números: Operações e Problemas",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
-    cursoId: '', aulaId: '', aulaIds: ["mat-01", "mat-06", "mat-08", "mat-09", "mb-03", "mb-07", "cr-01", "cr-02"],
-    total: 12,
+    cursoId: '', aulaId: '', aulaIds: ["mat-01", "mat-02", "mat-05", "mb-01", "mb-02", "cr-01"],
+    total: 6,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Em uma seleção para cursos no CFOPM, de certa cidade, foram abertas 300 vagas para o nível I e 100 vagas para o nível II. Sabe-se que houve 9000 inscrições para o nível I e a terça parte para o nivel II.\nNessas condições, pode-se concluir que",
+        opcoes: { A: "a concorrência para o nível 1 foi maior do que a concorrência para o nível II.", B: "a concorrência para o nível I foi igual à concorrência para o nível II.", C: "a concorrência para o nível II foi de 200 candidatos por vaga.", D: "houve 150 candidatos por vaga para o nivel II.", E: "houve 200 candidatos por vaga para o nivel I." },
+        gabarito: 'B',
+        explicacao: "Concorrência nível I: 9000/300 = 30 por vaga; nível II: 3000/100 = 30 por vaga — iguais."
+      },
+      {
+        num: 2,
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Em determinado concurso, os candidatos foram distribuídos em salas com 40 candidatos cada, segundo a ordem crescente dos números de inscrição: sala 01 recebe as inscrições 0001 a 0040; sala 02, as inscrições 0041 a 0080; sala 03, as inscrições 0081 a 0120; e assim por diante.\nNessas condições, pode-se afirmar que um candidato cujo número de inscrição coincide com a média aritmética dos números de inscrição obtidos através de todas as permutações de 2, 7 e 9 ficou na sala de número",
+        opcoes: { A: "20.", B: "19.", C: "18.", D: "17.", E: "16." },
+        gabarito: 'D',
+        explicacao: "Permutações de 2, 7 e 9: seis números cuja soma é (2+7+9)·222 = 3996 → média 666. Inscrição 666 ÷ 40 por sala = 16,65 → sala 17."
+      },
+      {
+        num: 3,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Como parte de sua preparação física, um atleta foi aconselhado por um nutricionista a acrescentar à sua dieta algum suplemento alimentar, como X ou Y, dos quais se tem as seguintes informações:\nX contém 2 unidades de fibras, 1 unidade de proteínas, 3 unidades de vitaminas e cada unidade desse suplemento custa r reais.\nY contém 1 unidade de fibras, 2 unidades de proteínas, 2 unidades de vitaminas e cada unidade desse suplemento custa 2r reais.\nSendo recomendada a ingestão diária mínima de 4 unidades de fibras, 5 unidades de proteínas e 8 unidades de vitaminas, pode-se afirmar que a despesa com os suplementos será mínima, se o número de unidades de X e de Y ingeridos forem, respectivamente, iguais a",
+        opcoes: { A: "1 e 2.", B: "2 e 1.", C: "2 e 2.", D: "2 e 3.", E: "3 e 2." },
+        gabarito: 'C',
+        explicacao: "Teste das opções nas exigências (4 fibras, 5 proteínas, 8 vitaminas): (2,2) atende tudo com custo 2r + 4r = 6r — o menor entre as combinações viáveis."
+      },
+      {
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Adicionando-se o menor inteiro positivo ao menor divisor inteiro de 8, em seguida, multiplicando-se pela raiz da equação 0,3x - 10 = 8, obtém se, corretamente,",
+        opcoes: { A: "360", B: "180", C: "- 420", D: "- 540", E: "- 600" },
+        gabarito: 'C',
+        explicacao: "Menor inteiro positivo = 1; menor divisor inteiro de 8 = −8; raiz de 0,3x − 10 = 8 → x = 60. Logo (1 + (−8)) · 60 = −420."
+      },
+      {
+        num: 5,
+        enunciado: "(UNEB · CFO PM BA · 2025) Os conjuntos numéricos abrangem diferentes classificações, como naturais, inteiros, racionais e irracionais, cada um com características distintas que os definem. Com base nessa divisão, identifique a alternativa que apresenta um número pertencente ao conjunto dos números irracionais.",
+        opcoes: { A: "2+3i", B: "1/2", C: "-3", D: "8", E: "√2" },
+        gabarito: 'E',
+        explicacao: "√2 é dízima não periódica — irracional. 2+3i é complexo, 1/2 é racional, −3 é inteiro e 8 é natural."
+      },
+      {
+        num: 6,
+        enunciado: "(FCC · Soldado PM BA · 2007) Uma pessoa tem R$ 14,00 em sua carteira apenas em cédulas de 1, 2 e 5 reais, sendo pelo menos uma de cada valor. Se X é o total de cédulas que ela possui, quantos são os possíveis valores de X?",
+        opcoes: { A: "4", B: "5", C: "6", D: "7", E: "8" },
+        gabarito: 'B',
+        explicacao: "5a + 2b + c = 14 com a, b, c ≥ 1: as soluções dão X (total de cédulas) ∈ {5, 6, 7, 8, 9} — 5 valores possíveis."
+      }
+    ]
+  },
+
+  /* ── 13. Lista de Exercícios — Teoria dos Conjuntos (questões reais de prova) ── */
+  {
+    id: 'seed-lq-teoria-conjuntos',
+    titulo: "Lista de Exercícios — Teoria dos Conjuntos",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-08", "mat-09", "mb-07"],
+    total: 4,
     questoes: [
       {
         num: 1,
@@ -989,67 +1043,37 @@ window.PL_SEED_LISTAS = [
         opcoes: { A: "40%", B: "36%", C: "32%", D: "28%", E: "25%" },
         gabarito: 'E',
         explicacao: "União: 120 − 42 (nenhuma) = 78. Interseção: 42 + 66 − 78 = 30 pessoas → 30/120 = 25%."
-      },
+      }
+    ]
+  },
+
+  /* ── 14. Lista de Exercícios — Frações e Números Racionais (questões reais de prova) ── */
+  {
+    id: 'seed-lq-fracoes',
+    titulo: "Lista de Exercícios — Frações e Números Racionais",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-06", "mb-03", "cr-02"],
+    total: 2,
+    questoes: [
       {
-        num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Em uma seleção para cursos no CFOPM, de certa cidade, foram abertas 300 vagas para o nível I e 100 vagas para o nível II. Sabe-se que houve 9000 inscrições para o nível I e a terça parte para o nivel II.\nNessas condições, pode-se concluir que",
-        opcoes: { A: "a concorrência para o nível 1 foi maior do que a concorrência para o nível II.", B: "a concorrência para o nível I foi igual à concorrência para o nível II.", C: "a concorrência para o nível II foi de 200 candidatos por vaga.", D: "houve 150 candidatos por vaga para o nivel II.", E: "houve 200 candidatos por vaga para o nivel I." },
-        gabarito: 'B',
-        explicacao: "Concorrência nível I: 9000/300 = 30 por vaga; nível II: 3000/100 = 30 por vaga — iguais."
-      },
-      {
-        num: 6,
-        enunciado: "(CONSULTEC · CFO PM BA · 2014) Em determinado concurso, os candidatos foram distribuídos em salas com 40 candidatos cada, segundo a ordem crescente dos números de inscrição: sala 01 recebe as inscrições 0001 a 0040; sala 02, as inscrições 0041 a 0080; sala 03, as inscrições 0081 a 0120; e assim por diante.\nNessas condições, pode-se afirmar que um candidato cujo número de inscrição coincide com a média aritmética dos números de inscrição obtidos através de todas as permutações de 2, 7 e 9 ficou na sala de número",
-        opcoes: { A: "20.", B: "19.", C: "18.", D: "17.", E: "16." },
-        gabarito: 'D',
-        explicacao: "Permutações de 2, 7 e 9: seis números cuja soma é (2+7+9)·222 = 3996 → média 666. Inscrição 666 ÷ 40 por sala = 16,65 → sala 17."
-      },
-      {
-        num: 7,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Como parte de sua preparação física, um atleta foi aconselhado por um nutricionista a acrescentar à sua dieta algum suplemento alimentar, como X ou Y, dos quais se tem as seguintes informações:\nX contém 2 unidades de fibras, 1 unidade de proteínas, 3 unidades de vitaminas e cada unidade desse suplemento custa r reais.\nY contém 1 unidade de fibras, 2 unidades de proteínas, 2 unidades de vitaminas e cada unidade desse suplemento custa 2r reais.\nSendo recomendada a ingestão diária mínima de 4 unidades de fibras, 5 unidades de proteínas e 8 unidades de vitaminas, pode-se afirmar que a despesa com os suplementos será mínima, se o número de unidades de X e de Y ingeridos forem, respectivamente, iguais a",
-        opcoes: { A: "1 e 2.", B: "2 e 1.", C: "2 e 2.", D: "2 e 3.", E: "3 e 2." },
-        gabarito: 'C',
-        explicacao: "Teste das opções nas exigências (4 fibras, 5 proteínas, 8 vitaminas): (2,2) atende tudo com custo 2r + 4r = 6r — o menor entre as combinações viáveis."
-      },
-      {
-        num: 8,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Adicionando-se o menor inteiro positivo ao menor divisor inteiro de 8, em seguida, multiplicando-se pela raiz da equação 0,3x - 10 = 8, obtém se, corretamente,",
-        opcoes: { A: "360", B: "180", C: "- 420", D: "- 540", E: "- 600" },
-        gabarito: 'C',
-        explicacao: "Menor inteiro positivo = 1; menor divisor inteiro de 8 = −8; raiz de 0,3x − 10 = 8 → x = 60. Logo (1 + (−8)) · 60 = −420."
-      },
-      {
-        num: 9,
+        num: 1,
         enunciado: "(IBFC · Soldado PM BA · 2017) Assinale a alternativa correta.\nAntônio gastou 50% de dois quintos do valor que possuía e ainda sobraram R$ 160,00 a ele.\nNessas circunstâncias o valor gasto por Antônio foi:",
         opcoes: { A: "R$ 200,00", B: "R$ 160,00", C: "R$ 60,00", D: "R$ 80,00", E: "R$ 40,00" },
         gabarito: 'E',
         explicacao: "Gastou 50% de 2/5 = 1/5 do valor. Sobraram 4/5 = R$ 160 → tinha R$ 200 e gastou R$ 40."
       },
       {
-        num: 10,
+        num: 2,
         enunciado: "(CONSULTEC · CFO PM BA · 2012) Em uma blitz, foram encontradas, no interior de um automóvel, duas garrafas, de mesma capacidade, cheias com uma mistura não identificada de bebidas alcoólicas. Após análise, verificou-se que uma das garrafas continha uma mistura das bebidas X e Y na razão de 1 para 2, enquanto a outra garrafa continha uma mistura das mesmas bebidas, porém na razão de 3 para 2.\nDespejando-se o conteúdo das duas garrafas em um terceiro recipiente, obter-se-á uma nova mistura de X e Y, na razão de",
         opcoes: { A: "7 para 8.", B: "5 para 4.", C: "3 para 4.", D: "2 para 1.", E: "1 para 1." },
         gabarito: 'A',
         explicacao: "Garrafas de volume V: X = V/3 + 3V/5 = 14V/15 e Y = 2V/3 + 2V/5 = 16V/15 → razão 14 para 16 = 7 para 8."
-      },
-      {
-        num: 11,
-        enunciado: "(UNEB · CFO PM BA · 2025) Os conjuntos numéricos abrangem diferentes classificações, como naturais, inteiros, racionais e irracionais, cada um com características distintas que os definem. Com base nessa divisão, identifique a alternativa que apresenta um número pertencente ao conjunto dos números irracionais.",
-        opcoes: { A: "2+3i", B: "1/2", C: "-3", D: "8", E: "√2" },
-        gabarito: 'E',
-        explicacao: "√2 é dízima não periódica — irracional. 2+3i é complexo, 1/2 é racional, −3 é inteiro e 8 é natural."
-      },
-      {
-        num: 12,
-        enunciado: "(FCC · Soldado PM BA · 2007) Uma pessoa tem R$ 14,00 em sua carteira apenas em cédulas de 1, 2 e 5 reais, sendo pelo menos uma de cada valor. Se X é o total de cédulas que ela possui, quantos são os possíveis valores de X?",
-        opcoes: { A: "4", B: "5", C: "6", D: "7", E: "8" },
-        gabarito: 'B',
-        explicacao: "5a + 2b + c = 14 com a, b, c ≥ 1: as soluções dão X (total de cédulas) ∈ {5, 6, 7, 8, 9} — 5 valores possíveis."
       }
     ]
   },
 
-  /* ── 13. Lista de Exercícios — Porcentagem, Regra de Três e Juros (questões reais de prova) ── */
+  /* ── 15. Lista de Exercícios — Porcentagem, Regra de Três e Juros (questões reais de prova) ── */
   {
     id: 'seed-lq-proporcao-financeira',
     titulo: "Lista de Exercícios — Porcentagem, Regra de Três e Juros",
@@ -1117,14 +1141,14 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 14. Lista de Exercícios — Álgebra: Equações, Funções e Polinômios (questões reais de prova) ── */
+  /* ── 16. Lista de Exercícios — Equações e Polinômios (questões reais de prova) ── */
   {
-    id: 'seed-lq-algebra-funcoes',
-    titulo: "Lista de Exercícios — Álgebra: Equações, Funções e Polinômios",
+    id: 'seed-lq-equacoes-polinomios',
+    titulo: "Lista de Exercícios — Equações e Polinômios",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
-    cursoId: '', aulaId: '', aulaIds: ["mat-10", "mat-11", "mat-12", "mat-16"],
-    total: 11,
+    cursoId: '', aulaId: '', aulaIds: ["mat-10"],
+    total: 5,
     questoes: [
       {
         num: 1,
@@ -1160,44 +1184,68 @@ window.PL_SEED_LISTAS = [
         opcoes: { A: "4.", B: "5.", C: "6.", D: "7.", E: "8." },
         gabarito: 'B',
         explicacao: "O lucro zera em t = 1, 5 e 8 (fatorando: (t−1)(t−5)(t−8)). Sem prejuízo (lucro positivo), excluindo os zeros: t ∈ {2, 3, 4, 9, 10} → 5 anos."
-      },
+      }
+    ]
+  },
+
+  /* ── 17. Lista de Exercícios — Funções do 1° e 2° Graus (questões reais de prova) ── */
+  {
+    id: 'seed-lq-funcoes',
+    titulo: "Lista de Exercícios — Funções do 1° e 2° Graus",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-11", "mat-12"],
+    total: 3,
+    questoes: [
       {
-        num: 6,
+        num: 1,
         enunciado: "(CONSULTEC · CFO PM BA · 2010) Segundo dados do IBGE, em 2006. aproximadamente 9,0% da bancada eleita para a Câmara Federal era composta por mulheres.\nSupondo-se que, em 2010, esse número cresça para 12,5% e que essa porcentagem varie linearmente com o tempo, pode-se estimar que as mulheres serão maioria na Câmara Federal a partir das eleições de",
         opcoes: { A: "2066", B: "2062", C: "2058", D: "2054", E: "2048" },
         gabarito: 'D',
         explicacao: "De 9% (2006) para 12,5% (2010): +3,5% a cada 4 anos. 12,5 + 3,5k > 50 → k > 10,7 → 11 eleições depois: 2010 + 44 = 2054."
       },
       {
-        num: 7,
+        num: 2,
         enunciado: "(UNEB · CFO PM BA · 2025) Uma empresa está analisando uma função quadrática que modela o custo de produção, onde f(x) = x² − 4x + 3 sendo x a quantidade de itens produzidos em centenas. Para uma produção de 300 itens (x=3), qual é o custo correspondente representado por f(3)?",
         opcoes: { A: "-1", B: "1", C: "3", D: "4", E: "0" },
         gabarito: 'E',
         explicacao: "f(3) = 3² − 4·3 + 3 = 9 − 12 + 3 = 0."
       },
       {
-        num: 8,
+        num: 3,
         enunciado: "(CONSULTEC · CFO PM BA · 2011) Uma pessoa teve furtada sua carteira com 12 cédulas e, ao prestar queixa na delegacia, declarou haver uma cédula de R$20,00, algumas de R$5,00 e outras de R$10,00, mas não soube precisar o valor total.\nAdmitindo-se que o quadrado do número de cédulas de R$5,00 seja menor do que o número total das demais, é correto afirmar que a quantia mínima que a pessoa poderia ter, em reais, na carteira seria igual a",
         opcoes: { A: "100", B: "105", C: "110", D: "115", E: "120" },
         gabarito: 'E',
         explicacao: "x = nº de cédulas de R$ 5: x² < 12 − x → x ≤ 2. Quantia mínima com x = 2: 20 + 2·5 + 9·10 = R$ 120."
-      },
+      }
+    ]
+  },
+
+  /* ── 18. Lista de Exercícios — Sistemas, Matrizes e Determinantes (questões reais de prova) ── */
+  {
+    id: 'seed-lq-sistemas-matrizes',
+    titulo: "Lista de Exercícios — Sistemas, Matrizes e Determinantes",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-16"],
+    total: 3,
+    questoes: [
       {
-        num: 9,
+        num: 1,
         enunciado: "(CONSULTEC · CFO PM BA · 2014) Com fins beneficentes, organizou-se um sorteio para o qual foram vendidas cartelas com nove números dispostos na forma de matrizes de ordem 3. Foi premiado o portador da cartela cujos números aᵢⱼ obedeciam à regra aᵢⱼ = |i − 3j| (i = linha, j = coluna).\nA matriz assim obtida tem determinante igual a",
         opcoes: { A: "−14.", B: "−10.", C: "0.", D: "10.", E: "14." },
         gabarito: 'C',
         explicacao: "aᵢⱼ = |i − 3j| gera as linhas (2, 5, 8), (1, 4, 7) e (0, 3, 6). L1 − L2 = L2 − L3 (linhas em PA) → determinante = 0."
       },
       {
-        num: 10,
+        num: 2,
         enunciado: "(UNEB · CFO PM BA · 2025) Em uma fábrica, dois setores precisam compartilhar recursos de maneira que o total de recursos alocados, representado por x+y=6, seja distribuído igualmente entre os dois setores. Além disso, uma auditoria verificou que a alocação dobrada desses recursos, representada por 2x+2y=12, também precisa ser validada. Considerando o contexto, quantas soluções existem para esse sistema de equações?",
         opcoes: { A: "Nenhuma.", B: "Infinitas.", C: "Dez.", D: "Duas.", E: "Uma." },
         gabarito: 'B',
         explicacao: "A segunda equação é exatamente o dobro da primeira — mesma reta. Sistema possível e indeterminado: infinitas soluções."
       },
       {
-        num: 11,
+        num: 3,
         enunciado: "(FCC · Soldado PM BA · 2023) Em um fornecedor de uniformes, três camisas e duas calças custam, juntas, R$ 455,00, e um conjunto de calça e camisa do mesmo tipo custa R$ 190,00. O preço, em reais, para a compra de duas camisas e uma calça é:",
         opcoes: { A: "215", B: "240", C: "265", D: "280", E: "305" },
         gabarito: 'C',
@@ -1206,7 +1254,7 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 15. Lista de Exercícios — Exponencial e Logaritmos (questões reais de prova) ── */
+  /* ── 19. Lista de Exercícios — Exponencial e Logaritmos (questões reais de prova) ── */
   {
     id: 'seed-lq-exponencial-log',
     titulo: "Lista de Exercícios — Exponencial e Logaritmos",
@@ -1260,7 +1308,7 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 16. Lista de Exercícios — Progressões: PA e PG (questões reais de prova) ── */
+  /* ── 20. Lista de Exercícios — Progressões: PA e PG (questões reais de prova) ── */
   {
     id: 'seed-lq-progressoes',
     titulo: "Lista de Exercícios — Progressões: PA e PG",
@@ -1321,14 +1369,14 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 17. Lista de Exercícios — Geometria Plana e Espacial (questões reais de prova) ── */
+  /* ── 21. Lista de Exercícios — Geometria Plana (questões reais de prova) ── */
   {
-    id: 'seed-lq-geometria',
-    titulo: "Lista de Exercícios — Geometria Plana e Espacial",
-    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
+    id: 'seed-lq-geo-plana',
+    titulo: "Lista de Exercícios — Geometria Plana",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
-    cursoId: '', aulaId: '', aulaIds: ["mat-19", "mat-20", "mat-21", "mat-22", "cr-05"],
-    total: 8,
+    cursoId: '', aulaId: '', aulaIds: ["mat-19", "mat-20"],
+    total: 2,
     questoes: [
       {
         num: 1,
@@ -1343,44 +1391,56 @@ window.PL_SEED_LISTAS = [
         opcoes: { A: "8", B: "12", C: "13", D: "18", E: "52" },
         gabarito: 'B',
         explicacao: "260 m ÷ 20 mangueiras = 13 m cada. Triângulo retângulo com cateto 5 (raio): altura = √(13² − 5²) = 12 m (terno 5-12-13)."
-      },
+      }
+    ]
+  },
+
+  /* ── 22. Lista de Exercícios — Geometria Espacial (questões reais de prova) ── */
+  {
+    id: 'seed-lq-geo-espacial',
+    titulo: "Lista de Exercícios — Geometria Espacial",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-21", "mat-22", "cr-05"],
+    total: 6,
+    questoes: [
       {
-        num: 3,
+        num: 1,
         enunciado: "(CONSULTEC · CFO PM BA · 2017) Os reservatórios de forma cilíndrica, para água, são econômicos e de manutenção mais simples. Considerando-se que, em laboratório, o protótipo de um deles tem 6cm de diâmetro e 12cm de altura, pode-se estimar que uma centena desses protótipos é capaz de armazenar, aproximadamente, xmf de água, e o valor de x é",
         opcoes: { A: "10800", B: "15496", C: "21624", D: "28168", E: "33912" },
         gabarito: 'E',
         explicacao: "V = πr²h = 3,14 · 9 · 12 ≈ 339,12 cm³ por protótipo. Uma centena: ≈ 33.912 mℓ."
       },
       {
-        num: 4,
+        num: 2,
         enunciado: "(CONSULTEC · CFO PM BA · 2017) Uma equipe de alunos do Curso de Formação de Oficiais da Polícia Militar desejava realizar algumas transformações na disposição do mobiliário interno da repartição onde atuava. Os profissionais dessa equipe consideraram um prisma reto, como inspiração, e seus lados, como modelo para um biombo.\nSeja P um prisma reto, com 12cm de altura e base quadrada, de área medindo 16cm ².\nNessas condições, pode-se afirmar que a área lateral, em cm ², do prisma s igual a",
         opcoes: { A: "192", B: "144", C: "96", D: "72", E: "48" },
         gabarito: 'A',
         explicacao: "Base quadrada de área 16 cm² → lado 4 cm. Área lateral = perímetro × altura = 16 × 12 = 192 cm²."
       },
       {
-        num: 5,
+        num: 3,
         enunciado: "(CONSULTEC · CFO PM BA · 2014) Sabe-se que a capacidade de uma taça na forma de um cone equilátero é de 72 √(3) π cm³ .\nSe uma pessoa colocou um líquido nessa taça até a altura correspondente a 2/3 do raio máximo da taça, então sobre o volume de líquido nela colocado, em cm³, pode-se afirmar:",
         opcoes: { A: "É menor do que 6,2π.", B: "Está entre 6,2π e 7,5π.", C: "É igual a 7,5π.", D: "Está entre 7,5π e 8,8π.", E: "É igual a 8,8π." },
         gabarito: 'B',
         explicacao: "Cone equilátero: V = (√3/3)πr³ = 72√3π → r = 6 e h = 6√3. Água até 4 cm (2/3 do raio): V·(4/(6√3))³ = 64π/9 ≈ 7,1π — entre 6,2π e 7,5π."
       },
       {
-        num: 6,
+        num: 4,
         enunciado: "(CONSULTEC · CFO PM BA · 2012) Em um certo país, as moedas são feitas do mesmo material, têm a mesma espessura e têm massa diretamente proporcional ao seu volume. Nesse país, as moedas de 10 centavos e 25 centavos têm massas, respectivamente, iguais a 4,8g e 7,5g, sendo o diâmetro da primeira igual a 20mm.\nConsiderando-se uma moeda M tal que os raios da moeda de 10 centavos, de M e da moeda de 25 centavos, nessa ordem, formam uma progressão geométrica, pode-se afirmar que a moeda M tem diâmetro, em mm, aproximadamente igual a",
         opcoes: { A: "23,5", B: "23,1", C: "22,8", D: "22,3", E: "21,2" },
         gabarito: 'D',
         explicacao: "Massa ∝ volume ∝ r² (mesma espessura): r₂₅ = 10·√(7,5/4,8) = 12,5 mm. PG: rM = √(10 · 12,5) = √125 ≈ 11,18 → diâmetro ≈ 22,3 mm."
       },
       {
-        num: 7,
+        num: 5,
         enunciado: "(CONSULTEC · CFO PM BA · 2011) É frequente a utilização de cones de PVC na sinalização de trânsito, estacionamentos, obras etc.\nAo adquirir dois desses cones — o maior com altura igual a 70cm e diâmetro da base, 40cm, e o menor com altura igual a 50cm e diâmetro da base, 24cm — o comprador decide guardá-los em uma caixa fechada que tem a forma de um prisma reto de base quadrada.\nPara que a base do cone maior fique apoiada na base inferior da caixa e o cone menor encaixado sobre o maior, será necessário utilizar-se uma caixa cuja capacidade interna mínima, em cm³, seja igual a",
         opcoes: { A: "2⁴ × 5 × 19", B: "2⁵ × 5² × 19", C: "2⁵ × 5 × 23", D: "2⁷ × 5² × 23", E: "2⁷ × 5² × 39" },
         gabarito: 'E',
         explicacao: "O cone menor (base r = 12) apoia-se onde o cone maior tem raio 12: a 42 cm do vértice = 28 cm da base. Altura da caixa: 28 + 50 = 78. Volume: 40·40·78 = 124.800 = 2⁷·5²·39."
       },
       {
-        num: 8,
+        num: 6,
         enunciado: "(CONSULTEC · CFO PM BA · 2010) Um professor propôs a seus alunos a construção de dois pluviômetros artesanais, de modelos diferentes, através dos quais pudessem aprender a calcular a quantidade de chuva ocorrida em uma localidade, num determinado espaço de tempo. Para tanto, foram utilizados dois recipientes, um cônico e um cilíndrico e, após uma chuva, verificou-se que a água recolhida pelo pluviômetro cônico havia atingido uma altura h = 8cm, preenchendo um certo espaço de um pequeno cone de geratriz g = 10cm.\nSe essa água, colocada no pluviômetro cilíndrico atingir a mesma altura h = 8cm, então o raio do recipiente cilíndrico, em cm, é igual a;",
         opcoes: { A: "√(6)", B: "2 √(3)", C: "3 √(2)", D: "2 √(6)", E: "6 √(2)" },
         gabarito: 'B',
@@ -1389,7 +1449,7 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 18. Lista de Exercícios — Trigonometria e Geometria Analítica (questões reais de prova) ── */
+  /* ── 23. Lista de Exercícios — Trigonometria e Geometria Analítica (questões reais de prova) ── */
   {
     id: 'seed-lq-trigonometria',
     titulo: "Lista de Exercícios — Trigonometria e Geometria Analítica",
@@ -1436,14 +1496,61 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 19. Lista de Exercícios — Combinatória, Probabilidade e Estatística (questões reais de prova) ── */
+  /* ── 24. Lista de Exercícios — Análise Combinatória (questões reais de prova) ── */
   {
-    id: 'seed-lq-combinatoria-estatistica',
-    titulo: "Lista de Exercícios — Combinatória, Probabilidade e Estatística",
+    id: 'seed-lq-combinatoria',
+    titulo: "Lista de Exercícios — Análise Combinatória",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
-    cursoId: '', aulaId: '', aulaIds: ["mat-17", "mat-18", "mat-26"],
-    total: 11,
+    cursoId: '', aulaId: '', aulaIds: ["mat-17"],
+    total: 5,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "(UNEB · CFO PM BA · 2025) Em uma competição de palavras, um desafio consiste em formar todas as combinações possíveis com as letras de uma palavra específica. A palavra escolhida foi \"CASA\", que possui letras repetidas. Quantos anagramas distintos podem ser formados utilizando todas as letras dessa palavra?",
+        opcoes: { A: "36", B: "72", C: "24", D: "48", E: "12" },
+        gabarito: 'E',
+        explicacao: "CASA tem 4 letras com A repetido 2 vezes: 4!/2! = 12 anagramas."
+      },
+      {
+        num: 2,
+        enunciado: "(FCC · Soldado PM BA · 2023) Placas para identificação de veículos deverão conter 4 letras distintas. Se escolhermos as letras X, Y, Z e W, o número de placas distintas que poderão ser produzidas é",
+        opcoes: { A: "36", B: "24", C: "20", D: "16", E: "12" },
+        gabarito: 'B',
+        explicacao: "4 letras distintas em 4 posições: 4! = 24 placas."
+      },
+      {
+        num: 3,
+        enunciado: "(IBFC · Soldado PM BA · 2020) Em uma prateleira de uma biblioteca, deseja-se dispor 4 livros de maneiras distintas. Sabendo que a prateleira possui 10 espaços em que os livros podem ser colocados, assinale a alternativa que apresenta corretamente a quantidade de maneiras que esses livros podem ser dispostos nessa prateleira.",
+        opcoes: { A: "3628800", B: "5040", C: "151200", D: "720", E: "24" },
+        gabarito: 'B',
+        explicacao: "Arranjo de 10 espaços tomados 4 a 4: 10 · 9 · 8 · 7 = 5040."
+      },
+      {
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Após um assalto, várias testemunhas foram ouvidas, mas não houve consenso quanto à placa do automóvel usado pelo assaltante na sua fuga. Através das informações dessas testemunhas, concluiu-se que a placa do veículo era constituída de 3 vogais distintas e quatro algarismos também distintos, sendo que os dois últimos algarismos eram os dígitos 0 e 1.\nCom base nesses dados, pode-se afirmar que o número de veículos a ser investigados é",
+        opcoes: { A: "560", B: "1120", C: "3360", D: "6720", E: "8240" },
+        gabarito: 'D',
+        explicacao: "Vogais distintas: 5·4·3 = 60. Os dois últimos algarismos são 0 e 1 (2 ordens) e os dois primeiros vêm dos 8 restantes: 8·7 = 56. Total: 60 · 56 · 2 = 6720."
+      },
+      {
+        num: 5,
+        enunciado: "(FCC · Soldado PM BA · 2009) Certo dia, um automóvel passou em alta velocidade por uma avenida, excedendo o limite ali permitido. Um policial de plantão no local tentou anotar o número da placa do carro do infrator, mas não conseguiu fazê-lo por completo: memorizou apenas o prefixo (CSA) e, da parte numérica, lembrava somente que o algarismo da esquerda era ímpar e o da direita era par. Com base nessas informações, o total de possibilidades para o número da placa de tal automóvel é",
+        opcoes: { A: "2500", B: "2000", C: "1000", D: "250", E: "100" },
+        gabarito: 'A',
+        explicacao: "Primeiro algarismo ímpar (5 opções), último par (5 opções), dois do meio livres (10 · 10): 5 · 10 · 10 · 5 = 2500."
+      }
+    ]
+  },
+
+  /* ── 25. Lista de Exercícios — Probabilidade e Estatística (questões reais de prova) ── */
+  {
+    id: 'seed-lq-probabilidade-estatistica',
+    titulo: "Lista de Exercícios — Probabilidade e Estatística",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-18", "mat-26"],
+    total: 6,
     questoes: [
       {
         num: 1,
@@ -1486,41 +1593,6 @@ window.PL_SEED_LISTAS = [
         opcoes: { A: "48%", B: "51%", C: "53%", D: "57%", E: "60%" },
         gabarito: 'E',
         explicacao: "CFOPM tem 4 consoantes e 1 vogal. Começar e terminar com consoante: 4 · 3 · 3! = 72 dos 120 anagramas → 72/120 = 60%."
-      },
-      {
-        num: 7,
-        enunciado: "(UNEB · CFO PM BA · 2025) Em uma competição de palavras, um desafio consiste em formar todas as combinações possíveis com as letras de uma palavra específica. A palavra escolhida foi \"CASA\", que possui letras repetidas. Quantos anagramas distintos podem ser formados utilizando todas as letras dessa palavra?",
-        opcoes: { A: "36", B: "72", C: "24", D: "48", E: "12" },
-        gabarito: 'E',
-        explicacao: "CASA tem 4 letras com A repetido 2 vezes: 4!/2! = 12 anagramas."
-      },
-      {
-        num: 8,
-        enunciado: "(FCC · Soldado PM BA · 2023) Placas para identificação de veículos deverão conter 4 letras distintas. Se escolhermos as letras X, Y, Z e W, o número de placas distintas que poderão ser produzidas é",
-        opcoes: { A: "36", B: "24", C: "20", D: "16", E: "12" },
-        gabarito: 'B',
-        explicacao: "4 letras distintas em 4 posições: 4! = 24 placas."
-      },
-      {
-        num: 9,
-        enunciado: "(IBFC · Soldado PM BA · 2020) Em uma prateleira de uma biblioteca, deseja-se dispor 4 livros de maneiras distintas. Sabendo que a prateleira possui 10 espaços em que os livros podem ser colocados, assinale a alternativa que apresenta corretamente a quantidade de maneiras que esses livros podem ser dispostos nessa prateleira.",
-        opcoes: { A: "3628800", B: "5040", C: "151200", D: "720", E: "24" },
-        gabarito: 'B',
-        explicacao: "Arranjo de 10 espaços tomados 4 a 4: 10 · 9 · 8 · 7 = 5040."
-      },
-      {
-        num: 10,
-        enunciado: "(CONSULTEC · CFO PM BA · 2010) Após um assalto, várias testemunhas foram ouvidas, mas não houve consenso quanto à placa do automóvel usado pelo assaltante na sua fuga. Através das informações dessas testemunhas, concluiu-se que a placa do veículo era constituída de 3 vogais distintas e quatro algarismos também distintos, sendo que os dois últimos algarismos eram os dígitos 0 e 1.\nCom base nesses dados, pode-se afirmar que o número de veículos a ser investigados é",
-        opcoes: { A: "560", B: "1120", C: "3360", D: "6720", E: "8240" },
-        gabarito: 'D',
-        explicacao: "Vogais distintas: 5·4·3 = 60. Os dois últimos algarismos são 0 e 1 (2 ordens) e os dois primeiros vêm dos 8 restantes: 8·7 = 56. Total: 60 · 56 · 2 = 6720."
-      },
-      {
-        num: 11,
-        enunciado: "(FCC · Soldado PM BA · 2009) Certo dia, um automóvel passou em alta velocidade por uma avenida, excedendo o limite ali permitido. Um policial de plantão no local tentou anotar o número da placa do carro do infrator, mas não conseguiu fazê-lo por completo: memorizou apenas o prefixo (CSA) e, da parte numérica, lembrava somente que o algarismo da esquerda era ímpar e o da direita era par. Com base nessas informações, o total de possibilidades para o número da placa de tal automóvel é",
-        opcoes: { A: "2500", B: "2000", C: "1000", D: "250", E: "100" },
-        gabarito: 'A',
-        explicacao: "Primeiro algarismo ímpar (5 opções), último par (5 opções), dois do meio livres (10 · 10): 5 · 10 · 10 · 5 = 2500."
       }
     ]
   }

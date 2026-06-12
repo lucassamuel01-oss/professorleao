@@ -177,7 +177,7 @@ function seedAdminUser() {
   if (users.some((u) => u.role === "admin")) return;
   users.push({
     id: "admin-001",
-    name: "Lucas Samuel Leão",
+    name: "Lucas Leão",
     email: "samuel@professorleao.com",
     password: bcrypt.hashSync("leao2024", 10),
     role: "admin",

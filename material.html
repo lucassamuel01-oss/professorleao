@@ -77,6 +77,29 @@
       border-left: 3px solid var(--accent); background: rgba(74,108,247,0.07);
       border-radius: 0 10px 10px 0; padding: 13px 16px; font-size: 14px; line-height: 1.75;
     }
+    /* esquema visual (SVG sobre fundo navy fixo — igual na tela e no PDF) */
+    .sec-card .figura {
+      background: #0c1a31; border: 1px solid rgba(74,108,247,0.22);
+      border-radius: 12px; padding: 16px 12px; margin: 4px 0;
+    }
+    /* treine agora (resposta escondida) */
+    .sec-card details { margin-top: 10px; }
+    .sec-card summary {
+      cursor: pointer; display: inline-block; padding: 9px 18px; border-radius: 9px;
+      background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.4);
+      color: #fdba74; font-family: var(--font-h); font-size: 12.5px; font-weight: 800;
+      list-style: none; user-select: none;
+    }
+    .sec-card summary::-webkit-details-marker { display: none; }
+    .sec-card details[open] summary { opacity: .55; margin-bottom: 10px; }
+    /* tabelas didáticas (ex.: tabela-verdade) */
+    .sec-card table.tab { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 14px; }
+    .sec-card table.tab th, .sec-card table.tab td {
+      border: 1px solid rgba(255,255,255,0.13); padding: 8px 10px; text-align: center;
+    }
+    .sec-card table.tab th { background: rgba(74,108,247,0.16); font-family: var(--font-h); font-size: 12.5px; }
+    .sec-card table.tab td.ok { color: #4ade80; font-weight: 700; }
+    .sec-card table.tab td.no { color: #f87171; font-weight: 700; }
 
     .mat-footer {
       margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08);
@@ -115,6 +138,7 @@
       <div class="mat-actions">
         <button class="btn-pdf" onclick="gerarPdfMaterial()" title="Baixar este material em PDF organizado para imprimir">📄 Gerar PDF</button>
         <a class="btn-orig" id="btnOriginal" style="display:none" target="_blank" rel="noopener">⬇️ Apostila original da aula (PDF)</a>
+        <button class="btn-orig" onclick="perguntarLeao()" title="Abrir o Leão IA com uma pergunta sobre este assunto">🦁 Tirar dúvida com o Leão</button>
       </div>
     </div>
     <div id="secoes"></div>
@@ -160,6 +184,14 @@ if (!_mat) {
   document.getElementById('conteudo').style.display = 'block';
 }
 
+/* ────── Tirar dúvida com o Leão IA (widget) ────── */
+function perguntarLeao() {
+  if (!_mat) return;
+  const q = 'Estou estudando "' + _mat.titulo + '". Me explica esse assunto de um jeito bem simples e me diz o que mais cai na prova?';
+  if (window.LeaoWidget) window.LeaoWidget.abrir(q);
+  else alert('O assistente está carregando — tente novamente em instantes.');
+}
+
 /* ────── Gerar PDF com a identidade do Professor Leão ────── */
 function gerarPdfMaterial() {
   if (!_mat) return;
@@ -167,11 +199,17 @@ function gerarPdfMaterial() {
   const logoAzul   = new URL('assets/img/logo-azul.png', location.href).href;
   const hoje = new Date().toLocaleDateString('pt-BR');
 
-  const secoesHtml = _mat.secoes.map(s => `
+  const secoesHtml = _mat.secoes.map(s => {
+    /* no PDF o "Treine agora" mostra a resposta aberta */
+    const corpo = s.h
+      .replace(/<details><summary>[^<]*<\/summary>/g, '<div class="resposta"><b>✅ Resposta: </b>')
+      .replace(/<\/details>/g, '</div>');
+    return `
     <div class="sec">
       <h2>${s.ic} ${escHtml(s.t)}</h2>
-      ${s.h}
-    </div>`).join('');
+      ${corpo}
+    </div>`;
+  }).join('');
 
   const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
 <title>${escHtml(_mat.titulo)} — Professor Leão</title>
@@ -202,6 +240,19 @@ function gerarPdfMaterial() {
     border-left: 4px solid #4A6CF7; background: #f2f5ff; border-radius: 0 10px 10px 0;
     padding: 9px 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
+  .sec .resposta {
+    border-left: 4px solid #34d399; background: #f0fbf6; border-radius: 0 10px 10px 0;
+    padding: 9px 13px; margin-top: 6px; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .sec .figura {
+    background: #0c1a31; border-radius: 12px; padding: 14px 10px; margin: 6px 0;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .sec table.tab { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 11.5px; }
+  .sec table.tab th, .sec table.tab td { border: 1px solid #c2cbe6; padding: 6px 8px; text-align: center; }
+  .sec table.tab th { background: #e8edfb; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sec table.tab td.ok { color: #0a7d4f; font-weight: bold; }
+  .sec table.tab td.no { color: #b91c1c; font-weight: bold; }
   .marca { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: -1; }
   .marca img { width: 62%; opacity: .05; transform: rotate(-12deg); }
   .rodape {

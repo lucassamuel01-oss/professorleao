@@ -54,6 +54,12 @@
       ctx.artigo = location.hash.replace('#', '') || null;
     } else if (p === 'lista.html') {
       ctx.tipo = 'minissimulado';
+    } else if (p === 'material.html') {
+      ctx.tipo = 'material';
+      try {
+        const m = (window.PL_MATERIAIS || []).find(x => x.id === params.get('id'));
+        if (m) ctx.materialTitulo = m.titulo;
+      } catch (e) { /* */ }
     } else {
       ctx.tipo = 'geral';
     }
@@ -106,6 +112,12 @@
       out.rotina = lead.horasDia + 'h/dia x ' + lead.diasSemana + ' dias';
     }
     try {
+      /* caderno de erros — para a IA cobrar a revisão */
+      if (typeof PlQuestoes !== 'undefined' && PlQuestoes.errosStats) {
+        out.cadernoErros = PlQuestoes.errosStats(SESS.email);
+      }
+    } catch (e) { /* */ }
+    try {
       if (typeof PL_CATALOG !== 'undefined' && window.plAuth) {
         const prog = plAuth.getProgressV2();
         let tot = 0, done = 0;
@@ -141,6 +153,7 @@
       jogo: 'Use o modo 🎓 Treino para aprender sem pressão e o 🔥 Difícil para valer mais pontos no ranking. As perguntas mudam a cada partida!',
       blog: 'Os artigos de raio-X dos editais (SD e CFO) têm os números exatos da sua prova — vale a leitura com o caderno do lado.',
       minissimulado: 'Abaixo de 70%? Reveja a aula do assunto antes de seguir. 70%+? Avance e volte neste minissimulado em 1 semana.',
+      material: 'Leia o material na ordem: ideia central → fórmulas → exemplo resolvido → pegadinhas. Depois faça o Treine Agora sem olhar a resposta e feche com o minissimulado da aula.',
       geral: 'Abra sua Minha Área para ver a Missão de Hoje — metas e lembretes do seu plano.',
     };
     let t = '🦁 ' + (s.nome || 'Aluno') + ', ';
@@ -148,7 +161,9 @@
     else t += 'crie seu plano na Minha Área para eu te acompanhar de perto';
     if (s.simulados) t += ' e sua média nos minissimulados é ' + s.simulados.media + '%';
     if (s.diasProva != null) t += '. Faltam ' + s.diasProva + ' dias para a prova';
-    t += '.\n\n' + (dicas[ctx.tipo] || dicas.geral);
+    if (s.cadernoErros && s.cadernoErros.pendentes > 0) {
+      t += '. 📕 Você tem ' + s.cadernoErros.pendentes + ' questão(ões) no caderno de erros — refazê-las é a revisão mais valiosa';
+    }
     t += '\n\n💡 Para conversa completa com a IA real, acesse pela plataforma oficial (servidor).';
     return t;
   }
@@ -294,6 +309,7 @@
           jogo: 'Boa! Jogar é fixação de verdade. Quer uma dica para pontuar mais ou revisar o assunto?',
           blog: 'Lendo o blog? Posso conectar o artigo com o seu plano de estudos.',
           minissimulado: 'Minissimulado na tela! Depois me pergunte o que fazer com os erros.',
+          material: 'Estudando' + (ctx.materialTitulo ? ' "' + ctx.materialTitulo + '"' : ' o material da aula') + '? Me pergunte qualquer parte que não ficou clara!',
           geral: 'Pronto para estudar? Me pergunte qualquer coisa sobre sua preparação.',
         }[ctx.tipo];
         bolha('Olá, ' + (SESS.name || 'Aluno').split(' ')[0] + '! 🦁 ' + oi, 'leao');
@@ -310,6 +326,14 @@
     document.getElementById('lw-q').addEventListener('keydown', e => {
       if (e.key === 'Enter') document.getElementById('lw-send').click();
     });
+
+    /* API pública: outras páginas abrem o chat já com uma pergunta */
+    window.LeaoWidget = {
+      abrir(pergunta) {
+        panel.classList.add('aberto');
+        if (pergunta) perguntar(pergunta);
+      }
+    };
   }
 
   if (document.readyState === 'loading') {
