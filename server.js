@@ -477,6 +477,11 @@ async function chamarGemini(system, messages) {
   for (const model of modelos) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+      /* Modelos 2.5 têm "thinking" (raciocínio interno) que CONSOME o
+         maxOutputTokens antes da resposta visível — sem desligar, a
+         resposta chega truncada no meio da frase. */
+      const generationConfig = { maxOutputTokens: 1500, temperature: 0.7 };
+      if (/2\.5/.test(model)) generationConfig.thinkingConfig = { thinkingBudget: 0 };
       const r = await fetch(url, {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -486,13 +491,13 @@ async function chamarGemini(system, messages) {
             role: m.role === "assistant" ? "model" : "user",
             parts: [{ text: m.content }],
           })),
-          generationConfig: { maxOutputTokens: 700, temperature: 0.7 },
+          generationConfig,
         }),
       });
       const data = await r.json();
       const texto = data && data.candidates && data.candidates[0] &&
         data.candidates[0].content && data.candidates[0].content.parts &&
-        data.candidates[0].content.parts.map(p => p.text || "").join("");
+        data.candidates[0].content.parts.filter(p => !p.thought).map(p => p.text || "").join("");
       if (!texto) {
         throw new Error(`Gemini(${model}): ` +
           String(data && data.error ? data.error.message : JSON.stringify(data)).slice(0, 200));
@@ -514,7 +519,7 @@ async function chamarGroq(system, messages) {
     },
     body: JSON.stringify({
       model,
-      max_tokens: 700,
+      max_tokens: 1200,
       messages: [{ role: "system", content: system }, ...messages],
     }),
   });
@@ -534,7 +539,7 @@ async function chamarAnthropic(system, messages) {
     },
     body: JSON.stringify({
       model: process.env.IA_MODEL || "claude-haiku-4-5-20251001",
-      max_tokens: 700,
+      max_tokens: 1200,
       system,
       messages,
     }),
