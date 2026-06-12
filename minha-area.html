@@ -1184,10 +1184,9 @@ document.getElementById('pubPlanForm').addEventListener('submit', e => {
   const diffs = [...document.querySelectorAll('[name=pubDificuldade]:checked')].map(c => c.value);
   const facs  = [...document.querySelectorAll('[name=pubFacilidade]:checked')].map(c => c.value);
 
+  const semData = document.getElementById('pubSemData')?.checked;
   if (!concurso) { alert('Por favor, selecione o concurso.'); return; }
-  if (!nome.trim()) { alert('Por favor, informe seu nome.'); return; }
-  if (!email.trim()) { alert('Por favor, informe seu e-mail.'); return; }
-  if (!dataProva) { alert('Por favor, informe a data da prova.'); return; }
+  if (!dataProva && !semData) { alert('Informe a data da prova ou marque "Ainda não sei a data da prova".'); return; }
 
   const btn = document.getElementById('btnSubmitPlano');
   btn.disabled = true; btn.textContent = '⏳ Gerando plano...';

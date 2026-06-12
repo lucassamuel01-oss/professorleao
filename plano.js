@@ -888,6 +888,10 @@ function renderPlanoHTML(dados, plano) {
   const pubFacBox     = document.getElementById('pubFacBox');
   const pubPlanForm   = document.getElementById('pubPlanForm');
   if (!pubPlanForm) return;
+  /* minha-area.html tem o PROPRIO fluxo do modal (handlers proprios);
+     registrar este handler junto duplicava o submit e disparava alerts
+     de campos que nem existem mais no modal (nome/e-mail/data). */
+  if (document.getElementById('modalPlano')) return;
 
   /* preenche checkboxes com as matérias do edital */
   function preencherMaterias(concurso) {
