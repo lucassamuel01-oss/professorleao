@@ -125,6 +125,94 @@ const PlQuestoes = (() => {
   }
 
   /* ═══════════════════════════════════════════════
+     CADERNO DE ERROS
+     Toda questão errada em lista/minissimulado entra
+     aqui e só sai depois de DOIS acertos seguidos.
+     localStorage: pl_erros_<email> →
+       { itens: { 'listaId|num': {listaId, num, addedAt,
+         ultimoErro, acertosSeguidos} }, dominadas: n }
+  ═══════════════════════════════════════════════ */
+  function _errosKey(email) { return 'pl_erros_' + _safeMail(email); }
+  function _errosLoad(email) {
+    try {
+      const d = JSON.parse(localStorage.getItem(_errosKey(email)) || 'null');
+      if (d && d.itens) return d;
+    } catch { /* recomeça */ }
+    return { itens: {}, dominadas: 0 };
+  }
+  function _errosSave(email, data) {
+    localStorage.setItem(_errosKey(email), JSON.stringify(data));
+  }
+
+  /* registra o resultado de uma questão respondida */
+  function errosRegistrar(listaId, num, acertou, email) {
+    if (!listaId || listaId === '__caderno') return;
+    const data  = _errosLoad(email);
+    const k     = listaId + '|' + num;
+    const agora = new Date().toISOString();
+    if (!acertou) {
+      const item = data.itens[k] || { listaId, num, addedAt: agora };
+      item.ultimoErro = agora;
+      item.acertosSeguidos = 0;
+      data.itens[k] = item;
+    } else if (data.itens[k]) {
+      const item = data.itens[k];
+      item.acertosSeguidos = (item.acertosSeguidos || 0) + 1;
+      if (item.acertosSeguidos >= 2) {
+        delete data.itens[k];
+        data.dominadas = (data.dominadas || 0) + 1;
+      }
+    }
+    _errosSave(email, data);
+  }
+
+  /* pendentes com a questão completa resolvida (ignora listas removidas) */
+  function errosPendentes(email) {
+    const data = _errosLoad(email);
+    const out  = [];
+    Object.values(data.itens).forEach(item => {
+      const lista = getList(item.listaId);
+      if (!lista) return;
+      const q = (lista.questoes || []).find(x => x.num === item.num);
+      if (!q) return;
+      out.push({ ...item, questao: q, listaTitulo: lista.titulo || '' });
+    });
+    out.sort((a, b) => String(a.ultimoErro || '') < String(b.ultimoErro || '') ? -1 : 1);
+    return out;
+  }
+
+  function _inicioSemana() { /* segunda-feira 00:00 da semana atual */
+    const dt = new Date(); dt.setHours(0, 0, 0, 0);
+    dt.setDate(dt.getDate() - ((dt.getDay() + 6) % 7));
+    return dt;
+  }
+
+  /* pendentes erradas ANTES da semana atual — alvo do lembrete semanal */
+  function errosParaRevisar(email) {
+    const corte = _inicioSemana().getTime();
+    return errosPendentes(email)
+      .filter(i => new Date(i.ultimoErro || i.addedAt).getTime() < corte);
+  }
+
+  function errosStats(email) {
+    const data = _errosLoad(email);
+    return { pendentes: Object.keys(data.itens).length, dominadas: data.dominadas || 0 };
+  }
+
+  /* lembrete: 1× por semana, enquanto houver questões da(s) semana(s) anterior(es) */
+  function errosPrecisaLembrete(email) {
+    const aRever = errosParaRevisar(email);
+    if (!aRever.length) return 0;
+    const wk = _inicioSemana().toISOString().slice(0, 10);
+    if (localStorage.getItem('pl_erros_lembrete_' + _safeMail(email)) === wk) return 0;
+    return aRever.length;
+  }
+  function errosMarcarLembrete(email) {
+    const wk = _inicioSemana().toISOString().slice(0, 10);
+    localStorage.setItem('pl_erros_lembrete_' + _safeMail(email), wk);
+  }
+
+  /* ═══════════════════════════════════════════════
      PDF PARSER
   ═══════════════════════════════════════════════ */
 
@@ -303,6 +391,8 @@ const PlQuestoes = (() => {
   return {
     getLists, getList, saveList, deleteList,
     getResp, saveResp, calcScore, getHistory,
+    errosRegistrar, errosPendentes, errosParaRevisar, errosStats,
+    errosPrecisaLembrete, errosMarcarLembrete,
     parsePDFText, extractTextFromPDF
   };
 

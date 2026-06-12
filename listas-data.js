@@ -679,74 +679,102 @@ window.PL_SEED_LISTAS = [
     materia: 'Raciocínio Lógico', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
-    total: 10,
+    total: 14,
     questoes: [
       {
         num: 1,
-        enunciado: "(IBFC · Soldado PM BA · 2020) Conjunções são proposições compostas em que há a presença do conectivo “e” e podem ser representadas pelo símbolo “^”. Sendo assim, assinale a alternativacorreta.",
+        enunciado: "(FCC · Soldado PM BA · 2009) Define-se sentença como qualquer oração que tem sujeito (o termo a respeito do qual se declara alguma coisa) e predicado (o que se declara sobre o sujeito). Na relação que segue há expressões e sentenças:\n1. Tomara que chova!\n2. Que horas são?\n3. Três vezes dois são cinco.\n4. Quarenta e dois detentos.\n5. Policiais são confiáveis.\n6. Exercícios físicos são saudáveis.\nDe acordo com a definição dada, é correto afirmar que, dos itens da relação acima, são sentenças APENAS os de números",
+        opcoes: { A: "1, 3 e 5.", B: "2, 3 e 5.", C: "3, 5 e 6.", D: "4 e 6.", E: "5 e 6." },
+        gabarito: 'C',
+        explicacao: "Sentença exige sujeito + predicado (oração declarativa): 3, 5 e 6. Exclamação (1), pergunta (2) e expressão sem predicado (4) não são sentenças."
+      },
+      {
+        num: 2,
+        enunciado: "(IBFC · Soldado PM BA · 2020) Conjunções são proposições compostas em que há a presença do conectivo “e” e podem ser representadas pelo símbolo “^”. Sendo assim, assinale a alternativa correta.",
         opcoes: { A: "Se P é verdadeira e Q é verdadeira, então P^Q é falsa", B: "Se P é verdadeira e Q é falsa, então P^Q é falsa", C: "Se P é falsa e Q é falsa, então P^Q é verdadeira", D: "Se P é falsa e Q é verdadeira, então P^Q é verdadeira", E: "P^Q só será verdadeira se P e Q forem falsas" },
         gabarito: 'B',
         explicacao: "A conjunção (∧) só é verdadeira quando as DUAS proposições são verdadeiras. Com Q falsa, P∧Q é falsa."
       },
       {
-        num: 2,
-        enunciado: "(IBFC · Soldado PM BA · 2020) Considere que os símbolos →, ↔, ^ e v representam os operadores lógicos “se…então”, “se e somente se”, “e” e “ou”, respectivamente. Analise as sentençasabaixo e dê valores Verdadeiro (V) ou Falso (F). ( ) (7 – 2 ÷ 2 = 5) v (3 > 2)( ) (3 + 2 = 4) ↔ (1 > 3)( ) (3 x 5 + 6 = 21) → (18 ÷ 3 - 1 = 7)( ) (4 x 4 + 3 = 19) ^ (9 - 2 = 7) Assinale a alternativa que apresenta a sequência correta de cima para baixo.",
+        num: 3,
+        enunciado: "(IBFC · Soldado PM BA · 2020) Considere que os símbolos →, ↔, ^ e v representam os operadores lógicos “se…então”, “se e somente se”, “e” e “ou”, respectivamente. Analise as sentenças abaixo e dê valores Verdadeiro (V) ou Falso (F).\n( ) (7 – 2 ÷ 2 = 5) v (3 > 2) ( ) (3 + 2 = 4) ↔ (1 > 3) ( ) (3 x 5 + 6 = 21) → (18 ÷ 3 - 1 = 7) ( ) (4 x 4 + 3 = 19) ^ (9 - 2 = 7) Assinale a alternativa que apresenta a sequência correta de cima para baixo.",
         opcoes: { A: "V, V, F, V", B: "F, V, F, V", C: "V, V, V, F", D: "V, F, F, V", E: "V, V, F, F" },
         gabarito: 'A',
         explicacao: "(7 − 2÷2 = 6 ≠ 5: F) ∨ (3>2: V) = V; (F) ↔ (F) = V; (21 = 21: V) → (5 ≠ 7: F) = F; (19 = 19: V) ∧ (7 = 7: V) = V. Sequência: V, V, F, V."
       },
       {
-        num: 3,
+        num: 4,
         enunciado: "(IBFC · Soldado PM BA · 2017) Se o valor lógico de uma proposição p é verdade e o valor lógico de uma proposição q é falso, então é correto afirmar que o valor lógico:",
         opcoes: { A: "da conjunção entre p e q é falso", B: "da disjunção entre p e q é falso", C: "do bicondicional entre p e q é verdade", D: "do condicional entre p e q, nessa ordem, é verdade", E: "da negação entre a disjunção entre p e q é verdade" },
         gabarito: 'A',
         explicacao: "Com p = V e q = F: a conjunção p∧q é falsa (alternativa correta). A disjunção é V, o bicondicional é F, o condicional p→q é F e a negação da disjunção é F."
       },
       {
-        num: 4,
+        num: 5,
         enunciado: "(FCC · Soldado PM BA · 2012) Admita que é verdadeira a proposição “Se Gabriela é bonita, então será eleita” . Nesse caso, também será verdadeira a proposição",
         opcoes: { A: "Todas as mulheres bonitas seriam eleitas.", B: "Se Gabriela não é bonita, então não será eleita.", C: "Gabriela pode ser eleita, mesmo sendo feia.", D: "Se Gabriela for eleita, então é bonita.", E: "Gabriela pode não ser eleita, mesmo sendo bonita." },
         gabarito: 'C',
         explicacao: "O condicional só garante o que ocorre quando o antecedente é verdadeiro. Nada impede Gabriela de ser eleita sem ser bonita — condicional não é \"se e somente se\"."
       },
       {
-        num: 5,
+        num: 6,
+        enunciado: "(IBFC · Soldado PM BA · 2020) Observe as duas proposições P e Q apresentadas a seguir.\nP: Ana é engenheira.\nQ: Bianca é arquiteta.\nConsidere que Ana é engenheira somente se Bianca é arquiteta e, assinale a alternativa correta.",
+        opcoes: { A: "Ana ser engenheira não implica Bianca ser arquiteta", B: "Ana ser engenheira é condição suficiente para Bianca ser arquiteta", C: "Uma condição necessária para Bianca ser arquiteta é Ana ser engenheira", D: "Ana é engenheira se e somente se Bianca não é arquiteta", E: "Uma condição necessária para Bianca ser arquiteta é Ana não ser engenheira" },
+        gabarito: 'B',
+        explicacao: "\"p somente se q\" traduz-se como p → q: Ana ser engenheira é condição SUFICIENTE para Bianca ser arquiteta (e Bianca arquiteta é necessária para Ana engenheira)."
+      },
+      {
+        num: 7,
         enunciado: "(IBFC · Soldado PM BA · 2020) Observe a disjunção: “Marcelo não gosta de futebol ou Bruno não gosta de natação”, assinale a alternativa correta que apresenta a negação dessa disjunção.",
         opcoes: { A: "Marcelo gosta de futebol e Bruno não gosta de natação", B: "Marcelo gosta de futebol se e somente se Bruno gosta de natação", C: "Ou Marcelo gosta de futebol ou Bruno gosta de natação", D: "Marcelo gosta de futebol e Bruno gosta de natação", E: "Marcelo não gosta de futebol e Bruno não gosta de natação" },
         gabarito: 'D',
         explicacao: "Negação da disjunção (De Morgan): ~(~p ∨ ~q) = p ∧ q → \"Marcelo gosta de futebol E Bruno gosta de natação\"."
       },
       {
-        num: 6,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Para atender, adequadamente, à população que recorre a um posto policial em busca de ajuda e proteção, os profissionais atuantes devem estar devidamentepreparados, devem ser éticos. Considere a proposição p: Se o Oficial da Polícia Militar não tem ética, então ele perde a confiança da população. Assim, é correto afirmar que a negação da proposição p é ~p: O Oficial da Polícia Militar",
+        num: 8,
+        enunciado: "(UNEB · CFO CBM BA · 2019) A Lógica Matemática utiliza conectivos para relacionar proposições. Um conectivo de extrema importância na lógica é o condicional que representamos por uma seta ( → ). por p e q . A linguagem \"Se p , então q \" pode ser representada por p → q . A grafia til ( ~ ) serve para negar uma proposição. Então a proposição lógica ~ q → ~ p é chamada de contrapositiva da forma lógica p → q , da qual também é equivalente.\nUma equivalência da proposição lógica \"Se o cavalo estiver cansado, então ele perderá a corrida\" é",
+        opcoes: { A: "o cavalo perdeu a corrida porque estava cansado.", B: "se o cavalo ganhou a corrida, então estava descansado.", C: "ou o cavalo estava cansado ou perdeu a corrida.", D: "se o cavalo estiver descansado, então ele ganhará a corrida.", E: "impossível o cavalo ganhar a corrida, se estiver cansado." },
+        gabarito: 'B',
+        explicacao: "Contrapositiva: nega os dois lados e inverte: \"Se o cavalo ganhou (não perdeu), então estava descansado (não cansado)\"."
+      },
+      {
+        num: 9,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Para atender, adequadamente, à população que recorre a um posto policial em busca de ajuda e proteção, os profissionais atuantes devem estar devidamente preparados, devem ser éticos.\nConsidere a proposição p: Se o Oficial da Polícia Militar não tem ética, então ele perde a confiança da população. Assim, é correto afirmar que a negação da proposição p é ~p: O Oficial da Polícia Militar",
         opcoes: { A: "perde a confiança da população se, e somente se, ele não tem ética.", B: "não perde a confiança da população e ele não tem ética.", C: "não perde a confiança da população ou não tem ética.", D: "perde a confiança da população e não tem ética.", E: "tem ética ou perde a confiança da população." },
         gabarito: 'B',
         explicacao: "A negação de \"se p, então q\" é \"p E não q\": mantém o antecedente e nega o consequente → \"não tem ética e não perde a confiança\"."
       },
       {
-        num: 7,
+        num: 10,
         enunciado: "(IBFC · Soldado PM BA · 2017) A frase: “Se o soldado chegou atrasado, então não fez atividade física” é equivalente à frase:",
         opcoes: { A: "O soldado chegou atrasado e não fez atividade física", B: "O soldado chegou atrasado e fez atividade física", C: "O soldado chegou atrasado ou fez atividade física", D: "O soldado não chegou atrasado ou não fez atividade física", E: "O soldado chegou atrasado se, e somente se, não fez atividade física" },
         gabarito: 'D',
         explicacao: "Equivalência clássica da banca: p→q ≡ ~p ∨ q. \"Se chegou atrasado, então não fez atividade\" ≡ \"NÃO chegou atrasado OU não fez atividade física\"."
       },
       {
-        num: 8,
+        num: 11,
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) De acordo com os conhecimentos sobre Lógica Matemática, é correto afirmar que a proposição “Não é verdade que se X participa da manifestação, então presencia atos de vandalismo” é logicamente equivalente a",
+        opcoes: { A: "“É verdade que X participa da manifestação e presencia atos de vandalismo”.", B: "“É verdade que X participa da manifestação ou presencia atos de vandalismo”.", C: "“Não é verdade que X participa da manifestação ou não presencia atos de vandalismo”.", D: "“Não é verdade que X não participa da manifestação ou presencia atos de vandalismo”.", E: "“Não é verdade que X não participa da manifestação ou não presencia atos de vandalismo”." },
+        gabarito: 'D',
+        explicacao: "~(p→q) ≡ p ∧ ~q ≡ ~(~p ∨ q) → \"Não é verdade que X não participa da manifestação ou presencia atos de vandalismo\"."
+      },
+      {
+        num: 12,
         enunciado: "(FCC · Soldado PM BA · 2012) A negação da afirmação: “Estou com saúde e sou feliz” é",
-        opcoes: { A: "Não estou com saúde ou sou feliz.", B: "Não estou com saúde ou não sou feliz.", C: "Não estou feliz e estou com saúde.", D: "Não estou com saúde e estou feliz.", E: "Estou com saúde ou não sou feliz." },
+        opcoes: { A: "Não estou com saúde ou sou feliz.", B: "Não estou com saúde ou não sou feliz.", C: "Não estou feliz e estou com saúde.", D: "Não estou com saúde e estou feliz.", E: "Estou com saúde ou não sou feliz," },
         gabarito: 'B',
         explicacao: "De Morgan: ~(p ∧ q) = ~p ∨ ~q → \"Não estou com saúde OU não sou feliz\"."
       },
       {
-        num: 9,
+        num: 13,
         enunciado: "(FCC · Soldado PM BA · 2012) A negação lógica da proposição: \"Pedro é o mais velho da classe ou Jorge é o mais novo da classe\" é",
         opcoes: { A: "Pedro não è o mais novo da classe ou Jorge não é o mais velho da classe.", B: "Pedro é o mais velho da classe e Jorge não é o mais novo da classe.", C: "Pedro não é o mais velho da classe e Jorge não é o mais novo da classe.", D: "Pedro não é o mais novo da classe e Jorge não é o mais velho da classe.", E: "Pedro é o mais novo da classe ou Jorge é o mais novo da classe." },
         gabarito: 'C',
         explicacao: "Negação do \"ou\": negam-se as duas partes e troca-se por \"e\" → \"Pedro não é o mais velho E Jorge não é o mais novo\"."
       },
       {
-        num: 10,
-        enunciado: "(CONSULTEC · CFO PM BA · 2011) Após interrogar o suspeito de um delito, o entrevistador concluiu que “se o suspeito mentiu, então ele é culpado”. Sendo verdadeira tal conclusão, também é verdade que",
+        num: 14,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Após interrogar o suspeito de um delito, o entrevistador concluiu que “se o suspeito mentiu, então ele é culpado”.\nSendo verdadeira tal conclusão, também é verdade que",
         opcoes: { A: "o suspeito mentiu.", B: "o suspeito é culpado.", C: "o suspeito não é culpado e mentiu.", D: "se o suspeito não é culpado, então ele não mentiu.", E: "se o suspeito não mentiu, então ele não é culpado." },
         gabarito: 'D',
         explicacao: "Todo condicional equivale à sua contrapositiva: p→q ≡ ~q→~p → \"se o suspeito não é culpado, então ele não mentiu\"."
@@ -761,7 +789,7 @@ window.PL_SEED_LISTAS = [
     materia: 'Raciocínio Lógico', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
-    total: 10,
+    total: 12,
     questoes: [
       {
         num: 1,
@@ -779,56 +807,70 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 3,
-        enunciado: "(IBFC · Soldado PM BA · 2020) Considere a proposição: “Todo pesquisador é estudioso.” Assinale a alternativa que não apresenta uma negação da proposição anterior.",
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) No preparo de um determinado prato, os ingredientes M, N, P, Q e R devem ser utilizados de acordo com as seguintes regras:\nSe o ingrediente M for usado, então, necessariamente, P deverá ser usado.\nSe o ingrediente N for usado, então, necessariamente, Q e R deverão ser usados Se o ingrediente R for usado, então, necessariamente, M ou Q deverão ser usados.\nNessas condições, desejando-se usar exatamente três desses ingredientes, o número máximode opções distintas será",
+        opcoes: { A: "2", B: "4", C: "6", D: "8", E: "10" },
+        gabarito: 'B',
+        explicacao: "Regras: M→P; N→(Q e R); R→(M ou Q). Trios válidos: {M,P,Q}, {M,P,R}, {P,Q,R} e {N,Q,R} → 4 opções."
+      },
+      {
+        num: 4,
+        enunciado: "(IBFC · Soldado PM BA · 2020) Considere a proposição:\n“Todo pesquisador é estudioso.” Assinale a alternativa que não apresenta uma negação da proposição anterior.",
         opcoes: { A: "Existe algum pesquisador que não é estudioso", B: "Algum pesquisador não é estudioso", C: "Pelo menos um pesquisador não é estudioso", D: "Existe pesquisador que não é estudioso", E: "Nenhum pesquisador é estudioso" },
         gabarito: 'E',
         explicacao: "A negação de \"todo A é B\" é \"existe A que não é B\" (basta um contraexemplo). \"NENHUM pesquisador é estudioso\" é afirmação muito mais forte — não é a negação."
       },
       {
-        num: 4,
-        enunciado: "(FCC · Soldado PM BA · 2012) Há um grupo de 13 meninos. Alguém diz: \"Todos esses meninos têm 13 anos de idade.” Para negar essa afirmação, o número mínimo de meninos que não pode ter13 anos de idade é:",
+        num: 5,
+        enunciado: "(FCC · Soldado PM BA · 2012) Há um grupo de 13 meninos. Alguém diz: \"Todos esses meninos têm 13 anos de idade.” Para negar essa afirmação, o número mínimo de meninos que não pode ter 13 anos de idade é:",
         opcoes: { A: "1.", B: "13.", C: "7.", D: "12.", E: "4" },
         gabarito: 'A',
         explicacao: "Para negar \"todos têm 13 anos\" basta UM menino com idade diferente. Negação de \"todo\" = \"pelo menos um não\"."
       },
       {
-        num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Em certa localidade, sabe-se que todos os militares têm porte de arma;nem todas as pessoas que têm porte de arma trabalham em quartéis. Com relação a essa localidade, alguém faz as seguintes afirmações: ( ) Somente militares trabalham em quartéis. ( ) É possível que existam militares que não trabalhem em quartéis. ( ) Algumas pessoas que trabalham em quartéis não têm porte de arma. Analisando-se tais afirmações e classificando-as como verdadeiras V ou falsas F, pode-se afirmar que, considerada de cima para baixo, a sequência correta é a",
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Em certa localidade, sabe-se que todos os militares têm porte de arma;\nnem todas as pessoas que têm porte de arma trabalham em quartéis.\nCom relação a essa localidade, alguém faz as seguintes afirmações:\n( ) Somente militares trabalham em quartéis.\n( ) É possível que existam militares que não trabalhem em quartéis.\n( ) Algumas pessoas que trabalham em quartéis não têm porte de arma.\nAnalisando-se tais afirmações e classificando-as como verdadeiras V ou falsas F, pode-se afirmar que, considerada de cima para baixo, a sequência correta é a",
         opcoes: { A: "V F F", B: "F V F", C: "F V V", D: "F F V", E: "V F V" },
         gabarito: 'C',
         explicacao: "I: nada garante que só militares trabalhem em quartéis (F). II: nem todos com porte estão em quartéis, então é possível haver militar fora (V). III: pode haver civil sem porte em quartel (V). Sequência: F V V."
       },
       {
-        num: 6,
-        enunciado: "(FCC · Soldado PM BA · 2009) Sejam as afirmações: – “Todo policial é forte.”– “Existem policiais altos.” Considerando que as duas afirmações são verdadeiras, então, com certeza, é correto afirmar que:",
+        num: 7,
+        enunciado: "(FCC · Soldado PM BA · 2009) Sejam as afirmações:\n– “Todo policial é forte.” – “Existem policiais altos.” Considerando que as duas afirmações são verdadeiras, então, com certeza, é correto afirmar que:",
         opcoes: { A: "Todo policial alto não é forte.", B: "Todo policial forte é alto.", C: "Existem policiais baixos e fracos.", D: "Algum policial alto não é forte.", E: "Algum policial forte é alto." },
         gabarito: 'E',
         explicacao: "Existem policiais altos, e TODO policial é forte — logo esses altos são fortes: \"algum policial forte é alto\" é conclusão necessária."
       },
       {
-        num: 7,
-        enunciado: "(FCC · Soldado PM BA · 2009) Certo dia, três policiais militares − Alceste, Belo e Guerra − foram designados para cumprir tarefas distintas entre si. Considere as seguintes informações: − seus tempos de serviço na Corporação eram: 12, 15 e 19 anos, não respectivamente; − as tarefas para as quais eles foram designados eram: patrulhamento de um bairro, acompanhamento de um evento e patrulhamento do trânsito em uma região; − a Alceste coube exercer o acompanhamento do evento; − na ocasião, Guerra tinha 19 anos de serviço na Corporação; − aquele que tinha 12 anos de serviço fez o patrulhamento do trânsito. Com base nas informações dadas, é correto afirmar que",
+        num: 8,
+        enunciado: "(FCC · Soldado PM BA · 2012) As amigas são Júlia, Marta e Cláudia. As idades de cada uma, não necessariamente na ordem em que foram apresentadas as amigas, são 13 anos, 15 anos e 17 anos. Também, não necessariamente nessa ordem, os animais de estimação de cada uma são cão, gato e coelho.\nSabe-se que:\nI. A dona do gato tem 13 anos e Júlia tem 15 anos.\nII. A amiga que não é a mais nova nem a mais velha tem o cão.\nIII. Cláudia tem um animal de estimação que não é o gato.\nSendo assim, a alternativa totalmente correta é",
+        opcoes: { A: "Marta tem 13 anos e o coelho é de Cláudia,", B: "O gato é de Júlia e Cláudia tem 13 anos.", C: "O cão é de Júlia e Marta tem 15 anos.", D: "O cão é de Marta e o gato é de Cláudia.", E: "A dona do gato tem 15 anos e Júlia tem o coelho." },
+        gabarito: 'A',
+        explicacao: "A dona do gato tem 13 e Júlia tem 15; a do meio (15) tem o cão → Júlia tem o cão. Cláudia não tem o gato → Marta (13) tem o gato e Cláudia (17) o coelho."
+      },
+      {
+        num: 9,
+        enunciado: "(FCC · Soldado PM BA · 2009) Certo dia, três policiais militares − Alceste, Belo e Guerra − foram designados para cumprir tarefas distintas entre si. Considere as seguintes informações:\n− seus tempos de serviço na Corporação eram: 12, 15 e 19 anos, não respectivamente;\n− as tarefas para as quais eles foram designados eram: patrulhamento de um bairro, acompanhamento de um evento e patrulhamento do trânsito em uma região;\n− a Alceste coube exercer o acompanhamento do evento;\n− na ocasião, Guerra tinha 19 anos de serviço na Corporação;\n− aquele que tinha 12 anos de serviço fez o patrulhamento do trânsito.\nCom base nas informações dadas, é correto afirmar que",
         opcoes: { A: "Alceste tinha 12 anos de serviço na Corporação.", B: "Belo tinha 12 anos de serviço na Corporação.", C: "Belo fez o patrulhamento do bairro.", D: "Alceste não tinha 15 anos de serviço na Corporação.", E: "Guerra fez o patrulhamento do trânsito." },
         gabarito: 'B',
         explicacao: "Guerra tem 19 anos. Alceste faz o evento, logo não fez o trânsito → não tem 12 anos → Alceste tem 15 e Belo tem 12 (e fez o trânsito); Guerra patrulhou o bairro."
       },
       {
-        num: 8,
-        enunciado: "(FCC · Soldado PM BA · 2007) Durante a perícia feita em uma residência assaltada, foram encontrados os seguintes vestígios que, com certeza, haviam sido deixados pelos assaltantes: uma lata vazia de refrigerante;uma lata vazia de cerveja;um fio de cabelo loiro;um toco de cigarro. Após a realização da perícia, a Polícia concluiu que os assaltantes eram apenas dois e que eles se encontravam entre cinco suspeitos − Alceste, Boni, Calunga, Dorival eEufrásio − cujas características são as seguintes: − Alceste: só bebe refrigerante, tem cabelos loiros e não fuma; − Boni: bebe cerveja e refrigerante, tem cabelos pretos e não fuma; − Calunga: não bebe refrigerante e nem cerveja, é ruivo e fuma cigarros; − Dorival: só bebe cerveja, tem cabelos loiros e não fuma; − Eufrásio: só bebe refrigerante, é totalmente careca e fuma cigarros. Com base nas informações dadas, é correto afirmar que os assaltantes eram",
+        num: 10,
+        enunciado: "(FCC · Soldado PM BA · 2007) Durante a perícia feita em uma residência assaltada, foram encontrados os seguintes vestígios que, com certeza, haviam sido deixados pelos assaltantes:\numa lata vazia de refrigerante;\numa lata vazia de cerveja;\num fio de cabelo loiro;\num toco de cigarro.\nApós a realização da perícia, a Polícia concluiu que os assaltantes eram apenas dois e que eles se encontravam entre cinco suspeitos − Alceste, Boni, Calunga, Dorival e Eufrásio − cujas características são as seguintes:\n− Alceste: só bebe refrigerante, tem cabelos loiros e não fuma;\n− Boni: bebe cerveja e refrigerante, tem cabelos pretos e não fuma;\n− Calunga: não bebe refrigerante e nem cerveja, é ruivo e fuma cigarros;\n− Dorival: só bebe cerveja, tem cabelos loiros e não fuma;\n− Eufrásio: só bebe refrigerante, é totalmente careca e fuma cigarros.\nCom base nas informações dadas, é correto afirmar que os assaltantes eram",
         opcoes: { A: "Alceste e Boni.", B: "Dorival e Eufrásio.", C: "Boni e Calunga.", D: "Calunga e Dorival.", E: "Alceste e Eufrásio." },
         gabarito: 'B',
         explicacao: "Os vestígios exigem cobrir: cerveja + refrigerante + cabelo loiro + cigarro. Dorival (só cerveja, loiro) e Eufrásio (só refrigerante, careca, fumante) cobrem tudo sem contradição."
       },
       {
-        num: 9,
-        enunciado: "(FCC · Soldado PM BA · 2012) Considere três amigos, Roberto, Eduardo e Marcos cujas idades, em anos completos, são diferentes entre si. - Roberto diz: Eduardo é o mais velho entre nós três.- Marcos diz: Roberto não é o mais novo de nós três.- Eduardo diz: Marcos é o mais novo entre nós três. Sabendo que apenas um dos amigos não disse a verdade, a lista dos amigos, em ordem crescente das respectivas idades, é",
+        num: 11,
+        enunciado: "(FCC · Soldado PM BA · 2012) Considere três amigos, Roberto, Eduardo e Marcos cujas idades, em anos completos, são diferentes entre si.\n- Roberto diz: Eduardo é o mais velho entre nós três.\n- Marcos diz: Roberto não é o mais novo de nós três.\n- Eduardo diz: Marcos é o mais novo entre nós três.\nSabendo que apenas um dos amigos não disse a verdade, a lista dos amigos, em ordem crescente das respectivas idades, ê",
         opcoes: { A: "Eduardo, Roberto e Marcos.", B: "Roberto, Eduardo e Marcos.", C: "Marcos, Eduardo e Roberto.", D: "Marcos, Roberto e Eduardo.", E: "Eduardo, Marcos e Roberto." },
         gabarito: 'C',
         explicacao: "Teste a ordem crescente Marcos < Eduardo < Roberto: Roberto mente (Eduardo não é o mais velho), Marcos diz a verdade e Eduardo diz a verdade — exatamente um mentiroso. ✓"
       },
       {
-        num: 10,
-        enunciado: "(FCC · Soldado PM BA · 2007) Caetano, Gilberto e Eudes, soldados da Polícia Militar do Estado da Bahia, foram designados certo dia para o patrulhamento de trânsito em três bairros − A, B e C −de uma cidade. Indagados sobre seus locais de patrulhamento, forneceram as seguintes informações: − o soldado que vai patrulhar o bairro A disse que Caetano vai patrulhar B;− o soldado que vai patrulhar B disse chamar-se Gilberto;− o soldado que vai patrulhar C afirmou que Eudes vai patrulhar B. Como era sabido que apenas Caetano não mentiu, então os bairros que Caetano, Gilberto e Eudes fizeram patrulhamento em tal dia foram, respectivamente,",
+        num: 12,
+        enunciado: "(FCC · Soldado PM BA · 2007) Caetano, Gilberto e Eudes, soldados da Polícia Militar do Estado da Bahia, foram designados certo dia para o patrulhamento de trânsito em três bairros − A, B e C − de uma cidade. Indagados sobre seus locais de patrulhamento, forneceram as seguintes informações:\n− o soldado que vai patrulhar o bairro A disse que Caetano vai patrulhar B;\n− o soldado que vai patrulhar B disse chamar-se Gilberto;\n− o soldado que vai patrulhar C afirmou que Eudes vai patrulhar B.\nComo era sabido que apenas Caetano não mentiu, então os bairros que Caetano, Gilberto e Eudes fizeram patrulhamento em tal dia foram, respectivamente,",
         opcoes: { A: "A, B e C.", B: "A, C e B.", C: "B, C e A.", D: "C, A e B.", E: "C, B e A." },
         gabarito: 'D',
         explicacao: "Caetano é o único que diz a verdade. Na opção D (Caetano em C, Gilberto em A, Eudes em B): Gilberto (em A) mente, Eudes (em B) mente ao dizer que é Gilberto e Caetano (em C) diz a verdade. Tudo consistente."
@@ -843,49 +885,70 @@ window.PL_SEED_LISTAS = [
     materia: 'Raciocínio Lógico', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ["mat-lg", "cr-04"],
-    total: 6,
+    total: 9,
     questoes: [
       {
         num: 1,
-        enunciado: "(FCC · Soldado PM BA · 2012) Observe a sequência de números, na qual se passa de um número para o seguinte somando alternadamente -1 ou 6: 5; 4; 10; 9; 15; 14; 20; 19; 25; . . . Mantendo sempre a mesma regra, o resultado da subtração entre o 31º elemento da sequência e o 27º elemento é:",
+        enunciado: "(FCC · Soldado PM BA · 2012) Observe a seqüência de números, na qual se passa de um número para o seguinte somando alternadamente -1 ou 6:\n5; 4; 10; 9; 15; 14; 20; 19; 25; . . .\nMantendo sempre a mesma regra, o resultado da subtração entre o 31º elemento da seqüência e o 27º elemento é:",
         opcoes: { A: "10.", B: "1.", C: "4.", D: "6.", E: "20." },
         gabarito: 'A',
         explicacao: "Os termos das posições ímpares valem 5k: o 27º termo é 5·14 = 70 e o 31º é 5·16 = 80. Diferença: 80 − 70 = 10."
       },
       {
         num: 2,
-        enunciado: "(FCC · Soldado PM BA · 2009) Os termos da sequência (25; 22; 11; 33; 30; 15; 45; 42; 21; 63; . . .) são obtidos segundo um determinado padrão. De acordo com esse padrão o décimo terceiro termo da sequência deverá ser um número",
+        enunciado: "(FCC · Soldado PM BA · 2009) Os termos da sequência (25; 22; 11; 33; 30; 15; 45; 42; 21; 63; . . .) são obtidos segundo um determinado padrão.\nDe acordo com esse padrão o décimo terceiro termo da sequência deverá ser um número",
         opcoes: { A: "não inteiro.", B: "ímpar.", C: "maior do que 80.", D: "divisível por 4.", E: "múltiplo de 11." },
         gabarito: 'C',
         explicacao: "O padrão se repete em ciclos: −3, ÷2, ×3. Continuando: 63, 60, 30, 90 — o 13º termo é 90, maior do que 80."
       },
       {
         num: 3,
+        enunciado: "(FCC · Soldado PM BA · 2007) Os dois pares de palavras abaixo foram formados segundo determinado critério.\nlacração − cal amostra − soma lavrar − ?\nSegundo o mesmo critério, a palavra que deverá ocupar o lugar do ponto de interrogação é",
+        opcoes: { A: "alar.", B: "rala.", C: "ralar.", D: "larva.", E: "arval." },
+        gabarito: 'E',
+        explicacao: "O critério é inverter o início da palavra: lacração → \"lac\" invertido = cal; amostra → \"amos\" invertido = soma; lavrar → \"lavra\" invertido = arval."
+      },
+      {
+        num: 4,
+        enunciado: "(FCC · Soldado PM BA · 2009) As letras que aparecem no quadriculado abaixo devem ser substituídas por números a fim de que, em cada uma das linhas, colunas e diagonais, a soma dos três números seja a mesma.\nX 7 2 Y 5 W 8 Z 4 Se X, Y, W e Z satisfazem as condições do problema, então X + Y + W + Z é igual a",
+        opcoes: { A: "19", B: "18", C: "17", D: "16", E: "15" },
+        gabarito: 'A',
+        explicacao: "Quadrado mágico com centro 5 → soma 15: X = 6, Y = 1, W = 9, Z = 3. X + Y + W + Z = 19."
+      },
+      {
+        num: 5,
         enunciado: "(FCC · Soldado PM BA · 2012) Na situação que vou descrever todos os envolvidos descendem de meu pai e de minha mãe. Tenho um irmão e duas irmãs e sou pai de duas crianças. Meu irmão tem dez sobrinhos. Minhas irmãs têm quantidades iguais de filhos, e eu tenho onze sobrinhos. Nessa situação, o número de primos de um dos filhos de uma de minhas irmãs é",
         opcoes: { A: "12.", B: "10.", C: "9.", D: "8.", E: "11." },
         gabarito: 'C',
         explicacao: "Meu irmão tem 10 sobrinhos → meus filhos (2) + filhos das irmãs = 10 → as irmãs têm 8 filhos (4 cada). Tenho 11 sobrinhos → meu irmão tem 3 filhos. Primos de um filho de uma irmã: 2 + 3 + 4 = 9."
       },
       {
-        num: 4,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Motivados pelo desejo de participar de uma seleção, alguns amigos seguiam concentrados: um na frente e quatro atrás, um atrás e quatro na frente, um entre doise dois, e cinco em linha. Logo, seguiam concentrados",
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Motivados pelo desejo de participar de uma seleção, alguns amigos seguiam concentrados: um na frente e quatro atrás, um atrás e quatro na frente, um entre dois e dois, e cinco em linha.\nLogo, seguiam concentrados",
         opcoes: { A: "50 amigos.", B: "20 amigos", C: "15 amigos.", D: "10 amigos.", E: "5 amigos." },
         gabarito: 'E',
         explicacao: "Cinco amigos em fila única atendem a tudo: 1 na frente e 4 atrás, 1 atrás e 4 na frente, 1 entre dois e dois, e 5 em linha."
       },
       {
-        num: 5,
-        enunciado: "(FCC · Soldado PM BA · 2012) De um grupo A de 30 crianças é dito que não há apenas meninos. De um grupo B de 20 crianças é dito que não há apenas meninas. A partir dessas afirmações,pode-se afirmar que",
+        num: 7,
+        enunciado: "(FCC · Soldado PM BA · 2012) De um grupo A de 30 crianças é dito que não há apenas meninos. De um grupo B de 20 crianças é dito que não há apenas meninas. A partir dessas afirmações, pode-se afirmar que",
         opcoes: { A: "o número de meninas do grupo A é maior que o número de meninos do grupo B.", B: "são 15 as meninas do grupo A e 10 os meninos do grupo B.", C: "o número de meninos do grupo A é maior que o número de meninas do grupo B.", D: "há pelo menos uma menina em A e pelo menos um menino em B.", E: "há 10 meninos em A e 5 meninos em B." },
         gabarito: 'D',
         explicacao: "\"Não há apenas meninos\" garante ao menos UMA menina em A; \"não há apenas meninas\" garante ao menos UM menino em B. É só o que se pode afirmar com certeza."
       },
       {
-        num: 6,
-        enunciado: "(FCC · Soldado PM BA · 2009) Observe que na sentença abaixo há duas palavras sublinhadas e dois espaços em branco. Cachorro está para . . . . . assim como pernilongo está para . . . . . . Preenchidos corretamente os espaços, a primeira palavra deve ter com a segunda a mesma relação que a terceira tem com a quarta. Nessas condições, as respectivas palavras que devem ocupar as lacunas são:",
+        num: 8,
+        enunciado: "(FCC · Soldado PM BA · 2009) Observe que na sentença abaixo há duas palavras sublinhadas e dois espaços em branco.\nCachorro está para . . . . . assim como pernilongo está para . . . . . .\nPreenchidos corretamente os espaços, a primeira palavra deve ter com a segunda a mesma relação que a terceira tem com a quarta. Nessas condições, as respectivas palavras que devem ocupar as lacunas são:",
         opcoes: { A: "cadela − pernalonga", B: "pelo − garra", C: "mordida − ferrolhada", D: "latido − zumbido", E: "raiva − picada" },
         gabarito: 'D',
         explicacao: "Latido está para cachorro assim como zumbido está para pernilongo — relação animal → som característico."
+      },
+      {
+        num: 9,
+        enunciado: "(FCC · Soldado PM BA · 2007) A sentença seguinte é seguida de um número entre parênteses, o qual corresponde ao número de letras de uma palavra que se aplica à definição dada.\n“Entrada ilegal de mercadorias no país.” (11) A letra inicial de tal palavra é",
+        opcoes: { A: "T", B: "S", C: "E", D: "B", E: "C" },
+        gabarito: 'E',
+        explicacao: "\"Entrada ilegal de mercadorias no país\" com 11 letras = CONTRABANDO → inicial C."
       }
     ]
   },
@@ -897,70 +960,91 @@ window.PL_SEED_LISTAS = [
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ["mat-01", "mat-06", "mat-08", "mat-09", "mb-03", "mb-07", "cr-01", "cr-02"],
-    total: 9,
+    total: 12,
     questoes: [
       {
         num: 1,
-        enunciado: "(CONSULTEC · CFO PM BA · 2014) Todos os funcionários de determinada empresa deverão fazer um curso de atualização por ela oferecido. Tal curso é composto por três módulos distintos eindependentes que poderão ser cursados simultaneamente ou não. Se cada módulo tiver uma taxa de participação de 70% dos funcionários, pode-se estimar o percentual mínimo de participação simultânea, nos três módulos, em",
+        enunciado: "(IBFC · Soldado PM BA · 2017) Assinale a alternativa correta.\nNuma tropa com 80 soldados, sabe-se que 37 deles gostam de natação, 25 gostam de futebol. Sendo que, nesses dois grupos, 8 gostam de ambas as modalidades. Nessas condições, o total de soldados que não gostam de nenhuma dessas modalidades é:",
+        opcoes: { A: "54", B: "26", C: "36", D: "20", E: "10" },
+        gabarito: 'B',
+        explicacao: "Pelo menos uma modalidade: 37 + 25 − 8 = 54. Nenhuma: 80 − 54 = 26."
+      },
+      {
+        num: 2,
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Todos os funcionários de determinada empresa deverão fazer um curso de atualização por ela oferecido. Tal curso é composto por três módulos distintos e independentes que poderão ser cursados simultaneamente ou não.\nSe cada módulo tiver uma taxa de participação de 70% dos funcionários, pode-se estimar o percentual mínimo de participação simultânea, nos três módulos, em",
         opcoes: { A: "10%.", B: "20%.", C: "25%.", D: "30%.", E: "40%." },
         gabarito: 'A',
         explicacao: "Princípio do pior caso: a participação simultânea mínima é 100% − 3×(100% − 70%) = 100% − 90% = 10%."
       },
       {
-        num: 2,
-        enunciado: "(FCC · Soldado PM BA · 2012) Sobre a apreciação dos sucos de abacaxi, caju e maracujá, foi feita uma enquete entre 14 pessoas obtendo-se algumas informações. Gostar de apenas um desses sucos, apenas uma pessoa gosta de cada um deles. Gostar dos três sucos, cinco são as pessoas que assim gostam. Há também os que gostam de apenas dois sabores de suco, sejam eles abacaxi e caju, abacaxi e maracujá e caju e maracujá. Sabendo que o suco mais apreciado é o de caju e o menos apreciado é o de maracujá, calcula-se que o número de apreciadores do suco de caju, nessa enquete, é",
+        num: 3,
+        enunciado: "(FCC · Soldado PM BA · 2012) Sobre a apreciação dos sucos de abacaxi, caju e mara­cujá, foi feita uma enquete entre 14 pessoas obtendo-se algumas informações. Gostar de apenas um desses su­cos, apenas uma pessoa gosta de cada um deles. Gostar dos três sucos, cinco são as pessoas que assim gostam. Há também os que gostam de apenas dois sabores de suco, sejam eles abacaxi e caju, abacaxi e maracujá e caju e maracujá. Sabendo que o suco mais apreciado é o de caju e o menos apreciado é o de maracujá, calcula-se que o número de apreciadores do suco de caju, nessa enquete, é",
         opcoes: { A: "11.", B: "8.", C: "12.", D: "9.", E: "10." },
         gabarito: 'A',
         explicacao: "\"Apenas um\": 3 pessoas; os três sucos: 5; sobram 6 para os pares. Distribuindo 3 + 1 + 2 para manter caju > abacaxi > maracujá: caju = 1 + 5 + 3 + 2 = 11."
       },
       {
-        num: 3,
-        enunciado: "(CONSULTEC · CFO PM BA · 2010) Devido à grande incidência de casos de meningite e da gripe H1N1, foi feito um levantamento dentre 120 pessoas de uma comunidade quanto às vacinas que já haviam tomado. Desse total, constatou-se que 42 pessoas haviam sido vacinadas contra a meningite, 66 pessoas contra a gripe H1N1 e que 42 pessoas ainda não haviam tomado nenhuma das duas vacinas. Com base nesses dados, pode-se afirmar que a porcentagem de pessoas do grupo que tomou as duas vacinas é de",
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Devido à grande incidência de casos de meningite e da gripe H1N1, foi feito um levantamento dentre 120 pessoas de uma comunidade quanto às vacinas que já haviam tomado.Desse total, constatou-se que 42 pessoas haviam sido vacinadas contra a meningite, 66 pessoas contra a gripe H1N1 e que 42 pessoas ainda não haviam tomado nenhuma das duas vacinas.\nCom base nesses dados, pode-se afirmar que a porcentagem de pessoas do grupo que tomou as duas vacinas é de",
         opcoes: { A: "40%", B: "36%", C: "32%", D: "28%", E: "25%" },
         gabarito: 'E',
         explicacao: "União: 120 − 42 (nenhuma) = 78. Interseção: 42 + 66 − 78 = 30 pessoas → 30/120 = 25%."
       },
       {
-        num: 4,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Em uma seleção para cursos no CFOPM, de certa cidade, foram abertas 300 vagas para o nível I e 100 vagas para o nível II. Sabe-se que houve 9000 inscrições para o nível I e a terça parte para o nível II. Nessas condições, pode-se concluir que",
-        opcoes: { A: "a concorrência para o nível 1 foi maior do que a concorrência para o nível II.", B: "a concorrência para o nível I foi igual à concorrência para o nível II.", C: "a concorrência para o nível II foi de 200 candidatos por vaga.", D: "houve 150 candidatos por vaga para o nível II.", E: "houve 200 candidatos por vaga para o nível I." },
+        num: 5,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Em uma seleção para cursos no CFOPM, de certa cidade, foram abertas 300 vagas para o nível I e 100 vagas para o nível II. Sabe-se que houve 9000 inscrições para o nível I e a terça parte para o nivel II.\nNessas condições, pode-se concluir que",
+        opcoes: { A: "a concorrência para o nível 1 foi maior do que a concorrência para o nível II.", B: "a concorrência para o nível I foi igual à concorrência para o nível II.", C: "a concorrência para o nível II foi de 200 candidatos por vaga.", D: "houve 150 candidatos por vaga para o nivel II.", E: "houve 200 candidatos por vaga para o nivel I." },
         gabarito: 'B',
         explicacao: "Concorrência nível I: 9000/300 = 30 por vaga; nível II: 3000/100 = 30 por vaga — iguais."
       },
       {
-        num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Como parte de sua preparação física, um atleta foi aconselhado por um nutricionista a acrescentar à sua dieta algum suplemento alimentar, como X ou Y, dos quais se tem as seguintes informações: X contém 2 unidades de fibras, 1 unidade de proteínas, 3 unidades de vitaminas e cada unidade desse suplemento custa r reais. Y contém 1 unidade de fibras, 2 unidades de proteínas, 2 unidades de vitaminas e cada unidade desse suplemento custa 2r reais. Sendo recomendada a ingestão diária mínima de 4 unidades de fibras, 5 unidades de proteínas e 8 unidades de vitaminas, pode-se afirmar que a despesa com os suplementos será mínima, se o número de unidades de X e de Y ingeridos forem, respectivamente, iguais a",
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Em determinado concurso, os candidatos foram distribuídos em salas com 40 candidatos cada, segundo a ordem crescente dos números de inscrição: sala 01 recebe as inscrições 0001 a 0040; sala 02, as inscrições 0041 a 0080; sala 03, as inscrições 0081 a 0120; e assim por diante.\nNessas condições, pode-se afirmar que um candidato cujo número de inscrição coincide com a média aritmética dos números de inscrição obtidos através de todas as permutações de 2, 7 e 9 ficou na sala de número",
+        opcoes: { A: "20.", B: "19.", C: "18.", D: "17.", E: "16." },
+        gabarito: 'D',
+        explicacao: "Permutações de 2, 7 e 9: seis números cuja soma é (2+7+9)·222 = 3996 → média 666. Inscrição 666 ÷ 40 por sala = 16,65 → sala 17."
+      },
+      {
+        num: 7,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Como parte de sua preparação física, um atleta foi aconselhado por um nutricionista a acrescentar à sua dieta algum suplemento alimentar, como X ou Y, dos quais se tem as seguintes informações:\nX contém 2 unidades de fibras, 1 unidade de proteínas, 3 unidades de vitaminas e cada unidade desse suplemento custa r reais.\nY contém 1 unidade de fibras, 2 unidades de proteínas, 2 unidades de vitaminas e cada unidade desse suplemento custa 2r reais.\nSendo recomendada a ingestão diária mínima de 4 unidades de fibras, 5 unidades de proteínas e 8 unidades de vitaminas, pode-se afirmar que a despesa com os suplementos será mínima, se o número de unidades de X e de Y ingeridos forem, respectivamente, iguais a",
         opcoes: { A: "1 e 2.", B: "2 e 1.", C: "2 e 2.", D: "2 e 3.", E: "3 e 2." },
         gabarito: 'C',
         explicacao: "Teste das opções nas exigências (4 fibras, 5 proteínas, 8 vitaminas): (2,2) atende tudo com custo 2r + 4r = 6r — o menor entre as combinações viáveis."
       },
       {
-        num: 6,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Adicionando-se o menor inteiro positivo ao menor divisor inteiro de 8, em seguida, multiplicando-se pela raiz da equação 0,3x - 10 = 8, obtém-se, corretamente,",
+        num: 8,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Adicionando-se o menor inteiro positivo ao menor divisor inteiro de 8, em seguida, multiplicando-se pela raiz da equação 0,3x - 10 = 8, obtém se, corretamente,",
         opcoes: { A: "360", B: "180", C: "- 420", D: "- 540", E: "- 600" },
         gabarito: 'C',
         explicacao: "Menor inteiro positivo = 1; menor divisor inteiro de 8 = −8; raiz de 0,3x − 10 = 8 → x = 60. Logo (1 + (−8)) · 60 = −420."
       },
       {
-        num: 7,
-        enunciado: "(IBFC · Soldado PM BA · 2017) Assinale a alternativa correta. Antônio gastou 50% de dois quintos do valor que possuía e ainda sobraram R$ 160,00 a ele. Nessas circunstâncias o valor gasto por Antônio foi:",
+        num: 9,
+        enunciado: "(IBFC · Soldado PM BA · 2017) Assinale a alternativa correta.\nAntônio gastou 50% de dois quintos do valor que possuía e ainda sobraram R$ 160,00 a ele.\nNessas circunstâncias o valor gasto por Antônio foi:",
         opcoes: { A: "R$ 200,00", B: "R$ 160,00", C: "R$ 60,00", D: "R$ 80,00", E: "R$ 40,00" },
         gabarito: 'E',
         explicacao: "Gastou 50% de 2/5 = 1/5 do valor. Sobraram 4/5 = R$ 160 → tinha R$ 200 e gastou R$ 40."
       },
       {
-        num: 8,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Em uma blitz, foram encontradas, no interior de um automóvel, duas garrafas, de mesma capacidade, cheias com uma mistura não identificada de bebidas alcoólicas.Após análise, verificou-se que uma das garrafas continha uma mistura das bebidas X e Y na razão de 1 para 2, enquanto a outra garrafa continha uma mistura das mesmas bebidas, porém na razão de 3 para 2. Despejando-se o conteúdo das duas garrafas em um terceiro recipiente, obter-se-á uma nova mistura de X e Y, na razão de",
+        num: 10,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Em uma blitz, foram encontradas, no interior de um automóvel, duas garrafas, de mesma capacidade, cheias com uma mistura não identificada de bebidas alcoólicas. Após análise, verificou-se que uma das garrafas continha uma mistura das bebidas X e Y na razão de 1 para 2, enquanto a outra garrafa continha uma mistura das mesmas bebidas, porém na razão de 3 para 2.\nDespejando-se o conteúdo das duas garrafas em um terceiro recipiente, obter-se-á uma nova mistura de X e Y, na razão de",
         opcoes: { A: "7 para 8.", B: "5 para 4.", C: "3 para 4.", D: "2 para 1.", E: "1 para 1." },
         gabarito: 'A',
         explicacao: "Garrafas de volume V: X = V/3 + 3V/5 = 14V/15 e Y = 2V/3 + 2V/5 = 16V/15 → razão 14 para 16 = 7 para 8."
       },
       {
-        num: 9,
+        num: 11,
         enunciado: "(UNEB · CFO PM BA · 2025) Os conjuntos numéricos abrangem diferentes classificações, como naturais, inteiros, racionais e irracionais, cada um com características distintas que os definem. Com base nessa divisão, identifique a alternativa que apresenta um número pertencente ao conjunto dos números irracionais.",
         opcoes: { A: "2+3i", B: "1/2", C: "-3", D: "8", E: "√2" },
         gabarito: 'E',
         explicacao: "√2 é dízima não periódica — irracional. 2+3i é complexo, 1/2 é racional, −3 é inteiro e 8 é natural."
+      },
+      {
+        num: 12,
+        enunciado: "(FCC · Soldado PM BA · 2007) Uma pessoa tem R$ 14,00 em sua carteira apenas em cédulas de 1, 2 e 5 reais, sendo pelo menos uma de cada valor. Se X é o total de cédulas que ela possui, quantos são os possíveis valores de X?",
+        opcoes: { A: "4", B: "5", C: "6", D: "7", E: "8" },
+        gabarito: 'B',
+        explicacao: "5a + 2b + c = 14 com a, b, c ≥ 1: as soluções dão X (total de cédulas) ∈ {5, 6, 7, 8, 9} — 5 valores possíveis."
       }
     ]
   },
@@ -972,39 +1056,39 @@ window.PL_SEED_LISTAS = [
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ["mat-14", "mat-15", "mat-25", "mb-05", "cr-03"],
-    total: 7,
+    total: 8,
     questoes: [
       {
         num: 1,
-        enunciado: "(CONSULTEC · CFO PM BA · 2014) Por medida de precaução, a administração de um prédio resolveu restringir o número de pessoas transportadas por um de seus elevadores a 9 mulheres ou 6 homens, de média compleição. Respeitando-se a restrição imposta, quando, no elevador, já se encontram 6 mulheres, é correto afirmar que, nesse elevador, ainda podem entrar, no máximo,",
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Por medida de precaução, a administração de um prédio resolveu restringir o número de pessoas transportadas por um de seus elevadores a 9 mulheres ou 6 homens, de média compleição.\nRespeitando-se a restrição imposta, quando, no elevador, já se encontram 6 mulheres, é correto afirmar que, nesse elevador, ainda podem entrar, no máximo,",
         opcoes: { A: "quatro homens.", B: "dois homens.", C: "dois homens e uma mulher.", D: "dois homens e duas mulheres.", E: "um homem e duas mulheres." },
         gabarito: 'B',
         explicacao: "9 mulheres ⇔ 6 homens → 3 mulheres ⇔ 2 homens. Com 6 mulheres dentro, ainda cabem 3 mulheres, ou seja, no máximo 2 homens."
       },
       {
         num: 2,
-        enunciado: "(CONSULTEC · CFO PM BA · 2011) Segundo dados divulgados pela imprensa, o comércio de bens falsificados corresponde a 2% de todas as transações comerciais feitas no mundo, sendo 250 bilhões de dólares o valor do mercado de pirataria no planeta. Só em 2009, foram apreendidos pela Receita Federal no Brasil, de produtos falsos, o equivalente a 1,414 bilhões de reais. Tal montante, considerando-se que, atualmente, um dólar vale cerca de R$1,50, corresponde, em dólares, a um valor entre",
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Segundo dados divulgados pela imprensa, o comércio de bens falsificados corresponde a 2% de todas as transações comerciais feitas no mundo, sendo 250 bilhões de dólares o valor do mercado de pirataria no planeta. Só em 2009, foram apreendidos pela Receita Federal no Brasil, de produtos falsos, o equivalente a 1,414 bilhões de reais.\nTal montante, considerando-se que, atualmente, um dólar vale cerca de R$1,50, corresponde, em dólares, a um valor entre",
         opcoes: { A: "900 e 910 milhões.", B: "911 e 920 milhões.", C: "921 e 930 milhões.", D: "931 e 940 milhões.", E: "941 e 950 milhões." },
         gabarito: 'E',
         explicacao: "1,414 bilhões de reais ÷ 1,50 ≈ 942,7 milhões de dólares — entre 941 e 950 milhões."
       },
       {
         num: 3,
-        enunciado: "(UNEB · CFO PM BA · 2023) O técnico de um determinado atleta constatou que ele acertou 70% dos 90 arremessos que ele fez na cesta de basquete. Após fazer mais 30 arremessos, melhorouseu percentual de acertos para 75% do total de arremessos. Em seguida, fez mais 30 arremessos e seu percentual de acertos aumentou para 80% do total de arremessos. Do total de arremessos feitos, a quantidade de arremessos que ele acertou foi",
+        enunciado: "(UNEB · CFO PM BA · 2023) O técnico de um determinado atleta constatou que ele acertou 70% dos 90 arremessos que ele fez na cesta de basquete. Após fazer mais 30 arremessos, melhorou seu percentual de acertos para 75% do total de arremessos. Em seguida, fez mais 30 arremessos e seu percentual de acertos aumentou para 80% do total de arremessos.\nDo total de arremessos feitos, a quantidade de arremessos que ele acertou foi",
         opcoes: { A: "63", B: "80", C: "90", D: "120", E: "150" },
         gabarito: 'D',
         explicacao: "Total de arremessos: 90 + 30 + 30 = 150. Acertos finais: 80% de 150 = 120."
       },
       {
         num: 4,
-        enunciado: "(CONSULTEC · CFO PM BA · 2014) O número de participantes em uma manifestação, após 3 horas de seu início, foi estimado em, aproximadamente, 1000 pessoas. Admitindo-se que esse número tenha aumentado 25% a cada hora, pode-se afirmar que, no início da manifestação, o número aproximado de participantes era igual a",
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) O número de participantes em uma manifestação, após 3 horas de seu início, foi estimado em, aproximadamente, 1000 pessoas.\nAdmitindo-se que esse número tenha aumentado 25% a cada hora, pode-se afirmar que, no início da manifestação, o número aproximado de participantes era igual a",
         opcoes: { A: "250.", B: "356.", C: "420.", D: "500.", E: "512." },
         gabarito: 'E',
         explicacao: "Voltando 3 horas: 1000 ÷ 1,25³ = 1000 ÷ 1,953125 = 512 pessoas."
       },
       {
         num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Para que não haja redução nos seus vencimentos líquidos, após sua aposentadoria, um funcionário de determinada empresa optou pelo pagamento de umaprevidência privada, mediante débito automático em seu salário, ciente de que sobre o valor total T, correspondente a um ano de salários, o desconto para pagamentodessa previdência seria de p% sobre a parcela de T até R$30000,00, mais um desconto de (p + 3)% sobre a parcela de T que excedesse esse valor. Sabendo-se que, no ano passado, o funcionário teve um desconto total de (p + 0,4)% sobre T, para pagamento da previdência privada, pode-se afirmar que o valor de T, em milhares de reais, foi de, aproximadamente,",
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Para que não haja redução nos seus vencimentos líquidos, após sua aposentadoria, um funcionário de determinada empresa optou pelo pagamento de uma previdência privada, mediante débito automático em seu salário, ciente de que sobre o valor total T, correspondente a um ano de salários, o desconto para pagamento dessa previdência seria de p% sobre a parcela de T até R$30000,00, mais um desconto de (p + 3)% sobre a parcela de T que excedesse esse valor.\nSabendo-se que, no ano passado, o funcionário teve um desconto total de (p + 0,4)% sobre T, para pagamento da previdência privada, pode-se afirmar que o valor de T, em milhares de reais, foi de, aproximadamente,",
         opcoes: { A: "26,5", B: "31,0", C: "34,6", D: "38,2", E: "40,5" },
         gabarito: 'C',
         explicacao: "30p + (T − 30)(p + 3) = T(p + 0,4) → 3T − 90 = 0,4T → T = 90/2,6 ≈ 34,6 mil reais."
@@ -1018,89 +1102,103 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 7,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Um capital foi aplicado, durante 2 anos, à taxa de capitalização anual i, a juros compostos. Se o capital tivesse sido aplicado por mais um ano, o valor acumuladoteria aumentado R$216,32. Se, ao contrário, tivesse sido aplicado por menos um ano, o valor acumulado teria diminuído R$208,00. Nessas condições, pode-se afirmar que a taxa de juros pagos, nessa aplicação, foi igual a",
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Um capital foi aplicado, durante 2 anos, à taxa de capitalização anual i, a juros compostos. Se o capital tivesse sido aplicado por mais um ano, o valor acumulado teria aumentado R$216,32. Se, ao contrário, tivesse sido aplicado por menos um ano, o valor acumulado teria diminuído R$208,00.\nNessas condições, pode-se afirmar que a taxa de juros pagos, nessa aplicação, foi igual a",
         opcoes: { A: "6,0%", B: "5,5%", C: "5,0%", D: "4,5%", E: "4,0%" },
         gabarito: 'E',
         explicacao: "A razão entre os acréscimos consecutivos é (1 + i): 216,32 / 208 = 1,04 → i = 4%."
+      },
+      {
+        num: 8,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Um empréstimo feito através de um financiamento, a uma taxa de juros simples de 2%am, deve ser pago em duas parcelas nos valores de R$3 000,00 e R$5 000,00,; com respectivos vencimentos para dois e quatro meses, contados a partir da data do empréstimo.Diante da impossibilidade de fazer tais pagamentos, o devedor propôs ao credor a substituição das duas parcelas por uma única parcela a ser paga no prazo de seis meses, contados a partir da data do empréstimo.\nSendo aceita tal proposta, o valor, em reais, dessa parcela única será de",
+        opcoes: { A: "8500", B: "8440", C: "8320", D: "8200", E: "8080" },
+        gabarito: 'A',
+        explicacao: "Desconto comercial simples na data zero: 3000(1 − 0,04) + 5000(1 − 0,08) = 7480. Parcela única em 6 meses: X(1 − 0,12) = 7480 → X = R$ 8.500."
       }
     ]
   },
 
-  /* ── 14. Lista de Exercícios — Álgebra, Funções e Logaritmos (questões reais de prova) ── */
+  /* ── 14. Lista de Exercícios — Álgebra: Equações, Funções e Polinômios (questões reais de prova) ── */
   {
     id: 'seed-lq-algebra-funcoes',
-    titulo: "Lista de Exercícios — Álgebra, Funções e Logaritmos",
-    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
+    titulo: "Lista de Exercícios — Álgebra: Equações, Funções e Polinômios",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
-    cursoId: '', aulaId: '', aulaIds: ["mat-04", "mat-11", "mat-12", "mat-13", "mat-16", "mb-06"],
-    total: 10,
+    cursoId: '', aulaId: '', aulaIds: ["mat-10", "mat-11", "mat-12", "mat-16"],
+    total: 11,
     questoes: [
       {
         num: 1,
-        enunciado: "(CONSULTEC · CFO PM BA · 2011) Com a contínua evolução tecnológica, a cada dia os aparelhos eletrônicos são produzidos com processadores mais velozes, que conseguem realizar suas tarefas numtempo cada vez menor. Supondo-se que o tempo, em milésimos de segundo (milissegundos), que certo componente eletrônico leva para processar x bits, seja dado por T(x) = log₈(x) e considerando-se log 2 = 0,30, pode-se concluir que 250 bits serão processados em, aproximadamente,",
-        opcoes: { A: "2,66 milissegundos.", B: "3,86 milissegundos.", C: "4,22 milissegundos.", D: "5,02 milissegundos.", E: "6,00 milissegundos." },
+        enunciado: "(FCC · Soldado PM BA · 2023) Um setor administrativo recebeu 150 caixas de equipamentos que serão distribuídas para três grupos de funcionários. O primeiro grupo deverá receber 30 caixas a menos do que o segundo grupo e o terceiro grupo a metade do que vai receber o segundo. O número de caixas que serão recebidas pelo primeiro e o terceiro grupos juntos é:",
+        opcoes: { A: "78", B: "52", C: "44", D: "80", E: "96" },
         gabarito: 'A',
-        explicacao: "T = log₈(250) = log 250 / log 8. log 250 = 3 − 2·0,30 = 2,40; log 8 = 3·0,30 = 0,90 → 2,40/0,90 ≈ 2,66 ms."
+        explicacao: "Segundo grupo = x: (x − 30) + x + x/2 = 150 → x = 72. Primeiro + terceiro: 42 + 36 = 78."
       },
       {
         num: 2,
-        enunciado: "(IBFC · Soldado PM BA · 2017) Assinale a alternativa correta. O nono termo da sequência lógica 3, - 6, 12, -24, ... , representa o total de candidatos presentes num concurso público. Se 210 desses candidatos foram aprovados,então o total de candidatos reprovados foi de:",
-        opcoes: { A: "1426", B: "878", C: "558", D: "768", E: "174" },
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) X recebe R$320,00 por x horas de trabalho semanal em seu emprego. Y recebe o mesmo valor, por seu trabalho semanal, porém trabalha 4 horas a mais e recebe R$4,00 a menos do que X, por hora trabalhada.\nNessas condições, pode-se afirmar que o número de horas semanais de trabalho de Y equivale a",
+        opcoes: { A: "metade de um dia.", B: "3/4 de um dia.", C: "5/6 de um dia.", D: "um dia.", E: "um dia e meio." },
         gabarito: 'C',
-        explicacao: "PG de razão −2: a₉ = 3 · (−2)⁸ = 768 presentes. Reprovados: 768 − 210 = 558."
+        explicacao: "X ganha 320/x por hora; Y: 320/(x+4) = 320/x − 4 → x² + 4x − 320 = 0 → x = 16. Y trabalha 20 h = 20/24 = 5/6 de um dia."
       },
       {
         num: 3,
-        enunciado: "(CONSULTEC · CFO PM BA · 2011) Apesar de não ser um investimento de alta rentabilidade, a caderneta de poupança garante que as pessoas tenham um fundo de reserva com alguma atualização ealta liquidez. Se uma caderneta de poupança remunera a aplicação de um capital C à taxa nominal de 6% a.a. capitalizada mensalmente, no regime de juros compostos, pode-se afirmar que os montantes obtidos, a cada mês do período de aplicação, formam uma",
-        opcoes: { A: "progressão aritmética de razão 0,005.", B: "progressão aritmética de razão 1,005.", C: "progressão geométrica de razão 0,005.", D: "progressão geométrica de razão 1,005.", E: "sequência que não é progressão aritmética, nem progressão geométrica." },
-        gabarito: 'D',
-        explicacao: "Taxa nominal 6% a.a. capitalizada mensalmente = 0,5% a.m. Em juros compostos, cada montante é o anterior × 1,005 → PG de razão 1,005."
+        enunciado: "(FCC · Soldado PM BA · 2023) A soma das raízes da equação x(x-1).(x+3).(x²+16)=0 é",
+        opcoes: { A: "−2", B: "2", C: "0", D: "4", E: "16" },
+        gabarito: 'A',
+        explicacao: "Raízes reais: 0, 1 e −3 (x² + 16 = 0 não tem raiz real; as complexas ±4i se cancelam). Soma: 0 + 1 − 3 = −2."
       },
       {
         num: 4,
-        enunciado: "(CONSULTEC · CFO PM BA · 2010) Uma empresa constatou, em outubro de 2009, um déficit em suas finanças, pois, para uma receita de R$ 160.000,00, teve uma despesa de R$ 200.000,00. Tentando se recuperar dos prejuízos, estabeleceu metas na perspectiva de aumentar mensalmente sua receita, segundo uma progressão geométrica de razão q = 5/4, e aumentar a despesa mensal segundo uma progressão aritmética de razão r = R$ 45.000,00. Admitindo-se que as metas foram alcançadas, pode-se afirmar que o primeiro mês em que a receita superou a despesa foi",
-        opcoes: { A: "dezembro de 2009.", B: "janeiro de 2010.", C: "fevereiro de 2010.", D: "março de 2010.", E: "abril de 2010." },
-        gabarito: 'C',
-        explicacao: "Receita: 160·(5/4)ⁿ; despesa: 200 + 45n (milhares). Em n = 4 meses: 390,6 > 380 — primeiro mês: fevereiro de 2010."
+        enunciado: "(UNEB · CFO PM BA · 2025) Em muitas situações, funções polinomiais são usadas para modelar fenômenos ou calcular valores específicos com base em uma variável. Considerando o polinômio P(x)=x³ - 2x² + x. Qual é o valor de P(2)?",
+        opcoes: { A: "4", B: "2", C: "10", D: "8", E: "12" },
+        gabarito: 'B',
+        explicacao: "P(2) = 2³ − 2·2² + 2 = 8 − 8 + 2 = 2."
       },
       {
         num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2010) Segundo dados do IBGE, em 2006, aproximadamente 9,0% da bancada eleita para a Câmara Federal era composta por mulheres. Supondo-se que, em 2010, esse número cresça para 12,5% e que essa porcentagem varie linearmente com o tempo, pode-se estimar que as mulheres serão maioria na Câmara Federal a partir das eleições de",
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) A função polinomial f(t) = t^³ - 14t^² + 53t - 40 representa a evolução do lucro de uma microempresa, em milhares de reais, ao longo de t anos de funcionamento, 1 ≤ t ≤ 10.\nExcluindo-se, durante esse intervalo de tempo, o número de anos em que o lucro foi igual a zero, pode-se afirmar que o número de anos em que a empresa não teve prejuízo foi igual a",
+        opcoes: { A: "4.", B: "5.", C: "6.", D: "7.", E: "8." },
+        gabarito: 'B',
+        explicacao: "O lucro zera em t = 1, 5 e 8 (fatorando: (t−1)(t−5)(t−8)). Sem prejuízo (lucro positivo), excluindo os zeros: t ∈ {2, 3, 4, 9, 10} → 5 anos."
+      },
+      {
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Segundo dados do IBGE, em 2006. aproximadamente 9,0% da bancada eleita para a Câmara Federal era composta por mulheres.\nSupondo-se que, em 2010, esse número cresça para 12,5% e que essa porcentagem varie linearmente com o tempo, pode-se estimar que as mulheres serão maioria na Câmara Federal a partir das eleições de",
         opcoes: { A: "2066", B: "2062", C: "2058", D: "2054", E: "2048" },
         gabarito: 'D',
         explicacao: "De 9% (2006) para 12,5% (2010): +3,5% a cada 4 anos. 12,5 + 3,5k > 50 → k > 10,7 → 11 eleições depois: 2010 + 44 = 2054."
       },
       {
-        num: 6,
-        enunciado: "(CONSULTEC · CFO PM BA · 2011) Uma pessoa teve furtada sua carteira com 12 cédulas e, ao prestar queixa na delegacia, declarou haver uma cédula de R$20,00, algumas de R$5,00 e outras de R$10,00, mas não soube precisar o valor total. Admitindo-se que o quadrado do número de cédulas de R$5,00 seja menor do que o número total das demais, é correto afirmar que a quantia mínima que a pessoa poderia ter, em reais, na carteira seria igual a",
+        num: 7,
+        enunciado: "(UNEB · CFO PM BA · 2025) Uma empresa está analisando uma função quadrática que modela o custo de produção, onde f(x) = x² − 4x + 3 sendo x a quantidade de itens produzidos em centenas. Para uma produção de 300 itens (x=3), qual é o custo correspondente representado por f(3)?",
+        opcoes: { A: "-1", B: "1", C: "3", D: "4", E: "0" },
+        gabarito: 'E',
+        explicacao: "f(3) = 3² − 4·3 + 3 = 9 − 12 + 3 = 0."
+      },
+      {
+        num: 8,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Uma pessoa teve furtada sua carteira com 12 cédulas e, ao prestar queixa na delegacia, declarou haver uma cédula de R$20,00, algumas de R$5,00 e outras de R$10,00, mas não soube precisar o valor total.\nAdmitindo-se que o quadrado do número de cédulas de R$5,00 seja menor do que o número total das demais, é correto afirmar que a quantia mínima que a pessoa poderia ter, em reais, na carteira seria igual a",
         opcoes: { A: "100", B: "105", C: "110", D: "115", E: "120" },
         gabarito: 'E',
         explicacao: "x = nº de cédulas de R$ 5: x² < 12 − x → x ≤ 2. Quantia mínima com x = 2: 20 + 2·5 + 9·10 = R$ 120."
       },
       {
-        num: 7,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Visando ampliar suas instalações, o setor de restauração da Polícia Militar aplicou um capital C em um fundo de investimentos, que paga juros compostos continuamente, de 1,5% ao mês, sendo o montante, ao final de t meses, calculado pela expressão M(t) = C · e^(0,015·t). Considerando-se ln 2 = 0,69, é correto estimar-se o tempo necessário para que esse capital seja duplicado em, aproximadamente,",
-        opcoes: { A: "22 meses.", B: "30 meses.", C: "38 meses.", D: "46 meses.", E: "54 meses." },
-        gabarito: 'D',
-        explicacao: "Para duplicar: e^(0,015t) = 2 → 0,015t = ln 2 = 0,69 → t = 46 meses."
-      },
-      {
-        num: 8,
-        enunciado: "(CONSULTEC · CFO PM BA · 2010) Segundo as leis brasileiras de trânsito, são considerados infratores os motoristas que dirijam estando no organismo com uma concentração superior a 0,6 grama de álcool por litro de sangue, o que equivale a uma lata de cerveja. Admite-se que a quantidade, em g/L, de álcool remanescente no organismo de uma pessoa, a partir do instante t, em horas, em que ela pare de beber, pode ser estimado através da expressão R(t) = k · (0,5)^(t/2). Ingerindo 5 latas de cerveja, uma após outra e, desejando sair, imediatamente, ao volante do seu veículo, um motorista foi aconselhado, por amigos, a aguardar o tempo mínimo necessário para que não infrinja a lei. Considerando-se log 2 = 0,30, pode-se concluir que esse tempo é de",
-        opcoes: { A: "4h00min", B: "4h40min", C: "5h00min", D: "6h00min", E: "6h48min" },
-        gabarito: 'B',
-        explicacao: "5 latas → k = 5 · 0,6 = 3 g/L. Exige-se 3·(0,5)^(t/2) ≤ 0,6 → (0,5)^(t/2) ≤ 0,2 → t = 2 · log 5/log 2 = 2 · 0,70/0,30 ≈ 4,67 h = 4h40min."
-      },
-      {
         num: 9,
-        enunciado: "(UNEB · CFO PM BA · 2025) Em uma fábrica, dois setores precisam compartilhar recursos de maneira que o total de recursos alocados, representado por x+y=6, seja distribuído igualmente entreos dois setores. Além disso, uma auditoria verificou que a alocação dobrada desses recursos, representada por 2x+2y=12, também precisa ser validada. Considerando o contexto, quantas soluções existem para esse sistema de equações?",
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Com fins beneficentes, organizou-se um sorteio para o qual foram vendidas cartelas com nove números dispostos na forma de matrizes de ordem 3. Foi premiado o portador da cartela cujos números aᵢⱼ obedeciam à regra aᵢⱼ = |i − 3j| (i = linha, j = coluna).\nA matriz assim obtida tem determinante igual a",
+        opcoes: { A: "−14.", B: "−10.", C: "0.", D: "10.", E: "14." },
+        gabarito: 'C',
+        explicacao: "aᵢⱼ = |i − 3j| gera as linhas (2, 5, 8), (1, 4, 7) e (0, 3, 6). L1 − L2 = L2 − L3 (linhas em PA) → determinante = 0."
+      },
+      {
+        num: 10,
+        enunciado: "(UNEB · CFO PM BA · 2025) Em uma fábrica, dois setores precisam compartilhar recursos de maneira que o total de recursos alocados, representado por x+y=6, seja distribuído igualmente entre os dois setores. Além disso, uma auditoria verificou que a alocação dobrada desses recursos, representada por 2x+2y=12, também precisa ser validada. Considerando o contexto, quantas soluções existem para esse sistema de equações?",
         opcoes: { A: "Nenhuma.", B: "Infinitas.", C: "Dez.", D: "Duas.", E: "Uma." },
         gabarito: 'B',
         explicacao: "A segunda equação é exatamente o dobro da primeira — mesma reta. Sistema possível e indeterminado: infinitas soluções."
       },
       {
-        num: 10,
-        enunciado: "(FCC · Soldado PM BA · 2023) Em um fornecedor de uniformes, três camisas e duas calças custam, juntas, R$ 455,00, e um conjunto de calça e camisa do mesmo tipo custa R$ 190,00. O preço,em reais, para a compra de duas camisas e uma calça é:",
+        num: 11,
+        enunciado: "(FCC · Soldado PM BA · 2023) Em um fornecedor de uniformes, três camisas e duas calças custam, juntas, R$ 455,00, e um conjunto de calça e camisa do mesmo tipo custa R$ 190,00. O preço, em reais, para a compra de duas camisas e uma calça é:",
         opcoes: { A: "215", B: "240", C: "265", D: "280", E: "305" },
         gabarito: 'C',
         explicacao: "3c + 2p = 455 e c + p = 190 → c = 75 e p = 115. Duas camisas e uma calça: 150 + 115 = R$ 265."
@@ -1108,25 +1206,208 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 15. Lista de Exercícios — Geometria e Trigonometria (questões reais de prova) ── */
+  /* ── 15. Lista de Exercícios — Exponencial e Logaritmos (questões reais de prova) ── */
   {
-    id: 'seed-lq-geometria',
-    titulo: "Lista de Exercícios — Geometria e Trigonometria",
+    id: 'seed-lq-exponencial-log',
+    titulo: "Lista de Exercícios — Exponencial e Logaritmos",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
     tipoLista: 'lista',
-    cursoId: '', aulaId: '', aulaIds: ["mat-19", "mat-21", "mat-22", "mat-23", "mat-24", "cr-05"],
+    cursoId: '', aulaId: '', aulaIds: ["mat-13"],
+    total: 6,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Com a contínua evolução tecnológica, a cada dia os aparelhos eletrônicos são produzidos com processadores mais velozes, que conseguem realizar suas tarefas num tempo cada vez menor.\nSupondo-se que o tempo, em milésimos de segundo (milissegundos), que certo componente eletrônico leva para processar xbits, seja dado por T(x) = log ₈ x e considerando-se log 2 = 0,30, pode-se concluir que 250bits serão processados em, aproximadamente,",
+        opcoes: { A: "2,66milissegundos.", B: "3,86milissegundos.", C: "4,22milissegundos.", D: "5,02milissegundos.", E: "6,00milissegundos." },
+        gabarito: 'A',
+        explicacao: "T = log₈(250) = log 250 / log 8. log 250 = 3 − 2·0,30 = 2,40; log 8 = 3·0,30 = 0,90 → 2,40/0,90 ≈ 2,66 ms."
+      },
+      {
+        num: 2,
+        enunciado: "(UNEB · CFO CBM BA · 2019) O número de unidades produzidas ( p ), de certo produto, durante um mês é obtido em função do número de funcionários ( f ) da fábrica de acordo com a relação :\np = 50 √(f) .\nSe a fábrica possui 64 funcionários, é correto afirmar que a contratação de mais 36 funcionários aumentará a produção mensal em",
+        opcoes: { A: "100 unidades.", B: "200 unidades.", C: "300 unidades.", D: "400 unidades.", E: "500 unidades." },
+        gabarito: 'A',
+        explicacao: "p = 50√f: com 64 funcionários, p = 50·8 = 400; com 100, p = 50·10 = 500. Aumento: 100 unidades."
+      },
+      {
+        num: 3,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Visando ampliar suas instalações, o setor de restauração da Polícia Militar aplicou um capital C em um fundo de investimentos, que paga juros compostos continuamente, de 1,5% ao mês, sendo o montante, ao fina! de t meses, calculado pela expressão f(t)=C · e^0,015 · t .\nConsiderando-se log_e2 = 0,69, é correto estimar-se o tempo necessário para que esse capital seja duplicado em, aproximadamente,",
+        opcoes: { A: "22 meses.", B: "30 meses.", C: "38 meses.", D: "46 meses.", E: "54 meses." },
+        gabarito: 'D',
+        explicacao: "Para duplicar: e^(0,015t) = 2 → 0,015t = ln 2 = 0,69 → t = 46 meses."
+      },
+      {
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Lembrando-se o gráfico cartesiano da função f(x) = 3^(2x−5) + 7, tem-se que os valores reais de x para os quais a imagem é maior do que 250 estão expressos em",
+        opcoes: { A: "x > 3.", B: "x > 5.", C: "x > 6.", D: "x > 9.", E: "x > 10." },
+        gabarito: 'B',
+        explicacao: "3^(2x−5) + 7 > 250 → 3^(2x−5) > 243 = 3⁵ → 2x − 5 > 5 → x > 5."
+      },
+      {
+        num: 5,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Durante uma reunião de trabalho, foi servido um cafezinho bem quente aos seus participantes.\nAdmitindo-se que a variação da temperatura do café, T (em ºC), em função do tempo x (em minutos), é definida pela expressão T(x) = 20 + 64 · 2^(−0,25x), pode-se afirmar que um participante dessa reunião que prefira o cafezinho menos quente, pode calcular o tempo de espera x, para que a temperatura T desejada seja atingida, através da expressão",
+        opcoes: { A: "24 + 40log (T-20)", B: "24 - 4log₂ (T-20)", C: "24 - 4log (T-20)", D: "44 - 1/4 log (T-20)", E: "1/4 log₂ (T-20) - 3/2" },
+        gabarito: 'B',
+        explicacao: "Isolando x: 2^(−0,25x) = (T−20)/64 → −x/4 = log₂(T−20) − 6 → x = 24 − 4·log₂(T−20)."
+      },
+      {
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Segundo as leis brasileiras de trânsito, são considerados infratores os motoristas que dirijam estando no organismo com uma concentração superior a 0.6 gramas de álcool por litro de sangue, o que equivale a uma lata de cerveja. Admite-se que a quantidade, em glt% de álcool remanescente no organismo de uma pessoa, a partir do instante t, em horas, em que ela pare de beber, pode ser estimado através da expressão R(t) = k(0,5)ᵗ^/². Ingerindo 5 latas de cerveja, uma após outra e, desejando sair, imediatamente, ao volante do seu veículo, um motorista foi aconselhado, por amigos, a aguardar o tempo mínimo necessário para cue não infrinja a lei.\nConsiderando-se log 2 = 0,30, pode-se concluir que esse tempo é de",
+        opcoes: { A: "4h00min", B: "4h40min", C: "5h00min", D: "6h00min", E: "6h48min" },
+        gabarito: 'B',
+        explicacao: "5 latas → k = 5 · 0,6 = 3 g/L. Exige-se 3·(0,5)^(t/2) ≤ 0,6 → (0,5)^(t/2) ≤ 0,2 → t = 2 · log 5/log 2 = 2 · 0,70/0,30 ≈ 4,67 h = 4h40min."
+      }
+    ]
+  },
+
+  /* ── 16. Lista de Exercícios — Progressões: PA e PG (questões reais de prova) ── */
+  {
+    id: 'seed-lq-progressoes',
+    titulo: "Lista de Exercícios — Progressões: PA e PG",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-03", "mat-04", "mb-06"],
     total: 7,
     questoes: [
       {
         num: 1,
-        enunciado: "(UNEB · CFO PM BA · 2025) Durante uma aula de trigonometria, o professor pediu aos alunos que analisassem ângulos em múltiplos de 90º e suas respectivas razões trigonométricas.Sabendo que sen(45°) = cos(45°) = √2/2, qual é o valor de sen²(45°) + cos²(45°)?",
-        opcoes: { A: "√2", B: "√(2/", C: "√(1/", D: "0", E: "1" },
+        enunciado: "(UNEB · CFO PM BA · 2023) Uma atleta corre todos os dias e resolveu, a partir de determinado dia, anotar a quantidade de quilômetros que caminhou durante 30 dias. No final dos 30 dias, ele verificou que caminhou, ao todo, 1170km e que a cada dia ele caminhou 2km a mais que o dia anterior.\nDe acordo com essas informações, pode-se dizer que, no 30º dia, o número de quilômetros que ele caminhou foi:",
+        opcoes: { A: "10", B: "23", C: "39", D: "55", E: "68" },
+        gabarito: 'E',
+        explicacao: "S₃₀ = 1170 e r = 2: 15·(2a₁ + 58) = 1170 → a₁ = 10. No 30º dia: a₃₀ = 10 + 29·2 = 68 km."
+      },
+      {
+        num: 2,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Ao consultar uma pasta de documentos, um funcionário observou que eles foram arquivados na ordem crescente de sua numeração, obedecendo à sequência 1, 3, 4, 6, 7, 9, ....\nCalculando-se a média aritmética dos números atribuídos aos trinta primeiros documentos, o valor obtido é igual a",
+        opcoes: { A: "20", B: "23", C: "26", D: "29", E: "32" },
+        gabarito: 'B',
+        explicacao: "O padrão soma +2, +1 alternadamente: pares (3k+1, 3k+3). Os 30 primeiros somam 690 → média 23."
+      },
+      {
+        num: 3,
+        enunciado: "(IBFC · Soldado PM BA · 2017) Assinale a alternativa correta.\nO nono termo da sequencia lógica 3, - 6, 12, -24, ... , representa o total de candidatos presentes num concurso público. Se 210 desses candidatos foram aprovados, então o total de candidatos reprovados foi de:",
+        opcoes: { A: "1426", B: "878", C: "558", D: "768", E: "174" },
+        gabarito: 'C',
+        explicacao: "PG de razão −2: a₉ = 3 · (−2)⁸ = 768 presentes. Reprovados: 768 − 210 = 558."
+      },
+      {
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Em determinada cidade, cada candidato inscrito para a seleção do CFOPM deveria contribuir, conforme um critério pré-estabelecido, com certa quantia para a manutenção de uma ONG, sem fins lucrativos. Sabe-se que, a cada dia, o número de candidatos a contribuir, logo inscritos, variaria de acordo com uma progressão geométrica de razão 2 e que, no 1º dia, somente 2 pessoas contribuíram.\nSe cada candidato contribuir com 3 reais, pode-se estimar que o número mínimo de dias necessários para que o total arrecadado atinja o valor R$6138,00 é",
+        opcoes: { A: "10", B: "12", C: "15", D: "18", E: "21" },
+        gabarito: 'A',
+        explicacao: "Contribuintes por dia: 2, 4, 8, … (PG razão 2). Total: 3·(2ⁿ⁺¹ − 2) ≥ 6138 → 2ⁿ⁺¹ ≥ 2048 = 2¹¹ → n = 10 dias."
+      },
+      {
+        num: 5,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Dois colegas de trabalho C₁ e C₂ devem ler as 124 páginas de um relatório, a partir do qual terão os subsídios necessários para, conjuntamente, emitirem um parecer técnico sobre determinada questão.\nAdmitindo que os dois comecem a leitura no mesmo dia, na página 1, suponha que C₁ lerá quatro páginas no primeiro dia e, a cada dia subsequente, lerá o dobro do número de páginas do dia anterior, com única exceção possível no último dia de leitura.\nC₂ lerá duas páginas no primeiro dia e, a cada dia subsequente, lerá mais quatro páginas do que no dia anterior, com única exceção possível no último dia de leitura.\nNessas condições, pode-se afirmar que",
+        opcoes: { A: "O número total de páginas lidas por C₁, em t dias, pode ser calculado pela expressão f(t) = 2ᵗ⁺² − 4.", B: "O número total de páginas lidas por C₂, em t dias, pode ser calculado pela expressão f(t) = 2t² + t.", C: "C₁ e C₂ concluirão a leitura em um mesmo número de dias.", D: "C₁ concluirá a leitura quatro dias antes de C₂.", E: "C₂ concluirá a leitura dois dias após C₁." },
+        gabarito: 'A',
+        explicacao: "C₁ lê 4 + 8 + 16 + … = 4(2ᵗ − 1) = 2ᵗ⁺² − 4 ✓ (alternativa A). C₂ lê PA 2, 4, 6, …, cuja soma é t² + t — a alternativa B (2t² + t) está errada."
+      },
+      {
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Apesar de não ser um investimento de alta rentabilidade, a caderneta de poupança garante que as pessoas tenham um fundo de reserva com alguma atualização e alta liquidez.\nSe uma caderneta de poupança remunera a aplicação de um capital C à taxa nominal de 6% a.a. capitalizada mensalmente, no regime de juros compostos, pode-se afirmar que os montantes obtidos, a cada mês do período de aplicação, formam uma",
+        opcoes: { A: "progressão aritmética de razão 0,005.", B: "progressão aritmética de razão 1,005.", C: "progressão geométrica de razão 0,005.", D: "progressão geométrica de razão 1,005.", E: "sequência que não é progressão aritmética, nem progressão geométrica." },
+        gabarito: 'D',
+        explicacao: "Taxa nominal 6% a.a. capitalizada mensalmente = 0,5% a.m. Em juros compostos, cada montante é o anterior × 1,005 → PG de razão 1,005."
+      },
+      {
+        num: 7,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Uma empresa constatou, em outubro de 2009, um déficit em suas finanças, pois, para uma receita de R$160 000,00. teve uma despesa de R$200 000,00. Tentando se recuperar dos prejuízos, estabeleceu metas na perspectiva de aumentar mensalmente sua receita, segundo uma progressão geométrica de razão q = 5/4 , e aumentar a despesa mensal segundo uma progressão aritmética de razão r = R$45 000,00 Admitindo-se que as metas foram alcançadas, pode-se afirmar que o primeiro mês em que a receita superou a despesa foi",
+        opcoes: { A: "dezembro de 2009.", B: "janeiro de 2010.", C: "fevereiro de 2010.", D: "março de 2010.", E: "abril de 2010." },
+        gabarito: 'C',
+        explicacao: "Receita: 160·(5/4)ⁿ; despesa: 200 + 45n (milhares). Em n = 4 meses: 390,6 > 380 — primeiro mês: fevereiro de 2010."
+      }
+    ]
+  },
+
+  /* ── 17. Lista de Exercícios — Geometria Plana e Espacial (questões reais de prova) ── */
+  {
+    id: 'seed-lq-geometria',
+    titulo: "Lista de Exercícios — Geometria Plana e Espacial",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-19", "mat-20", "mat-21", "mat-22", "cr-05"],
+    total: 8,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "(UNEB · CFO PM BA · 2025) Um engenheiro está projetando a fachada de um edifício e precisa calcular a área de um triângulo decorativo para definir a quantidade de material necessário. A base desse triângulo mede 8 cm e sua altura é de 5 cm. Qual é a área dessa figura?",
+        opcoes: { A: "70 cm²", B: "30 cm²", C: "20 cm²", D: "50 cm²", E: "40 cm²" },
+        gabarito: 'C',
+        explicacao: "Área do triângulo: (base × altura)/2 = (8 × 5)/2 = 20 cm²."
+      },
+      {
+        num: 2,
+        enunciado: "(UNEB · CFO PM BA · 2023) Determinada família deseja construir uma árvore de natal no quintal da casa e, para tanto, desenha uma circunferência de 5 metros de raio, no local onde quer construir essa árvore e fixa, no centro dessa circunferência e perpendicularmente ao plano do chão, um cano em pé. Em seguida, preenche a parte interna desse cano com cimento para que este fique fixo no local determinado.\nA partir de um ponto P neste cano, serão colocadas mangueiras de iluminação, de mesmo comprimento e em formato de segmentos de retas, até pontos dessa circunferência, de forma que esta fique dividida em 20 partes iguais.\nSabendo-se que para tal construção essa família utilizou 260 metros de comprimento dessas mangueiras de iluminação, a altura, em metros, do ponto P de onde deverão ser colocadas essas mangueiras é de:",
+        opcoes: { A: "8", B: "12", C: "13", D: "18", E: "52" },
+        gabarito: 'B',
+        explicacao: "260 m ÷ 20 mangueiras = 13 m cada. Triângulo retângulo com cateto 5 (raio): altura = √(13² − 5²) = 12 m (terno 5-12-13)."
+      },
+      {
+        num: 3,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Os reservatórios de forma cilíndrica, para água, são econômicos e de manutenção mais simples. Considerando-se que, em laboratório, o protótipo de um deles tem 6cm de diâmetro e 12cm de altura, pode-se estimar que uma centena desses protótipos é capaz de armazenar, aproximadamente, xmf de água, e o valor de x é",
+        opcoes: { A: "10800", B: "15496", C: "21624", D: "28168", E: "33912" },
+        gabarito: 'E',
+        explicacao: "V = πr²h = 3,14 · 9 · 12 ≈ 339,12 cm³ por protótipo. Uma centena: ≈ 33.912 mℓ."
+      },
+      {
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Uma equipe de alunos do Curso de Formação de Oficiais da Polícia Militar desejava realizar algumas transformações na disposição do mobiliário interno da repartição onde atuava. Os profissionais dessa equipe consideraram um prisma reto, como inspiração, e seus lados, como modelo para um biombo.\nSeja P um prisma reto, com 12cm de altura e base quadrada, de área medindo 16cm ².\nNessas condições, pode-se afirmar que a área lateral, em cm ², do prisma s igual a",
+        opcoes: { A: "192", B: "144", C: "96", D: "72", E: "48" },
+        gabarito: 'A',
+        explicacao: "Base quadrada de área 16 cm² → lado 4 cm. Área lateral = perímetro × altura = 16 × 12 = 192 cm²."
+      },
+      {
+        num: 5,
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Sabe-se que a capacidade de uma taça na forma de um cone equilátero é de 72 √(3) π cm³ .\nSe uma pessoa colocou um líquido nessa taça até a altura correspondente a 2/3 do raio máximo da taça, então sobre o volume de líquido nela colocado, em cm³, pode-se afirmar:",
+        opcoes: { A: "É menor do que 6,2π.", B: "Está entre 6,2π e 7,5π.", C: "É igual a 7,5π.", D: "Está entre 7,5π e 8,8π.", E: "É igual a 8,8π." },
+        gabarito: 'B',
+        explicacao: "Cone equilátero: V = (√3/3)πr³ = 72√3π → r = 6 e h = 6√3. Água até 4 cm (2/3 do raio): V·(4/(6√3))³ = 64π/9 ≈ 7,1π — entre 6,2π e 7,5π."
+      },
+      {
+        num: 6,
+        enunciado: "(CONSULTEC · CFO PM BA · 2012) Em um certo país, as moedas são feitas do mesmo material, têm a mesma espessura e têm massa diretamente proporcional ao seu volume. Nesse país, as moedas de 10 centavos e 25 centavos têm massas, respectivamente, iguais a 4,8g e 7,5g, sendo o diâmetro da primeira igual a 20mm.\nConsiderando-se uma moeda M tal que os raios da moeda de 10 centavos, de M e da moeda de 25 centavos, nessa ordem, formam uma progressão geométrica, pode-se afirmar que a moeda M tem diâmetro, em mm, aproximadamente igual a",
+        opcoes: { A: "23,5", B: "23,1", C: "22,8", D: "22,3", E: "21,2" },
+        gabarito: 'D',
+        explicacao: "Massa ∝ volume ∝ r² (mesma espessura): r₂₅ = 10·√(7,5/4,8) = 12,5 mm. PG: rM = √(10 · 12,5) = √125 ≈ 11,18 → diâmetro ≈ 22,3 mm."
+      },
+      {
+        num: 7,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) É frequente a utilização de cones de PVC na sinalização de trânsito, estacionamentos, obras etc.\nAo adquirir dois desses cones — o maior com altura igual a 70cm e diâmetro da base, 40cm, e o menor com altura igual a 50cm e diâmetro da base, 24cm — o comprador decide guardá-los em uma caixa fechada que tem a forma de um prisma reto de base quadrada.\nPara que a base do cone maior fique apoiada na base inferior da caixa e o cone menor encaixado sobre o maior, será necessário utilizar-se uma caixa cuja capacidade interna mínima, em cm³, seja igual a",
+        opcoes: { A: "2⁴ × 5 × 19", B: "2⁵ × 5² × 19", C: "2⁵ × 5 × 23", D: "2⁷ × 5² × 23", E: "2⁷ × 5² × 39" },
+        gabarito: 'E',
+        explicacao: "O cone menor (base r = 12) apoia-se onde o cone maior tem raio 12: a 42 cm do vértice = 28 cm da base. Altura da caixa: 28 + 50 = 78. Volume: 40·40·78 = 124.800 = 2⁷·5²·39."
+      },
+      {
+        num: 8,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Um professor propôs a seus alunos a construção de dois pluviômetros artesanais, de modelos diferentes, através dos quais pudessem aprender a calcular a quantidade de chuva ocorrida em uma localidade, num determinado espaço de tempo. Para tanto, foram utilizados dois recipientes, um cônico e um cilíndrico e, após uma chuva, verificou-se que a água recolhida pelo pluviômetro cônico havia atingido uma altura h = 8cm, preenchendo um certo espaço de um pequeno cone de geratriz g = 10cm.\nSe essa água, colocada no pluviômetro cilíndrico atingir a mesma altura h = 8cm, então o raio do recipiente cilíndrico, em cm, é igual a;",
+        opcoes: { A: "√(6)", B: "2 √(3)", C: "3 √(2)", D: "2 √(6)", E: "6 √(2)" },
+        gabarito: 'B',
+        explicacao: "Água no cone: h = 8 e g = 10 → r = 6 → V = (1/3)π·36·8 = 96π. No cilindro com h = 8: πR²·8 = 96π → R² = 12 → R = 2√3."
+      }
+    ]
+  },
+
+  /* ── 18. Lista de Exercícios — Trigonometria e Geometria Analítica (questões reais de prova) ── */
+  {
+    id: 'seed-lq-trigonometria',
+    titulo: "Lista de Exercícios — Trigonometria e Geometria Analítica",
+    materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'dificil',
+    tipoLista: 'lista',
+    cursoId: '', aulaId: '', aulaIds: ["mat-23", "mat-24"],
+    total: 5,
+    questoes: [
+      {
+        num: 1,
+        enunciado: "(UNEB · CFO PM BA · 2025) Durante uma aula de trigonometria, o professor pediu aos alunos que analisassem ângulos em múltiplos de 90º e suas respectivas razões trigonométricas.\nSabendo que sen(45°) = cos(45°) = √2/2, qual é o valor de sen²(45°) + cos²(45°)?",
+        opcoes: { A: "√2", B: "√2/2", C: "√(1/2)", D: "0", E: "1" },
         gabarito: 'E',
         explicacao: "Identidade fundamental da trigonometria: sen²θ + cos²θ = 1, para qualquer ângulo."
       },
       {
         num: 2,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) O menor valor que a função f(x) = sec²x − tg²x − cos x pode assumir é",
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) O menor valor que a função f(x) = sec ²x - tg ²x - cos x pode assumir é",
         opcoes: { A: "0", B: "-0,5", C: "-1", D: "-1,5", E: "-2" },
         gabarito: 'A',
         explicacao: "sec²x − tg²x = 1 (identidade), então f(x) = 1 − cos x. Como cos x ≤ 1, o menor valor é 1 − 1 = 0."
@@ -1140,28 +1421,14 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 4,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Os reservatórios de forma cilíndrica, para água, são econômicos e de manutenção mais simples. Considerando-se que, em laboratório, o protótipo de um deles tem 6 cm de diâmetro e 12cm de altura, pode-se estimar que uma centena desses protótipos é capaz de armazenar, aproximadamente, x mℓ de água, e o valor de x é",
-        opcoes: { A: "10800", B: "15496", C: "21624", D: "28168", E: "33912" },
-        gabarito: 'E',
-        explicacao: "V = πr²h = 3,14 · 9 · 12 ≈ 339,12 cm³ por protótipo. Uma centena: ≈ 33.912 mℓ."
+        enunciado: "(CONSULTEC · CFO PM BA · 2017) Sejam as circunferências cujas equações são expressas por C₁: x² + y² + 16x + 63 = 0 e C₂: 3x² + 3y² - 6x - 54y + 234 = 0, respectivamente.\nNessas condições, é correto afirmar que uma das expressões para a equação geral da reta que passa pelos centros de C₁ e de C₂ é",
+        opcoes: { A: "y - x - 4 = 0", B: "x - y + 4 = 0", C: "x - y + 8 = 0", D: "x + y - 8 = 0", E: "y + x + 8 = 0" },
+        gabarito: 'C',
+        explicacao: "Centros: C₁(−8, 0) e C₂(1, 9). Coeficiente angular: 9/9 = 1 → y = x + 8, ou seja, x − y + 8 = 0."
       },
       {
         num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2017) Uma equipe de alunos do Curso de Formação de Oficiais da Polícia Militar desejava realizar algumas transformações na disposição do mobiliário interno da repartiçãoonde atuava. Os profissionais dessa equipe consideraram um prisma reto, como inspiração, e seus lados, como modelo para um biombo. Seja P um prisma reto, com 12cm de altura e base quadrada, de área medindo 16cm². Nessas condições, pode-se afirmar que a área lateral, em cm², do prisma é igual a",
-        opcoes: { A: "192", B: "144", C: "96", D: "72", E: "48" },
-        gabarito: 'A',
-        explicacao: "Base quadrada de área 16 cm² → lado 4 cm. Área lateral = perímetro × altura = 16 × 12 = 192 cm²."
-      },
-      {
-        num: 6,
-        enunciado: "(CONSULTEC · CFO PM BA · 2012) Em um certo país, as moedas são feitas do mesmo material, têm a mesma espessura e têm massa diretamente proporcional ao seu volume. Nesse país, as moedasde 10 centavos e 25 centavos têm massas, respectivamente, iguais a 4,8g e 7,5g, sendo o diâmetro da primeira igual a 20mm. Considerando-se uma moeda M tal que os raios da moeda de 10 centavos, de M e da moeda de 25 centavos, nessa ordem, formam uma progressão geométrica, pode-se afirmar que a moeda M tem diâmetro, em mm, aproximadamente igual a",
-        opcoes: { A: "23,5", B: "23,1", C: "22,8", D: "22,3", E: "21,2" },
-        gabarito: 'D',
-        explicacao: "Massa ∝ volume ∝ r² (mesma espessura): r₂₅ = 10·√(7,5/4,8) = 12,5 mm. PG: rM = √(10 · 12,5) = √125 ≈ 11,18 → diâmetro ≈ 22,3 mm."
-      },
-      {
-        num: 7,
-        enunciado: "(CONSULTEC · CFO PM BA · 2014) Devido ao crescimento no número de ocorrências violentas em determinado bairro decidiu-se instalar um posto policial cuja localização foi escolhida, por razõesestratégicas, tomando-se como referência três regiões − R 1, R 2, R 3 − de maior incidência de eventos dessa natureza. Se R 1, R 2, R 3 forem representadas no plano cartesiano por (6,1), (6,9) e (13,1), respectivamente, então o posto deverá ser representado por um ponto P, o mais próximo possível de R 1 e R 2, equidistante destes e,além disso, a uma distância de 5u.c. de R 3. Assim sendo, a medida da distância do ponto P a R 2, em unidades de comprimento, deverá ser, aproximadamente, igual a",
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Devido ao crescimento no número de ocorrências violentas em determinado bairro decidiu-se instalar um posto policial cuja localização foi escolhida, por razões estratégicas, tomando-se como referência três regiões − R ₁, R ₂, R ₃ − de maior incidência de eventos dessa natureza. Se R ₁, R ₂, R ₃ forem representadas no plano cartesiano por (6,1), (6,9) e (13,1), respectivamente, então o posto deverá ser representado por um ponto P, o mais próximo possível de R ₁_ e R ₂, equidistante destes e, além disso, a uma distância de 5u.c. de R ₃.\nAssim sendo, a medida da distância do ponto P a R ₂, em unidades de comprimento, deverá ser, aproximadamente, igual a",
         opcoes: { A: "4,0.", B: "4,7.", C: "5,3.", D: "5,6.", E: "6,2." },
         gabarito: 'D',
         explicacao: "P equidistante de R1(6,1) e R2(6,9) → y = 5. Distância 5 até R3(13,1): (x−13)² + 16 = 25 → x = 10. d(P, R2) = √(4² + 4²) = √32 ≈ 5,6."
@@ -1169,14 +1436,14 @@ window.PL_SEED_LISTAS = [
     ]
   },
 
-  /* ── 16. Lista de Exercícios — Combinatória, Probabilidade e Estatística (questões reais de prova) ── */
+  /* ── 19. Lista de Exercícios — Combinatória, Probabilidade e Estatística (questões reais de prova) ── */
   {
     id: 'seed-lq-combinatoria-estatistica',
     titulo: "Lista de Exercícios — Combinatória, Probabilidade e Estatística",
     materia: 'Matemática', fonte: 'Questões de provas — FCC · IBFC · UNEB · CONSULTEC (PM BA/CBM BA)', dificuldade: 'media',
     tipoLista: 'lista',
     cursoId: '', aulaId: '', aulaIds: ["mat-17", "mat-18", "mat-26"],
-    total: 6,
+    total: 11,
     questoes: [
       {
         num: 1,
@@ -1187,35 +1454,70 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 2,
-        enunciado: "(CONSULTEC · CFO PM BA · 2011) Dois grupos de estudantes foram submetidos a uma avaliação. Uma análise das notas obtidas por eles apontou, para o primeiro grupo, média e desvio padrão, respectivamente, iguais a M1 = 5 e D1 = 1,5 e, para o segundo grupo, média e desvio padrão iguais a M2 = 7 e D2 = 2,5. Por uma tarefa complementar, cada aluno do primeiro grupo teve um acréscimo de 20% à nota obtida na primeira avaliação e cada aluno do segundo grupo teve 1 ponto de acréscimo à referida nota. Sendo M1′ e D1′, M2′ e D2′ as médias e desvios padrão depois do acréscimo, no primeiro e segundo grupos, é correto afirmar que",
-        opcoes: { A: "M1′ − M1 = 0,2 e D1′ − D1 = 0,2", B: "M1 < M1′ e D1 = D1′", C: "M2′ − M2 = 1 e D2′ − D2 = 1", D: "M2 < M2′ e D2 = D2′", E: "D1′ − D1 = 0,3 e D2′ − D2 = 1" },
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Em um dia de grande movimentação em uma delegacia de polícia, o tempo médio e o tempo mediano de espera para atendimento de um grupo de 10 pessoas foram, ambos, iguais a 12 minutos.\nSabendo-se que o conjunto ordenado de valores 4, 5, 5, 9, a, 14, 16, 18, b, 21 corresponde ao tempo de espera, em minutos, de cada uma dessas pessoas, pode-se concluir que b - a é igual a",
+        opcoes: { A: "5", B: "6", C: "7", D: "8", E: "9" },
+        gabarito: 'D',
+        explicacao: "Mediana de 10 valores = média do 5º e 6º: (a+14)/2 = 12 → a = 10. Média 12 → soma = 120: os demais somam 102 + b → b = 18. Logo b − a = 8."
+      },
+      {
+        num: 3,
+        enunciado: "(CONSULTEC · CFO PM BA · 2011) Dois grupos de estudantes foram submetidos a uma avaliação. Uma análise das notas obtidas por eles apontou, para o primeiro grupo, média e desvio padrão respectivamente iguais a M ₁ = 5 e D ₁ = 1,5 e, para o segundo grupo, média e desvio padrão iguais a M ₂ = 7 e D2 = 2,5. Por uma tarefa complementar, cada aluno do primeiro grupo teve um acréscimo de 20% à nota obtida na primeira avaliação e cada aluno do segundo grupo teve 1 ponto de acréscimo à referida nota.\nSendo M1’ e D ₁’, M ₂’ e D ₂’ as médias e desvios padrão depois do acréscimo, no primeiro e segundo grupos, é correto afirmar que",
+        opcoes: { A: "M ₁’ − M1 = 0,2 e D1’ − D1 = 0,2", B: "M ₁ < M1’ e D1 = D1’", C: "M ₂’ − M2 = 1 e D ₂’ − D ₂ = 1", D: "M ₂ < M ₂’ e D ₂ = D ₂’", E: "D ₁’ − D1 = 0,3 e D ₂’ − D ₂ = 1" },
         gabarito: 'D',
         explicacao: "Somar 1 ponto a todas as notas desloca a média (+1) mas NÃO altera a dispersão: M2 < M2′ e D2 = D2′. (No 1º grupo, multiplicar por 1,2 altera média E desvio.)"
       },
       {
-        num: 3,
+        num: 4,
+        enunciado: "(CONSULTEC · CFO PM BA · 2014) Devido a um problema na emissão digital de senhas, um funcionário recebeu uma caixa contendo cartões numerados para serem distribuídos ao público como senhas de atendimento. Examinando-se esses cartões, observou-se que 20 deles tinham numeração múltipla de 3;\n15 deles tinham numeração múltipla de 4;\n10 deles tinham numeração múltipla de 12.\nConsiderando-se que a caixa contém o menor número possível de cartões com essas características, pode-se afirmar que, retirando-se, aleatoriamente, um desses cartões, a probabilidade de que ele não tenha numeração múltipla de 12 é igual a",
+        opcoes: { A: "1/4", B: "3/10", C: "2/5", D: "1/2", E: "3/5" },
+        gabarito: 'E',
+        explicacao: "Menor caixa possível: 20 + 15 − 10 = 25 cartões (os 10 múltiplos de 12 contam nos dois grupos). Não múltiplos de 12: 25 − 10 = 15 → 15/25 = 3/5."
+      },
+      {
+        num: 5,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Apenas três candicatos X, Y e Z disputarão uma eleição, na qual só pode haver um vencedor.\nAo analisar as intenções de voto da população, um instituto de pesquisa constatou que a chance de o candidato X vencer a eleição é o dobro da chance do candidato Y;\no candidato Y vencer a eleição é dois terços da chance do candidato Z.\nAssim, a probabilidade de vitória do candidato X ou do candidato Z é igual a",
+        opcoes: { A: "2/3", B: "3/7", C: "7/9", D: "9/11", E: "11/10" },
+        gabarito: 'C',
+        explicacao: "Sejam z = 3k, y = 2k e x = 4k → total 9k. P(X ou Z) = (4k + 3k)/9k = 7/9."
+      },
+      {
+        num: 6,
         enunciado: "(CONSULTEC · CFO PM BA · 2011) Supondo-se que cada um dos 120 candidatos inscritos em um concurso receba como código de identificação um anagrama distinto, da sigla CFOPM, pode-se estimar que a probabilidade de o anagrama impresso em um cartão escolhido aleatoriamente começar e terminar por consoante é igual a",
         opcoes: { A: "48%", B: "51%", C: "53%", D: "57%", E: "60%" },
         gabarito: 'E',
         explicacao: "CFOPM tem 4 consoantes e 1 vogal. Começar e terminar com consoante: 4 · 3 · 3! = 72 dos 120 anagramas → 72/120 = 60%."
       },
       {
-        num: 4,
+        num: 7,
+        enunciado: "(UNEB · CFO PM BA · 2025) Em uma competição de palavras, um desafio consiste em formar todas as combinações possíveis com as letras de uma palavra específica. A palavra escolhida foi \"CASA\", que possui letras repetidas. Quantos anagramas distintos podem ser formados utilizando todas as letras dessa palavra?",
+        opcoes: { A: "36", B: "72", C: "24", D: "48", E: "12" },
+        gabarito: 'E',
+        explicacao: "CASA tem 4 letras com A repetido 2 vezes: 4!/2! = 12 anagramas."
+      },
+      {
+        num: 8,
+        enunciado: "(FCC · Soldado PM BA · 2023) Placas para identificação de veículos deverão conter 4 letras distintas. Se escolhermos as letras X, Y, Z e W, o número de placas distintas que poderão ser produzidas é",
+        opcoes: { A: "36", B: "24", C: "20", D: "16", E: "12" },
+        gabarito: 'B',
+        explicacao: "4 letras distintas em 4 posições: 4! = 24 placas."
+      },
+      {
+        num: 9,
         enunciado: "(IBFC · Soldado PM BA · 2020) Em uma prateleira de uma biblioteca, deseja-se dispor 4 livros de maneiras distintas. Sabendo que a prateleira possui 10 espaços em que os livros podem ser colocados, assinale a alternativa que apresenta corretamente a quantidade de maneiras que esses livros podem ser dispostos nessa prateleira.",
         opcoes: { A: "3628800", B: "5040", C: "151200", D: "720", E: "24" },
         gabarito: 'B',
         explicacao: "Arranjo de 10 espaços tomados 4 a 4: 10 · 9 · 8 · 7 = 5040."
       },
       {
-        num: 5,
-        enunciado: "(CONSULTEC · CFO PM BA · 2010) Após um assalto, várias testemunhas foram ouvidas, mas não houve consenso quanto à placa do automóvel usado pelo assaltante na sua fuga. Através dasinformações dessas testemunhas, concluiu-se que a placa do veículo era constituída de 3 vogais distintas e quatro algarismos também distintos, sendo que os dois últimos algarismos eram os dígitos 0 e 1. Com base nesses dados, pode-se afirmar que o número de veículos a ser investigados é",
+        num: 10,
+        enunciado: "(CONSULTEC · CFO PM BA · 2010) Após um assalto, várias testemunhas foram ouvidas, mas não houve consenso quanto à placa do automóvel usado pelo assaltante na sua fuga. Através das informações dessas testemunhas, concluiu-se que a placa do veículo era constituída de 3 vogais distintas e quatro algarismos também distintos, sendo que os dois últimos algarismos eram os dígitos 0 e 1.\nCom base nesses dados, pode-se afirmar que o número de veículos a ser investigados é",
         opcoes: { A: "560", B: "1120", C: "3360", D: "6720", E: "8240" },
         gabarito: 'D',
         explicacao: "Vogais distintas: 5·4·3 = 60. Os dois últimos algarismos são 0 e 1 (2 ordens) e os dois primeiros vêm dos 8 restantes: 8·7 = 56. Total: 60 · 56 · 2 = 6720."
       },
       {
-        num: 6,
-        enunciado: "(FCC · Soldado PM BA · 2009) Certo dia, um automóvel passou em alta velocidade por uma avenida, excedendo o limite ali permitido. Um policial de plantão no local tentou anotar o número daplaca do carro do infrator, mas não conseguiu fazê-lo por completo: memorizou apenas o prefixo (CSA) e, da parte numérica, lembrava somente que o algarismo da esquerda era ímpar e o da direita era par. Com base nessas informações, o total de possibilidades para o número da placa de tal automóvel é",
+        num: 11,
+        enunciado: "(FCC · Soldado PM BA · 2009) Certo dia, um automóvel passou em alta velocidade por uma avenida, excedendo o limite ali permitido. Um policial de plantão no local tentou anotar o número da placa do carro do infrator, mas não conseguiu fazê-lo por completo: memorizou apenas o prefixo (CSA) e, da parte numérica, lembrava somente que o algarismo da esquerda era ímpar e o da direita era par. Com base nessas informações, o total de possibilidades para o número da placa de tal automóvel é",
         opcoes: { A: "2500", B: "2000", C: "1000", D: "250", E: "100" },
         gabarito: 'A',
         explicacao: "Primeiro algarismo ímpar (5 opções), último par (5 opções), dois do meio livres (10 · 10): 5 · 10 · 10 · 5 = 2500."

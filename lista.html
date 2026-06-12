@@ -409,20 +409,38 @@
   /* ────── Load lista ────── */
   function init() {
     const params = new URLSearchParams(location.search);
-    const id = params.get('id');
-    if (!id) { showNotFound(); return; }
+    const modoCaderno = params.get('caderno');
 
-    _lista = PlQuestoes.getList(id);
-    if (!_lista || !_lista.questoes || !_lista.questoes.length) { showNotFound(); return; }
+    if (modoCaderno) {
+      /* 📕 lista virtual montada com as questões do Caderno de Erros */
+      const itens = modoCaderno === 'semana'
+        ? PlQuestoes.errosParaRevisar(_session.email)
+        : PlQuestoes.errosPendentes(_session.email);
+      if (!itens.length) { showCadernoVazio(); return; }
+      _lista = {
+        id: '__caderno', _caderno: true,
+        titulo: '📕 Caderno de Erros — ' + (modoCaderno === 'semana' ? 'Revisão da semana' : 'Refazer questões pendentes'),
+        materia: 'Revisão dos seus erros',
+        fonte: 'Acerte cada questão 2 vezes seguidas para dominá-la',
+        dificuldade: '',
+        questoes: itens.map((it, i) => ({ ...it.questao, num: i + 1, _orig: { listaId: it.listaId, num: it.num } }))
+      };
+    } else {
+      const id = params.get('id');
+      if (!id) { showNotFound(); return; }
 
-    // Restore answers if exists
-    const prev = PlQuestoes.getResp(id, _session.email);
-    if (prev && prev.respostas && !prev.finalizadoEm) {
-      _respostas = { ...prev.respostas };
-    } else if (prev && prev.finalizadoEm) {
-      // Already completed — show results directly
-      _respostas = { ...prev.respostas };
-      _finalizado = true;
+      _lista = PlQuestoes.getList(id);
+      if (!_lista || !_lista.questoes || !_lista.questoes.length) { showNotFound(); return; }
+
+      // Restore answers if exists
+      const prev = PlQuestoes.getResp(id, _session.email);
+      if (prev && prev.respostas && !prev.finalizadoEm) {
+        _respostas = { ...prev.respostas };
+      } else if (prev && prev.finalizadoEm) {
+        // Already completed — show results directly
+        _respostas = { ...prev.respostas };
+        _finalizado = true;
+      }
     }
 
     document.title = `${_lista.titulo} – Professor Leão`;
@@ -440,6 +458,14 @@
   function showNotFound() {
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('notFoundScreen').style.display = 'flex';
+  }
+
+  function showCadernoVazio() {
+    const scr = document.getElementById('notFoundScreen');
+    scr.querySelector('.icon').textContent = '🎉';
+    scr.querySelector('h2').textContent = 'Caderno de erros em dia!';
+    scr.querySelector('p').textContent = 'Nenhuma questão pendente para refazer agora. Continue resolvendo listas e minissimulados — o que você errar aparece aqui.';
+    showNotFound();
   }
 
   function showQuiz() {
@@ -547,8 +573,8 @@
   /* ────── Select answer ────── */
   function selectAnswer(num, letra) {
     _respostas[num] = letra;
-    // Auto-save
-    PlQuestoes.saveResp(_lista.id, _session.email, _respostas, false);
+    // Auto-save (o caderno virtual não persiste retomada)
+    if (!_lista._caderno) PlQuestoes.saveResp(_lista.id, _session.email, _respostas, false);
 
     // Refresh opcoes visually
     document.querySelectorAll('.q-opcao').forEach(btn => {
@@ -601,7 +627,15 @@
   /* ────── Finalize ────── */
   function finalize() {
     _finalizado = true;
-    PlQuestoes.saveResp(_lista.id, _session.email, _respostas, true);
+    if (!_lista._caderno) PlQuestoes.saveResp(_lista.id, _session.email, _respostas, true);
+    /* 📕 Caderno de Erros: registra cada questão desta tentativa.
+       Errou (ou deixou em branco) → entra/permanece no caderno;
+       acertou → conta acerto seguido (2 seguidos = dominada). */
+    _lista.questoes.forEach(q => {
+      const ok   = _respostas[q.num] === q.gabarito;
+      const alvo = q._orig || { listaId: _lista.id, num: q.num };
+      PlQuestoes.errosRegistrar(alvo.listaId, alvo.num, ok, _session.email);
+    });
     renderResults();
   }
 
@@ -611,7 +645,14 @@
     document.getElementById('progressWrap').style.display = 'none';
     document.getElementById('resultScreen').style.display = 'block';
 
-    const score = PlQuestoes.calcScore(_lista.id, _respostas);
+    /* o caderno é uma lista virtual — calcula o score localmente */
+    const score = _lista._caderno
+      ? (() => {
+          const total   = _lista.questoes.length;
+          const acertos = _lista.questoes.filter(q => _respostas[q.num] === q.gabarito).length;
+          return { acertos, erros: total - acertos, total, percent: total ? Math.round(acertos / total * 100) : 0 };
+        })()
+      : PlQuestoes.calcScore(_lista.id, _respostas);
     if (!score) return;
 
     const { acertos, erros, total, percent } = score;

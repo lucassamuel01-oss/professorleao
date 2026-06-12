@@ -508,6 +508,29 @@
     </div>
   </div>
 
+  <!-- 📕 Lembrete semanal do Caderno de Erros -->
+  <div id="cadernoLembrete" style="display:none;background:linear-gradient(135deg,#3b2415,#4a2c12);border:1px solid rgba(251,146,60,.45);border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="font-size:30px">🔔</div>
+    <div style="flex:1;min-width:220px">
+      <strong style="font-family:var(--font-h);font-size:15px">Revisão semanal: <span id="cadernoLembreteN">0</span> questão(ões) para refazer</strong>
+      <p style="font-size:13px;color:#fcd9b6;margin-top:3px">Antes de começar as aulas desta semana, refaça o que você errou na semana passada. Cada questão sai do caderno depois de 2 acertos seguidos.</p>
+    </div>
+    <div style="display:flex;gap:10px">
+      <a href="lista.html?caderno=semana" style="padding:10px 18px;border-radius:10px;background:#fb923c;color:#1a1109;font-family:var(--font-h);font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap">Refazer agora ▶</a>
+      <button onclick="adiarLembreteCaderno()" style="padding:10px 14px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--silver);font-family:var(--font-h);font-weight:700;font-size:12.5px;cursor:pointer">Depois</button>
+    </div>
+  </div>
+
+  <!-- 🦁 Guia do Método — destaque da primeira semana -->
+  <div id="metodoBanner" style="display:none;background:linear-gradient(135deg,var(--navy-3),#1a3570);border:1px solid rgba(74,108,247,.4);border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="font-size:30px">🦁</div>
+    <div style="flex:1;min-width:220px">
+      <strong style="font-family:var(--font-h);font-size:15px">Começando agora? Leia o guia do Método</strong>
+      <p style="font-size:13px;color:var(--silver);margin-top:3px">"Como estudar com o Método do Professor Leão: o guia completo" — Pomodoro de 25 min, trio aula → minissimulado → jogo e plano guiado pelo edital.</p>
+    </div>
+    <a href="blog.html#metodo-professor-leao" style="padding:10px 18px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap">📖 Ler o guia →</a>
+  </div>
+
   <!-- Continue banner -->
   <div class="continue-banner" id="continueBanner" style="display:none">
     <div class="continue-banner__icon" id="continueIcon">📖</div>
@@ -642,6 +665,25 @@
     </div>
   </div>
   <div class="listas-grid" id="listasGrid" style="display:none"></div>
+
+  <!-- 📕 Caderno de Erros -->
+  <div id="cadernoSec" style="display:none;margin-top:8px">
+    <div class="sec-header" style="margin-top:16px">
+      <h2>📕 Caderno de Erros</h2>
+      <p>Tudo o que você errou nas listas e minissimulados — refaça até dominar (2 acertos seguidos)</p>
+    </div>
+    <div style="background:var(--navy-2);border:1px solid rgba(251,146,60,.25);border-radius:var(--radius);padding:20px 22px;margin-bottom:40px;display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+      <div style="display:flex;gap:26px">
+        <div style="text-align:center"><div id="cadernoPendentes" style="font-family:var(--font-h);font-size:30px;font-weight:900;color:#fb923c">0</div><div style="font-size:12px;color:var(--silver)">pendentes</div></div>
+        <div style="text-align:center"><div id="cadernoDominadas" style="font-family:var(--font-h);font-size:30px;font-weight:900;color:#22c55e">0</div><div style="font-size:12px;color:var(--silver)">dominadas</div></div>
+      </div>
+      <div style="flex:1;min-width:220px;font-size:13px;color:var(--silver)" id="cadernoMsg"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="lista.html?caderno=1" id="cadernoBtn" style="padding:11px 20px;border-radius:10px;background:#fb923c;color:#1a1109;font-family:var(--font-h);font-weight:800;font-size:13px;text-decoration:none">📕 Refazer erros ▶</a>
+        <a href="blog.html#caderno-de-erros" style="padding:11px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.15);color:var(--silver);font-family:var(--font-h);font-weight:700;font-size:12.5px;text-decoration:none">Por que funciona?</a>
+      </div>
+    </div>
+  </div>
 
 </main>
 
@@ -930,6 +972,49 @@ function escHtml(s) {
 }
 
 carregarListas();
+
+/* ════════════════════════════════════════
+   📕 CADERNO DE ERROS + GUIA DO MÉTODO
+════════════════════════════════════════ */
+function initCaderno() {
+  const stats = PlQuestoes.errosStats(_session.email);
+  const sec = document.getElementById('cadernoSec');
+  if (stats.pendentes || stats.dominadas) {
+    sec.style.display = 'block';
+    document.getElementById('cadernoPendentes').textContent = stats.pendentes;
+    document.getElementById('cadernoDominadas').textContent = stats.dominadas;
+    document.getElementById('cadernoMsg').textContent = stats.pendentes
+      ? 'Refazer os próprios erros é o caminho mais rápido para subir a nota: acerte 2 vezes seguidas e a questão sai do caderno.'
+      : 'Caderno zerado — você dominou tudo o que tinha errado. 👏';
+    document.getElementById('cadernoBtn').style.display = stats.pendentes ? '' : 'none';
+  }
+  /* lembrete semanal: erros da(s) semana(s) anterior(es) ainda pendentes */
+  const n = PlQuestoes.errosPrecisaLembrete(_session.email);
+  if (n > 0) {
+    document.getElementById('cadernoLembreteN').textContent = n;
+    document.getElementById('cadernoLembrete').style.display = 'flex';
+  }
+}
+function adiarLembreteCaderno() {
+  PlQuestoes.errosMarcarLembrete(_session.email);
+  document.getElementById('cadernoLembrete').style.display = 'none';
+}
+initCaderno();
+
+/* destaque do guia do Método durante a primeira semana de acesso */
+(function bannerMetodo() {
+  try {
+    let inicio = _session.createdAt ? new Date(_session.createdAt) : null;
+    if (!inicio || isNaN(inicio.getTime())) {
+      const chave = 'pl_inicio_' + (_session.id || 'x');
+      let salvo = localStorage.getItem(chave);
+      if (!salvo) { salvo = new Date().toISOString(); localStorage.setItem(chave, salvo); }
+      inicio = new Date(salvo);
+    }
+    const dias = (Date.now() - inicio.getTime()) / 864e5;
+    if (dias <= 7) document.getElementById('metodoBanner').style.display = 'flex';
+  } catch (e) { /* sem destaque */ }
+})();
 
 /* ── Course cards ── */
 const grid = document.getElementById('coursesGrid');
@@ -1761,6 +1846,7 @@ const TOUR_PASSOS = [
   { sel: '#avisosSec',     t: '📣 Quadro de Avisos',   d: 'Aulas ao vivo, novidades de concursos e editais publicados pelo professor aparecem aqui.' },
   { sel: '#jogosSec',      t: '🎮 Arena de Jogos',     d: 'Treine se divertindo! As perguntas são geradas na hora (nunca se repetem) e o modo Treino não tem cronômetro.' },
   { sel: '#listasSec',     t: '📝 Minissimulados',     d: '10 questões no estilo da banca por assunto, com gabarito comentado. Eles também aparecem dentro de cada aula.' },
+  { sel: '#cadernoSec',    t: '📕 Caderno de Erros',   d: 'Toda questão que você errar entra aqui automaticamente. Refaça até acertar 2 vezes seguidas — e toda semana o Leão te lembra de revisar.' },
   { sel: '#iaCard',        t: '🦁 Leão IA',            d: 'Seu treinador pessoal: pergunte como está seu desempenho, o que estudar agora e seus pontos fracos. Ele também te acompanha pelas outras páginas (botão 🦁 flutuante).' },
   { sel: '#blogAlunoGrid', t: '📰 Blog',               d: 'Método de estudo, raio-X dos editais (com download) e dicas de TAF. Pronto! Bons estudos 💪' },
 ];
