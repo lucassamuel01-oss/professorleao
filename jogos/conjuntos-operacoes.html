@@ -533,5 +533,9 @@ function show(id){['screenLobby','screenGame','screenResult'].forEach(s=>{docume
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 </script>
+
+<!-- Conteudo exclusivo da Area do Aluno -->
+<script src="../auth.js"></script>
+<script>window.plAuth && window.plAuth.requireAuth();</script>
 </body>
 </html>

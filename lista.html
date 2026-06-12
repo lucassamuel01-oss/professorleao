@@ -831,9 +831,10 @@
   .rodape {
     position: fixed; left: 0; right: 0; bottom: 0; text-align: center;
     font-family: Arial, Helvetica, sans-serif; font-size: 9.5px; color: #7c87a8;
-    border-top: 1px solid #d8deee; padding: 5px 0 1px; background: #fff;
+    border-top: 1px solid #d8deee; padding: 5px 0 1px; background: #fff; line-height: 1.6;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
+  .rodape b { color: #0A1628; }
 </style></head><body>
   <div class="marca"><img src="${logoAzul}" alt=""></div>
   <div class="cab">
@@ -851,7 +852,7 @@
     <div class="gab-grid">${gabGrid}</div>
     ${comentarios ? '<h2 class="sec">💡 Gabarito comentado</h2>' + comentarios : ''}
   </div>
-  <div class="rodape">🦁 Professor Leão — A matemática que aprova · material de uso exclusivo dos alunos da plataforma · Bons estudos!</div>
+  <div class="rodape"><b>🦁 Professor Leão — A matemática que aprova</b> · www.professorleao.com · WhatsApp (77) 99922-9281 · Instagram @professor.leao<br>Material de uso exclusivo dos alunos da plataforma. Bons estudos!</div>
   <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); }<\/script>
 </body></html>`;
 

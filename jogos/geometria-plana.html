@@ -529,5 +529,9 @@ function renderResRank(period){
 function show(id){ ['screenLobby','screenGame','screenResult'].forEach(s=>{ document.getElementById(s).style.display=s===id?'block':'none'; }); }
 function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 </script>
+
+<!-- Conteudo exclusivo da Area do Aluno -->
+<script src="../auth.js"></script>
+<script>window.plAuth && window.plAuth.requireAuth();</script>
 </body>
 </html>

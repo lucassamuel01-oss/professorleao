@@ -817,7 +817,7 @@ const PL_CATALOG = {
   /* ── Definições de atividades ──────────────────────────── */
   ATIVIDADES: [
     { key: 'video',     icon: '🎥', label: 'Vídeo da Aula',         cor: '#60a5fa' },
-    { key: 'pdf',       icon: '📄', label: 'PDF da Aula',            cor: '#34d399' },
+    { key: 'pdf',       icon: '📚', label: 'Material da Aula (PDF)',  cor: '#34d399' },
     { key: 'jogo',      icon: '🎮', label: 'Jogo Interativo',        cor: '#a78bfa' },
     { key: 'lista',     icon: '📋', label: 'Lista de Questões',      cor: '#fb923c' },
     { key: 'resolucao', icon: '✏️', label: 'Resolução de Questões',  cor: '#f472b6' }
@@ -898,6 +898,7 @@ const PL_CATALOG = {
   /* cada curso recebe APENAS os materiais do seu próprio edital —
      materiais da mentoria (cronograma/revisão) não pertencem aos cursos */
   const APOSTILAS_MILITAR = [
+    { titulo: 'Apostila Completa — CFSD 2026 (nova)',     desc: 'Apostila atualizada de matemática com estudo dirigido por assunto.', url: 'assets/apostila-cfsd-2026.pdf' },
     { titulo: 'Apostila Completa de Matemática — CFO/SD', desc: 'Teoria completa de todos os assuntos do edital de matemática.', url: 'assets/apostila-cfo.pdf' },
     { titulo: 'Conteúdo Programático — CFO/SD',           desc: 'O que cai na prova: edital de matemática detalhado.',          url: 'assets/conteudo-cfo.pdf' },
   ];

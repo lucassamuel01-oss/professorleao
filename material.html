@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Material da Aula – Professor Leão</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-branca.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0A1628; --navy-2: #0F1E38; --navy-3: #152545;
+      --accent: #4A6CF7; --accent-light: #6B89FF;
+      --silver: #8892B4; --white: #FFFFFF;
+      --font-h: 'Montserrat', sans-serif; --font-b: 'Open Sans', sans-serif;
+      --radius: 14px; --tr: 0.22s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-b); background: var(--navy); color: var(--white); min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,22,40,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74,108,247,0.18);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .topbar__logo { display: flex; align-items: center; gap: 10px; }
+    .topbar__logo img { height: 28px; }
+    .topbar__title { font-family: var(--font-h); font-weight: 800; font-size: 14px; }
+    .btn-ghost { padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(74,108,247,0.25);
+      color: var(--silver); font-family: var(--font-h); font-size: 12px; font-weight: 700; transition: var(--tr); display: inline-flex; align-items: center; gap: 6px; }
+    .btn-ghost:hover { color: var(--accent-light); border-color: rgba(74,108,247,0.45); }
+
+    .page { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    .mat-header {
+      background: linear-gradient(135deg, var(--navy-3), #1a3570);
+      border: 1px solid rgba(74,108,247,0.25); border-radius: var(--radius);
+      padding: 26px 30px; margin-bottom: 26px;
+    }
+    .mat-header .tag { font-family: var(--font-h); font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--accent-light); text-transform: uppercase; }
+    .mat-header h1 { font-family: var(--font-h); font-size: clamp(18px,3.4vw,24px); font-weight: 900; margin: 8px 0 14px; }
+    .mat-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-pdf {
+      padding: 10px 18px; border-radius: 10px;
+      background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.4);
+      color: #fdba74; font-family: var(--font-h); font-size: 12.5px; font-weight: 800;
+      transition: var(--tr); display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-pdf:hover { background: rgba(251,146,60,0.26); }
+    .btn-orig {
+      padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15);
+      color: var(--silver); font-family: var(--font-h); font-size: 12.5px; font-weight: 700; transition: var(--tr);
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-orig:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+    .sec-card {
+      background: var(--navy-2); border: 1px solid rgba(74,108,247,0.12);
+      border-radius: var(--radius); padding: 24px 28px; margin-bottom: 18px;
+    }
+    .sec-card h2 {
+      font-family: var(--font-h); font-size: 16px; font-weight: 800; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .sec-card p, .sec-card li { font-size: 14.5px; line-height: 1.8; color: rgba(255,255,255,0.88); }
+    .sec-card ul { padding-left: 22px; display: flex; flex-direction: column; gap: 7px; }
+    .sec-card b, .sec-card strong { color: var(--accent-light); }
+    .sec-card .en {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; font-size: 14px;
+    }
+    .sec-card .sol {
+      border-left: 3px solid var(--accent); background: rgba(74,108,247,0.07);
+      border-radius: 0 10px 10px 0; padding: 13px 16px; font-size: 14px; line-height: 1.75;
+    }
+
+    .mat-footer {
+      margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center; color: var(--silver); font-size: 12.5px; line-height: 1.9;
+    }
+    .mat-footer a { color: var(--accent-light); font-weight: 700; }
+
+    .screen-center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; gap: 14px; }
+    .screen-center .icon { font-size: 54px; }
+    .screen-center h2 { font-family: var(--font-h); font-size: 21px; }
+    .screen-center p { color: var(--silver); max-width: 400px; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="minha-area.html" class="topbar__logo">
+    <img src="assets/img/logo-branca.png" alt="Professor Leão" />
+    <span class="topbar__title">PROF. <span style="color:var(--accent-light)">LEÃO</span></span>
+  </a>
+  <a class="btn-ghost" href="javascript:history.back()">← Voltar</a>
+</header>
+
+<div class="page">
+  <div class="screen-center" id="naoEncontrado" style="display:none">
+    <div class="icon">🔍</div>
+    <h2>Material não encontrado</h2>
+    <p>Este material pode ter sido movido. Volte para a sua área e abra a aula novamente.</p>
+    <a href="minha-area.html" style="padding:12px 26px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-weight:800">Ir para Minha Área</a>
+  </div>
+
+  <div id="conteudo" style="display:none">
+    <div class="mat-header">
+      <div class="tag">📚 Material da Aula · Resumo teórico</div>
+      <h1 id="matTitulo">—</h1>
+      <div class="mat-actions">
+        <button class="btn-pdf" onclick="gerarPdfMaterial()" title="Baixar este material em PDF organizado para imprimir">📄 Gerar PDF</button>
+        <a class="btn-orig" id="btnOriginal" style="display:none" target="_blank" rel="noopener">⬇️ Apostila original da aula (PDF)</a>
+      </div>
+    </div>
+    <div id="secoes"></div>
+    <div class="mat-footer">
+      Estude com método: leia o material, resolva o minissimulado e a lista de exercícios da aula.<br>
+      🦁 <a href="https://www.professorleao.com">www.professorleao.com</a> ·
+      <a href="https://wa.me/5577999229281">WhatsApp (77) 99922-9281</a> ·
+      <a href="https://instagram.com/professor.leao">@professor.leao</a>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="materiais-data.js"></script>
+<script src="leao-widget.js" defer></script>
+<script>
+'use strict';
+const _session = window.plAuth.requireAuth();
+
+const _mat = (window.PL_MATERIAIS || []).find(m =>
+  m.id === new URLSearchParams(location.search).get('id'));
+
+function escHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+if (!_mat) {
+  document.getElementById('naoEncontrado').style.display = 'flex';
+} else {
+  document.title = _mat.titulo + ' – Professor Leão';
+  document.getElementById('matTitulo').textContent = _mat.titulo;
+  if (_mat.pdfOriginal) {
+    const b = document.getElementById('btnOriginal');
+    b.href = _mat.pdfOriginal;
+    b.style.display = 'inline-flex';
+  }
+  document.getElementById('secoes').innerHTML = _mat.secoes.map(s => `
+    <div class="sec-card">
+      <h2><span>${s.ic}</span> ${escHtml(s.t)}</h2>
+      ${s.h}
+    </div>`).join('');
+  document.getElementById('conteudo').style.display = 'block';
+}
+
+/* ────── Gerar PDF com a identidade do Professor Leão ────── */
+function gerarPdfMaterial() {
+  if (!_mat) return;
+  const logoBranca = new URL('assets/img/logo-branca.png', location.href).href;
+  const logoAzul   = new URL('assets/img/logo-azul.png', location.href).href;
+  const hoje = new Date().toLocaleDateString('pt-BR');
+
+  const secoesHtml = _mat.secoes.map(s => `
+    <div class="sec">
+      <h2>${s.ic} ${escHtml(s.t)}</h2>
+      ${s.h}
+    </div>`).join('');
+
+  const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>${escHtml(_mat.titulo)} — Professor Leão</title>
+<style>
+  @page { margin: 13mm 12mm 19mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1c2438; font-size: 12.5px; line-height: 1.65; padding-bottom: 40px; }
+  .cab {
+    background: #0A1628; color: #fff; border-radius: 14px; padding: 18px 22px;
+    display: flex; align-items: center; gap: 18px; border-bottom: 5px solid #4A6CF7;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .cab img { height: 58px; }
+  .cab h1 { font-family: Arial, Helvetica, sans-serif; font-size: 18px; line-height: 1.3; }
+  .cab .tag { font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #fdba74; letter-spacing: 1.4px; font-weight: bold; margin-bottom: 4px; }
+  .cab .sub { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #9fb0e8; margin-top: 4px; letter-spacing: .4px; }
+  .info { font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; color: #56607a; margin: 10px 2px 16px; }
+  .sec { margin-bottom: 16px; page-break-inside: avoid; }
+  .sec h2 {
+    font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #0A1628;
+    border-left: 5px solid #4A6CF7; padding-left: 11px; margin-bottom: 9px;
+  }
+  .sec p, .sec li { margin-bottom: 5px; }
+  .sec ul { padding-left: 22px; }
+  .sec b, .sec strong { color: #1d3da8; }
+  .sec .en { border: 1.4px dashed #aeb9d8; border-radius: 10px; padding: 9px 13px; margin-bottom: 8px; }
+  .sec .sol {
+    border-left: 4px solid #4A6CF7; background: #f2f5ff; border-radius: 0 10px 10px 0;
+    padding: 9px 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .marca { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: -1; }
+  .marca img { width: 62%; opacity: .05; transform: rotate(-12deg); }
+  .rodape {
+    position: fixed; left: 0; right: 0; bottom: 0; text-align: center;
+    font-family: Arial, Helvetica, sans-serif; font-size: 9.5px; color: #7c87a8;
+    border-top: 1px solid #d8deee; padding: 5px 0 1px; background: #fff; line-height: 1.6;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .rodape b { color: #0A1628; }
+</style></head><body>
+  <div class="marca"><img src="${logoAzul}" alt=""></div>
+  <div class="cab">
+    <img src="${logoBranca}" alt="Professor Leão">
+    <div>
+      <div class="tag">MATERIAL DA AULA · RESUMO TEÓRICO</div>
+      <h1>${escHtml(_mat.titulo)}</h1>
+      <div class="sub">PROFESSOR LEÃO · A MATEMÁTICA QUE APROVA — PM BA · CBM BA · CORREIOS</div>
+    </div>
+  </div>
+  <div class="info">Gerado em ${hoje} · Complete o estudo com o minissimulado e a lista de exercícios desta aula na plataforma.</div>
+  ${secoesHtml}
+  <div class="rodape"><b>🦁 Professor Leão — A matemática que aprova</b> · www.professorleao.com · WhatsApp (77) 99922-9281 · Instagram @professor.leao<br>Material de uso exclusivo dos alunos da plataforma. Bons estudos!</div>
+  <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); }<\/script>
+</body></html>`;
+
+  const win = window.open('', '_blank');
+  if (!win) { alert('Libere pop-ups para gerar o PDF.'); return; }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+}
+</script>
+</body>
+</html>

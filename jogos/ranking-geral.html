@@ -350,5 +350,9 @@ function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 renderAll();
 </script>
 <script src="../leao-widget.js" defer></script>
+
+<!-- Conteudo exclusivo da Area do Aluno -->
+<script src="../auth.js"></script>
+<script>window.plAuth && window.plAuth.requireAuth();</script>
 </body>
 </html>
