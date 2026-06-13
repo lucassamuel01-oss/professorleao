@@ -668,7 +668,8 @@ function fmtDataBR(iso) {
    só envia se houver SMTP e e-mail do comprador. Retorna true/false. */
 async function enviarEmailAcesso(venda, req) {
   const mailer = getMailer();
-  if (!mailer || !venda.email) return false;
+  if (!mailer) { venda.emailStatus = "sem-smtp"; console.error("[VENDA] e-mail NÃO enviado: SMTP não configurado (defina SMTP_HOST/SMTP_USER/SMTP_PASS no Railway)."); return false; }
+  if (!venda.email) { venda.emailStatus = "sem-email"; console.error("[VENDA] e-mail NÃO enviado: comprador sem e-mail capturado."); return false; }
   const base = baseUrl(req);
   const nomeProd = String(venda.produtoNome || "seu produto").replace(/[<>]/g, "");
   let assunto, corpo;
@@ -679,7 +680,7 @@ async function enviarEmailAcesso(venda, req) {
       <p>Sua compra de <b>${nomeProd}</b> foi confirmada. Como você já é aluno, somamos o período à sua conta — seu acesso vai até <b>${ate}</b>.</p>
       <p style="text-align:center;margin:24px 0"><a href="${base}/login.html" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Entrar na Área do Aluno</a></p>`;
   } else {
-    const link = base + "/cadastro.html?token=" + venda.conviteToken;
+    const link = base + "/cadastro.html?convite=" + venda.conviteToken;
     assunto = "Acesso liberado — Professor Leão";
     corpo = `<h2 style="color:#0A1628">Pagamento aprovado! 🎉</h2>
       <p>Sua compra de <b>${nomeProd}</b> foi confirmada. Crie seu acesso à plataforma:</p>
@@ -694,9 +695,11 @@ async function enviarEmailAcesso(venda, req) {
       html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">${corpo}
         <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p></div>`,
     });
+    venda.emailStatus = "enviado"; venda.emailErro = null;
     console.log(`[VENDA] e-mail de acesso enviado para ${venda.email} (${venda.tipoAcesso})`);
     return true;
   } catch (e) {
+    venda.emailStatus = "falha"; venda.emailErro = e.message;
     console.error("[VENDA] FALHA ao enviar e-mail para " + venda.email + ":", e.message);
     return false;
   }
@@ -760,6 +763,7 @@ async function processarVendaAprovada(vendaId, req) {
   }
   writeVendas(vendas);
   await enviarEmailAcesso(venda, req);
+  writeVendas(vendas); // persiste o resultado do envio do e-mail (emailStatus/emailErro)
   return {
     status: "approved", processada: false, tipoAcesso: venda.tipoAcesso,
     conviteToken: venda.conviteToken || null, novoExpiraEm: venda.novoExpiraEm || null,

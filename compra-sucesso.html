@@ -65,7 +65,7 @@
       $('ico').textContent = '🎉'; badge('ok', 'Pagamento aprovado');
       $('titulo').textContent = 'Acesso liberado!';
       $('msg').innerHTML = 'Sua compra de <b>' + esc(d.produtoNome || 'curso') + '</b> foi confirmada. Crie seu acesso à plataforma agora:';
-      $('cta').innerHTML = '<a class="btn" href="cadastro.html?token=' + encodeURIComponent(d.conviteToken) + '">Criar meu acesso →</a>' +
+      $('cta').innerHTML = '<a class="btn" href="cadastro.html?convite=' + encodeURIComponent(d.conviteToken) + '">Criar meu acesso →</a>' +
         (d.temEmail ? '<p class="hint" style="color:#8892B4">Também enviamos este link para o seu e-mail.</p>' : '');
       $('entrarLinha').style.display = 'none';
     }

@@ -131,7 +131,7 @@
 
 <script>
   const params = new URLSearchParams(location.search);
-  const token  = params.get('convite') || '';
+  const token  = params.get('convite') || params.get('token') || '';
 
   function showInvalid(title, msg) {
     document.getElementById('formBox').style.display = 'none';
