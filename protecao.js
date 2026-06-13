@@ -42,12 +42,14 @@
     const data = new Date().toLocaleDateString('pt-BR');
     const texto = etiqueta + '  ·  ' + data + '  ·  professorleao.com';
 
-    /* tile SVG em data-URI: leve, repetível, não selecionável */
+    /* tile SVG em data-URI: discreto (quase imperceptível na leitura,
+       mas ainda legível em um print ampliado → rastreável). Tile
+       grande e esparso + opacidade muito baixa. */
     const svg =
-      "<svg xmlns='http://www.w3.org/2000/svg' width='420' height='220'>" +
-      "<text x='0' y='110' transform='rotate(-24 0 110)' " +
-      "fill='rgba(120,140,180,0.16)' font-family='Arial,Helvetica,sans-serif' " +
-      "font-size='14' font-weight='bold'>" +
+      "<svg xmlns='http://www.w3.org/2000/svg' width='680' height='420'>" +
+      "<text x='0' y='210' transform='rotate(-22 0 210)' " +
+      "fill='rgba(130,148,184,0.045)' font-family='Arial,Helvetica,sans-serif' " +
+      "font-size='13' font-weight='600'>" +
       texto.replace(/&/g, '&amp;').replace(/</g, '&lt;') +
       "</text></svg>";
     const uri = "url(\"data:image/svg+xml;utf8," + encodeURIComponent(svg) + "\")";
@@ -57,7 +59,7 @@
     wm.style.cssText = [
       'position:fixed', 'inset:0', 'z-index:2147483000',
       'pointer-events:none', 'background-image:' + uri,
-      'background-repeat:repeat', 'opacity:1', 'mix-blend-mode:normal'
+      'background-repeat:repeat'
     ].join(';');
     document.body.appendChild(wm);
 

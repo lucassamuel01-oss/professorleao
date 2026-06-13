@@ -252,22 +252,19 @@ function touchLastAccess(user) {
   }
 }
 
-/* Credenciais do admin.
+/* Credenciais do admin — NADA fica no código versionado.
    - E-mail: variável ADMIN_EMAIL (padrão: o e-mail do professor).
-   - Senha:  variável ADMIN_PASSWORD; sem ela, usa o hash abaixo
-             (hash bcrypt = irreversível, seguro para versionar).
-   Para trocar a senha sem mexer no código, defina ADMIN_PASSWORD
-   no Railway. */
+   - Senha:  variável ADMIN_PASSWORD (defina no Railway). Sem ela, na
+             primeira vez o sistema gera uma senha aleatória forte,
+             cria o admin e a registra UMA VEZ no log do servidor —
+             depois disso a senha definida pelo admin é preservada. */
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "lucas.samuel01@gmail.com").toLowerCase();
 const ADMIN_NAME = process.env.ADMIN_NAME || "Lucas Leão";
-const ADMIN_PASS_HASH = process.env.ADMIN_PASSWORD
-  ? bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10)
-  : "$2b$10$HUAT6Qj/ED6D26I71wr1SOcKXjJvF5qaLycc.XmBvBM1hUIbfBJsW";
 
 function seedAdminUser() {
   let users = readUsers();
-  /* migração: remove credenciais antigas de admin (e-mail/senha
-     que já estiveram no código público) e recria com as atuais */
+  /* migração: remove credenciais antigas de admin (e-mail/senha que
+     já estiveram no código público em versões anteriores) */
   const antigos = users.filter((u) => u.role === "admin" && u.email.toLowerCase() !== ADMIN_EMAIL);
   if (antigos.length) {
     users = users.filter((u) => !(u.role === "admin" && u.email.toLowerCase() !== ADMIN_EMAIL));
@@ -276,22 +273,33 @@ function seedAdminUser() {
 
   const atual = users.find((u) => u.email.toLowerCase() === ADMIN_EMAIL);
   if (atual) {
-    /* garante papel de admin + senha atual em quem já existe */
     atual.role = "admin";
     atual.name = atual.name || ADMIN_NAME;
-    atual.password = ADMIN_PASS_HASH;
     atual.active = true;
     atual.expiresAt = null;
+    /* só (re)define a senha quando ADMIN_PASSWORD existe — é a âncora.
+       Sem a variável, preserva a senha atual (incl. a redefinida pelo
+       próprio admin via "esqueci minha senha"). */
+    if (process.env.ADMIN_PASSWORD) {
+      atual.password = bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10);
+    }
     writeUsers(users);
     console.log(`[ADMIN] Conta de administrador garantida: ${ADMIN_EMAIL}`);
     return;
   }
 
+  /* admin ainda não existe → cria */
+  let senha = process.env.ADMIN_PASSWORD;
+  let gerada = false;
+  if (!senha) {
+    senha = crypto.randomBytes(9).toString("base64").replace(/[^A-Za-z0-9]/g, "").slice(0, 12) + "9A!";
+    gerada = true;
+  }
   users.push({
     id: "admin-001",
     name: ADMIN_NAME,
     email: ADMIN_EMAIL,
-    password: ADMIN_PASS_HASH,
+    password: bcrypt.hashSync(senha, 10),
     role: "admin",
     curso: "Todos",
     active: true,
@@ -303,7 +311,15 @@ function seedAdminUser() {
     lastVisited: null,
   });
   writeUsers(users);
-  console.log(`[ADMIN] Administrador criado: ${ADMIN_EMAIL}`);
+  if (gerada) {
+    console.log("════════════════════════════════════════════════════");
+    console.log(`[ADMIN] Conta criada: ${ADMIN_EMAIL}`);
+    console.log(`[ADMIN] Senha temporária (anote e troque): ${senha}`);
+    console.log("[ADMIN] Defina ADMIN_PASSWORD nas variáveis do Railway para fixar a sua senha.");
+    console.log("════════════════════════════════════════════════════");
+  } else {
+    console.log(`[ADMIN] Administrador criado: ${ADMIN_EMAIL}`);
+  }
 }
 
 /* ── Auth middleware (somente APIs e páginas protegidas) ───── */
