@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Professor Leão">
+  <defs>
+    <linearGradient id="pl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6B89FF"/>
+      <stop offset="1" stop-color="#4A6CF7"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="58%">
+      <stop offset="0" stop-color="#4A6CF7" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#4A6CF7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#0A1628"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <text x="256" y="322" font-family="Arial, Helvetica, sans-serif" font-size="232" font-weight="bold" letter-spacing="-10" text-anchor="middle" fill="url(#pl)">PL</text>
+  <rect x="168" y="356" width="176" height="14" rx="7" fill="#F5B301"/>
+</svg>
