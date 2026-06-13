@@ -13,10 +13,33 @@
 
    Para forçar atualização do cache, suba o número da versão.
    ============================================================ */
-const VERSION = 'pl-v3';
+const VERSION = 'pl-v4';
 const CACHE = 'pl-cache-' + VERSION;
 const PRECACHE = ['/', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
 const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)$/i;
+
+/* Jogos + dependências compartilhadas — aquecidos em SEGUNDO PLANO (sob
+   demanda da página, respeitando Economia de Dados) para ficarem jogáveis
+   OFFLINE sem o aluno precisar abrir cada um antes. */
+const GAME_DEPS = ['/jogos.html', '/jogos/arcade.js', '/jogos/rankings.js', '/auth.js', '/protecao.js', '/leao-widget.js', '/appnav.js'];
+const GAME_URLS = GAME_DEPS.concat([
+  '/jogos/calculo.html', '/jogos/combinatoria.html', '/jogos/conjuntos-numericos.html',
+  '/jogos/conjuntos-operacoes.html', '/jogos/equacoes.html', '/jogos/estatistica.html',
+  '/jogos/expressoes.html', '/jogos/figuras.html', '/jogos/fracoes.html', '/jogos/funcoes.html',
+  '/jogos/geo-areas.html', '/jogos/geo-espacial.html', '/jogos/geometria-plana.html',
+  '/jogos/graficos.html', '/jogos/juros.html', '/jogos/logica-vf.html', '/jogos/matrizes.html',
+  '/jogos/multiplos-divisores.html', '/jogos/pa-pg.html', '/jogos/porcentagem.html',
+  '/jogos/potenciacao.html', '/jogos/probabilidade.html', '/jogos/ranking-geral.html',
+  '/jogos/razao.html', '/jogos/regra-de-tres.html', '/jogos/sequencias.html',
+  '/jogos/sistemas.html', '/jogos/unidades.html'
+]);
+function warmGames() {
+  return caches.open(CACHE).then((c) =>
+    Promise.allSettled(GAME_URLS.map((u) =>
+      fetch(u, { credentials: 'same-origin' }).then((r) => { if (r && r.ok) return c.put(u, r); }).catch(() => {})
+    ))
+  );
+}
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
@@ -34,7 +57,10 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-self.addEventListener('message', (e) => { if (e.data === 'skipWaiting') self.skipWaiting(); });
+self.addEventListener('message', (e) => {
+  if (e.data === 'skipWaiting') self.skipWaiting();
+  if (e.data === 'warm-games') e.waitUntil(warmGames());
+});
 
 self.addEventListener('fetch', (e) => {
   const req = e.request;
