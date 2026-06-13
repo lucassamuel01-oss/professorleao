@@ -64,6 +64,84 @@ app.use(
   })
 );
 
+/* ════════════════════════════════════════════════════════════
+   SEGURANÇA E PROTEÇÃO
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 1. Cabeçalhos de segurança (anti-embed, anti-sniff, etc.) ── */
+app.use((req, res, next) => {
+  /* impede que o site seja embutido em iframe de terceiros
+     (anti-clickjacking e anti-cópia da interface via embedding) */
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  if (req.secure || req.headers["x-forwarded-proto"] === "https") {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+  res.setHeader(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: blob:",
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+      "connect-src 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'", // ninguém embute este site
+    ].join("; ")
+  );
+  next();
+});
+
+/* ── 2. Rate limiting por IP (anti-scraping e anti-flood) ──
+   Janela deslizante em memória. Limite generoso para uso normal,
+   mas corta automação que dispara centenas de requisições. */
+const _rl = new Map();
+function rateLimit({ janelaMs, max, escopo }) {
+  return (req, res, next) => {
+    const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "?")
+      .split(",")[0].trim();
+    const chave = escopo + ":" + ip;
+    const agora = Date.now();
+    let reg = _rl.get(chave);
+    if (!reg || agora - reg.inicio > janelaMs) reg = { inicio: agora, n: 0 };
+    reg.n++;
+    _rl.set(chave, reg);
+    if (reg.n > max) {
+      res.setHeader("Retry-After", Math.ceil((janelaMs - (agora - reg.inicio)) / 1000));
+      return res.status(429).json({ success: false, message: "Muitas requisições. Aguarde um instante." });
+    }
+    next();
+  };
+}
+/* limpeza periódica do mapa para não crescer indefinidamente */
+setInterval(() => {
+  const agora = Date.now();
+  for (const [k, v] of _rl) if (agora - v.inicio > 600000) _rl.delete(k);
+}, 600000).unref?.();
+
+/* todas as APIs: no máx. 240 req/min por IP */
+app.use("/api", rateLimit({ janelaMs: 60000, max: 240, escopo: "api" }));
+
+/* ── 3. Bloqueio de ferramentas de automação conhecidas nas APIs ──
+   User-agents de scraping/HTTP clients automatizados são barrados
+   nas rotas de dados. Navegadores reais e buscadores passam. */
+const UA_BLOQUEADOS = /(curl|wget|python-requests|python-urllib|scrapy|httpclient|libwww|go-http|node-fetch|axios\/|okhttp|java\/|httpie|postman|insomnia|headlesschrome|phantomjs|puppeteer|playwright|selenium|aiohttp)/i;
+app.use("/api", (req, res, next) => {
+  const ua = String(req.headers["user-agent"] || "");
+  if (!ua || UA_BLOQUEADOS.test(ua)) {
+    return res.status(403).json({ success: false, message: "Acesso automatizado não autorizado." });
+  }
+  next();
+});
+
 /* ── MongoDB + cache em memória ──────────────────────────────
    Cache síncrono em memória + persistência assíncrona.       */
 
@@ -225,14 +303,43 @@ app.get("/health", (req, res) => {
   res.json({ ok: true, app: "professor-leao", db: !!_mongoDb });
 });
 
-app.post("/api/login", (req, res) => {
+/* ── Anti-brute-force: trava login após tentativas falhas ──
+   Conta por (email + IP). 8 erros → bloqueio progressivo. */
+const _loginFails = new Map();
+function _clientIp(req) {
+  return (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "?").split(",")[0].trim();
+}
+function loginBloqueio(email, ip) {
+  const reg = _loginFails.get(email + "|" + ip);
+  if (!reg) return 0;
+  if (reg.n < 8) return 0;
+  const espera = Math.min(15 * 60000, (reg.n - 7) * 60000); // 1 min por erro extra, até 15 min
+  const restante = reg.ate - Date.now();
+  return restante > 0 ? Math.ceil(restante / 1000) : 0;
+}
+function registrarFalha(email, ip) {
+  const k = email + "|" + ip;
+  const reg = _loginFails.get(k) || { n: 0, ate: 0 };
+  reg.n++;
+  reg.ate = Date.now() + Math.min(15 * 60000, Math.max(0, reg.n - 7) * 60000);
+  _loginFails.set(k, reg);
+}
+
+app.post("/api/login", rateLimit({ janelaMs: 60000, max: 15, escopo: "login" }), (req, res) => {
   const email = String(req.body.email || "").trim().toLowerCase();
   const password = String(req.body.password || "");
+  const ip = _clientIp(req);
+
+  const espera = loginBloqueio(email, ip);
+  if (espera > 0) {
+    return res.status(429).json({ success: false, message: `Muitas tentativas. Tente novamente em ${Math.ceil(espera / 60)} min.` });
+  }
 
   const users = readUsers();
   const user = users.find((u) => u.email.toLowerCase() === email);
 
   if (!user || !bcrypt.compareSync(password, user.password)) {
+    registrarFalha(email, ip);
     return res.status(401).json({ success: false, message: "E-mail ou senha incorretos." });
   }
   if (!user.active) {
@@ -242,11 +349,30 @@ app.post("/api/login", (req, res) => {
     return res.status(403).json({ success: false, message: "Acesso expirado. Renove pelo WhatsApp." });
   }
 
+  _loginFails.delete(email + "|" + ip); // sucesso zera o contador
+
+  /* detecção de conta compartilhada: registra os IPs recentes da conta.
+     Muitos IPs distintos em 24h é sinal de credencial vazada. */
+  detectarCompartilhamento(user, ip, users);
+
   req.session.userId = user.id;
   user.lastAccessAt = new Date().toISOString();
   writeUsers(users);
   res.json({ success: true, user: safeUser(user) });
 });
+
+/* registra IPs recentes e sinaliza compartilhamento suspeito */
+const LIMITE_IPS_24H = 4; // mesma conta em >4 IPs/dia = suspeito
+function detectarCompartilhamento(user, ip, users) {
+  const agora = Date.now();
+  user.acessos = (user.acessos || []).filter((a) => agora - a.t < 24 * 60 * 60 * 1000);
+  if (!user.acessos.some((a) => a.ip === ip)) user.acessos.push({ ip, t: agora });
+  const ipsDistintos = new Set(user.acessos.map((a) => a.ip)).size;
+  user.compartilhamentoSuspeito = ipsDistintos > LIMITE_IPS_24H;
+  if (user.compartilhamentoSuspeito) {
+    console.warn(`[SEGURANÇA] Conta ${user.email} acessada de ${ipsDistintos} IPs em 24h — possível compartilhamento.`);
+  }
+}
 
 app.post("/api/logout", (req, res) => {
   req.session.destroy(() => {});
@@ -659,6 +785,10 @@ app.get("/api/admin/alunos", requireAuthApi, requireAdminApi, (req, res) => {
   const alunos = readUsers().map((u) => ({
     ...safeUser(u),
     progress: u.progress || {},
+    /* alerta de segurança: conta usada de muitos IPs em 24h
+       (possível credencial compartilhada) — sem expor os IPs */
+    compartilhamentoSuspeito: !!u.compartilhamentoSuspeito,
+    ipsRecentes: new Set((u.acessos || []).map((a) => a.ip)).size,
   }));
   res.json(alunos);
 });

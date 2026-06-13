@@ -213,6 +213,8 @@ function gerarPdfMaterial() {
   const logoBranca = new URL('assets/img/logo-branca.png', location.href).href;
   const logoAzul   = new URL('assets/img/logo-azul.png', location.href).href;
   const hoje = new Date().toLocaleDateString('pt-BR');
+  const _al  = window.PL_ALUNO || { nome: (_session && _session.name) || 'Aluno', email: (_session && _session.email) || '' };
+  const licenca = escHtml((_al.nome + (_al.email ? ' · ' + _al.email : '')).trim());
 
   const secoesHtml = _mat.secoes.map(s => {
     /* no PDF o "Treine agora" mostra a resposta aberta */
@@ -294,7 +296,7 @@ function gerarPdfMaterial() {
   </div>
   <div class="info">Gerado em ${hoje} · Complete o estudo com o minissimulado e a lista de exercícios desta aula na plataforma.</div>
   ${secoesHtml}
-  <div class="rodape"><b>🦁 Professor Leão — A matemática que aprova</b> · www.professorleao.com · WhatsApp (77) 99922-9281 · Instagram @professor.leao<br>Material de uso exclusivo dos alunos da plataforma. Bons estudos!</div>
+  <div class="rodape"><b>🦁 Professor Leão — A matemática que aprova</b> · www.professorleao.com · WhatsApp (77) 99922-9281 · Instagram @professor.leao<br>📌 Material licenciado para <b>${licenca}</b> — uso pessoal e intransferível. A redistribuição é proibida e rastreável.</div>
   <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 350); }<\/script>
 </body></html>`;
 
@@ -305,5 +307,6 @@ function gerarPdfMaterial() {
   win.document.close();
 }
 </script>
+<script src="protecao.js" defer></script>
 </body>
 </html>
