@@ -2419,6 +2419,499 @@ window.PL_SEED_LISTAS = [
 ];
 
 /* ════════════════════════════════════════════════════════════
+   MINISSIMULADOS POR ASSUNTO — COMPLEMENTO COM QUESTÕES REAIS
+   Questões reais de banca selecionadas do banco (Tec) para
+   casar EXATAMENTE com o assunto da aula e o perfil do edital
+   (Soldado/Oficial PM BA · CBM BA — FCC · CONSULTEC · UNEB · IBFC).
+   O bloco _ajustarMinisPara10 deixa cada minissimulado 'banco'
+   com 10 questões: mantém as já curadas e completa com estas.
+   ════════════════════════════════════════════════════════════ */
+window.PL_SEED_MINI_EXTRA = {
+  'seed-lq-logica-sequencias': [
+    {
+      enunciado: "(FCC · DPT BA · 2014) Observe a sequência 6; 10; 18; 34; 66; … em que cada termo é o dobro do anterior menos 2. Sabe-se que o 11º termo é 4098. A soma do 9º com o 10º termo é igual a:",
+      opcoes: { A: "5126", B: "2122", C: "4098", D: "3076", E: "6186" },
+      gabarito: "D",
+      explicacao: "Aplicando 'dobro do anterior menos 2': 6, 10, 18, 34, 66, 130, 258, 514, 1026, 2050, 4098. O 9º (1026) somado ao 10º (2050) dá 3076."
+    }
+  ],
+  'seed-lq-numeros-operacoes': [
+    {
+      enunciado: "(FCC · SEC BA · 2018) Raquel dividiu 17 por 3 na calculadora e obteve no visor 5,6666667; Sérgio fez a mesma divisão e obteve 5,6666666. Sobre os resultados, o professor respondeu, corretamente, que:",
+      opcoes: { A: "a calculadora de Raquel deve estar quebrada e, por isso, marcou o último algarismo como 7.", B: "ambas apresentaram resultados aproximados, sendo a de Sérgio a de menor erro em relação ao valor correto.", C: "ambas apresentaram resultados aproximados, sendo a de Raquel a de menor erro em relação ao valor correto.", D: "a calculadora de Sérgio deve estar em base não decimal.", E: "ambas apresentaram resultados aproximados porque 17/3 é um número irracional." },
+      gabarito: "C",
+      explicacao: "17/3 = 5,6666… (dízima). Raquel arredondou (5,6666667) e Sérgio truncou (5,6666666); o arredondamento de Raquel fica mais perto do valor real, com menor erro."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2022) O valor numérico da expressão (x·y)/(y − x) para y = 4 e x = −2 é:",
+      opcoes: { A: "4", B: "−2/3", C: "6", D: "−16/9", E: "−4/3" },
+      gabarito: "E",
+      explicacao: "(x·y)/(y − x) = (−2·4)/(4 − (−2)) = −8/6 = −4/3."
+    },
+    {
+      enunciado: "(FCC · SEE MG · 2012) Uma escola tinha 480 alunos matriculados e a diretora queria montar turmas de, no mínimo, 35 alunos. Verificando que uma das turmas ficaria incompleta, ela concluiu que seria necessário matricular mais:",
+      opcoes: { A: "6 alunos.", B: "10 alunos.", C: "15 alunos.", D: "25 alunos." },
+      gabarito: "B",
+      explicacao: "480 = 13·35 + 25: formam-se 13 turmas de 35 e sobra uma turma com 25 alunos. Para completá-la (chegar a 35) faltam 10 alunos."
+    },
+    {
+      enunciado: "(FCC · Pref. Santos · 2005) Um ano bissexto (366 dias) tem x semanas completas e mais y dias. O número x·y é:",
+      opcoes: { A: "104", B: "54", C: "52", D: "108", E: "208" },
+      gabarito: "A",
+      explicacao: "366 ÷ 7 = 52 semanas completas e resto 2, logo x = 52 e y = 2. Assim x·y = 104."
+    }
+  ],
+  'seed-lq-teoria-conjuntos': [
+    {
+      enunciado: "(CONSULTEC · Oficial PM BA · 2011) Numa pesquisa com motoristas: 50% já foram multados por estacionar em local proibido, 60% por usar o celular dirigindo e 15 nunca foram multados por nenhuma das duas. O número mínimo de motoristas que podem ter cometido as duas infrações é:",
+      opcoes: { A: "18", B: "19", C: "21", D: "23", E: "24" },
+      gabarito: "B",
+      explicacao: "Com 40 motoristas (menor total compatível): 20 multados por estacionamento, 24 por celular e 15 por nenhuma, então no máximo 25 foram multados por alguma. Pela inclusão-exclusão, ao menos 20 + 24 − 25 = 19 cometeram as duas."
+    },
+    {
+      enunciado: "(IBFC · Soldado CBM BA · 2020) Considere os conjuntos A = {1, 2, 4, 5, 6, 10} e B = {3, 4, 5, 6, 8, 10}. Os conjuntos A∩B e A−B são, respectivamente:",
+      opcoes: { A: "{4, 5, 6, 10} e {1, 2}", B: "{1, 2} e {3, 8}", C: "{4, 5, 6, 10} e {1, 2, 3, 8}", D: "{1, 2, 3, 4, 5, 6, 8, 10} e {1, 2}", E: "{4, 5, 6, 10} e {3, 8}" },
+      gabarito: "A",
+      explicacao: "A∩B são os elementos comuns: {4, 5, 6, 10}. A−B são os de A que não estão em B: {1, 2}."
+    },
+    {
+      enunciado: "(IBFC · Soldado CBM BA · 2020) Num corpo de bombeiros, 10 profissionais têm a especialidade “Busca e salvamento”, 8 têm “Combate a incêndio” e, destes, 4 têm ambas. O número total de profissionais considerados é:",
+      opcoes: { A: "10", B: "12", C: "20", D: "14", E: "22" },
+      gabarito: "D",
+      explicacao: "Total = 10 + 8 − 4 (contados duas vezes) = 14 profissionais."
+    },
+    {
+      enunciado: "(IBFC · PC BA · 2022) Dois conjuntos finitos A e B têm, respectivamente, 10 e 12 elementos, e a interseção entre eles tem 3 elementos. É correto afirmar que:",
+      opcoes: { A: "a união entre A e B tem 22 elementos.", B: "a 'adição' entre A e B tem 19 elementos.", C: "A − B tem 19 elementos.", D: "B − A tem 9 elementos.", E: "A e B são disjuntos." },
+      gabarito: "D",
+      explicacao: "União = 10 + 12 − 3 = 19; A − B = 10 − 3 = 7; B − A = 12 − 3 = 9. A única correta é B − A = 9."
+    },
+    {
+      enunciado: "(FCC · SEFAZ BA · 2019) Numa cidade com dois clubes (Alfa e Beta), o número de sócios de Alfa é 3/4 do número de sócios de Beta; 8% dos habitantes são sócios dos dois clubes e 24% não são sócios de nenhum. Escolhido um habitante ao acaso, a probabilidade de ser sócio somente de Alfa é:",
+      opcoes: { A: "30%.", B: "32%.", C: "20%.", D: "28%.", E: "34%." },
+      gabarito: "D",
+      explicacao: "Em 100 habitantes, 24 não são sócios → 76 em ao menos um clube. Com Beta = b e Alfa = 3b/4 e 8 nos dois: 3b/4 + b − 8 = 76 → b = 48 e Alfa = 36. Só Alfa = 36 − 8 = 28%."
+    },
+    {
+      enunciado: "(FCC · TRT 6ª · 2025) Em um bairro há 70 famílias: 30 têm cachorro, 18 têm gato e 13 têm pássaro; 3 têm cachorro e gato, 8 têm cachorro e pássaro, e nenhum gato convive com pássaro. O número de famílias que NÃO possuem animais é:",
+      opcoes: { A: "22.", B: "18.", C: "15.", D: "20.", E: "10." },
+      gabarito: "D",
+      explicacao: "Como nenhum gato convive com pássaro, gato∩pássaro = 0. Famílias com algum animal = 30 + 18 + 13 − 3 − 8 = 50. Sem animais = 70 − 50 = 20."
+    }
+  ],
+  'seed-lq-fracoes': [
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Numa festa, uma pessoa comeu 2/3 de um bolo. Em seguida, compartilhou 1/4 da parte que restava com um amigo, que provou essa porção. Que fração do bolo ainda não foi consumida ao final?",
+      opcoes: { A: "1/4.", B: "1/5.", C: "1/9.", D: "1/6.", E: "1/12." },
+      gabarito: "A",
+      explicacao: "Comeu 2/3, sobrou 1/3. O amigo provou 1/4 desse resto: 1/4·1/3 = 1/12. Não consumido = 1/3 − 1/12 = 1/4."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2022) O gasto com salários de um setor (1 gerente, 8 administradores e 1 arquivista) teve reajuste de 20% e passou a R$ 57.600,00. Sabendo que 1/3 do gasto é com o gerente e 1/24 com o arquivista, o valor que cada administrador recebia antes do reajuste era:",
+      opcoes: { A: "R$ 2.000,00", B: "R$ 3.750,00", C: "R$ 3.600,00", D: "R$ 1.986,00", E: "R$ 3.456,00" },
+      gabarito: "B",
+      explicacao: "Antes do reajuste o total era 57.600 ÷ 1,2 = R$ 48.000. Gerente = 1/3 = 16.000; arquivista = 1/24 = 2.000; sobram 30.000 para os 8 administradores → 3.750 cada."
+    },
+    {
+      enunciado: "(FCC · TRE BA · 2003) De uma equipe de técnicos, 1/3 trabalhou das 8 às 10 h e 2/5 do número restante das 10 às 12 h. Se à tarde a orientação foi dada pelos últimos 6 técnicos, o total de membros da equipe era:",
+      opcoes: { A: "12", B: "15", C: "18", D: "21", E: "24" },
+      gabarito: "B",
+      explicacao: "Após a manhã sobram 2/3; destes, 2/5 trabalham das 10 às 12 (= 4/15 do total). Restam 2/3 − 4/15 = 6/15 = 2/5 do total para a tarde, e isso são 6 técnicos → total 15."
+    },
+    {
+      enunciado: "(FCC · SEDUC SP · 2010) Uma professora mediu a altura de seus 35 alunos e comparou cada uma com a média aritmética das alturas. Todos os números encontrados pertencem ao conjunto dos números:",
+      opcoes: { A: "inteiros, mas não aos naturais.", B: "racionais não negativos.", C: "reais não positivos.", D: "racionais não positivos.", E: "complexos, mas não aos reais." },
+      gabarito: "B",
+      explicacao: "Alturas de pessoas são positivas e podem ser fracionárias; a média também. Todos são racionais não negativos."
+    },
+    {
+      enunciado: "(FCC · SEDUC SP · 2010) Existe um número real que, somado ao numerador e subtraído do denominador da fração 7/13, a transforma em sua inversa. Esse número é:",
+      opcoes: { A: "um quadrado perfeito, como 4.", B: "primo.", C: "um decimal não exato, como 1,2.", D: "um dos divisores de 24, como 2 ou 3.", E: "um inteiro negativo, como −5." },
+      gabarito: "D",
+      explicacao: "Queremos (7 + x)/(13 − x) = 13/7 (o inverso). Então 7(7 + x) = 13(13 − x) → 49 + 7x = 169 − 13x → 20x = 120 → x = 6, que é divisor de 24."
+    },
+    {
+      enunciado: "(FCC · CPRH · 2026) Um cinema tem 160 lugares e uma sessão por dia. De segunda a quarta o ingresso custa R$ 24,00 e de quinta a domingo, R$ 36,00. Na semana passada, na segunda foram vendidos 1/4 dos ingressos; na terça, a metade; na quarta, quinta, sexta e sábado, todos os ingressos. Se a arrecadação total foi R$ 29.328,00, o número de ingressos vendidos no domingo foi:",
+      opcoes: { A: "148", B: "146", C: "150", D: "140", E: "144" },
+      gabarito: "A",
+      explicacao: "Seg: 40·24 = 960; ter: 80·24 = 1.920; qua: 160·24 = 3.840; qui + sex + sáb: 3·160·36 = 17.280 → subtotal 24.000. Faltam 29.328 − 24.000 = 5.328 = 36·d → d = 148."
+    },
+    {
+      enunciado: "(FCC · TRT 1ª · 2025) José ganhou R$ 15.000,00 na loteria. Deu 1/3 de presente para a esposa e 1/5 do que sobrou para a filha. A quantia que sobrou para José foi:",
+      opcoes: { A: "R$ 6.500,00", B: "R$ 7.000,00", C: "R$ 8.000,00", D: "R$ 3.500,00", E: "R$ 5.000,00" },
+      gabarito: "C",
+      explicacao: "1/3 de 15.000 = 5.000 para a esposa, sobrando 10.000; 1/5 de 10.000 = 2.000 para a filha. Sobraram R$ 8.000,00."
+    },
+    {
+      enunciado: "(FCC · TRT 1ª · 2025) Em uma viagem de 1200 km, Pedro percorreu 2/3 do trajeto a 80 km/h e o restante a 50 km/h. O tempo total da viagem foi de:",
+      opcoes: { A: "10h", B: "18h", C: "15h", D: "13h", E: "16h" },
+      gabarito: "B",
+      explicacao: "2/3 de 1.200 = 800 km a 80 km/h → 10 h; os 400 km restantes a 50 km/h → 8 h. Total: 18 h."
+    }
+  ],
+  'seed-lq-proporcao-financeira': [
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Um produto custa R$ 200,00 e sofre dois aumentos sucessivos: primeiro de 10% e, em seguida, de 20%. O valor final do produto é:",
+      opcoes: { A: "R$ 260,00", B: "R$ 320,00", C: "R$ 262,00", D: "R$ 264,00", E: "R$ 240,00" },
+      gabarito: "D",
+      explicacao: "Aumentos sucessivos multiplicam: 200 · 1,10 · 1,20 = R$ 264,00 (não se somam os percentuais)."
+    },
+    {
+      enunciado: "(FCC · TRE BA · 2003) Artur e Boni dividiram a instalação de 16 aparelhos na razão inversa de seus tempos de serviço. Boni trabalha há 6 anos e Artur há mais tempo. Se Artur instalou 4 aparelhos, há quantos anos ele trabalha na empresa?",
+      opcoes: { A: "8", B: "10", C: "12", D: "16", E: "18" },
+      gabarito: "E",
+      explicacao: "Artur instalou 4 e Boni 12, razão 1:3. Como a divisão é inversa ao tempo de serviço, os tempos estão na razão 3:1; com Boni há 6 anos, Artur trabalha há 18 anos."
+    }
+  ],
+  'seed-lq-equacoes-polinomios': [
+    {
+      enunciado: "(CONSULTEC · Oficial PM BA · 2017) Uma loja oferece desconto de x%, com x natural satisfazendo 3x − 43 > 0 e 93 − 6x > 0. O valor de x é:",
+      opcoes: { A: "30", B: "25", C: "20", D: "15", E: "10" },
+      gabarito: "D",
+      explicacao: "3x − 43 > 0 → x > 14,33; 93 − 6x > 0 → x < 15,5. O único natural no intervalo é x = 15."
+    },
+    {
+      enunciado: "(FCC · TJ BA · 2023) Ana deu a Beth três quartos das jabuticabas de um saco. Beth deu a Carla a metade das suas mais 5. Então Carla percebeu que, dando algumas a Ana, as três ficariam com a mesma quantidade. O número de jabuticabas do saco era:",
+      opcoes: { A: "150", B: "130", C: "120", D: "125", E: "140" },
+      gabarito: "C",
+      explicacao: "Ana fica com N/4 e Beth com 3N/4; Beth dá a Carla 3N/8 + 5, ficando com 3N/8 − 5. Para as três terem N/3, basta 3N/8 − 5 = N/3 → N = 120 jabuticabas."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2022) Numa fazenda há bois e avestruzes, somando 730 animais e 2060 pernas. O número de avestruzes é:",
+      opcoes: { A: "300", B: "270", C: "460", D: "430", E: "330" },
+      gabarito: "D",
+      explicacao: "Com b bois e a avestruzes: b + a = 730 e 4b + 2a = 2060. Subtraindo o dobro da 1ª, 2b = 600 → b = 300 e a = 430 avestruzes."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2022) Uma conta de R$ 780,00 seria dividida igualmente, mas dois participantes (aniversariantes) não pagaram, e os demais pagaram R$ 13,00 a mais cada. O número de participantes era:",
+      opcoes: { A: "9", B: "11", C: "14", D: "12", E: "15" },
+      gabarito: "D",
+      explicacao: "Com n participantes: 780/(n − 2) = 780/n + 13. Isso leva a n² − 2n − 120 = 0, cuja raiz positiva é n = 12."
+    },
+    {
+      enunciado: "(FCC · TRE BA · 2003) Dos 16 veículos de uma oficina, o número X dos que precisavam de ajuste mecânico era 5/3 do número Y dos que precisavam de conserto elétrico (nenhum precisava dos dois). O valor de X − Y é:",
+      opcoes: { A: "1", B: "2", C: "3", D: "4", E: "5" },
+      gabarito: "D",
+      explicacao: "X + Y = 16 e X = 5Y/3. Substituindo: 8Y/3 = 16 → Y = 6 e X = 10. Logo X − Y = 4."
+    }
+  ],
+  'seed-lq-funcoes': [
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Considere a função do 1º grau f(x) = 2x + 5. Quanto ao seu comportamento, com base no coeficiente angular, a função é:",
+      opcoes: { A: "Variável.", B: "Decrescente.", C: "Não pode ser determinada.", D: "Constante.", E: "Crescente." },
+      gabarito: "E",
+      explicacao: "O coeficiente angular é 2 > 0, logo a função é crescente."
+    },
+    {
+      enunciado: "(FCC · SEFAZ BA · 2019) O custo unitário de uma peça é R$ 0,50 e o custo fixo semanal da linha é R$ 5.000,00. Para obter lucro semanal de R$ 2.000,00 vendendo cada peça a R$ 1,00, o número de milhares de unidades a vender é:",
+      opcoes: { A: "7.", B: "9.", C: "11.", D: "14.", E: "16." },
+      gabarito: "D",
+      explicacao: "Lucro = 1·q − (5.000 + 0,5q) = 0,5q − 5.000 = 2.000 → q = 14.000 = 14 mil unidades."
+    },
+    {
+      enunciado: "(FCC · SEFAZ BA · 2019) O preço de um notebook segue y = mx + n, com x em anos de uso. Sabendo que em x = 0 vale R$ 12.000 e em x = 7 vale R$ 800, o valor em x = 4 é, em reais:",
+      opcoes: { A: "4200.", B: "4600.", C: "5200.", D: "5600.", E: "7200." },
+      gabarito: "D",
+      explicacao: "Em x = 0, n = 12.000; em x = 7, 7m + 12.000 = 800 → m = −1.600. Em x = 4: y = −1.600·4 + 12.000 = 5.600."
+    },
+    {
+      enunciado: "(FCC · SEFAZ BA · 2019) A receita diária é r(x) = 750x e o custo é c(x) = 250x + 10.000, com x o número de consultorias. O número de consultorias por dia para um lucro L(x) = r(x) − c(x) de R$ 5.000 é:",
+      opcoes: { A: "10.", B: "15.", C: "20.", D: "25.", E: "30." },
+      gabarito: "E",
+      explicacao: "L(x) = 750x − (250x + 10.000) = 500x − 10.000 = 5.000 → x = 30 consultorias."
+    },
+    {
+      enunciado: "(FCC · SEFAZ BA · 2019) A oferta de um produto é y = 90 − 1,2x e a demanda é y = 1,4x + 12. As coordenadas do ponto de equilíbrio de mercado (oferta = demanda) são:",
+      opcoes: { A: "(50, 30).", B: "(40, 42).", C: "(30, 54).", D: "(20, 66).", E: "(10, 78)." },
+      gabarito: "C",
+      explicacao: "90 − 1,2x = 1,4x + 12 → 78 = 2,6x → x = 30; y = 1,4·30 + 12 = 54. Ponto (30, 54)."
+    },
+    {
+      enunciado: "(FCC · TRF 4ª · 2025) André e Luís têm conta conjunta com saldos iniciais de R$ 41.000,00 e R$ 33.000,00. A cada ano André deposita R$ 4.000,00 e Luís R$ 6.000,00, sem retiradas. No ano em que o total depositado por André igualar o de Luís, a soma depositada pelos dois será, em reais:",
+      opcoes: { A: "124.000,00.", B: "104.000,00.", C: "94.000,00.", D: "84.000,00.", E: "114.000,00." },
+      gabarito: "E",
+      explicacao: "André acumula 41.000 + 4.000t e Luís 33.000 + 6.000t. Igualando: t = 4 anos. Cada um terá 57.000, e o total é R$ 114.000,00."
+    },
+    {
+      enunciado: "(FCC · SABESP · 2018) Os táxis de uma cidade cobram pela fórmula P = 4,55 + 1,35·k, em que P é o preço (R$) e k a distância em km. Quem rodou 3,4 km pagou:",
+      opcoes: { A: "R$ 20,06", B: "R$ 13,12", C: "R$ 18,34", D: "R$ 9,14", E: "R$ 8,92" },
+      gabarito: "D",
+      explicacao: "P = 4,55 + 1,35·3,4 = 4,55 + 4,59 = R$ 9,14."
+    }
+  ],
+  'seed-lq-sistemas-matrizes': [
+    {
+      enunciado: "(UNEB · Oficial PM BA · 2019) Considere a matriz quadrada A de ordem 3 com elementos a_ij = 2^(i+j) se i < j e a_ij = i² − j + 1 se i ≥ j. A soma dos elementos da diagonal principal é:",
+      opcoes: { A: "7", B: "8", C: "9", D: "10", E: "11" },
+      gabarito: "E",
+      explicacao: "Na diagonal i = j (caso i ≥ j): a_ii = i² − i + 1. Assim a₁₁ = 1, a₂₂ = 3, a₃₃ = 7, cuja soma é 11."
+    },
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Dada a matriz A = [[2, 4], [1, 2]], o determinante de A é:",
+      opcoes: { A: "2.", B: "6.", C: "0.", D: "4.", E: "8." },
+      gabarito: "C",
+      explicacao: "det A = 2·2 − 4·1 = 4 − 4 = 0."
+    },
+    {
+      enunciado: "(FCC · TJ BA · 2023) Os recipientes A e B continham, juntos, 48 litros de suco. Transferiu-se de A para B a mesma quantidade que havia em B; depois, de B para A a mesma quantidade que havia em A. Ao final os dois ficaram iguais. A quantidade inicial, em litros, no recipiente A era:",
+      opcoes: { A: "18", B: "36", C: "42", D: "30", E: "28" },
+      gabarito: "D",
+      explicacao: "Trabalhando de trás para frente a partir de 24 e 24: antes da 2ª transferência A = 12 e B = 36; antes da 1ª, A = 30 e B = 18. Inicialmente A tinha 30 litros."
+    },
+    {
+      enunciado: "(FCC · TRE BA · 2003) Distribuindo documentos por pastas: com 30 por pasta sobram 36 documentos; com 35 por pasta restam apenas 11. O total de documentos é um número:",
+      opcoes: { A: "primo.", B: "quadrado perfeito.", C: "cubo perfeito.", D: "divisível por 5.", E: "múltiplo de 6." },
+      gabarito: "E",
+      explicacao: "N = 30p + 36 = 35p + 11 → 5p = 25 → p = 5 e N = 186. Como 186 = 6·31, é múltiplo de 6."
+    },
+    {
+      enunciado: "(FCC · Pref. Jaboatão dos Guararapes · 2024) Três amigos pediram, na segunda, dois combos A e um combo B, gastando R$ 134,00; na terça, dois combos A e dois combos B, gastando R$ 176,00. O valor do combo B é, em reais:",
+      opcoes: { A: "48,00", B: "46,00", C: "44,00", D: "42,00", E: "43,00" },
+      gabarito: "D",
+      explicacao: "2A + B = 134 e 2A + 2B = 176. Subtraindo a 1ª da 2ª: B = 42, ou seja, R$ 42,00."
+    },
+    {
+      enunciado: "(FCC · Pref. Jaboatão dos Guararapes · 2024) Numa cantina, um sanduíche e um suco custam R$ 12,00; um sanduíche e dois chocolates, R$ 18,00; e dois sucos e um sanduíche, R$ 16,00. O preço de um chocolate é:",
+      opcoes: { A: "R$ 10,00", B: "R$ 5,00", C: "R$ 7,00", D: "R$ 8,00", E: "R$ 4,00" },
+      gabarito: "B",
+      explicacao: "Sendo s, j (suco) e c (chocolate): s + j = 12 e 2j + s = 16 → j = 4 e s = 8. De s + 2c = 18: 8 + 2c = 18 → c = R$ 5,00."
+    },
+    {
+      enunciado: "(FCC · TRT 11ª · 2017) Sendo A = [[1, 3], [2, 1]] uma matriz quadrada de ordem 2, o determinante da inversa da transposta de A é igual a:",
+      opcoes: { A: "−0,20", B: "−0,40", C: "−0,25", D: "−0,50", E: "−1,00" },
+      gabarito: "A",
+      explicacao: "det A = 1·1 − 3·2 = −5. Como det(Aᵗ) = det A e det(A⁻¹) = 1/det A, o determinante pedido é 1/(−5) = −0,20."
+    }
+  ],
+  'seed-lq-exponencial-log': [
+    {
+      enunciado: "(FCC · IBMEC · 2018) A população de uma cidade cresce 25% ao ano (a cada ano é 25% maior que a do ano anterior). Considerando log 5 ≈ 0,7, a população quintuplica em, aproximadamente:",
+      opcoes: { A: "7 anos.", B: "10 anos.", C: "12 anos.", D: "5 anos.", E: "15 anos." },
+      gabarito: "A",
+      explicacao: "1,25ⁿ = 5 → n = log 5 / log 1,25. Como log 1,25 = log 5 − 2·log 2 = 0,7 − 2·0,3 = 0,1, então n = 0,7/0,1 = 7 anos."
+    },
+    {
+      enunciado: "(FCC · IBMEC · 2018) Para a equação logarítmica (log₂ x)² − 4 = 0, a soma das possíveis soluções reais é:",
+      opcoes: { A: "4,25", B: "4", C: "2", D: "1,25", E: "2,75" },
+      gabarito: "A",
+      explicacao: "(log₂ x)² = 4 → log₂ x = 2 ou −2 → x = 4 ou x = 1/4. A soma é 4 + 0,25 = 4,25."
+    },
+    {
+      enunciado: "(FCC · SEDU ES · 2016) A diferença entre o maior e o menor valor da imagem da função g(x) = 4ˣ − 1, com x no intervalo [−1; 2,5], é:",
+      opcoes: { A: "14.", B: "31,75.", C: "17,5.", D: "8,25.", E: "18." },
+      gabarito: "B",
+      explicacao: "g é crescente: máximo em g(2,5) = 4^2,5 − 1 = 2⁵ − 1 = 31 e mínimo em g(−1) = 1/4 − 1 = −0,75. Diferença = 31 − (−0,75) = 31,75."
+    },
+    {
+      enunciado: "(FCC · CEF · 1998) Calculando o valor de log₃ [ (3^(x+1) − 3ˣ − 3^(x−1)) / (5·3ˣ) ], obtém-se:",
+      opcoes: { A: "log₃(1/5)", B: "1/3", C: "1/5", D: "−1/3", E: "−1" },
+      gabarito: "E",
+      explicacao: "No numerador, 3^(x+1) − 3ˣ − 3^(x−1) = 3ˣ·(3 − 1 − 1/3) = 3ˣ·(5/3). Dividindo por 5·3ˣ resulta 1/3, e log₃(1/3) = −1."
+    }
+  ],
+  'seed-lq-progressoes': [
+    {
+      enunciado: "(FCC · SEC BA · 2022) Um auditório tem 20 filas: a 1ª com 10 cadeiras, a 2ª com 11, e assim por diante (a 20ª com 29). Se só podem ser ocupadas as fileiras ímpares (1ª, 3ª, …, 19ª) e todos os lugares forem ocupados, o número de estudantes é:",
+      opcoes: { A: "106", B: "110", C: "124", D: "190", E: "158" },
+      gabarito: "D",
+      explicacao: "As fileiras ímpares têm 10, 12, 14, …, 28 cadeiras — uma PA de 10 termos. Soma = 10·(10 + 28)/2 = 190 estudantes."
+    },
+    {
+      enunciado: "(IBFC · Soldado CBM BA · 2017) Carlos cadastrou como senha o nono termo de uma P.G. cujo primeiro termo é 3 e cuja razão é igual à razão da P.A. 12, 14, … A senha cadastrada foi:",
+      opcoes: { A: "384", B: "768", C: "192", D: "4374", E: "1458" },
+      gabarito: "B",
+      explicacao: "A razão da PA 12, 14, … é 2. A PG tem a₁ = 3 e razão 2, então o 9º termo é 3·2⁸ = 3·256 = 768."
+    },
+    {
+      enunciado: "(FCC · SEAP BA · 2010) Em janeiro de 2009 um fabricante doou 1 camiseta a uma instituição e, a cada mês seguinte, doou o dobro do mês anterior, até maio (inclusive). A quantidade total doada pode ser representada por:",
+      opcoes: { A: "2⁵", B: "2⁵ + 1", C: "2⁵ − 1", D: "(2⁵ − 1) : 2", E: "2(2⁵ − 1)" },
+      gabarito: "C",
+      explicacao: "As doações de janeiro a maio formam a PG 1, 2, 4, 8, 16 (5 termos). A soma é (2⁵ − 1) = 31 camisetas."
+    }
+  ],
+  'seed-lq-geo-plana': [
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Um terreno triangular tem lados de 6 cm, 8 cm e 10 cm. O perímetro desse triângulo é:",
+      opcoes: { A: "18 cm.", B: "20 cm.", C: "32 cm.", D: "26 cm.", E: "24 cm." },
+      gabarito: "E",
+      explicacao: "Perímetro = 6 + 8 + 10 = 24 cm."
+    },
+    {
+      enunciado: "(IBFC · Soldado CBM BA · 2017) A área de um triângulo retângulo cuja hipotenusa mede 2√5 cm e um dos catetos mede 4 cm é igual a:",
+      opcoes: { A: "8 cm²", B: "6 cm²", C: "10 cm²", D: "4√5 cm²", E: "4 cm²" },
+      gabarito: "E",
+      explicacao: "Pelo Teorema de Pitágoras o outro cateto = √((2√5)² − 4²) = √(20 − 16) = 2 cm. Área = 4·2/2 = 4 cm²."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2018) Luís partiu de A para leste, percorrendo 8 km até B; de B partiu para o sul, percorrendo 4 km até C. A distância em linha reta entre A e C é, aproximadamente:",
+      opcoes: { A: "entre 7,5 e 8,5 km.", B: "entre 6,5 e 7,5 km.", C: "menor do que 6,5 km.", D: "entre 8,5 e 9,5 km.", E: "maior do que 9,5 km." },
+      gabarito: "D",
+      explicacao: "Distância = √(8² + 4²) = √80 ≈ 8,94 km, que está entre 8,5 e 9,5 km."
+    },
+    {
+      enunciado: "(FCC · TCE SE · 2011) Às 3 horas o menor ângulo entre os ponteiros das horas e dos minutos é 90°. Exatamente 50 minutos depois, esse menor ângulo mede:",
+      opcoes: { A: "120°.", B: "135°.", C: "150°.", D: "160°.", E: "175°." },
+      gabarito: "E",
+      explicacao: "Às 3h50, o ponteiro das horas está a 90° + 50·0,5° = 115° e o dos minutos a 50·6° = 300°. A diferença é 185°, cujo menor ângulo é 360° − 185° = 175°."
+    },
+    {
+      enunciado: "(FCC · SEDUC SP · 2010) Os lados de um triângulo medem x + 1, 7 − x e 4x − 2. O número de valores de x para os quais o triângulo é isósceles é:",
+      opcoes: { A: "1", B: "0", C: "2", D: "3", E: "6" },
+      gabarito: "A",
+      explicacao: "Igualando pares de lados: x = 3 dá lados 4, 4, 10 (não fecha) e x = 1 dá 2, 6, 2 (não fecha); só x = 1,8 (lados 2,8; 5,2; 5,2) forma triângulo isósceles válido. Logo, 1 valor."
+    },
+    {
+      enunciado: "(FCC · IBMEC · 2018) À tarde, a sombra de um edifício de 45 m de altura mede 45 m. Sabendo que nesse local o Sol nasce às 6h e se põe às 18h, o relógio deve marcar:",
+      opcoes: { A: "14:00", B: "15:00", C: "16:00", D: "14:30", E: "16:30" },
+      gabarito: "B",
+      explicacao: "Sombra igual à altura ⇒ ângulo de 45°. Com o Sol nascendo às 6h e se pondo às 18h (máximo ao meio-dia), 45° à tarde ocorre às 15h."
+    },
+    {
+      enunciado: "(FCC · SEDU ES · 2018) A altura relativa à hipotenusa de um triângulo retângulo mede 12 cm e um dos catetos mede 15 cm. A medida do outro cateto, em centímetros, é:",
+      opcoes: { A: "24.", B: "18.", C: "22.", D: "16.", E: "20." },
+      gabarito: "E",
+      explicacao: "Na relação 1/h² = 1/b² + 1/c² com h = 12 e um cateto c = 15: 1/b² = 1/144 − 1/225 = 1/400 → b = 20 cm."
+    },
+    {
+      enunciado: "(FCC · ARTESP · 2026) A largura de um retângulo é 1 m menor que o dobro do seu comprimento. Se a área é 10 m², a soma da largura com o comprimento é:",
+      opcoes: { A: "7,0 m", B: "5,5 m", C: "7,5 m", D: "6,0 m", E: "6,5 m" },
+      gabarito: "E",
+      explicacao: "Com comprimento x e largura 2x − 1: x(2x − 1) = 10 → 2x² − x − 10 = 0 → x = 2,5. A largura é 4, e a soma é 2,5 + 4 = 6,5 m."
+    }
+  ],
+  'seed-lq-geo-espacial': [
+    {
+      enunciado: "(FCC · Soldado PM BA · 2023) A aresta de um cubo é igual ao lado do quadrado que serve de base a uma pirâmide; a altura da pirâmide é o dobro do lado da base. A razão entre o volume do cubo e o volume da pirâmide é:",
+      opcoes: { A: "3", B: "2", C: "3/2", D: "4/3", E: "5/2" },
+      gabarito: "C",
+      explicacao: "Seja a a aresta. V_cubo = a³ e V_pirâmide = (1/3)·a²·(2a) = (2/3)a³. Razão = a³ ÷ (2/3·a³) = 3/2."
+    },
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Uma lata cilíndrica tem raio da base 3 cm e altura 10 cm. Seu volume interno, usando π = 3,14, é:",
+      opcoes: { A: "180 cm³.", B: "220 cm³.", C: "360 cm³.", D: "282,6 cm³.", E: "94,2 cm³." },
+      gabarito: "D",
+      explicacao: "Volume do cilindro = π·r²·h = 3,14·3²·10 = 282,6 cm³."
+    },
+    {
+      enunciado: "(FCC · TRE BA · 2003) Um recipiente em forma de paralelepípedo retângulo mede 1,5 m de comprimento, 1 m de largura e 0,5 m de altura. Desprezando a espessura das paredes, sua capacidade, em litros, é:",
+      opcoes: { A: "50", B: "75", C: "500", D: "750", E: "7 500" },
+      gabarito: "D",
+      explicacao: "Volume = 1,5·1·0,5 = 0,75 m³. Como 1 m³ = 1000 L, a capacidade é 750 litros."
+    },
+    {
+      enunciado: "(FCC · TJ SC · 2021) Com 64 cubinhos 1×1×1 montou-se um cubo 4×4×4 e pintaram-se de azul as faces externas. O número de cubinhos que ficaram sem nenhuma face pintada é:",
+      opcoes: { A: "32.", B: "8.", C: "16.", D: "27.", E: "4." },
+      gabarito: "B",
+      explicacao: "Os cubinhos sem pintura formam o miolo, com aresta 4 − 2 = 2: são 2 × 2 × 2 = 8 cubinhos."
+    }
+  ],
+  'seed-lq-trigonometria': [
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) No plano cartesiano, considere os pontos A(2, 3) e B(5, 7). A distância entre A e B é:",
+      opcoes: { A: "6.", B: "3.", C: "7.", D: "8.", E: "5." },
+      gabarito: "E",
+      explicacao: "d = √((5 − 2)² + (7 − 3)²) = √(9 + 16) = √25 = 5."
+    },
+    {
+      enunciado: "(FCC · SEDU ES · 2018) Dois pisos paralelos distam 4 m e são ligados por uma escada rolante retilínea de 8 m. O ângulo de inclinação da escada em relação ao piso mais baixo é de:",
+      opcoes: { A: "30°.", B: "75°.", C: "60°.", D: "45°.", E: "25°." },
+      gabarito: "A",
+      explicacao: "sen θ = altura/comprimento = 4/8 = 0,5, logo θ = 30°."
+    },
+    {
+      enunciado: "(FCC · SEDUC SP · 2010) Para qualquer real x, a expressão sen⁴x − cos⁴x é equivalente a:",
+      opcoes: { A: "2cos²x − 1", B: "1 − sen 2x", C: "cos 2x", D: "−2cos²x + 1", E: "sen 2x" },
+      gabarito: "D",
+      explicacao: "sen⁴x − cos⁴x = (sen²x − cos²x)(sen²x + cos²x) = sen²x − cos²x = −cos 2x = −(2cos²x − 1) = −2cos²x + 1."
+    },
+    {
+      enunciado: "(FCC · SEDU ES · 2018) Num plano cartesiano, os pontos (1, 1) e (4, 5) são extremidades da diagonal de um retângulo de lados paralelos aos eixos. A área desse retângulo é:",
+      opcoes: { A: "8.", B: "6.", C: "20.", D: "12.", E: "10." },
+      gabarito: "D",
+      explicacao: "Os lados são as diferenças das coordenadas: |4 − 1| = 3 e |5 − 1| = 4. Área = 3·4 = 12."
+    },
+    {
+      enunciado: "(IBFC · Soldado CBM BA · 2017) Ana digitou a reta r: y = 3x − 2 e, em seguida, uma reta s paralela a r. A equação de s pode ser:",
+      opcoes: { A: "3x + 2y − 1 = 0", B: "6x − 3y + 2 = 0", C: "9x − 3y + 5 = 0", D: "2x − 6y + 1 = 0", E: "3x + 2y − 4 = 0" },
+      gabarito: "C",
+      explicacao: "Retas paralelas têm o mesmo coeficiente angular (3). Em 9x − 3y + 5 = 0, isolando y: y = 3x + 5/3, cujo coeficiente angular é 3."
+    }
+  ],
+  'seed-lq-combinatoria': [
+    {
+      enunciado: "(CONSULTEC · Oficial PM BA · 2011) Cada um dos 120 candidatos recebe como código um anagrama distinto da sigla CFOPM. A probabilidade de um cartão sorteado ao acaso começar e terminar por consoante é:",
+      opcoes: { A: "48%", B: "51%", C: "53%", D: "57%", E: "60%" },
+      gabarito: "E",
+      explicacao: "CFOPM tem 4 consoantes e 1 vogal. P(começar e terminar com consoante) = (4/5)·(3/4) = 3/5 = 60%."
+    },
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2023) Uma palavra tem 8 letras, das quais 3 se repetem duas vezes cada. A quantidade de anagramas que podem ser formados é:",
+      opcoes: { A: "24", B: "48", C: "56", D: "5040", E: "6720" },
+      gabarito: "D",
+      explicacao: "Com 8 letras em que 3 se repetem duas vezes cada: 8!/(2!·2!·2!) = 40.320/8 = 5.040 anagramas."
+    },
+    {
+      enunciado: "(IBFC · Soldado CBM BA · 2017) Um comandante escolherá os 4 melhores de uma tropa de 10 soldados para receberem, cada um, a mesma condecoração. O total de escolhas distintas é:",
+      opcoes: { A: "5040", B: "2520", C: "420", D: "210", E: "840" },
+      gabarito: "D",
+      explicacao: "Como a ordem não importa (mesma condecoração), é uma combinação: C(10, 4) = 210."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2022) A turma do professor Luís tem 12 rapazes e 8 moças. Ele formará um grupo com exatamente 7 rapazes e 7 moças. A quantidade de grupos distintos é:",
+      opcoes: { A: "6336", B: "3168", C: "1056", D: "1024", E: "528" },
+      gabarito: "A",
+      explicacao: "Escolhas independentes: C(12, 7)·C(8, 7) = 792·8 = 6.336 grupos."
+    },
+    {
+      enunciado: "(FCC · SEFAZ PI · 2025) Um comitê de 4 membros será formado a partir de 6 auditores e 5 especialistas, com pelo menos 2 especialistas. O número de formações distintas é:",
+      opcoes: { A: "190", B: "240", C: "215", D: "205", E: "225" },
+      gabarito: "C",
+      explicacao: "Casos com ≥ 2 especialistas: C(5,2)·C(6,2) + C(5,3)·C(6,1) + C(5,4) = 150 + 60 + 5 = 215."
+    }
+  ],
+  'seed-lq-probabilidade-estatistica': [
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2025) Considerando os números 10, 15, 20 e 25, a média aritmética desse conjunto é:",
+      opcoes: { A: "15.", B: "20.", C: "17,5.", D: "30.", E: "25." },
+      gabarito: "C",
+      explicacao: "Média = (10 + 15 + 20 + 25)/4 = 70/4 = 17,5."
+    },
+    {
+      enunciado: "(UNEB · Oficial CBM BA · 2023) Os atendimentos de uma corporação foram: acidentes de trânsito 20, desastres naturais 5, desmoronamentos 2, afogamentos 10, incêndio urbano 18 e incêndio florestal 5. A amplitude e o desvio padrão desses valores são, aproximadamente:",
+      opcoes: { A: "5 e 46,3", B: "12 e 6", C: "15 e 36", D: "18 e 6,8", E: "20 e 2,5" },
+      gabarito: "D",
+      explicacao: "Amplitude = 20 − 2 = 18. Média = 60/6 = 10; a variância = (10² + 5² + 8² + 0² + 8² + 5²)/6 = 278/6 ≈ 46,3 e o desvio padrão ≈ √46,3 ≈ 6,8."
+    },
+    {
+      enunciado: "(CONSULTEC · Oficial PM BA · 2010) Três candidatos X, Y e Z disputam uma eleição (um só vencedor). A chance de X vencer é o dobro da de Y, e a de Y é dois terços da de Z. A probabilidade de vitória de X ou de Z é:",
+      opcoes: { A: "2/3", B: "3/7", C: "7/9", D: "9/11" },
+      gabarito: "C",
+      explicacao: "Seja P(Z) = z: P(Y) = 2z/3 e P(X) = 4z/3. Como somam 1: 3z = 1 → z = 1/3. P(X ou Z) = 4/9 + 1/3 = 7/9."
+    },
+    {
+      enunciado: "(FCC · SEC BA · 2022) A média das idades dos professores de Física e Matemática de uma reunião é 40 anos. A média dos de Física é 35 e a dos de Matemática é 50. A razão entre o número de professores de Física e de Matemática é:",
+      opcoes: { A: "1", B: "3", C: "2", D: "4", E: "5" },
+      gabarito: "C",
+      explicacao: "(35f + 50m)/(f + m) = 40 → 35f + 50m = 40f + 40m → 10m = 5f → f/m = 2."
+    }
+  ]
+};
+
+/* Deixa cada minissimulado 'banco' com exatamente 10 questões:
+   mantém as já curadas (até 10) e completa com as do banco acima. */
+(function _ajustarMinisPara10() {
+  const extra = window.PL_SEED_MINI_EXTRA || {};
+  (window.PL_SEED_LISTAS || []).filter(l => l.tipoLista === 'banco').forEach(l => {
+    let qs = (l.questoes || []).slice(0, 10);
+    const add = extra[l.id] || [];
+    for (let i = 0; qs.length < 10 && i < add.length; i++) qs.push(add[i]);
+    qs = qs.slice(0, 10).map((q, i) => ({ ...q, num: i + 1 }));
+    l.questoes = qs;
+    l.total = qs.length;
+  });
+})();
+
+/* ════════════════════════════════════════════════════════════
    INTEGRAÇÃO COM AS AULAS
    A Lista de Exercícios do assunto passa a ser o material
    "lista" da aula (substitui os antigos PDFs estáticos).
