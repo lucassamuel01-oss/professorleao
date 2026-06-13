@@ -254,7 +254,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>19 jogos de matemática, álgebra, estatística, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>22 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -468,6 +468,31 @@
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/regra-de-tres.html">▶ Jogar Agora</a>
         <button class="btn-rank" onclick="openRankModal('regra-de-tres','⚖️ Regra de Três')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Razão e Proporção -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#115e59,#0d9488)">
+        <div class="game-card__icon">⚖️</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Razão e proporção</div>
+        <div class="game-card__name">Razão e Proporção</div>
+        <div class="game-card__desc">A relação entre as grandezas! Simplificar razões, achar o termo da proporção (produto em cruz), dividir em partes proporcionais (visual em blocos) e escalas de mapa.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">➗ Proporção em cruz</span>
+          <span class="game-card__meta-item">📊 Partes proporcionais</span>
+          <span class="game-card__meta-item">🗺️ Escala</span>
+        </div>
+        <div class="game-card__best" id="best-raz">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/razao.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('razao','⚖️ Razão e Proporção')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
@@ -764,6 +789,56 @@
       </div>
     </div>
 
+    <!-- Análise de Gráficos -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#4d7c0f,#84cc16)">
+        <div class="game-card__icon">📊</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Interpretação de dados</div>
+        <div class="game-card__name">Análise de Gráficos</div>
+        <div class="game-card__desc">Leia o gráfico e responda! Maior, menor, diferença, total e média — interpretação de gráficos de barras animados, como nas provas. Cada questão explica como ler.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">📈 Gráfico animado</span>
+          <span class="game-card__meta-item">🔍 Leitura de dados</span>
+          <span class="game-card__meta-item">💡 Como ler explicado</span>
+        </div>
+        <div class="game-card__best" id="best-graf">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/graficos.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('graficos','📊 Análise de Gráficos')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Probabilidade -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#86198f,#d946ef)">
+        <div class="game-card__icon">🎲</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Probabilidade</div>
+        <div class="game-card__name">Probabilidade</div>
+        <div class="game-card__desc">Qual a chance de...? Dados, moedas, urnas e cartas. O espaço amostral aparece destacado e você calcula a probabilidade como fração simplificada.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🟪 Espaço amostral</span>
+          <span class="game-card__meta-item">➗ Fração simplificada</span>
+          <span class="game-card__meta-item">💡 Contagem explicada</span>
+        </div>
+        <div class="game-card__best" id="best-prob">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/probabilidade.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('probabilidade','🎲 Probabilidade')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ── Categoria: Raciocínio Lógico ── -->
@@ -855,7 +930,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 19 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 22 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -885,6 +960,9 @@
           <div class="rank-gtab" data-game="combinatoria"                  onclick="setRankGame(this,'combinatoria')">🎲 Combinatória</div>
           <div class="rank-gtab" data-game="logica-vf"                     onclick="setRankGame(this,'logica-vf')">⚡ V ou F: Lógica</div>
           <div class="rank-gtab" data-game="estatistica"                   onclick="setRankGame(this,'estatistica')">📊 Estatística</div>
+          <div class="rank-gtab" data-game="graficos"                      onclick="setRankGame(this,'graficos')">📊 Gráficos</div>
+          <div class="rank-gtab" data-game="probabilidade"                 onclick="setRankGame(this,'probabilidade')">🎲 Probabilidade</div>
+          <div class="rank-gtab" data-game="razao"                         onclick="setRankGame(this,'razao')">⚖️ Razão</div>
           <div class="rank-gtab" data-game="geo-areas"                     onclick="setRankGame(this,'geo-areas')">📐 Áreas</div>
           <div class="rank-gtab" data-game="geo-espacial"                  onclick="setRankGame(this,'geo-espacial')">🧊 Espacial</div>
           <div class="rank-gtab" data-game="sequencias"                    onclick="setRankGame(this,'sequencias')">🧩 Sequências</div>
@@ -996,6 +1074,9 @@ const GAMES = [
   { id: 'juros',                name: '💰 Juros Simples & Compostos', bestId: 'best-jur'  },
   { id: 'logica-vf',            name: '⚡ V ou F: Lógica',            bestId: 'best-lvf'  },
   { id: 'estatistica',          name: '📊 Estatística Relâmpago',     bestId: 'best-est'  },
+  { id: 'graficos',             name: '📊 Análise de Gráficos',       bestId: 'best-graf' },
+  { id: 'probabilidade',        name: '🎲 Probabilidade',             bestId: 'best-prob' },
+  { id: 'razao',                name: '⚖️ Razão e Proporção',         bestId: 'best-raz'  },
   { id: 'geo-areas',            name: '📐 Correspondência de Áreas',  bestId: 'best-geoa' },
   { id: 'geo-espacial',         name: '🧊 Geometria Espacial',        bestId: 'best-geoe' },
   { id: 'sequencias',           name: '🧩 Sequências Lógicas',        bestId: 'best-seq'  },

@@ -54,6 +54,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .seq-display{background:var(--navy-2);border:1px solid rgba(16,185,129,.2);border-radius:20px;padding:24px 20px 20px;margin-bottom:14px}
 .seq-display__tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:14px}
 .seq-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.num-line{display:flex;justify-content:center;margin:2px 0 10px}
+.num-line svg{max-width:290px;width:100%;height:auto}
+.num-line .pt{opacity:0;animation:ptIn .42s ease forwards}
+@keyframes ptIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
 .seq-term{display:inline-flex;align-items:center;justify-content:center;min-width:52px;height:52px;border-radius:12px;background:var(--navy-3);border:1px solid rgba(16,185,129,.2);font-family:var(--fh);font-size:18px;font-weight:900;color:var(--white)}
 .seq-term.blank{border-style:dashed;border-color:var(--al);background:rgba(16,185,129,.08);color:var(--al);font-size:28px;letter-spacing:-2px}
 .seq-arrow{font-size:14px;color:rgba(255,255,255,.2)}
@@ -161,6 +165,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="seq-display">
       <div class="seq-display__tipo" id="qTipo"></div>
       <div class="seq-row" id="seqRow"></div>
+      <div class="num-line" id="numLine"></div>
       <div class="seq-ask" id="seqAsk"></div>
     </div>
     <div class="opt-grid" id="optGrid"></div>
@@ -319,12 +324,32 @@ function startGame(){
   renderQuestion();
 }
 
+/* reta numérica: os termos conhecidos surgem em sequência (mostra o passo da PA / o salto da PG) */
+function renderLinha(q){
+  const el=document.getElementById('numLine'); if(!el) return;
+  const known=(q.terms||[]).filter(t=>typeof t==='number');
+  if(known.length<2){ el.innerHTML=''; return; }
+  const mn=Math.min(...known), mx=Math.max(...known);
+  const W=290,H=62,L=24,R=W-22,y=40;
+  const sx=v=> (mx===mn)?(L+R)/2 : L+(v-mn)/(mx-mn)*(R-L);
+  let inner='<line x1="'+L+'" y1="'+y+'" x2="'+R+'" y2="'+y+'" stroke="#3a4a6b" stroke-width="2"/>'+
+    '<polygon points="'+R+','+y+' '+(R-8)+','+(y-4)+' '+(R-8)+','+(y+4)+'" fill="#3a4a6b"/>';
+  known.forEach((v,i)=>{ const x=sx(v).toFixed(1);
+    inner+='<g class="pt" style="animation-delay:'+(i*0.2).toFixed(2)+'s">'+
+      '<line x1="'+x+'" y1="'+(y-5)+'" x2="'+x+'" y2="'+(y+5)+'" stroke="#94a3b8" stroke-width="1.4"/>'+
+      '<circle cx="'+x+'" cy="'+y+'" r="4.5" fill="#fbbf24"/>'+
+      '<text x="'+x+'" y="'+(y-11)+'" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat" font-weight="800">'+v+'</text></g>';
+  });
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'">'+inner+'</svg>';
+}
+
 function renderQuestion(){
   if(qIdx>=questions.length){ endGame(); return; }
   const q=questions[qIdx]; answering=false; selected=null;
   document.getElementById('hudQ').textContent=qIdx+1;
   document.getElementById('qTipo').textContent=q.tipo;
   document.getElementById('seqAsk').innerHTML=q.ask;
+  renderLinha(q);
   // Build sequence row
   const row=document.getElementById('seqRow');
   if(q.terms && q.terms.length){

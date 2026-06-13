@@ -54,6 +54,11 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
 /* Question card */
 .q-card{background:var(--navy-2);border:1px solid rgba(74,108,247,.15);border-radius:20px;padding:26px 28px 22px;margin-bottom:14px}
+.cruz-box{display:flex;flex-direction:column;align-items:center;margin:8px 0 2px}
+.cruz-box svg{max-width:230px;width:100%;height:auto}
+.cruz-box .cz-arrow{stroke-dasharray:170;stroke-dashoffset:170;animation:czDraw .7s .35s ease forwards}
+@keyframes czDraw{to{stroke-dashoffset:0}}
+.cruz-box .cz-lab{font-size:12px;color:#8892B4;margin-top:4px;font-weight:600}
 .q-card__tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:8px}
 .q-card__texto{font-size:16px;line-height:1.65;color:rgba(255,255,255,.92)}
 /* Options (2×2 grid) */
@@ -170,6 +175,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="q-card">
       <div class="q-card__tipo" id="qTipo"></div>
       <div class="q-card__texto" id="qTexto"></div>
+      <div class="cruz-box" id="cruzBox"></div>
     </div>
     <div class="opt-grid" id="optGrid"></div>
     <button class="btn-answer" id="btnAnswer" onclick="submitAnswer()">Confirmar Resposta</button>
@@ -343,18 +349,18 @@ function startGame() {
       if(Math.random()<0.5){
         const u=_ri(2,6), k1=_ri(2,5), k2=k1+_ri(1,5);
         const o=_mkOps('R$ '+(k2*u)+',00',()=>'R$ '+Math.max(2,k2*u+_pk([-1,1])*_pk([u,2*u,k2]))+',00');
-        return {diff:d,tipo:'Proporção Direta',texto:'Se '+k1+' kg de um produto custam R$ '+(k1*u)+',00, quanto custam '+k2+' kg?',ops:o.ops,g:o.g,expl:'1 kg custa R$ '+u+' ('+(k1*u)+'÷'+k1+'). Então '+k2+' kg = '+k2+' × '+u+' = R$ '+(k2*u)};
+        return {diff:d,tipo:'Proporção Direta',cruz:{ga:'kg',gb:'R$',a:k1,b:k1*u,c:k2,inv:false},texto:'Se '+k1+' kg de um produto custam R$ '+(k1*u)+',00, quanto custam '+k2+' kg?',ops:o.ops,g:o.g,expl:'1 kg custa R$ '+u+' ('+(k1*u)+'÷'+k1+'). Então '+k2+' kg = '+k2+' × '+u+' = R$ '+(k2*u)};
       }
       const v=_pk([40,50,60,70,80,90]), t=_ri(2,5);
       const o=_mkOps((v*t)+' km',()=>Math.max(10,v*t+_pk([-1,1])*_pk([v/2,v,10*t]))+' km');
-      return {diff:d,tipo:'Proporção Direta',texto:'Um carro percorre '+v+' km em 1 hora. Quantos km percorre em '+t+' horas, na mesma velocidade?',ops:o.ops,g:o.g,expl:'Direta: '+v+' km em 1 h → em '+t+' h são '+v+' × '+t+' = '+(v*t)+' km'};
+      return {diff:d,tipo:'Proporção Direta',cruz:{ga:'horas',gb:'km',a:1,b:v,c:t,inv:false},texto:'Um carro percorre '+v+' km em 1 hora. Quantos km percorre em '+t+' horas, na mesma velocidade?',ops:o.ops,g:o.g,expl:'Direta: '+v+' km em 1 h → em '+t+' h são '+v+' × '+t+' = '+(v*t)+' km'};
     }
     if(d==='normal'){
       const n2=_pk([2,3,4,6]), f=_ri(2,4), n1=n2*f===n2?n2*2:n2, dias2=_ri(2,6)*f, dias1=dias2/f;
       // n1 operários fazem em dias1; n2 (menos) fazem em dias2 = dias1*f, com n1=n2*f
       const N1=n2*f, D1=_ri(2,5), D2=D1*f;
       const o=_mkOps(D2+' dias',()=>Math.max(1,D2+_pk([-1,1])*_pk([D1,f,2]))+' dias');
-      return {diff:d,tipo:'Proporção Inversa',texto:N1+' operários constroem um muro em '+D1+' dias. Quantos dias levarão '+n2+' operários, no mesmo ritmo?',ops:o.ops,g:o.g,expl:'Inversa (menos operários → mais dias): '+N1+'×'+D1+' = '+n2+'×x → x = '+(N1*D1)+'÷'+n2+' = '+D2+' dias'};
+      return {diff:d,tipo:'Proporção Inversa',cruz:{ga:'operários',gb:'dias',a:N1,b:D1,c:n2,inv:true},texto:N1+' operários constroem um muro em '+D1+' dias. Quantos dias levarão '+n2+' operários, no mesmo ritmo?',ops:o.ops,g:o.g,expl:'Inversa (menos operários → mais dias): '+N1+'×'+D1+' = '+n2+'×x → x = '+(N1*D1)+'÷'+n2+' = '+D2+' dias'};
     }
     const u=_ri(2,5), m1=_ri(2,5), d1=_ri(2,5), m2=_ri(2,5), d2=_ri(2,6);
     const p1=u*m1*d1, p2=u*m2*d2;
@@ -377,12 +383,37 @@ function startGame() {
   renderQuestion();
 }
 
+/* a "cruz" da regra de três se monta: células + setas que se desenham (direta = em cruz, inversa = na linha) */
+function renderCruz(q){
+  const el=document.getElementById('cruzBox'); if(!el) return;
+  const c=q.cruz; if(!c){ el.innerHTML=''; return; }
+  const W=210,H=132, xL=58,xR=152, yT=52,yB=98;
+  function cell(x,y,t,unk){
+    return '<rect x="'+(x-32)+'" y="'+(y-17)+'" width="64" height="34" rx="8" fill="'+(unk?'rgba(245,158,11,.18)':'#152545')+'" stroke="'+(unk?'#f59e0b':'#3a4a6b')+'" stroke-width="'+(unk?'2':'1.3')+'"/>'+
+      '<text x="'+x+'" y="'+(y+6)+'" text-anchor="middle" fill="'+(unk?'#fbbf24':'#fff')+'" font-size="16" font-family="Montserrat" font-weight="900">'+t+'</text>';
+  }
+  let s='<svg viewBox="0 0 '+W+' '+H+'"><defs><marker id="czah" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f59e0b"/></marker></defs>';
+  s+='<text x="'+xL+'" y="22" text-anchor="middle" fill="#9db4ff" font-size="11" font-family="Montserrat" font-weight="800">'+c.ga+'</text>';
+  s+='<text x="'+xR+'" y="22" text-anchor="middle" fill="#9db4ff" font-size="11" font-family="Montserrat" font-weight="800">'+c.gb+'</text>';
+  if(!c.inv){
+    s+='<line x1="'+(xL+18)+'" y1="'+(yT+10)+'" x2="'+(xR-18)+'" y2="'+(yB-10)+'" stroke="#f59e0b" stroke-width="2" class="cz-arrow" marker-end="url(#czah)"/>';
+    s+='<line x1="'+(xR-18)+'" y1="'+(yT+10)+'" x2="'+(xL+18)+'" y2="'+(yB-10)+'" stroke="#f59e0b" stroke-width="2" class="cz-arrow" style="animation-delay:.55s" marker-end="url(#czah)"/>';
+  } else {
+    s+='<line x1="'+(xL+18)+'" y1="'+(yT-2)+'" x2="'+(xR-18)+'" y2="'+(yT-2)+'" stroke="#f59e0b" stroke-width="2" class="cz-arrow" marker-end="url(#czah)"/>';
+    s+='<line x1="'+(xL+18)+'" y1="'+(yB+2)+'" x2="'+(xR-18)+'" y2="'+(yB+2)+'" stroke="#f59e0b" stroke-width="2" class="cz-arrow" style="animation-delay:.55s" marker-end="url(#czah)"/>';
+  }
+  s+=cell(xL,yT,c.a,false)+cell(xR,yT,c.b,false)+cell(xL,yB,c.c,false)+cell(xR,yB,'?',true);
+  s+='</svg>';
+  el.innerHTML=s+'<div class="cz-lab">'+(c.inv?'Inversa: multiplique na <b>linha</b> ('+c.a+'×'+c.b+' = '+c.c+'×?)':'Direta: multiplique <b>em cruz</b> ('+c.a+'×? = '+c.b+'×'+c.c+')')+'</div>';
+}
+
 function renderQuestion() {
   if (qIdx >= questions.length) { endGame(); return; }
   const q = questions[qIdx]; answering=false; selected=null;
   document.getElementById('hudQ').textContent = qIdx+1;
   document.getElementById('qTipo').textContent = q.tipo;
   document.getElementById('qTexto').textContent = q.texto;
+  renderCruz(q);
 
   const grid = document.getElementById('optGrid');
   grid.innerHTML = q.ops.map((op,i)=>`
