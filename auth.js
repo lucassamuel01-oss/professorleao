@@ -13,12 +13,15 @@
 const PL_USERS_KEY   = 'pl_users';
 const PL_SESSION_KEY = 'pl_session';
 
-/* ---------- Admin padrão (modo local) ---------- */
+/* ---------- Admin padrão (modo local) ----------
+   Apenas IDENTIDADE do admin (para a UI funcionar offline). NÃO traz
+   senha: a autenticação do admin é feita SEMPRE pelo servidor, com a
+   senha vinda da variável de ambiente ADMIN_PASSWORD (nunca no código,
+   que é público). Sem senha aqui, o login local do admin é recusado. */
 const DEFAULT_ADMIN = {
   id: 'admin-001',
   name: 'Lucas Leão',
   email: 'samuel@professorleao.com',
-  password: 'leao2024',
   role: 'admin',
   active: true,
   expiresAt: null,

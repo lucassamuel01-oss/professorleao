@@ -50,8 +50,9 @@ Em **Settings → Networking → Generate Domain**. A URL gerada
 
 - `…/admin.html` → admin com convites, progresso e WhatsApp dos alunos
 - `…/cadastro.html?convite=…` → links que você gera para cada aluno
-- Login admin inicial: `samuel@professorleao.com` / `leao2024`
-  (**troque a senha** pela aba Alunos após o primeiro login)
+- Login admin: e-mail definido em `ADMIN_EMAIL` e senha em `ADMIN_PASSWORD`
+  (variáveis de ambiente do Railway — **nunca** ponha a senha no código ou
+  na documentação, pois o repositório é público).
 
 ## Como saber que funcionou
 

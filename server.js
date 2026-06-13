@@ -78,7 +78,10 @@ app.use(
     store: _sessStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { httpOnly: true, sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000 },
+    /* secure:"auto" → cookie só viaja por HTTPS em produção (atrás do
+       proxy do Railway, via trust proxy); em dev local (HTTP) continua
+       funcionando. httpOnly evita leitura por JS; sameSite lax mitiga CSRF. */
+    cookie: { httpOnly: true, sameSite: "lax", secure: "auto", maxAge: 30 * 24 * 60 * 60 * 1000 },
   })
 );
 
