@@ -27,6 +27,8 @@ const bcrypt = require("bcryptjs");
 const { MongoClient } = require("mongodb");
 let nodemailer = null;
 try { nodemailer = require("nodemailer"); } catch (e) { /* opcional */ }
+let MongoStore = null;
+try { MongoStore = require("connect-mongo"); } catch (e) { /* opcional */ }
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -60,6 +62,16 @@ app.use(bodyParser.json({ limit: "4mb" }));
 app.use(
   session({
     secret: getSessionSecret(),
+    /* sessões no MongoDB (sobrevivem a deploys); sem banco, usa o
+       MemoryStore padrão (login cai a cada restart, mas não quebra) */
+    store: (process.env.MONGODB_URI && MongoStore)
+      ? MongoStore.create({
+          mongoUrl: process.env.MONGODB_URI,
+          dbName: "professor-leao",
+          collectionName: "sessions",
+          ttl: 30 * 24 * 60 * 60,
+        })
+      : undefined,
     resave: false,
     saveUninitialized: false,
     cookie: { httpOnly: true, sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000 },
