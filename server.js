@@ -88,9 +88,10 @@ app.use(
 
 /* ── 1. Cabeçalhos de segurança (anti-embed, anti-sniff, etc.) ── */
 app.use((req, res, next) => {
-  /* impede que o site seja embutido em iframe de terceiros
-     (anti-clickjacking e anti-cópia da interface via embedding) */
-  res.setHeader("X-Frame-Options", "DENY");
+  /* impede que o site seja embutido em iframe de TERCEIROS
+     (anti-clickjacking), mas permite o próprio site embutir suas
+     páginas (a aula carrega jogos, listas e materiais em iframe) */
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-XSS-Protection", "1; mode=block");
@@ -112,7 +113,7 @@ app.use((req, res, next) => {
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'none'", // ninguém embute este site
+      "frame-ancestors 'self'", // só o próprio site pode embutir suas páginas
     ].join("; ")
   );
   next();
