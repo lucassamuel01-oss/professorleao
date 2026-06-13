@@ -51,6 +51,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
 /* Formula box destaque */
 .q-card{background:var(--navy-2);border:1px solid rgba(234,179,8,.2);border-radius:20px;padding:24px;margin-bottom:16px}
+.q-bars{display:flex;justify-content:center;margin:10px 0 2px}
+.q-bars svg{max-width:270px;width:100%;height:auto}
+.q-bars .bar{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;animation:barGrow .55s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes barGrow{to{transform:scaleY(1)}}
 .q-tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:12px;text-align:center}
 .formula-box{background:linear-gradient(135deg,rgba(78,35,8,.6),rgba(234,179,8,.08));border:1px solid rgba(234,179,8,.3);border-radius:14px;padding:14px 18px;margin-bottom:14px}
 .formula-box__label{font-family:var(--fh);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:rgba(234,179,8,.6);margin-bottom:6px}
@@ -164,6 +168,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
         <div class="formula-box__expr" id="qFormula"></div>
       </div>
       <div class="q-dados" id="qDados"></div>
+      <div class="q-bars" id="qBars"></div>
       <div class="q-text" id="qText"></div>
     </div>
     <div class="opt-grid" id="optGrid"></div>
@@ -245,7 +250,7 @@ let timerSec=25, timerInterval=null, timerStarted;
 let _advanceTimer=null,_advanced=false;
 let answering=false;
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 35 : diff === 'facil' ? 70 : 50; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 48 : diff === 'facil' ? 82 : 62; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try{
@@ -285,13 +290,13 @@ function startGame(){
     if(d==='facil'){
       const C=_pk([500,1000,1500,2000]), i=_ri(1,5), t=_ri(2,6), J=C*i/100*t;
       const o=_mkOps(_fmtR(J),()=>_fmtR(Math.max(10,J+_pk([-1,1])*_pk([10,20,C*i/100]))));
-      return {diff:d,tipo:'Juros Simples',formula:'J = C × i × t',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule os Juros:',ops:o.ops,g:o.g,expl:'J = C × i × t = '+_fmtR(C)+' × '+i+'/100 × '+t+' = '+_fmtR(J)};
+      return {diff:d,tipo:'Juros Simples',bars:{C:C,i:i,t:t,comp:false},formula:'J = C × i × t',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule os Juros:',ops:o.ops,g:o.g,expl:'J = C × i × t = '+_fmtR(C)+' × '+i+'/100 × '+t+' = '+_fmtR(J)};
     }
     if(d==='normal'){
       if(Math.random()<0.5){
         const C=_pk([800,1000,1200,2000]), i=_ri(2,5), t=_ri(3,8), M=C+C*i/100*t;
         const o=_mkOps(_fmtR(M),()=>_fmtR(Math.max(100,M+_pk([-1,1])*_pk([20,50,C*i/100]))));
-        return {diff:d,tipo:'Montante Simples',formula:'M = C + J = C(1 + i×t)',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante:',ops:o.ops,g:o.g,expl:'M = C × (1 + i×t) = '+_fmtR(C)+' × (1 + '+i+'/100×'+t+') = '+_fmtR(M)};
+        return {diff:d,tipo:'Montante Simples',bars:{C:C,i:i,t:t,comp:false},formula:'M = C + J = C(1 + i×t)',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante:',ops:o.ops,g:o.g,expl:'M = C × (1 + i×t) = '+_fmtR(C)+' × (1 + '+i+'/100×'+t+') = '+_fmtR(M)};
       }
       const i=_ri(2,4), t=_ri(4,8), C=_pk([500,1000,1500,2500]), J=C*i/100*t;
       const o=_mkOps(_fmtR(C),()=>_fmtR(Math.max(100,C+_pk([-1,1])*_pk([100,200,500]))));
@@ -304,7 +309,7 @@ function startGame(){
       const errados=[Msimples,M+_pk([-1,1])*_pk([10,50,100]),C*Math.pow(1+i/100,t-1)];
       return _fmtR(Math.round(_pk(errados)*100)/100);
     });
-    return {diff:d,tipo:'Juros Compostos',formula:'M = C × (1 + i)ᵗ',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante (capitalização composta):',ops:o.ops,g:o.g,expl:'M = C × (1+i)ᵗ = '+_fmtR(C)+' × (1+'+i+'/100)^'+t+' = '+_fmtR(M)};
+    return {diff:d,tipo:'Juros Compostos',bars:{C:C,i:i,t:t,comp:true},formula:'M = C × (1 + i)ᵗ',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante (capitalização composta):',ops:o.ops,g:o.g,expl:'M = C × (1+i)ᵗ = '+_fmtR(C)+' × (1+'+i+'/100)^'+t+' = '+_fmtR(M)};
   }
 
   const pool=montarPool(diff);
@@ -325,11 +330,32 @@ function renderQuestion(){
   document.getElementById('qTipo').textContent=q.tipo;
   document.getElementById('qFormula').textContent=q.formula;
   document.getElementById('qDados').innerHTML=q.dados.map(d=>`<div class="dado">${d}</div>`).join('');
+  renderBars(q);
   document.getElementById('qText').innerHTML=q.texto;
   const grid=document.getElementById('optGrid');
   grid.innerHTML=q.ops.map((op,i)=>`<button class="opt-btn" onclick="selectOpt(this,${i})">${op}</button>`).join('');
   document.getElementById('btnAnswer').disabled=true;
   startTimer();
+}
+
+/* barras do montante crescendo período a período (simples vs composto) */
+function renderBars(q){
+  const el=document.getElementById('qBars'); if(!el) return;
+  const b=q&&q.bars; if(!b){ el.innerHTML=''; return; }
+  const n=Math.min(b.t,8); const vals=[];
+  for(let k=0;k<=n;k++){ vals.push(b.comp ? b.C*Math.pow(1+b.i/100,k) : b.C*(1+b.i/100*k)); }
+  const max=Math.max(...vals);
+  const cols=n+1, W=Math.min(270, 24+cols*30), H=124, base=H-20, top=10;
+  const step=(W-12)/cols, bw=Math.max(13, step-7);
+  let inner='';
+  for(let k=0;k<=n;k++){
+    const h=Math.max(2,(vals[k]/max)*(base-top));
+    const x=8+k*step;
+    inner+='<rect x="'+x.toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="3" fill="'+(k===n?'#fbbf24':'#eab308')+'" fill-opacity="'+(k===n?'.95':'.45')+'" class="bar" style="animation-delay:'+(k*0.07).toFixed(2)+'s"/>';
+    inner+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(base+12)+'" text-anchor="middle" fill="#8892B4" font-size="8" font-family="Open Sans">'+k+'</text>';
+  }
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'"><line x1="5" y1="'+base+'" x2="'+(W-5)+'" y2="'+base+'" stroke="#3a4a6b" stroke-width="1"/>'+inner+
+    '<text x="'+(W/2).toFixed(0)+'" y="'+(H-3)+'" text-anchor="middle" fill="#8892B4" font-size="8.5" font-family="Open Sans">crescimento do montante (meses) →</text></svg>';
 }
 
 function selectOpt(el,idx){

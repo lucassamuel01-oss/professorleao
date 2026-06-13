@@ -254,7 +254,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>12 jogos de matemática com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>19 jogos de matemática, álgebra, estatística, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -580,6 +580,31 @@
       </div>
     </div>
 
+    <!-- Equações -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#6b21a8,#a855f7)">
+        <div class="game-card__icon">🟰</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Álgebra</div>
+        <div class="game-card__name">Equações</div>
+        <div class="game-card__desc">Encontre o x! Equações do 1º grau (isolar a incógnita) e do 2º grau (Bhaskara). Digite a resposta — no 2º grau, as duas raízes. A resolução completa aparece a cada questão.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">✏️ Digite o x</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">💡 Bhaskara passo a passo</span>
+        </div>
+        <div class="game-card__best" id="best-eq">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/equacoes.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('equacoes','🟰 Equações')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ── Categoria: Geometria, Combinatória e Finanças ── -->
@@ -611,6 +636,56 @@
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/geometria-plana.html">▶ Jogar Agora</a>
         <button class="btn-rank" onclick="openRankModal('geometria-plana','🔺 Geometria Plana')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Geometria: Correspondência de Áreas -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#92400e,#f59e0b)">
+        <div class="game-card__icon">📐</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Geometria interativa</div>
+        <div class="game-card__name">Correspondência de Áreas</div>
+        <div class="game-card__desc">Geometria visual: ligue cada figura (quadrado, triângulo, círculo, trapézio…) à sua área correta. A cada acerto, a fórmula e o cálculo aparecem. Jogo de correspondência, com figuras de verdade.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🖼️ Figuras interativas</span>
+          <span class="game-card__meta-item">🔗 Ligar pares</span>
+          <span class="game-card__meta-item">💡 Fórmula revelada</span>
+        </div>
+        <div class="game-card__best" id="best-geoa">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/geo-areas.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('geo-areas','📐 Correspondência de Áreas')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Geometria Espacial -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#075985,#0ea5e9)">
+        <div class="game-card__icon">🧊</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Geometria espacial 3D</div>
+        <div class="game-card__name">Sólidos em 3D</div>
+        <div class="game-card__desc">Sólidos que giram em 3D e se abrem! Calcule o volume de cubos, blocos, cilindros, cones, esferas e pirâmides. Toque em "Girar" para ver de todos os ângulos e "Planificar" para abrir o sólido.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🔄 Gira em 3D</span>
+          <span class="game-card__meta-item">📦 Planificação animada</span>
+          <span class="game-card__meta-item">💡 Fórmula revelada</span>
+        </div>
+        <div class="game-card__best" id="best-geoe">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/geo-espacial.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('geo-espacial','🧊 Geometria Espacial')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
@@ -664,6 +739,115 @@
       </div>
     </div>
 
+    <!-- Estatística Relâmpago -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#312e81,#6366f1)">
+        <div class="game-card__icon">📊</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Estatística</div>
+        <div class="game-card__name">Estatística Relâmpago</div>
+        <div class="game-card__desc">Medidas de tendência central na prática! Calcule média, moda, mediana e amplitude de conjuntos de dados e digite a resposta. A cada questão, a resolução passo a passo aparece.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">⌨️ Digite a resposta</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">💡 Resolução comentada</span>
+        </div>
+        <div class="game-card__best" id="best-est">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/estatistica.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('estatistica','📊 Estatística Relâmpago')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Categoria: Raciocínio Lógico ── -->
+  <div class="cat-label">
+    <div class="cat-label__pill" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)">⚡ Raciocínio, Padrões & Medidas</div>
+    <div class="cat-label__line"></div>
+  </div>
+  <div class="games-grid">
+
+    <!-- V ou F: Lógica -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#0e4f5e,#06b6d4)">
+        <div class="game-card__icon">⚡</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Raciocínio Lógico</div>
+        <div class="game-card__name">Verdadeiro ou Falso</div>
+        <div class="game-card__desc">Speed run de lógica! Tabela-verdade, conectivos, negação, Leis de De Morgan e quantificadores — decida V ou F contra o relógio. A cada erro, a explicação aparece na hora.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">⚡ 45–75s cronometrados</span>
+          <span class="game-card__meta-item">∞ Cartas ilimitadas</span>
+          <span class="game-card__meta-item">⌨️ Atalhos V / F</span>
+        </div>
+        <div class="game-card__best" id="best-lvf">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/logica-vf.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('logica-vf','⚡ V ou F: Lógica')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Sequências Lógicas -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#9f1239,#f43f5e)">
+        <div class="game-card__icon">🧩</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Padrões e sequências</div>
+        <div class="game-card__name">Sequências Lógicas</div>
+        <div class="game-card__desc">Descubra o padrão e complete a sequência! Toque nas peças, na ordem certa, para montar os próximos termos — PA, PG, quadrados, triangulares e Fibonacci. A regra aparece a cada rodada.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🧩 Montar o padrão</span>
+          <span class="game-card__meta-item">📋 8 desafios</span>
+          <span class="game-card__meta-item">💡 Regra revelada</span>
+        </div>
+        <div class="game-card__best" id="best-seq">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/sequencias.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('sequencias','🧩 Sequências Lógicas')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Conversão de Unidades -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#065f46,#10b981)">
+        <div class="game-card__icon">📏</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Grandezas e medidas</div>
+        <div class="game-card__name">Conversão de Unidades</div>
+        <div class="game-card__desc">Suba e desça a escada das unidades! Comprimento, massa, capacidade, área, volume e tempo. A escada interativa mostra quantos degraus converter — digite o resultado.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">📏 Escada visual</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">⌨️ Digite a resposta</span>
+        </div>
+        <div class="game-card__best" id="best-uni">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/unidades.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('unidades','📏 Conversão de Unidades')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ── Ranking Geral ── -->
@@ -671,7 +855,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 12 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 19 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -696,8 +880,15 @@
           <div class="rank-gtab" data-game="pa-pg"                         onclick="setRankGame(this,'pa-pg')">📈 PA & PG</div>
           <div class="rank-gtab" data-game="fracoes"                       onclick="setRankGame(this,'fracoes')">🍕 Frações</div>
           <div class="rank-gtab" data-game="funcoes"                       onclick="setRankGame(this,'funcoes')">📐 Funções</div>
+          <div class="rank-gtab" data-game="equacoes"                      onclick="setRankGame(this,'equacoes')">🟰 Equações</div>
           <div class="rank-gtab" data-game="geometria-plana"               onclick="setRankGame(this,'geometria-plana')">🔺 Geometria</div>
           <div class="rank-gtab" data-game="combinatoria"                  onclick="setRankGame(this,'combinatoria')">🎲 Combinatória</div>
+          <div class="rank-gtab" data-game="logica-vf"                     onclick="setRankGame(this,'logica-vf')">⚡ V ou F: Lógica</div>
+          <div class="rank-gtab" data-game="estatistica"                   onclick="setRankGame(this,'estatistica')">📊 Estatística</div>
+          <div class="rank-gtab" data-game="geo-areas"                     onclick="setRankGame(this,'geo-areas')">📐 Áreas</div>
+          <div class="rank-gtab" data-game="geo-espacial"                  onclick="setRankGame(this,'geo-espacial')">🧊 Espacial</div>
+          <div class="rank-gtab" data-game="sequencias"                    onclick="setRankGame(this,'sequencias')">🧩 Sequências</div>
+          <div class="rank-gtab" data-game="unidades"                      onclick="setRankGame(this,'unidades')">📏 Unidades</div>
           <div class="rank-gtab" data-game="juros"                         onclick="setRankGame(this,'juros')">💰 Juros</div>
         </div>
 
@@ -799,9 +990,16 @@ const GAMES = [
   { id: 'pa-pg',                name: '📈 Progressões PA & PG',       bestId: 'best-papg' },
   { id: 'fracoes',              name: '🍕 Frações',                   bestId: 'best-frac' },
   { id: 'funcoes',              name: '📐 Funções',                   bestId: 'best-func' },
+  { id: 'equacoes',             name: '🟰 Equações',                  bestId: 'best-eq'   },
   { id: 'geometria-plana',      name: '🔺 Geometria Plana',           bestId: 'best-geo'  },
   { id: 'combinatoria',         name: '🎲 Combinatória',              bestId: 'best-comb' },
   { id: 'juros',                name: '💰 Juros Simples & Compostos', bestId: 'best-jur'  },
+  { id: 'logica-vf',            name: '⚡ V ou F: Lógica',            bestId: 'best-lvf'  },
+  { id: 'estatistica',          name: '📊 Estatística Relâmpago',     bestId: 'best-est'  },
+  { id: 'geo-areas',            name: '📐 Correspondência de Áreas',  bestId: 'best-geoa' },
+  { id: 'geo-espacial',         name: '🧊 Geometria Espacial',        bestId: 'best-geoe' },
+  { id: 'sequencias',           name: '🧩 Sequências Lógicas',        bestId: 'best-seq'  },
+  { id: 'unidades',             name: '📏 Conversão de Unidades',     bestId: 'best-uni'  },
 ];
 
 /* ── Load stats ── */

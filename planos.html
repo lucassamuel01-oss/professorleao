@@ -425,6 +425,7 @@
         onkeydown="if(event.key==='Enter')_finalizarCompra()"
         style="width:100%;padding:13px 15px;border-radius:10px;border:1px solid rgba(74,108,247,.3);background:rgba(74,108,247,.06);color:#fff;font-size:15px;outline:none;text-align:center;margin-bottom:6px" />
       <div id="emailErr" style="color:#fca5a5;font-size:12.5px;min-height:16px;margin-bottom:10px"></div>
+      <div id="dupWarn" style="display:none;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.35);border-radius:10px;padding:12px 14px;margin-bottom:12px;text-align:left;font-size:12.5px;color:#fde68a;line-height:1.55"></div>
       <button id="emailGo" onclick="_finalizarCompra()" style="width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--navy-mid),var(--accent));color:#fff;font-family:var(--font-h);font-weight:800;font-size:15px">Continuar para o pagamento →</button>
       <button onclick="document.getElementById('emailModal').style.display='none'" style="margin-top:10px;background:none;border:none;color:var(--silver);font-size:12.5px;cursor:pointer">Cancelar</button>
       <p style="color:var(--silver);font-size:11px;margin-top:14px;opacity:.7">🔒 Pagamento processado pelo Mercado Pago. Não guardamos seu cartão.</p>
@@ -458,16 +459,49 @@
       document.getElementById('emProd').textContent = NOMES[id];
       try { const s = JSON.parse(localStorage.getItem('pl_session') || 'null'); if (s && s.email) document.getElementById('emailCompra').value = s.email; } catch (e) {}
       document.getElementById('emailErr').textContent = '';
+      _dupConfirmado = false;
+      const dw = document.getElementById('dupWarn'); dw.style.display = 'none'; dw.innerHTML = '';
+      const gb = document.getElementById('emailGo'); gb.textContent = 'Continuar para o pagamento →';
       document.getElementById('emailModal').style.display = 'flex';
       setTimeout(() => document.getElementById('emailCompra').focus(), 50);
     }
 
     let _pendingProduto = null;
+    let _dupConfirmado = false;
+
+    /* 1º passo: valida o e-mail e checa duplicidade (já é aluno / já tem o
+       produto). Se houver, mostra o aviso e exige uma 2ª confirmação. */
     async function _finalizarCompra() {
       const email = (document.getElementById('emailCompra').value || '').trim();
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { document.getElementById('emailErr').textContent = 'Digite um e-mail válido.'; return; }
+      document.getElementById('emailErr').textContent = '';
       const id = _pendingProduto;
-      const btn = document.getElementById('emailGo'); if (btn) { btn.disabled = true; btn.textContent = 'Aguarde…'; }
+      const btn = document.getElementById('emailGo');
+
+      if (!_dupConfirmado) {
+        if (btn) { btn.disabled = true; btn.textContent = 'Verificando…'; }
+        try {
+          const rv = await fetch('/api/checkout/verificar', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ produto: id, email }),
+          });
+          const dv = await rv.json();
+          if (dv && dv.jaAluno) {
+            const periodo = (dv.diasProduto === 365) ? '1 ano' : (dv.diasProduto + ' dias');
+            let txt = '<b>📋 Você já tem conta com este e-mail.</b><br>';
+            if (dv.jaTemProduto) txt += '➡️ Este produto (<b>' + (dv.produtoNome || '') + '</b>) já está na sua conta.<br>';
+            if (dv.ativo && dv.expiraEm) txt += 'Seu acesso está ativo até <b>' + new Date(dv.expiraEm).toLocaleDateString('pt-BR') + '</b>.<br>';
+            txt += 'Se continuar, <b>somaremos ' + periodo + '</b> ao seu acesso (sem criar conta nova).';
+            const dw = document.getElementById('dupWarn'); dw.innerHTML = txt; dw.style.display = 'block';
+            _dupConfirmado = true;
+            if (btn) { btn.disabled = false; btn.textContent = 'Continuar e somar período →'; }
+            return;
+          }
+        } catch (e) { /* sem verificação → segue para o pagamento normalmente */ }
+      }
+
+      /* 2º passo (ou e-mail novo): segue para o pagamento */
+      if (btn) { btn.disabled = true; btn.textContent = 'Aguarde…'; }
       try {
         const r = await fetch('/api/checkout', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -478,7 +512,7 @@
         document.getElementById('emailModal').style.display = 'none'; whatsFallback(id);
       } catch (e) {
         document.getElementById('emailModal').style.display = 'none'; whatsFallback(id);
-      } finally { if (btn) { btn.disabled = false; btn.textContent = 'Continuar para o pagamento →'; } }
+      } finally { if (btn) { btn.disabled = false; btn.textContent = _dupConfirmado ? 'Continuar e somar período →' : 'Continuar para o pagamento →'; } }
     }
 
     /* ── Cupom ── */

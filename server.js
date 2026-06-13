@@ -503,8 +503,9 @@ function getMailer() {
 
 function baseUrl(req) {
   if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/+$/, "");
-  const proto = req.headers["x-forwarded-proto"] || (req.secure ? "https" : "http");
-  return proto + "://" + req.headers.host;
+  const proto = (req.headers["x-forwarded-proto"] || (req.secure ? "https" : "http")).split(",")[0].trim();
+  const host = (req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0].trim();
+  return proto + "://" + host;
 }
 
 /* solicita recuperação: gera token (1h), envia e-mail (ou deixa
@@ -602,17 +603,19 @@ app.post(
 
 /* Catálogo oficial — o PREÇO é definido AQUI, no servidor (nunca
    confiamos no valor enviado pelo cliente). */
+/* `dias` = período de acesso liberado pela compra. Assinaturas seguem
+   seu ciclo; cursos/apostilas avulsos dão 1 ano (365 dias) de acesso. */
 const PRODUTOS_LOJA = {
-  mensal:         { nome: "Assinatura Mensal",                    preco: 49.9 },
-  trimestral:     { nome: "Assinatura Trimestral",               preco: 119.9 },
-  anual:          { nome: "Assinatura Anual",                    preco: 297.0 },
-  cfo:            { nome: "Curso CFO PMBA — Completo",            preco: 257.0 },
-  sd:             { nome: "Curso SD PMBA — Completo",             preco: 210.0 },
-  basica:         { nome: "Curso Matemática Básica",             preco: 96.0 },
-  correios:       { nome: "Curso Correios",                      preco: 140.0 },
-  apostilaCfsd:   { nome: "Apostila CFSD 2026",                  preco: 47.0 },
-  apostilaCfo:    { nome: "Apostila CFO",                        preco: 57.0 },
-  aovivo:         { nome: "Aulas ao Vivo e Mentoria — SD/PMBA",   preco: 497.0 },
+  mensal:         { nome: "Assinatura Mensal",                    preco: 49.9,  dias: 30 },
+  trimestral:     { nome: "Assinatura Trimestral",               preco: 119.9, dias: 90 },
+  anual:          { nome: "Assinatura Anual",                    preco: 297.0, dias: 365 },
+  cfo:            { nome: "Curso CFO PMBA — Completo",            preco: 257.0, dias: 365 },
+  sd:             { nome: "Curso SD PMBA — Completo",             preco: 210.0, dias: 365 },
+  basica:         { nome: "Curso Matemática Básica",             preco: 96.0,  dias: 365 },
+  correios:       { nome: "Curso Correios",                      preco: 140.0, dias: 365 },
+  apostilaCfsd:   { nome: "Apostila CFSD 2026",                  preco: 47.0,  dias: 365 },
+  apostilaCfo:    { nome: "Apostila CFO",                        preco: 57.0,  dias: 365 },
+  aovivo:         { nome: "Aulas ao Vivo e Mentoria — SD/PMBA",   preco: 497.0, dias: 365 },
 };
 
 /* ── Cupons ── */
@@ -629,6 +632,139 @@ function aplicarCupom(preco, cupom) {
   if (!cupom) return preco;
   let p = cupom.tipo === "fixo" ? preco - cupom.valor : preco * (1 - cupom.valor / 100);
   return Math.max(0, Math.round(p * 100) / 100);
+}
+
+/* ── Acesso: período e cursos ──────────────────────────────────
+   somarPeriodo: estende a validade. Se ainda houver acesso futuro,
+   SOMA os dias ao fim atual (não perde o que falta); se já expirou
+   ou não havia prazo, conta a partir de agora. */
+function somarPeriodo(expiresAtAtual, dias) {
+  const agora = Date.now();
+  let base = agora;
+  if (expiresAtAtual) {
+    const t = new Date(expiresAtAtual).getTime();
+    if (!isNaN(t) && t > agora) base = t; // ainda válido → soma ao restante
+  }
+  return new Date(base + (dias || 365) * 86400000).toISOString();
+}
+function cursoInclui(cursoAtual, produtoNome) {
+  if (!cursoAtual || !produtoNome) return false;
+  const a = cursoAtual.toLowerCase();
+  const b = String(produtoNome).toLowerCase();
+  if (a.includes("todos")) return true;           // acesso total cobre tudo
+  return a.includes(b) || b.includes(a);          // casa nos dois sentidos
+}
+function mesclarCurso(cursoAtual, produtoNome) {
+  if (!produtoNome) return cursoAtual || "";
+  if (!cursoAtual) return produtoNome;
+  if (cursoInclui(cursoAtual, produtoNome)) return cursoAtual;
+  return cursoAtual + " + " + produtoNome;
+}
+function fmtDataBR(iso) {
+  try { return new Date(iso).toLocaleDateString("pt-BR"); } catch { return ""; }
+}
+
+/* Envia o e-mail de acesso (novo cadastro OU renovação). Best-effort:
+   só envia se houver SMTP e e-mail do comprador. Retorna true/false. */
+async function enviarEmailAcesso(venda, req) {
+  const mailer = getMailer();
+  if (!mailer || !venda.email) return false;
+  const base = baseUrl(req);
+  const nomeProd = String(venda.produtoNome || "seu produto").replace(/[<>]/g, "");
+  let assunto, corpo;
+  if (venda.tipoAcesso === "estendido") {
+    const ate = fmtDataBR(venda.novoExpiraEm);
+    assunto = "Acesso renovado — Professor Leão";
+    corpo = `<h2 style="color:#0A1628">Pagamento aprovado! 🎉</h2>
+      <p>Sua compra de <b>${nomeProd}</b> foi confirmada. Como você já é aluno, somamos o período à sua conta — seu acesso vai até <b>${ate}</b>.</p>
+      <p style="text-align:center;margin:24px 0"><a href="${base}/login.html" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Entrar na Área do Aluno</a></p>`;
+  } else {
+    const link = base + "/cadastro.html?token=" + venda.conviteToken;
+    assunto = "Acesso liberado — Professor Leão";
+    corpo = `<h2 style="color:#0A1628">Pagamento aprovado! 🎉</h2>
+      <p>Sua compra de <b>${nomeProd}</b> foi confirmada. Crie seu acesso à plataforma:</p>
+      <p style="text-align:center;margin:24px 0"><a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar meu acesso</a></p>
+      <p style="font-size:12px;color:#8892a8">Se o botão não funcionar, copie e cole no navegador:<br>${link}</p>`;
+  }
+  try {
+    await mailer.sendMail({
+      from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`,
+      to: venda.email,
+      subject: assunto,
+      html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">${corpo}
+        <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p></div>`,
+    });
+    console.log(`[VENDA] e-mail de acesso enviado para ${venda.email} (${venda.tipoAcesso})`);
+    return true;
+  } catch (e) {
+    console.error("[VENDA] FALHA ao enviar e-mail para " + venda.email + ":", e.message);
+    return false;
+  }
+}
+
+/* Processa uma venda APROVADA (idempotente). Conta o cupom e, conforme
+   o e-mail já seja de aluno ou não:
+   - aluno existente → SOMA o período de acesso (evita duplicar conta);
+   - e-mail novo     → gera convite de cadastro com validade do produto.
+   Usado pelo webhook E pela página de sucesso (que também confirma o
+   pagamento no MP), para que o acesso nunca dependa só do e-mail. */
+async function processarVendaAprovada(vendaId, req) {
+  const vendas = readVendas();
+  const venda = vendas.find((v) => v.id === vendaId);
+  if (!venda) return null;
+  if (venda.status !== "approved") return { status: venda.status, venda };
+  if (venda.processada) {
+    return {
+      status: "approved", processada: true, tipoAcesso: venda.tipoAcesso,
+      conviteToken: venda.conviteToken || null, novoExpiraEm: venda.novoExpiraEm || null,
+      produtoNome: venda.produtoNome,
+    };
+  }
+  venda.processada = true; // trava de idempotência (antes de qualquer await)
+
+  if (venda.cupom) {
+    const cupons = readCupons();
+    const c = cupons.find((x) => x.codigo.toUpperCase() === venda.cupom.toUpperCase());
+    if (c) { c.usos = (c.usos || 0) + 1; writeCupons(cupons); }
+  }
+
+  const prod = PRODUTOS_LOJA[venda.produto] || {};
+  const dias = prod.dias || 365;
+  const users = readUsers();
+  const existente = venda.email
+    ? users.find((u) => u.email.toLowerCase() === venda.email.toLowerCase())
+    : null;
+
+  if (existente) {
+    existente.expiresAt = somarPeriodo(existente.expiresAt, dias);
+    existente.active = true;
+    existente.curso = mesclarCurso(existente.curso, venda.produtoNome);
+    venda.tipoAcesso = "estendido";
+    venda.usuarioId = existente.id;
+    venda.novoExpiraEm = existente.expiresAt;
+    writeUsers(users);
+    console.log(`[VENDA] Aprovada (${venda.produtoNome}) — aluno EXISTENTE ${venda.email}; acesso somado até ${fmtDataBR(existente.expiresAt)}`);
+  } else {
+    const token = crypto.randomBytes(16).toString("hex");
+    const invites = readInvites();
+    invites.push({
+      id: "i" + Date.now().toString(36),
+      token, email: venda.email || "", curso: venda.produtoNome,
+      accessExpiresAt: new Date(Date.now() + dias * 86400000).toISOString(),
+      createdAt: new Date().toISOString(), usedAt: null, origem: "compra:" + venda.id,
+    });
+    writeInvites(invites);
+    venda.tipoAcesso = "novo";
+    venda.conviteToken = token;
+    console.log(`[VENDA] Aprovada (${venda.produtoNome}) — convite ${token} para ${venda.email || "sem e-mail"}`);
+  }
+  writeVendas(vendas);
+  await enviarEmailAcesso(venda, req);
+  return {
+    status: "approved", processada: false, tipoAcesso: venda.tipoAcesso,
+    conviteToken: venda.conviteToken || null, novoExpiraEm: venda.novoExpiraEm || null,
+    produtoNome: venda.produtoNome,
+  };
 }
 
 /* Cupom permanente de indicação: 10% para quem indica E para quem é
@@ -763,6 +899,29 @@ app.get("/api/banco/imagem/:id", requireAuthApi, (req, res) => {
    Cria uma preferência de pagamento e devolve a URL do checkout
    HOSPEDADO pelo Mercado Pago (o cartão é digitado lá, nunca aqui).
    Requer MP_ACCESS_TOKEN nas variáveis de ambiente. */
+/* Verifica, ANTES do pagamento, se o e-mail já é de aluno e se já tem o
+   produto — para avisar sobre duplicidade. Se o aluno seguir mesmo
+   assim, o período é somado (ver processarVendaAprovada). Responde só
+   booleans + a data de validade (do próprio comprador). */
+app.post("/api/checkout/verificar", rateLimit({ janelaMs: 60000, max: 15, escopo: "verificar" }), (req, res) => {
+  const produto = String((req.body && req.body.produto) || "");
+  const email = String((req.body && req.body.email) || "").trim().toLowerCase();
+  const prod = PRODUTOS_LOJA[produto];
+  if (!prod) return res.status(400).json({ success: false, message: "Produto inválido." });
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.json({ success: true, jaAluno: false });
+  const u = readUsers().find((x) => x.email.toLowerCase() === email);
+  if (!u || u.role === "admin") return res.json({ success: true, jaAluno: false });
+  res.json({
+    success: true,
+    jaAluno: true,
+    ativo: isAccessValid(u),
+    expiraEm: u.expiresAt || null,
+    jaTemProduto: cursoInclui(u.curso, prod.nome),
+    diasProduto: prod.dias || 365,
+    produtoNome: prod.nome,
+  });
+});
+
 app.post("/api/checkout", rateLimit({ janelaMs: 60000, max: 20, escopo: "checkout" }), async (req, res) => {
   const { produto, cupom, nome, email } = req.body || {};
   const prod = PRODUTOS_LOJA[produto];
@@ -846,48 +1005,64 @@ app.post("/api/webhook/mercadopago", async (req, res) => {
     if (pay.payer && pay.payer.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(pay.payer.email) && !venda.email) {
       venda.email = pay.payer.email;
     }
-
-    if (pay.status === "approved" && !venda.processada) {
-      venda.processada = true;
-      /* contabiliza o uso do cupom */
-      if (venda.cupom) {
-        const cupons = readCupons();
-        const c = cupons.find((x) => x.codigo.toUpperCase() === venda.cupom.toUpperCase());
-        if (c) { c.usos = (c.usos || 0) + 1; writeCupons(cupons); }
-      }
-      /* gera um convite de cadastro e envia por e-mail (se SMTP) */
-      try {
-        const token = crypto.randomBytes(16).toString("hex");
-        const invites = readInvites();
-        invites.push({
-          id: "i" + Date.now().toString(36),
-          token, email: venda.email || "", curso: venda.produtoNome,
-          createdAt: new Date().toISOString(), usedAt: null, origem: "compra:" + venda.id,
-        });
-        writeInvites(invites);
-        venda.conviteToken = token;
-        const mailer = getMailer();
-        if (mailer && venda.email) {
-          const link = baseUrl(req) + "/cadastro.html?token=" + token;
-          await mailer.sendMail({
-            from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`,
-            to: venda.email,
-            subject: "Acesso liberado — Professor Leão",
-            html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">
-              <h2 style="color:#0A1628">Pagamento aprovado! 🎉</h2>
-              <p>Sua compra de <b>${String(venda.produtoNome).replace(/[<>]/g, "")}</b> foi confirmada. Crie seu acesso à plataforma:</p>
-              <p style="text-align:center;margin:24px 0"><a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar meu acesso</a></p>
-              <p style="font-size:12px;color:#8892a8">🦁 Professor Leão · www.professorleao.com</p>
-            </div>`,
-          }).catch((e) => console.error("[VENDA] e-mail:", e.message));
-        }
-        console.log(`[VENDA] Pagamento aprovado (${venda.produtoNome}) — convite ${token} para ${venda.email || "sem e-mail"}`);
-      } catch (e) { console.error("[VENDA] convite:", e.message); }
-    }
     writeVendas(vendas);
+
+    if (pay.status === "approved") {
+      await processarVendaAprovada(vendaId, req);
+    }
   } catch (err) {
     console.error("[WEBHOOK] Erro:", err.message);
   }
+});
+
+/* Status da compra para a página de sucesso. Confirma o pagamento
+   direto no MP (não depende só do webhook) e processa a liberação de
+   acesso. Devolve o link de cadastro (conta nova) ou a renovação
+   (aluno existente). Assim o acesso NUNCA fica preso só no e-mail. */
+app.get("/api/compra/status", rateLimit({ janelaMs: 60000, max: 40, escopo: "compra-status" }), async (req, res) => {
+  const ref = String(req.query.ref || "").trim();
+  if (!ref) return res.status(400).json({ success: false, message: "Referência ausente." });
+  const venda = readVendas().find((v) => v.id === ref);
+  if (!venda) return res.json({ success: true, status: "desconhecida" });
+
+  /* ainda não aprovada? pergunta ao MP (caso o webhook tenha atrasado) */
+  if (venda.status !== "approved" && process.env.MP_ACCESS_TOKEN) {
+    try {
+      const r = await fetch(
+        "https://api.mercadopago.com/v1/payments/search?external_reference=" + encodeURIComponent(ref) + "&sort=date_created&criteria=desc",
+        { headers: { Authorization: "Bearer " + process.env.MP_ACCESS_TOKEN } }
+      );
+      const data = await r.json();
+      const pago = (data.results || []).find((p) => p.status === "approved") || (data.results || [])[0];
+      if (pago) {
+        const vendas = readVendas();
+        const v = vendas.find((x) => x.id === ref);
+        if (v) {
+          v.status = pago.status;
+          v.mpPaymentId = pago.id;
+          if (pago.status === "approved" && !v.pagoEm) v.pagoEm = new Date().toISOString();
+          if (pago.payer && pago.payer.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(pago.payer.email) && !v.email) {
+            v.email = pago.payer.email;
+          }
+          writeVendas(vendas);
+        }
+      }
+    } catch (e) { console.error("[COMPRA-STATUS] MP:", e.message); }
+  }
+
+  const atual = readVendas().find((v) => v.id === ref);
+  if (atual && atual.status === "approved") {
+    const r = await processarVendaAprovada(ref, req);
+    return res.json({
+      success: true, status: "approved",
+      tipoAcesso: r ? r.tipoAcesso : atual.tipoAcesso,
+      conviteToken: r ? r.conviteToken : atual.conviteToken || null,
+      novoExpiraEm: r ? r.novoExpiraEm : atual.novoExpiraEm || null,
+      produtoNome: atual.produtoNome,
+      temEmail: !!atual.email,
+    });
+  }
+  return res.json({ success: true, status: (atual && atual.status) || "pendente", produtoNome: atual && atual.produtoNome });
 });
 
 /* ── Cadastro via convite único ─────────────────────────────── */

@@ -235,7 +235,7 @@ let timerSec=25, timerInterval=null, timerStarted;
 let _advanceTimer=null,_advanced=false;
 let answering=false;
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 35 : diff === 'facil' ? 70 : 50; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 45 : diff === 'facil' ? 80 : 60; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try{

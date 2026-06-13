@@ -248,7 +248,7 @@ let timerSec=30, timerInterval=null, timerStarted;
 let answering=false, resPeriod='daily';
 let _advanceTimer=null, _advanced=false;
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 25 : diff === 'facil' ? 55 : 40; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 42 : diff === 'facil' ? 70 : 55; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try {

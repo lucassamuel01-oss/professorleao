@@ -52,6 +52,13 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .q-card{background:var(--navy-2);border:1px solid rgba(6,182,212,.2);border-radius:20px;padding:28px 24px;margin-bottom:16px;text-align:center}
 .q-tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:12px}
 .q-func{font-family:var(--fh);font-size:26px;font-weight:900;color:var(--al);letter-spacing:1px;margin:10px 0;padding:14px;background:var(--navy-3);border-radius:12px;border:1px solid rgba(6,182,212,.2)}
+.q-graph{display:flex;justify-content:center;margin:6px 0 2px}
+.q-graph svg{max-width:260px;width:100%;height:auto;animation:gIn .4s ease}
+@keyframes gIn{from{opacity:0}to{opacity:1}}
+.q-graph .curve{stroke-dasharray:1400;stroke-dashoffset:1400;animation:drawCurve 1.15s .15s ease forwards}
+@keyframes drawCurve{to{stroke-dashoffset:0}}
+.q-graph .ptmark{animation:ptPulse 1.4s ease-in-out infinite}
+@keyframes ptPulse{0%,100%{opacity:.4}50%{opacity:1}}
 .q-text{font-size:15px;color:rgba(255,255,255,.75);line-height:1.5;margin-top:10px}
 .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .opt-btn{padding:16px 12px;border-radius:12px;border:2px solid rgba(6,182,212,.18);background:var(--navy-3);color:var(--white);font-family:var(--fh);font-size:18px;font-weight:900;cursor:pointer;transition:.2s;text-align:center;user-select:none;line-height:1.3}
@@ -154,6 +161,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="q-card">
       <div class="q-tipo" id="qTipo"></div>
       <div class="q-func" id="qFunc"></div>
+      <div class="q-graph" id="qGraph"></div>
       <div class="q-text" id="qText"></div>
     </div>
     <div class="opt-grid" id="optGrid"></div>
@@ -236,7 +244,7 @@ let timerSec=25, timerInterval=null, timerStarted;
 let _advanceTimer=null,_advanced=false;
 let answering=false;
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 30 : diff === 'facil' ? 60 : 45; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 45 : diff === 'facil' ? 75 : 58; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try{
@@ -276,27 +284,27 @@ function startGame(){
     if(d==='facil'){
       const a=_ri(2,5), b=_ri(1,9), x0=_ri(2,6), v=a*x0+b;
       const o=_mkOps(v,()=>_pk([v-1,v+1,v-a,v+a,a*x0-b].filter(x=>x!==v)));
-      return {diff:d,tipo:'Função 1° Grau — Valor',func:_fmtLin(a,b),texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g,expl:'Substitua x por '+x0+': f('+x0+') = '+a+'×'+x0+(b>=0?' + '+b:' − '+(-b))+' = '+v};
+      return {diff:d,tipo:'Função 1° Grau — Valor',plot:{k:'lin',a:a,b:b},func:_fmtLin(a,b),texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g,expl:'Substitua x por '+x0+': f('+x0+') = '+a+'×'+x0+(b>=0?' + '+b:' − '+(-b))+' = '+v};
     }
     if(d==='normal'){
       if(Math.random()<0.5){
         const a=_ri(2,6), k=_ri(2,8), c=a*k;
         const o=_mkOps('x = '+k,()=>'x = '+_pk([k-1,k+1,c,Math.round(c/2),a].filter(x=>x!==k)));
-        return {diff:d,tipo:'Zero da Função',func:'f(x) = '+a+'x − '+c,texto:'Encontre o zero da função:',ops:o.ops,g:o.g,expl:'Zero é onde f(x)=0: '+a+'x = '+c+', então x = '+c+'/'+a+' = '+k};
+        return {diff:d,tipo:'Zero da Função',plot:{k:'lin',a:a,b:-c},func:'f(x) = '+a+'x − '+c,texto:'Encontre o zero da função:',ops:o.ops,g:o.g,expl:'Zero é onde f(x)=0: '+a+'x = '+c+', então x = '+c+'/'+a+' = '+k};
       }
       const r1=_ri(1,5), r2=_ri(r1+1,8), b=r1+r2, c=r1*r2, x0=_ri(0,3), v=x0*x0-b*x0+c;
       const o=_mkOps(v,()=>_pk([v-1,v+1,v+x0,v-b,c].filter(x=>x!==v)));
-      return {diff:d,tipo:'Função 2° Grau — Valor',func:'f(x) = x² − '+b+'x + '+c,texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g,expl:'f('+x0+') = '+x0+'² − '+b+'×'+x0+' + '+c+' = '+v};
+      return {diff:d,tipo:'Função 2° Grau — Valor',plot:{k:'quad',a:1,b:-b,c:c},func:'f(x) = x² − '+b+'x + '+c,texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g,expl:'f('+x0+') = '+x0+'² − '+b+'×'+x0+' + '+c+' = '+v};
     }
     if(Math.random()<0.5){
       const r1=_ri(1,5), r2=_ri(r1+1,9), b=r1+r2, c=r1*r2;
       const correto=r1+' e '+r2;
       const o=_mkOps(correto,()=>_pk([(r1-1)+' e '+(r2+1),(-r1)+' e '+(-r2),r1+' e '+(r2+1),(r1+1)+' e '+r2].filter(x=>x!==correto)));
-      return {diff:d,tipo:'Raízes da Função',func:'f(x) = x² − '+b+'x + '+c,texto:'Quais são as raízes?',ops:o.ops,g:o.g,expl:'Soma das raízes = '+b+' e produto = '+c+'. Logo as raízes são '+r1+' e '+r2};
+      return {diff:d,tipo:'Raízes da Função',plot:{k:'quad',a:1,b:-b,c:c},func:'f(x) = x² − '+b+'x + '+c,texto:'Quais são as raízes?',ops:o.ops,g:o.g,expl:'Soma das raízes = '+b+' e produto = '+c+'. Logo as raízes são '+r1+' e '+r2};
     }
     const xv=_ri(1,6), b=2*xv, c=_ri(1,9), correto='x = '+xv;
     const o=_mkOps(correto,()=>'x = '+_pk([xv-1,xv+1,-xv,b,2*xv+1].filter(x=>x!==xv)));
-    return {diff:d,tipo:'Vértice da Parábola',func:'f(x) = x² − '+b+'x + '+c,texto:'Qual o x do vértice (xᵥ = −b/2a)?',ops:o.ops,g:o.g,expl:'xᵥ = −b/2a = '+b+'/2 = '+xv};
+    return {diff:d,tipo:'Vértice da Parábola',plot:{k:'quad',a:1,b:-b,c:c},func:'f(x) = x² − '+b+'x + '+c,texto:'Qual o x do vértice (xᵥ = −b/2a)?',ops:o.ops,g:o.g,expl:'xᵥ = −b/2a = '+b+'/2 = '+xv};
   }
 
   const pool=montarPool(diff);
@@ -316,11 +324,33 @@ function renderQuestion(){
   document.getElementById('hudQ').textContent=qIdx+1;
   document.getElementById('qTipo').textContent=q.tipo;
   document.getElementById('qFunc').textContent=q.func;
+  renderGraph(q);
   document.getElementById('qText').innerHTML=q.texto;
   const grid=document.getElementById('optGrid');
   grid.innerHTML=q.ops.map((op,i)=>`<button class="opt-btn" data-idx="${i}" onclick="selectOpt(this,${i})">${op}</button>`).join('');
   document.getElementById('btnAnswer').disabled=true;
   startTimer();
+}
+
+/* desenha o gráfico da função (eixos + curva que se "desenha") */
+function renderGraph(q){
+  const el=document.getElementById('qGraph'); if(!el) return;
+  const p=q&&q.plot; if(!p){ el.innerHTML=''; return; }
+  const W=240,H=150,mx=20,my=12, x0=-2,x1=8, N=64;
+  const f = p.k==='lin' ? (x=>p.a*x+p.b) : (x=>p.a*x*x+p.b*x+p.c);
+  const ys=[]; for(let i=0;i<=N;i++){ ys.push(f(x0+(x1-x0)*i/N)); }
+  let ymin=Math.min(0,...ys), ymax=Math.max(0,...ys); if(ymin===ymax){ymin-=1;ymax+=1;}
+  const padd=(ymax-ymin)*0.12; ymin-=padd; ymax+=padd;
+  const sx=x=> mx+(x-x0)/(x1-x0)*(W-2*mx);
+  const sy=y=> (H-my)-(y-ymin)/(ymax-ymin)*(H-2*my);
+  const ax=sy(0), ay=sx(0);
+  let d=''; for(let i=0;i<=N;i++){ const x=x0+(x1-x0)*i/N; d+=(i?'L':'M')+sx(x).toFixed(1)+' '+sy(f(x)).toFixed(1)+' '; }
+  let mark='';
+  if(p.k==='quad'){ const xv=-p.b/(2*p.a), yv=f(xv); if(xv>=x0&&xv<=x1) mark='<circle cx="'+sx(xv).toFixed(1)+'" cy="'+sy(yv).toFixed(1)+'" r="4" fill="#fbbf24" class="ptmark"/>'; }
+  el.innerHTML='<svg viewBox=\"0 0 '+W+' '+H+'\">'+
+    '<line x1=\"'+mx+'\" y1=\"'+ax+'\" x2=\"'+(W-mx)+'\" y2=\"'+ax+'\" stroke=\"#3a4a6b\" stroke-width=\"1\"/>'+
+    '<line x1=\"'+ay+'\" y1=\"'+my+'\" x2=\"'+ay+'\" y2=\"'+(H-my)+'\" stroke=\"#3a4a6b\" stroke-width=\"1\"/>'+
+    '<path d=\"'+d+'\" fill=\"none\" stroke=\"#22d3ee\" stroke-width=\"2.5\" stroke-linejoin=\"round\" class=\"curve\"/>'+mark+'</svg>';
 }
 
 function selectOpt(el,idx){

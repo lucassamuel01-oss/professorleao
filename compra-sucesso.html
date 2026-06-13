@@ -19,9 +19,17 @@
     .status{display:inline-block;font-family:var(--font-h);font-weight:800;font-size:12px;letter-spacing:.5px;padding:5px 14px;border-radius:99px;margin-bottom:18px}
     .ok{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.4);color:#86efac}
     .pend{background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.4);color:#fbbf24}
-    a.btn{display:inline-block;margin-top:8px;padding:13px 26px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-h);font-weight:800;font-size:14px;text-decoration:none}
+    .err{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.4);color:#fca5a5}
+    a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:8px;padding:15px 26px;border-radius:12px;background:var(--accent);color:#fff;font-family:var(--font-h);font-weight:800;font-size:15px;text-decoration:none;border:none;cursor:pointer;transition:.18s;box-shadow:0 6px 22px rgba(74,108,247,.4)}
+    a.btn:hover,button.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+    button.btn:disabled{opacity:.6;cursor:default;transform:none}
+    a.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.18);color:#c8d0e4;font-size:13px;padding:12px 22px;box-shadow:none;margin-top:10px}
     a.wa{color:#86efac;font-weight:700;text-decoration:none}
+    .spin{width:34px;height:34px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--accent-light);border-radius:50%;margin:6px auto 14px;animation:rot .8s linear infinite}
+    @keyframes rot{to{transform:rotate(360deg)}}
     .nota{font-size:12.5px;color:var(--silver);margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+    .cta{margin:6px 0 4px}
+    .hint{font-size:12px;margin-top:10px;min-height:16px}
   </style>
 </head>
 <body>
@@ -30,23 +38,114 @@
     <div class="ico" id="ico">🎉</div>
     <div class="status ok" id="status">Pagamento recebido</div>
     <h1 id="titulo">Compra confirmada!</h1>
-    <p id="msg">Obrigado pela confiança! Assim que o pagamento for aprovado, você recebe no seu e-mail o link para criar o acesso à plataforma.</p>
-    <p style="font-size:13px">Já tem acesso? <a class="wa" href="login.html" style="color:var(--accent-light)">Entrar na Área do Aluno →</a></p>
-    <a class="btn" href="index.html">Voltar ao site</a>
-    <div class="nota">Não recebeu o e-mail em alguns minutos? Verifique o spam ou fale com o professor:
+    <p id="msg">Estamos confirmando seu pagamento…</p>
+    <div class="cta" id="cta"></div>
+    <p style="font-size:13px" id="entrarLinha">Já tem acesso? <a class="wa" href="login.html" style="color:var(--accent-light)">Entrar na Área do Aluno →</a></p>
+    <div class="nota">Problemas com o acesso? Fale com o professor:
       <a class="wa" href="https://wa.me/5577999229281" target="_blank" rel="noopener">WhatsApp (77) 99922-9281</a>.</div>
   </div>
 
   <script>
-    /* o Mercado Pago retorna ?status=approved|pending|… na URL */
-    var st = new URLSearchParams(location.search).get('status') || new URLSearchParams(location.search).get('collection_status');
-    if (st === 'pending' || st === 'in_process') {
-      document.getElementById('ico').textContent = '⏳';
-      var badge = document.getElementById('status');
-      badge.className = 'status pend';
-      badge.textContent = 'Pagamento em processamento';
-      document.getElementById('titulo').textContent = 'Quase lá!';
-      document.getElementById('msg').textContent = 'Seu pagamento está sendo processado (comum no boleto e em alguns cartões). Assim que for aprovado, você recebe o acesso por e-mail automaticamente.';
+    'use strict';
+    var qs = new URLSearchParams(location.search);
+    var ref = qs.get('external_reference') || qs.get('ref') || '';
+    var stUrl = qs.get('status') || qs.get('collection_status') || '';
+
+    var $ = function (id) { return document.getElementById(id); };
+    function badge(cls, txt) { var b = $('status'); b.className = 'status ' + cls; b.textContent = txt; }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+    /* botão de atualizar status — sempre visível enquanto processa */
+    function ctaProcessando() {
+      return '<button class="btn" id="btnCheck" onclick="checarManual()">🔄 Já paguei — atualizar status</button>' +
+             '<p class="hint" id="checkHint" style="color:#8892B4">Pagou via Pix? A confirmação leva alguns segundos — a página também atualiza sozinha.</p>';
+    }
+
+    function viewAprovadoNovo(d) {
+      $('ico').textContent = '🎉'; badge('ok', 'Pagamento aprovado');
+      $('titulo').textContent = 'Acesso liberado!';
+      $('msg').innerHTML = 'Sua compra de <b>' + esc(d.produtoNome || 'curso') + '</b> foi confirmada. Crie seu acesso à plataforma agora:';
+      $('cta').innerHTML = '<a class="btn" href="cadastro.html?token=' + encodeURIComponent(d.conviteToken) + '">Criar meu acesso →</a>' +
+        (d.temEmail ? '<p class="hint" style="color:#8892B4">Também enviamos este link para o seu e-mail.</p>' : '');
+      $('entrarLinha').style.display = 'none';
+    }
+    function viewAprovadoEstendido(d) {
+      $('ico').textContent = '🎉'; badge('ok', 'Pagamento aprovado');
+      $('titulo').textContent = 'Acesso renovado!';
+      var ate = d.novoExpiraEm ? new Date(d.novoExpiraEm).toLocaleDateString('pt-BR') : '';
+      $('msg').innerHTML = 'Você já é aluno — somamos o período à sua conta.' + (ate ? ' Seu acesso vai até <b>' + ate + '</b>.' : '');
+      $('cta').innerHTML = '<a class="btn" href="login.html">Entrar na Área do Aluno →</a>';
+      $('entrarLinha').style.display = 'none';
+    }
+    function viewPendente() {
+      $('ico').innerHTML = '<div class="spin"></div>'; badge('pend', 'Processando pagamento');
+      $('titulo').textContent = 'Quase lá!';
+      $('msg').textContent = 'Estamos confirmando seu pagamento. Assim que for aprovado, o acesso aparece aqui — sem precisar do e-mail.';
+      $('cta').innerHTML = ctaProcessando();
+      $('entrarLinha').style.display = '';
+    }
+    function viewRejeitado() {
+      $('ico').textContent = '❌'; badge('err', 'Pagamento não aprovado');
+      $('titulo').textContent = 'Pagamento não concluído';
+      $('msg').textContent = 'Seu pagamento não foi aprovado. Você pode tentar novamente.';
+      $('cta').innerHTML = '<a class="btn" href="planos.html">Tentar novamente →</a>';
+      $('entrarLinha').style.display = '';
+    }
+    function viewFallback() {
+      $('ico').textContent = '🎉'; badge('ok', 'Pagamento recebido');
+      $('titulo').textContent = 'Compra confirmada!';
+      $('msg').textContent = 'Obrigado pela confiança! Assim que o pagamento for aprovado, você recebe no seu e-mail o link para criar o acesso à plataforma.';
+      $('cta').innerHTML = ref ? ctaProcessando() : '';
+      $('entrarLinha').style.display = '';
+    }
+
+    /* ── consulta o status no servidor (que confirma direto no Mercado Pago) ── */
+    async function consultar() {
+      if (!ref) return null;
+      try {
+        var r = await fetch('/api/compra/status?ref=' + encodeURIComponent(ref), { credentials: 'same-origin' });
+        return await r.json();
+      } catch (e) { return null; }
+    }
+    function aplicar(d) {
+      if (d && d.status === 'approved') {
+        clearTimeout(timer);
+        if (d.tipoAcesso === 'estendido') viewAprovadoEstendido(d);
+        else if (d.conviteToken) viewAprovadoNovo(d);
+        else viewAprovadoEstendido(d);
+        return true;
+      }
+      if (d && d.status === 'rejected') { clearTimeout(timer); viewRejeitado(); return true; }
+      if (d && d.status === 'desconhecida') { clearTimeout(timer); viewFallback(); return true; }
+      return false; // ainda pendente
+    }
+
+    var tentativas = 0, MAX = 40, timer = null;
+    async function poll() {
+      var d = await consultar();
+      if (aplicar(d)) return;
+      tentativas++;
+      if (tentativas >= MAX) { return; } // para o auto-poll, mas o botão manual continua valendo
+      timer = setTimeout(poll, 4000);
+    }
+    async function checarManual() {
+      var b = $('btnCheck'); var hint = $('checkHint');
+      if (b) { b.disabled = true; b.textContent = 'Verificando…'; }
+      if (hint) { hint.style.color = '#8892B4'; hint.textContent = 'Consultando o Mercado Pago…'; }
+      var d = await consultar();
+      if (aplicar(d)) return; // aprovado/rejeitado → troca a tela
+      b = $('btnCheck'); hint = $('checkHint');
+      if (b) { b.disabled = false; b.textContent = '🔄 Atualizar status'; }
+      if (hint) { hint.style.color = '#fbbf24'; hint.textContent = 'Ainda processando. Se você já pagou, aguarde alguns segundos e toque novamente.'; }
+    }
+
+    if (!ref) {
+      viewFallback();
+    } else if (stUrl === 'rejected' || stUrl === 'cancelled') {
+      viewRejeitado();
+    } else {
+      viewPendente();
+      poll();
     }
   </script>
 </body>

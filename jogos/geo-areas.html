@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Geometria: Correspondência de Áreas – Professor Leão</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0A1628;--navy-2:#0F1E38;--navy-3:#152545;--navy-4:#1B2E6B;
+  --accent:#f59e0b;--al:#fcd34d;
+  --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;--white:#fff;--sil:#8892B4;
+  --fh:'Montserrat',sans-serif;--fb:'Open Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--navy)}
+body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(245,158,11,.18);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar__left{display:flex;align-items:center;gap:10px}
+.topbar__logo{font-family:var(--fh);font-size:14px;font-weight:800;letter-spacing:1px}
+.topbar__logo span{color:var(--al)}
+.topbar__tag{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--al)}
+.btn-back{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center}
+.btn-back:hover{color:var(--white)}
+.wrap{width:100%;max-width:720px;padding:24px 16px 60px;flex:1}
+.lobby{background:var(--navy-2);border:1px solid rgba(245,158,11,.15);border-radius:20px;padding:40px 32px;text-align:center}
+.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(245,158,11,.45))}
+.lobby__title{font-family:var(--fh);font-size:26px;font-weight:900;margin-bottom:8px}
+.lobby__sub{color:var(--sil);font-size:15px;margin-bottom:28px;line-height:1.55}
+.lobby__rules{background:var(--navy-3);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
+.lobby__rules h3{font-family:var(--fh);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--al);margin-bottom:10px}
+.rule-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--sil);margin-bottom:6px;line-height:1.4}
+.lobby__input{width:100%;max-width:320px;padding:13px 16px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(245,158,11,.2);color:var(--white);font-size:15px;outline:none;text-align:center;margin-bottom:8px;transition:.2s;display:block;margin-left:auto;margin-right:auto}
+.lobby__input:focus{border-color:var(--accent)}
+.lobby__input::placeholder{color:rgba(255,255,255,.2)}
+.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.diff-btn{padding:10px 18px;border-radius:8px;font-family:var(--fh);font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:var(--navy-3);color:var(--sil);cursor:pointer;transition:.2s;line-height:1.3;text-align:center}
+.diff-btn.active{border-color:var(--accent);background:rgba(245,158,11,.2);color:var(--white)}
+.diff-mult{font-size:10px;opacity:.7;display:block;margin-top:2px}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,#92400e,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(245,158,11,.35);margin-top:16px}
+.btn-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.hud__progress{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--sil)}
+.hud__progress strong{color:var(--white)}
+.hud__right{display:flex;align-items:center;gap:10px}
+.hud__score{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--al)}
+.hud__streak{display:flex;align-items:center;gap:4px;font-family:var(--fh);font-size:12px;font-weight:800;color:var(--warn);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:4px 10px;opacity:0;transition:.3s}
+.hud__streak.show{opacity:1}
+.hud__mult{font-family:var(--fh);font-size:11px;font-weight:800;padding:4px 9px;border-radius:20px;border:1px solid;opacity:.85}
+.timer-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:10px}
+.timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
+.helpline{text-align:center;font-size:12.5px;color:var(--sil);margin-bottom:12px}
+.last-match{min-height:20px;text-align:center;font-size:12.5px;color:#86efac;margin-bottom:10px;font-weight:600;transition:.2s}
+.match-board{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.match-col{display:flex;flex-direction:column;gap:10px}
+.col-h{font-family:var(--fh);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--sil);text-align:center;margin-bottom:2px}
+.mcard{background:var(--navy-2);border:2px solid rgba(245,158,11,.18);border-radius:14px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;user-select:none}
+.mcard.fig{padding:6px}
+.mcard.fig svg{width:100%;max-width:120px;height:auto}
+.mcard.val{padding:18px 8px;font-family:var(--fh);font-weight:900;font-size:18px;color:#fff;min-height:64px}
+.mcard:hover:not(.done){border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+.mcard.sel{border-color:var(--accent)!important;background:rgba(245,158,11,.2)!important;box-shadow:0 0 0 2px rgba(245,158,11,.4)}
+.mcard.done{border-color:var(--ok)!important;background:rgba(34,197,94,.14)!important;opacity:.65;cursor:default}
+.mcard.err{border-color:var(--err)!important;background:rgba(239,68,68,.18)!important;animation:shake .35s}
+.mcard.miss{border-color:var(--warn)!important;background:rgba(245,158,11,.12)!important}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.feedback{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(140px);width:calc(100% - 32px);max-width:520px;z-index:100;background:var(--navy-3);border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 16px 48px rgba(0,0,0,.6);transition:.35s cubic-bezier(.34,1.56,.64,1)}
+.feedback.show{transform:translateX(-50%) translateY(0)}
+.feedback.perfect{border-color:var(--ok);background:rgba(22,101,52,.4)}
+.feedback.wrong{border-color:var(--err);background:rgba(120,20,20,.3)}
+.feedback__icon{font-size:32px;flex-shrink:0}
+.feedback__text{flex:1}
+.feedback__title{font-family:var(--fh);font-size:14px;font-weight:800}
+.feedback__sub{font-size:12.5px;color:rgba(255,255,255,.72);margin-top:3px;line-height:1.5}
+.feedback__pts{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al);flex-shrink:0}
+.feedback.perfect .feedback__pts{color:#4ade80}
+.feedback.wrong .feedback__pts{color:#f87171}
+.result{background:var(--navy-2);border:1px solid rgba(245,158,11,.15);border-radius:20px;padding:36px 28px;text-align:center}
+.result__icon{font-size:72px;margin-bottom:12px;display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.result__title{font-family:var(--fh);font-size:26px;font-weight:900;margin-bottom:6px}
+.result__score{font-family:var(--fh);font-size:52px;font-weight:900;color:var(--al);line-height:1;margin:12px 0 2px}
+.result__raw{font-size:12px;color:var(--sil);margin-bottom:4px}
+.result__sub{font-size:14px;color:var(--sil);margin-bottom:24px}
+.result__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.result__stat{background:var(--navy-3);border-radius:10px;padding:14px}
+.result__stat-val{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al)}
+.result__stat-lbl{font-size:11px;color:var(--sil);margin-top:3px}
+.result__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.btn-replay{padding:13px 28px;border-radius:10px;font-family:var(--fh);font-weight:800;font-size:14px;background:linear-gradient(135deg,#92400e,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s}
+.btn-hub{padding:13px 24px;border-radius:10px;font-family:var(--fh);font-weight:700;font-size:14px;background:rgba(255,255,255,.07);color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s}
+.btn-hub:hover{color:var(--white)}
+.mini-rank{background:var(--navy-3);border-radius:14px;overflow:hidden}
+.mini-rank-head{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center}
+.mini-rank-head h3{font-family:var(--fh);font-size:13px;font-weight:800}
+.period-tabs{display:flex;gap:4px}
+.period-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--sil);border:1px solid transparent;transition:.2s}
+.period-tab.active{background:rgba(245,158,11,.2);border-color:rgba(245,158,11,.35);color:var(--al)}
+.rank-rows{padding:4px 0}
+.rrow{display:grid;grid-template-columns:30px 28px 1fr auto;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;transition:.2s}
+.rrow:hover{background:rgba(255,255,255,.04)}
+.rrow--self{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)}
+.rpos{font-family:var(--fh);font-size:12px;font-weight:800;text-align:center;color:var(--sil)}
+.rpos-1{color:#f59e0b}.rpos-2{color:#94a3b8}.rpos-3{color:#b87333}
+.rav{width:28px;height:28px;border-radius:50%;background:var(--navy-4);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:11px;font-weight:800;color:var(--al);flex-shrink:0}
+.rname{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rscore{font-family:var(--fh);font-size:14px;font-weight:900;color:var(--al);text-align:right}
+.rscore-1{color:#f59e0b}.rscore-2{color:#94a3b8}.rscore-3{color:#b87333}
+.rdiff{font-size:9px;opacity:.55;margin-top:1px}
+@media(max-width:480px){.result__grid{grid-template-columns:1fr 1fr}.mcard.val{font-size:16px;padding:14px 6px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
+    <div class="topbar__tag">📐 Áreas</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
+    <a href="../jogos.html" class="btn-back">← Arena</a>
+  </div>
+</header>
+<div class="wrap">
+  <div id="screenLobby">
+    <div class="lobby">
+      <span class="lobby__icon">📐</span>
+      <div class="lobby__title">Correspondência de Áreas</div>
+      <div class="lobby__sub">Geometria visual e interativa!<br/>Ligue cada <b>figura</b> à sua <b>área</b> correta. A cada acerto, a fórmula aparece.</div>
+      <div class="lobby__rules">
+        <h3>📐 Como jogar — ligar pares</h3>
+        <div class="rule-item">👆 <span>Toque numa <strong>figura</strong> e depois na <strong>área</strong> correspondente</span></div>
+        <div class="rule-item">📏 <span>Quadrado, retângulo, triângulo, círculo, paralelogramo, trapézio</span></div>
+        <div class="rule-item">✅ <span>Par certo = <strong>+60 pts</strong> + bônus de sequência · tabuleiro limpo = bônus</span></div>
+        <div class="rule-item">💡 <span>Cada acerto revela a <strong>fórmula e o cálculo</strong></span></div>
+      </div>
+      <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
+      <div class="diff-row">
+        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">3 pares · ×0.7</span></button>
+        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">4 pares · ×1.0</span></button>
+        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">5 pares · ×1.5</span></button>
+        <button class="diff-btn"        data-diff="treino"  onclick="setDiff(this)">🎓 Treino<span class="diff-mult">sem tempo · ×0.5</span></button>
+      </div>
+      <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
+    </div>
+  </div>
+
+  <div id="screenGame" style="display:none">
+    <div class="hud">
+      <div class="hud__progress">Rodada <strong id="hudQ">1</strong>/6</div>
+      <div class="hud__right">
+        <div class="hud__streak" id="hudStreak">🔥 ×<span id="streakNum">0</span></div>
+        <div class="hud__mult" id="hudMult"></div>
+        <div class="hud__score" id="hudScore">0</div>
+      </div>
+    </div>
+    <div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div>
+    <div class="helpline">Toque numa figura e depois na sua área 👇</div>
+    <div class="last-match" id="lastMatch"></div>
+    <div class="match-board">
+      <div class="match-col"><div class="col-h">Figuras</div><div id="colFig" style="display:flex;flex-direction:column;gap:10px"></div></div>
+      <div class="match-col"><div class="col-h">Áreas</div><div id="colVal" style="display:flex;flex-direction:column;gap:10px"></div></div>
+    </div>
+  </div>
+
+  <div id="screenResult" style="display:none">
+    <div class="result">
+      <span class="result__icon" id="resIcon">🏆</span>
+      <div class="result__title" id="resTitle">Jogo Finalizado!</div>
+      <div class="result__score" id="resScore">0</div>
+      <div class="result__raw" id="resRaw"></div>
+      <div class="result__sub" id="resSub"></div>
+      <div class="result__grid">
+        <div class="result__stat"><div class="result__stat-val" id="rsAcertos">0</div><div class="result__stat-lbl">Pares certos</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsAcc">0%</div><div class="result__stat-lbl">Precisão</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsStreak">0</div><div class="result__stat-lbl">Streak máx</div></div>
+      </div>
+      <div class="result__actions">
+        <button class="btn-replay" onclick="startGame()">↺ Jogar Novamente</button>
+        <button class="btn-hub" onclick="location.href='../jogos.html'">← Arena</button>
+      </div>
+      <div class="mini-rank">
+        <div class="mini-rank-head"><h3>🏆 Ranking</h3>
+          <div class="period-tabs">
+            <div class="period-tab active" onclick="setResPeriod(this,'daily')">Hoje</div>
+            <div class="period-tab" onclick="setResPeriod(this,'weekly')">Semana</div>
+            <div class="period-tab" onclick="setResPeriod(this,'all')">Geral</div>
+          </div>
+        </div>
+        <div class="rank-rows" id="rankRows"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="feedback" id="fbToast">
+  <div class="feedback__icon" id="fbIcon">✅</div>
+  <div class="feedback__text">
+    <div class="feedback__title" id="fbTitle">Tabuleiro completo!</div>
+    <div class="feedback__sub" id="fbSub"></div>
+  </div>
+  <div class="feedback__pts" id="fbPts">+60</div>
+</div>
+
+<script src="arcade.js"></script>
+<script src="rankings.js"></script>
+<script src="../auth.js"></script>
+<script>
+'use strict';
+const GAME_ID = 'geo-areas';
+const N_ROUNDS = 6;
+
+let diff='facil', playerName='', playerEmail='';
+let roundIdx=0, score=0, streak=0, maxStreak=0, acertos=0, totalPares=0;
+let board=null, selFig=null, selVal=null, matchedFig=null, matchedVal=null, roundActive=false;
+let timerInterval=null, timerStarted;
+
+const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const _pk=a=>a[Math.floor(Math.random()*a.length)];
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+try{
+  const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
+  if(sess){ document.getElementById('inputNome').value=PL_Rankings.getCodename()||sess.name||''; playerEmail=sess.email||''; }
+}catch(e){}
+
+function setDiff(el){ document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); diff=el.dataset.diff; }
+function getTimerSec(){ if(diff==='treino')return 9999; return diff==='dificil'?62:diff==='facil'?48:55; }
+function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
+function paresPorRodada(){ return diff==='facil'?3 : diff==='dificil'?5 : 4; }
+
+/* ── Figuras (SVG) ── */
+function svgQuad(l){return '<svg viewBox="0 0 120 116" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="14" width="64" height="64" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2.5"/><text x="60" y="98" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+l+'</text><text x="16" y="50" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+l+'</text></svg>';}
+function svgRet(b,h){return '<svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="20" width="86" height="56" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2.5"/><text x="65" y="94" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+b+'</text><text x="12" y="52" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+h+'</text></svg>';}
+function svgTri(b,h){return '<svg viewBox="0 0 130 116" xmlns="http://www.w3.org/2000/svg"><polygon points="20,90 110,90 35,20" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2.5"/><line x1="35" y1="90" x2="35" y2="20" stroke="#f59e0b" stroke-dasharray="3,3" stroke-width="1.3" opacity=".7"/><text x="65" y="106" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+b+'</text><text x="20" y="58" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+h+'</text></svg>';}
+function svgPar(b,h){return '<svg viewBox="0 0 140 110" xmlns="http://www.w3.org/2000/svg"><polygon points="30,78 112,78 102,24 20,24" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2.5"/><line x1="102" y1="24" x2="102" y2="78" stroke="#f59e0b" stroke-dasharray="3,3" stroke-width="1.3" opacity=".7"/><text x="66" y="96" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+b+'</text><text x="108" y="55" fill="#cbd5e1" font-size="12" font-family="Montserrat">'+h+'</text></svg>';}
+function svgTrap(B,b,h){return '<svg viewBox="0 0 140 116" xmlns="http://www.w3.org/2000/svg"><polygon points="20,86 120,86 100,26 40,26" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2.5"/><text x="70" y="104" text-anchor="middle" fill="#cbd5e1" font-size="11" font-family="Montserrat">B='+B+'</text><text x="70" y="20" text-anchor="middle" fill="#cbd5e1" font-size="11" font-family="Montserrat">b='+b+'</text><text x="124" y="58" fill="#cbd5e1" font-size="11" font-family="Montserrat">h='+h+'</text></svg>';}
+function svgCirc(r){return '<svg viewBox="0 0 120 116" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="54" r="40" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2.5"/><line x1="60" y1="54" x2="100" y2="54" stroke="#fcd34d" stroke-width="1.6"/><text x="80" y="48" fill="#cbd5e1" font-size="11" font-family="Montserrat">r='+r+'</text></svg>';}
+
+function gerFigura(){
+  const tipos = diff==='facil'?['quad','ret','tri'] : diff==='dificil'?['quad','ret','tri','par','circ','trap'] : ['quad','ret','tri','par','circ'];
+  const t=_pk(tipos);
+  if(t==='quad'){ const l=_ri(2,9), a=l*l; return {svg:svgQuad(l),areaStr:a+' cm²',nome:'Quadrado',formula:'A = lado²',calc:l+' × '+l+' = '+a+' cm²'}; }
+  if(t==='ret'){ const b=_ri(3,12),h=_ri(2,9),a=b*h; return {svg:svgRet(b,h),areaStr:a+' cm²',nome:'Retângulo',formula:'A = base × altura',calc:b+' × '+h+' = '+a+' cm²'}; }
+  if(t==='tri'){ let b=_ri(4,12),h=_ri(2,9); if((b*h)%2)h++; const a=b*h/2; return {svg:svgTri(b,h),areaStr:a+' cm²',nome:'Triângulo',formula:'A = (base × altura) / 2',calc:'('+b+' × '+h+') / 2 = '+a+' cm²'}; }
+  if(t==='par'){ const b=_ri(3,11),h=_ri(2,8),a=b*h; return {svg:svgPar(b,h),areaStr:a+' cm²',nome:'Paralelogramo',formula:'A = base × altura',calc:b+' × '+h+' = '+a+' cm²'}; }
+  if(t==='trap'){ let B=_ri(6,14),b=_ri(2,B-1),h=_ri(2,8); if(((B+b)*h)%2)h++; const a=(B+b)*h/2; return {svg:svgTrap(B,b,h),areaStr:a+' cm²',nome:'Trapézio',formula:'A = (B + b) × h / 2',calc:'('+B+' + '+b+') × '+h+' / 2 = '+a+' cm²'}; }
+  const r=_ri(2,7), a=r*r; return {svg:svgCirc(r),areaStr:a+'π cm²',nome:'Círculo',formula:'A = π × r²',calc:'π × '+r+'² = '+a+'π cm²'};
+}
+
+function gerBoard(){
+  const pares=paresPorRodada(); const figs=[]; const seen=new Set(); let guard=0;
+  while(figs.length<pares && guard++<300){ const f=gerFigura(); if(!seen.has(f.areaStr)){ seen.add(f.areaStr); figs.push(f); } }
+  const values=shuffle(figs.map(f=>f.areaStr));
+  return {figs, values};
+}
+
+function startGame(){
+  playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
+  roundIdx=0; score=0; streak=0; maxStreak=0; acertos=0; totalPares=0;
+  const mc=PL_Rankings.DIFF_COLOR[diff]||'#fff';
+  const el=document.getElementById('hudMult'); el.textContent='×'+getMultiplier().toFixed(1); el.style.color=mc; el.style.borderColor=mc;
+  show('screenGame'); document.getElementById('hudScore').textContent='0'; document.getElementById('hudStreak').classList.remove('show');
+  renderRound();
+}
+
+function renderRound(){
+  if(roundIdx>=N_ROUNDS){ endGame(); return; }
+  board=gerBoard(); selFig=null; selVal=null; matchedFig=new Set(); matchedVal=new Set(); roundActive=true;
+  totalPares+=board.figs.length;
+  document.getElementById('hudQ').textContent=roundIdx+1;
+  document.getElementById('lastMatch').textContent='';
+  document.getElementById('colFig').innerHTML=board.figs.map((f,i)=>'<button class="mcard fig" id="fig-'+i+'" onclick="tapFig('+i+')">'+f.svg+'</button>').join('');
+  document.getElementById('colVal').innerHTML=board.values.map((v,j)=>'<button class="mcard val" id="val-'+j+'" onclick="tapVal('+j+')">'+v+'</button>').join('');
+  startTimer();
+}
+
+function tapFig(i){ if(!roundActive||matchedFig.has(i))return; selFig=i; updateSel(); resolve(); }
+function tapVal(j){ if(!roundActive||matchedVal.has(j))return; selVal=j; updateSel(); resolve(); }
+
+function updateSel(){
+  document.querySelectorAll('.mcard.sel').forEach(c=>c.classList.remove('sel'));
+  if(selFig!==null){ const c=document.getElementById('fig-'+selFig); if(c&&!c.classList.contains('done'))c.classList.add('sel'); }
+  if(selVal!==null){ const c=document.getElementById('val-'+selVal); if(c&&!c.classList.contains('done'))c.classList.add('sel'); }
+}
+
+function resolve(){
+  if(selFig===null||selVal===null) return;
+  const fi=selFig, vj=selVal;
+  const acerto = board.figs[fi].areaStr === board.values[vj];
+  if(acerto){
+    matchedFig.add(fi); matchedVal.add(vj);
+    const cf=document.getElementById('fig-'+fi), cv=document.getElementById('val-'+vj);
+    if(cf){cf.classList.remove('sel');cf.classList.add('done');}
+    if(cv){cv.classList.remove('sel');cv.classList.add('done');}
+    streak++; if(streak>maxStreak)maxStreak=streak; acertos++;
+    let pts=60+Math.min(streak,5)*10; score+=pts;
+    const f=board.figs[fi];
+    document.getElementById('lastMatch').innerHTML='✅ <b style="color:#fff">'+f.nome+'</b>: '+f.formula+' → '+f.calc;
+    updateHUD();
+    try{ if(window.Arcade){ Arcade.correct(streak); if(streak>=3)Arcade.confetti(streak>=5?60:28); if(streak>=2)Arcade.combo(streak); } }catch(e){}
+    selFig=null; selVal=null;
+    if(matchedFig.size===board.figs.length) roundComplete();
+  } else {
+    streak=0; score=Math.max(0,score-8); updateHUD();
+    const cf=document.getElementById('fig-'+fi), cv=document.getElementById('val-'+vj);
+    if(cf){cf.classList.remove('sel');cf.classList.add('err');}
+    if(cv){cv.classList.remove('sel');cv.classList.add('err');}
+    try{ if(window.Arcade)Arcade.wrong(); }catch(e){}
+    selFig=null; selVal=null;
+    setTimeout(()=>{ if(cf)cf.classList.remove('err'); if(cv)cv.classList.remove('err'); }, 450);
+  }
+}
+
+function roundComplete(){
+  roundActive=false; clearInterval(timerInterval);
+  const sec=getTimerSec(); const timeLeft=Math.max(0,sec-(Date.now()-timerStarted)/1000);
+  const bonus = diff==='treino'?20 : 30+Math.round((timeLeft/sec)*40);
+  score+=bonus; updateHUD();
+  try{ if(window.Arcade)Arcade.celebrate(); }catch(e){}
+  showFeedback(true, '🎉', 'Tabuleiro completo!', 'Todos os pares certos! +'+bonus+' de bônus.', '+'+bonus);
+  setTimeout(()=>{ hideFeedback(); roundIdx++; renderRound(); }, 1700);
+}
+
+function timeUp(){
+  roundActive=false; clearInterval(timerInterval); streak=0; updateHUD();
+  // revela os pares que faltavam
+  board.figs.forEach((f,i)=>{ if(!matchedFig.has(i)){
+    const cf=document.getElementById('fig-'+i); if(cf)cf.classList.add('miss');
+    const vj=board.values.findIndex((v,j)=>v===f.areaStr && !matchedVal.has(j));
+    if(vj>=0){ matchedVal.add(vj); const cv=document.getElementById('val-'+vj); if(cv)cv.classList.add('miss'); }
+  }});
+  try{ if(window.Arcade)Arcade.timeUp(); }catch(e){}
+  showFeedback(false, '⏰', 'Tempo esgotado!', 'Os pares destacados eram as ligações certas.', '');
+  setTimeout(()=>{ hideFeedback(); roundIdx++; renderRound(); }, 2600);
+}
+
+function startTimer(){
+  clearInterval(timerInterval); timerStarted=Date.now();
+  const sec=getTimerSec(); const bar=document.getElementById('timerBar');
+  bar.style.transition='none'; bar.style.width='100%'; bar.style.background='var(--accent)';
+  requestAnimationFrame(()=>{ bar.style.transition='width '+sec+'s linear,background .3s'; bar.style.width='0%'; });
+  if(diff==='treino') return;
+  timerInterval=setInterval(()=>{
+    const elapsed=(Date.now()-timerStarted)/1000, pct=Math.max(0,1-elapsed/sec);
+    if(pct<0.33)bar.style.background='var(--err)'; else if(pct<0.6)bar.style.background='var(--warn)';
+    if(elapsed>=sec){ clearInterval(timerInterval); if(roundActive) timeUp(); }
+  },200);
+}
+
+function showFeedback(ok,icon,title,sub,pts){
+  const fb=document.getElementById('fbToast');
+  fb.className='feedback '+(ok?'perfect':'wrong')+' show';
+  document.getElementById('fbIcon').textContent=icon;
+  document.getElementById('fbTitle').textContent=title;
+  document.getElementById('fbSub').textContent=sub;
+  document.getElementById('fbPts').textContent=pts;
+}
+function hideFeedback(){ document.getElementById('fbToast').classList.remove('show'); }
+
+function updateHUD(){
+  document.getElementById('hudScore').textContent=score.toLocaleString('pt-BR');
+  const sk=document.getElementById('hudStreak');
+  if(streak>=2){ document.getElementById('streakNum').textContent=streak; sk.classList.add('show'); } else sk.classList.remove('show');
+}
+
+function endGame(){
+  clearInterval(timerInterval); hideFeedback();
+  const ws=PL_Rankings.calcWeighted(score,diff);
+  PL_Rankings.save(GAME_ID,{name:playerName,email:playerEmail,score,difficulty:diff});
+  show('screenResult'); try{if(window.Arcade)Arcade.celebrate();}catch(e){}
+  const acc=totalPares?Math.round(acertos/totalPares*100):0;
+  const icon=ws>=1200?'🏆':ws>=800?'🎯':ws>=400?'⚡':'📚';
+  document.getElementById('resIcon').textContent=icon;
+  document.getElementById('resTitle').textContent=ws>=1200?'Mestre das Áreas!':ws>=800?'Muito Bem!':ws>=400?'Bom Jogo!':'Continue Praticando!';
+  animScore(ws);
+  document.getElementById('resRaw').textContent='Score bruto: '+score.toLocaleString('pt-BR')+' × '+getMultiplier().toFixed(1)+' = '+ws.toLocaleString('pt-BR');
+  document.getElementById('resSub').textContent='pontos no ranking · '+PL_Rankings.DIFF_LABEL[diff];
+  document.getElementById('rsAcertos').textContent=acertos+'/'+totalPares;
+  document.getElementById('rsAcc').textContent=acc+'%';
+  document.getElementById('rsStreak').textContent=maxStreak;
+  renderResRank('daily');
+}
+function animScore(target){ const el=document.getElementById('resScore'); let cur=0,step=Math.max(1,Math.ceil(target/40));
+  const iv=setInterval(()=>{ cur=Math.min(cur+step,target); el.textContent=cur.toLocaleString('pt-BR'); if(cur>=target)clearInterval(iv); },30); }
+function setResPeriod(el,period){ document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); renderResRank(period); }
+function renderResRank(period){
+  const board2=PL_Rankings.getBoard(GAME_ID,period,10);
+  const rows=document.getElementById('rankRows'); const MEDALS=['🥇','🥈','🥉'];
+  if(!board2.length){ rows.innerHTML='<div style="text-align:center;padding:20px;color:var(--sil);font-size:13px">Nenhuma partida ainda</div>'; return; }
+  rows.innerHTML=board2.map((e,i)=>{
+    const isSelf=e.e&&playerEmail&&e.e===playerEmail;
+    const ws=(e.ws!==undefined?e.ws:e.s).toLocaleString('pt-BR');
+    return '<div class="rrow '+(isSelf?'rrow--self':'')+'">'+
+      '<div class="rpos '+(i<3?'rpos-'+(i+1):'')+'">'+(i<3?MEDALS[i]:'#'+(i+1))+'</div>'+
+      '<div class="rav">'+(e.n||'?').slice(0,2).toUpperCase()+'</div>'+
+      '<div class="rname">'+esc(e.n)+(isSelf?' <span style="font-size:10px;color:var(--al)">(você)</span>':'')+'</div>'+
+      '<div class="rscore '+(i<3?'rscore-'+(i+1):'')+'">'+ws+'<div class="rdiff">'+(PL_Rankings.DIFF_LABEL[e.d]||e.d)+'</div></div></div>';
+  }).join('');
+}
+function show(id){ ['screenLobby','screenGame','screenResult'].forEach(s=>{ document.getElementById(s).style.display=s===id?'block':'none'; }); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+</script>
+
+<!-- Conteudo exclusivo da Area do Aluno -->
+<script src="../auth.js"></script>
+<script>window.plAuth && window.plAuth.requireAuth();</script>
+<script src="../protecao.js" defer></script>
+</body>
+</html>

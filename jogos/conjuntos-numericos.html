@@ -151,7 +151,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
     <div class="topbar__tag">🔢 Conjuntos Numéricos</div>
   </div>
-  <a href="../jogos.html"><button class="btn-back">← Arena</button></a>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
+    <a href="../jogos.html"><button class="btn-back">← Arena</button></a>
+  </div>
 </header>
 
 <div class="wrap">
@@ -305,7 +308,7 @@ function setDiff(el) {
   diff = el.dataset.diff;
 }
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 18 : diff === 'facil' ? 35 : 25; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 32 : diff === 'facil' ? 55 : 42; }
 
 // Session prefill
 try {
@@ -466,6 +469,14 @@ function submitAnswer(timeout = false) {
   score += pts;
   updateHUD();
 
+  // efeitos de arcade
+  try{ if(window.Arcade){
+    if(isPerfect){ Arcade.correct(streak); Arcade.confetti(streak>=3?70:35); if(streak>=2)Arcade.combo(streak); }
+    else if(timeout){ Arcade.timeUp(); }
+    else if(pts>0){ Arcade.correct(1); }
+    else { Arcade.wrong(); }
+  } }catch(e){}
+
   // Reveal options
   const btns = document.querySelectorAll('.opt-btn');
   btns.forEach(b => {
@@ -483,7 +494,17 @@ function submitAnswer(timeout = false) {
     hideFeedback();
     qIdx++;
     renderQuestion();
-  }, 2400);
+  }, isPerfect ? 2400 : 4200);
+}
+
+// Explicação didática: por que o número pertence àqueles conjuntos
+function explainSets(q){
+  const s = q.sets, lst = q.sets.join(', ');
+  if (s.includes('ℕ'))  return q.n+' é natural — logo pertence a todos os conjuntos: '+lst;
+  if (s.includes('ℤ'))  return q.n+' é inteiro (sem parte fracionária) — '+lst;
+  if (s.includes('𝕀'))  return q.n+' é irracional (decimal infinito e não periódico) — '+lst;
+  if (s.includes('ℚ'))  return q.n+' é racional (fração ou decimal exato/dízima) — '+lst;
+  return q.n+' tem parte imaginária — pertence só a ℂ';
 }
 
 function showFeedback(isPerfect, ac, er, fa, pts, timeout) {
@@ -491,7 +512,12 @@ function showFeedback(isPerfect, ac, er, fa, pts, timeout) {
   fb.className = 'feedback ' + (timeout && !isPerfect ? 'wrong' : isPerfect ? 'perfect' : (pts>0?'partial':'wrong'));
   document.getElementById('fbIcon').textContent  = timeout && !isPerfect ? '⏰' : isPerfect ? '🎯' : pts>0 ? '⚡' : '❌';
   document.getElementById('fbTitle').textContent = timeout && !isPerfect ? 'Tempo esgotado!' : isPerfect ? 'Perfeito! 🔥' : pts>0 ? 'Parcial' : 'Errou!';
-  document.getElementById('fbSub').textContent   = `✅${ac} acerto${ac!==1?'s':''} · ❌${er} erro${er!==1?'s':''} · ⚠️${fa} não marcou`;
+  const subEl = document.getElementById('fbSub');
+  subEl.textContent = `✅${ac} acerto${ac!==1?'s':''} · ❌${er} erro${er!==1?'s':''} · ⚠️${fa} não marcou`;
+  if (!isPerfect) {
+    const q = questions[qIdx];
+    if (q) subEl.innerHTML += '<br><span style="color:#cbd5e1">💡 '+explainSets(q)+'</span>';
+  }
   document.getElementById('fbPts').textContent   = (pts>0?'+':'')+pts;
   requestAnimationFrame(() => fb.classList.add('show'));
 }

@@ -250,7 +250,7 @@ let timerSec=25, timerInterval=null, timerStarted;
 let _advanceTimer=null,_advanced=false;
 let answering=false, resPeriod='daily';
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 25 : diff === 'facil' ? 50 : 35; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 40 : diff === 'facil' ? 65 : 50; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
 try{

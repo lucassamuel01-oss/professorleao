@@ -143,7 +143,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
     <div class="topbar__tag">🎯 Caça ao Número</div>
   </div>
-  <a href="../jogos.html"><button class="btn-back">← Arena</button></a>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
+    <a href="../jogos.html"><button class="btn-back">← Arena</button></a>
+  </div>
 </header>
 
 <div class="wrap">
@@ -342,7 +345,7 @@ let diff='normal', playerName='', playerEmail='';
 let phases=[], phaseIdx=0, score=0;
 let numbers=[], correctNums=[], selectedNums=[];
 let timerSec=25, timerInterval=null, timerStarted;
-let answering=false, totalBonus=0, perfectPhases=0;
+let answering=false, totalBonus=0, perfectPhases=0, perfectStreak=0;
 let totalAcertos=0, totalPossible=0;
 
 // Session prefill
@@ -356,7 +359,7 @@ function setDiff(el){
   el.classList.add('active'); diff=el.dataset.diff;
 }
 
-function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 20 : diff === 'facil' ? 40 : 30; }
+function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 35 : diff === 'facil' ? 58 : 45; }
 
 function genNumbers(phase){
   const maxN = diff==='dificil'?70:diff==='facil'?30:50;
@@ -376,7 +379,7 @@ function genNumbers(phase){
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
   phases=buildPhases(diff);
-  phaseIdx=0; score=0; answering=false; totalBonus=0; perfectPhases=0;
+  phaseIdx=0; score=0; answering=false; totalBonus=0; perfectPhases=0; perfectStreak=0;
   totalAcertos=0; totalPossible=0;
 
   // Mult badge
@@ -482,6 +485,15 @@ function submitPhase(timeout=false){
     pts+=bonus; totalBonus+=bonus; perfectPhases++;
   }
   score+=pts;
+
+  // Streak de fases perfeitas + efeitos de arcade
+  if(isPerfect) perfectStreak++; else perfectStreak=0;
+  try{ if(window.Arcade){
+    if(isPerfect){ Arcade.correct(perfectStreak); Arcade.confetti(perfectStreak>=3?70:35); if(perfectStreak>=2)Arcade.combo(perfectStreak); }
+    else if(timeout){ Arcade.timeUp(); }
+    else if(pts>0){ Arcade.correct(1); }
+    else { Arcade.wrong(); }
+  } }catch(e){}
 
   // Reveal
   document.querySelectorAll('.num-btn').forEach(b=>{

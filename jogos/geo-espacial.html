@@ -3,41 +3,41 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Geometria Plana – Professor Leão</title>
+<title>Geometria Espacial – Professor Leão</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --navy:#0A1628;--navy-2:#0F1E38;--navy-3:#152545;--navy-4:#1B2E6B;
-  --accent:#f97316;--al:#fdba74;
+  --accent:#0ea5e9;--al:#7dd3fc;
   --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;--white:#fff;--sil:#8892B4;
   --fh:'Montserrat',sans-serif;--fb:'Open Sans',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--navy)}
 body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(249,115,22,.15);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(14,165,233,.18);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .topbar__left{display:flex;align-items:center;gap:10px}
 .topbar__logo{font-family:var(--fh);font-size:14px;font-weight:800;letter-spacing:1px}
 .topbar__logo span{color:var(--al)}
-.topbar__tag{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.25);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--al)}
+.topbar__tag{background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--al)}
 .btn-back{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center}
 .btn-back:hover{color:var(--white)}
 .wrap{width:100%;max-width:700px;padding:24px 16px 60px;flex:1}
-.lobby{background:var(--navy-2);border:1px solid rgba(249,115,22,.15);border-radius:20px;padding:40px 32px;text-align:center}
-.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(249,115,22,.4))}
+.lobby{background:var(--navy-2);border:1px solid rgba(14,165,233,.15);border-radius:20px;padding:40px 32px;text-align:center}
+.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(14,165,233,.45))}
 .lobby__title{font-family:var(--fh);font-size:28px;font-weight:900;margin-bottom:8px}
 .lobby__sub{color:var(--sil);font-size:15px;margin-bottom:28px;line-height:1.55}
 .lobby__rules{background:var(--navy-3);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
 .lobby__rules h3{font-family:var(--fh);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--al);margin-bottom:10px}
 .rule-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--sil);margin-bottom:6px;line-height:1.4}
-.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
-.diff-btn{padding:10px 18px;border-radius:8px;font-family:var(--fh);font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:var(--navy-3);color:var(--sil);cursor:pointer;transition:.2s;line-height:1.3;text-align:center}
-.diff-btn.active{border-color:var(--accent);background:rgba(249,115,22,.2);color:var(--white)}
-.diff-mult{font-size:10px;opacity:.7;display:block;margin-top:2px}
-.lobby__input{width:100%;max-width:320px;padding:13px 16px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(249,115,22,.2);color:var(--white);font-size:15px;outline:none;text-align:center;margin-bottom:8px;transition:.2s;display:block;margin-left:auto;margin-right:auto}
+.lobby__input{width:100%;max-width:320px;padding:13px 16px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(14,165,233,.2);color:var(--white);font-size:15px;outline:none;text-align:center;margin-bottom:8px;transition:.2s;display:block;margin-left:auto;margin-right:auto}
 .lobby__input:focus{border-color:var(--accent)}
 .lobby__input::placeholder{color:rgba(255,255,255,.2)}
-.btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,#7c2d12,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(249,115,22,.35);margin-top:16px}
+.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.diff-btn{padding:10px 18px;border-radius:8px;font-family:var(--fh);font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:var(--navy-3);color:var(--sil);cursor:pointer;transition:.2s;line-height:1.3;text-align:center}
+.diff-btn.active{border-color:var(--accent);background:rgba(14,165,233,.2);color:var(--white)}
+.diff-mult{font-size:10px;opacity:.7;display:block;margin-top:2px}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,#075985,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(14,165,233,.35);margin-top:16px}
 .btn-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
 .hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .hud__progress{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--sil)}
@@ -49,43 +49,45 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .hud__mult{font-family:var(--fh);font-size:11px;font-weight:800;padding:4px 9px;border-radius:20px;border:1px solid;opacity:.85}
 .timer-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:18px}
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
-/* SVG card */
-.q-card{background:var(--navy-2);border:1px solid rgba(249,115,22,.2);border-radius:20px;padding:20px 16px;margin-bottom:16px}
-.q-tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:10px;text-align:center}
-.q-svg{display:flex;justify-content:center;margin:10px 0;min-height:150px;align-items:center}
-.q-svg svg{max-width:290px;width:100%;height:auto;animation:figIn .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes figIn{0%{opacity:0;transform:scale(.82)}100%{opacity:1;transform:scale(1)}}
-/* alturas/diagonais que se "desenham" */
-.measure{stroke-dasharray:230;stroke-dashoffset:230;animation:draw 1s .3s ease forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-/* o "?" da incógnita pulsa */
-.qmark{animation:pulse 1.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-.q-formula{font-family:var(--fh);font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-align:center;margin:6px 0 2px;letter-spacing:.5px}
-.q-text{font-size:15px;color:rgba(255,255,255,.8);text-align:center;line-height:1.5;margin-top:6px}
-/* Options */
-.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.opt-btn{padding:16px 12px;border-radius:12px;border:2px solid rgba(249,115,22,.18);background:var(--navy-3);color:var(--white);font-family:var(--fh);font-size:17px;font-weight:900;cursor:pointer;transition:.2s;text-align:center;user-select:none}
-.opt-btn:hover:not(:disabled){border-color:rgba(249,115,22,.45);background:rgba(249,115,22,.1)}
-.opt-btn.sel{border-color:var(--accent);background:rgba(249,115,22,.22);color:var(--al)}
-.opt-btn.reveal-ok {border-color:var(--ok)!important;background:rgba(34,197,94,.2)!important;color:#4ade80!important}
+.q-card{background:var(--navy-2);border:1px solid rgba(14,165,233,.2);border-radius:20px;padding:18px 16px;margin-bottom:16px}
+.q-tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:6px;text-align:center}
+/* palco 3D animado */
+.stage{perspective:700px;display:flex;justify-content:center;align-items:center;min-height:170px;margin:4px 0}
+.solid{width:170px;height:auto;animation:wob 5s ease-in-out infinite;transform-style:preserve-3d;transform-origin:center}
+@keyframes wob{0%,100%{transform:rotateY(-18deg) translateY(0)}50%{transform:rotateY(18deg) translateY(-7px)}}
+.solid.spin{animation:spin 2.6s linear infinite}
+@keyframes spin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.solid.paused{animation-play-state:paused}
+.planif{width:100%;max-width:230px;height:auto;animation:fadein .4s ease}
+@keyframes fadein{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.solid-tools{display:flex;gap:8px;justify-content:center;margin:6px 0 2px}
+.tool-btn{font-family:var(--fh);font-size:11px;font-weight:700;padding:6px 12px;border-radius:20px;border:1px solid rgba(14,165,233,.3);background:rgba(14,165,233,.08);color:var(--al);cursor:pointer;transition:.15s}
+.tool-btn:hover{background:rgba(14,165,233,.18)}
+.tool-btn.off{opacity:.45}
+.q-formula{font-family:var(--fh);font-size:13px;font-weight:700;color:rgba(255,255,255,.55);text-align:center;margin:8px 0 2px;letter-spacing:.5px}
+.q-text{font-size:15px;color:rgba(255,255,255,.85);text-align:center;line-height:1.5;margin-top:4px}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;margin-top:10px}
+.opt-btn{padding:15px 12px;border-radius:12px;border:2px solid rgba(14,165,233,.18);background:var(--navy-3);color:var(--white);font-family:var(--fh);font-size:17px;font-weight:900;cursor:pointer;transition:.2s;text-align:center;user-select:none}
+.opt-btn:hover:not(:disabled){border-color:rgba(14,165,233,.5);background:rgba(14,165,233,.1)}
+.opt-btn.sel{border-color:var(--accent);background:rgba(14,165,233,.22);color:var(--al)}
+.opt-btn.reveal-ok{border-color:var(--ok)!important;background:rgba(34,197,94,.2)!important;color:#4ade80!important}
 .opt-btn.reveal-err{border-color:var(--err)!important;background:rgba(239,68,68,.2)!important;color:#f87171!important}
 .opt-btn:disabled{cursor:default}
-.btn-answer{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#7c2d12,var(--accent));color:var(--white);font-family:var(--fh);font-weight:900;font-size:15px;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(249,115,22,.3)}
+.btn-answer{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#075985,var(--accent));color:var(--white);font-family:var(--fh);font-weight:900;font-size:15px;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(14,165,233,.3)}
 .btn-answer:hover{filter:brightness(1.12)}
 .btn-answer:disabled{opacity:.5;cursor:default}
-.feedback{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(140px);width:calc(100% - 32px);max-width:520px;z-index:100;background:var(--navy-3);border:1px solid rgba(249,115,22,.2);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 16px 48px rgba(0,0,0,.6);transition:.35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+.feedback{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(140px);width:calc(100% - 32px);max-width:520px;z-index:100;background:var(--navy-3);border:1px solid rgba(14,165,233,.2);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 16px 48px rgba(0,0,0,.6);transition:.35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
 .feedback.show{transform:translateX(-50%) translateY(0)}
 .feedback.perfect{border-color:var(--ok);background:rgba(22,101,52,.4)}
 .feedback.wrong{border-color:var(--err);background:rgba(120,20,20,.3)}
 .feedback__icon{font-size:32px;flex-shrink:0}
 .feedback__text{flex:1}
 .feedback__title{font-family:var(--fh);font-size:14px;font-weight:800}
-.feedback__sub{font-size:12.5px;color:rgba(255,255,255,.7);margin-top:3px;line-height:1.5}
+.feedback__sub{font-size:12.5px;color:rgba(255,255,255,.72);margin-top:3px;line-height:1.5}
 .feedback__pts{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al);flex-shrink:0}
 .feedback.perfect .feedback__pts{color:#4ade80}
 .feedback.wrong .feedback__pts{color:#f87171}
-.result{background:var(--navy-2);border:1px solid rgba(249,115,22,.15);border-radius:20px;padding:36px 28px;text-align:center}
+.result{background:var(--navy-2);border:1px solid rgba(14,165,233,.15);border-radius:20px;padding:36px 28px;text-align:center}
 .result__icon{font-size:72px;margin-bottom:12px;display:block;animation:pop .4s ease}
 @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 .result__title{font-family:var(--fh);font-size:26px;font-weight:900;margin-bottom:6px}
@@ -97,7 +99,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .result__stat-val{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al)}
 .result__stat-lbl{font-size:11px;color:var(--sil);margin-top:3px}
 .result__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
-.btn-replay{padding:13px 28px;border-radius:10px;font-family:var(--fh);font-weight:800;font-size:14px;background:linear-gradient(135deg,#7c2d12,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s}
+.btn-replay{padding:13px 28px;border-radius:10px;font-family:var(--fh);font-weight:800;font-size:14px;background:linear-gradient(135deg,#075985,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s}
 .btn-hub{padding:13px 24px;border-radius:10px;font-family:var(--fh);font-weight:700;font-size:14px;background:rgba(255,255,255,.07);color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s}
 .btn-hub:hover{color:var(--white)}
 .mini-rank{background:var(--navy-3);border-radius:14px;overflow:hidden}
@@ -105,11 +107,11 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .mini-rank-head h3{font-family:var(--fh);font-size:13px;font-weight:800}
 .period-tabs{display:flex;gap:4px}
 .period-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--sil);border:1px solid transparent;transition:.2s}
-.period-tab.active{background:rgba(249,115,22,.2);border-color:rgba(249,115,22,.35);color:var(--al)}
+.period-tab.active{background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.35);color:var(--al)}
 .rank-rows{padding:4px 0}
 .rrow{display:grid;grid-template-columns:30px 28px 1fr auto;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;transition:.2s}
 .rrow:hover{background:rgba(255,255,255,.04)}
-.rrow--self{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2)}
+.rrow--self{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.2)}
 .rpos{font-family:var(--fh);font-size:12px;font-weight:800;text-align:center;color:var(--sil)}
 .rpos-1{color:#f59e0b}.rpos-2{color:#94a3b8}.rpos-3{color:#b87333}
 .rav{width:28px;height:28px;border-radius:50%;background:var(--navy-4);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:11px;font-weight:800;color:var(--al);flex-shrink:0}
@@ -124,7 +126,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 <header class="topbar">
   <div class="topbar__left">
     <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
-    <div class="topbar__tag">📐 Geom. Plana</div>
+    <div class="topbar__tag">🧊 Geom. Espacial</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
@@ -134,26 +136,27 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 <div class="wrap">
   <div id="screenLobby">
     <div class="lobby">
-      <span class="lobby__icon">📐</span>
-      <div class="lobby__title">Geometria Plana</div>
-      <div class="lobby__sub">Figuras que ganham vida!<br/>Quadrado, retângulo, triângulo, paralelogramo, losango, trapézio, círculo e hexágono — área, perímetro e Pitágoras.</div>
+      <span class="lobby__icon">🧊</span>
+      <div class="lobby__title">Geometria Espacial</div>
+      <div class="lobby__sub">Sólidos em 3D que <b>giram</b> e <b>se abrem</b>!<br/>Calcule o volume de cubos, blocos, cilindros, cones, esferas e pirâmides.</div>
       <div class="lobby__rules">
-        <h3>📐 Visual, animado e didático</h3>
-        <div class="rule-item">🖼️ <span>Cada figura <strong>aparece animada</strong>, com as alturas e diagonais se desenhando</span></div>
-        <div class="rule-item">🔢 <span>São <strong>12 tipos</strong> de figura — área, perímetro, diagonais e Teorema de Pitágoras</span></div>
+        <h3>🧊 Interativo e visual</h3>
+        <div class="rule-item">🔄 <span>Cada sólido <strong>gira em 3D</strong> — toque em "Girar" para ver de todos os ângulos</span></div>
+        <div class="rule-item">📦 <span>Toque em <strong>"Planificar"</strong> e veja o sólido se abrir (cubo e cilindro)</span></div>
         <div class="rule-item">✅ <span>Acerto = <strong>100 pts</strong> + bônus de velocidade e sequência</span></div>
-        <div class="rule-item">💡 <span>Cada questão revela a <strong>fórmula e o cálculo</strong>, relacionando os conceitos</span></div>
+        <div class="rule-item">💡 <span>Cada questão revela a <strong>fórmula e o cálculo</strong> do volume</span></div>
       </div>
       <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
       <div class="diff-row">
-        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">quadrado·retângulo·triângulo · ×0.7</span></button>
-        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">+ losango·trapézio·círculo · ×1.0</span></button>
-        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">+ Pitágoras·hexágono · ×1.5</span></button>
+        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">cubo·bloco · ×0.7</span></button>
+        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">+ cilindro·pirâmide · ×1.0</span></button>
+        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">+ cone·esfera · ×1.5</span></button>
         <button class="diff-btn"        data-diff="treino"  onclick="setDiff(this)">🎓 Treino<span class="diff-mult">sem tempo · ×0.5</span></button>
       </div>
       <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
     </div>
   </div>
+
   <div id="screenGame" style="display:none">
     <div class="hud">
       <div class="hud__progress">Questão <strong id="hudQ">1</strong>/10</div>
@@ -166,13 +169,18 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div>
     <div class="q-card">
       <div class="q-tipo" id="qTipo"></div>
-      <div class="q-svg" id="qSvg"></div>
+      <div class="stage" id="stage"></div>
+      <div class="solid-tools">
+        <button class="tool-btn" id="btnGirar" onclick="toggleGirar()">🔄 Girar</button>
+        <button class="tool-btn" id="btnPlanif" onclick="togglePlanif()" style="display:none">📦 Planificar</button>
+      </div>
       <div class="q-formula" id="qFormula"></div>
       <div class="q-text" id="qText"></div>
+      <div class="opt-grid" id="optGrid"></div>
+      <button class="btn-answer" id="btnAnswer" onclick="submitAnswer()" disabled>Confirmar Resposta</button>
     </div>
-    <div class="opt-grid" id="optGrid"></div>
-    <button class="btn-answer" id="btnAnswer" onclick="submitAnswer()">Confirmar Resposta</button>
   </div>
+
   <div id="screenResult" style="display:none">
     <div class="result">
       <span class="result__icon" id="resIcon">🏆</span>
@@ -202,29 +210,32 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     </div>
   </div>
 </div>
+
 <div class="feedback" id="fbToast" onclick="nextQuestion()">
   <div class="feedback__icon" id="fbIcon">✅</div>
   <div class="feedback__text">
     <div class="feedback__title" id="fbTitle">Correto!</div>
-    <div class="feedback__sub"  id="fbSub"></div>
+    <div class="feedback__sub" id="fbSub"></div>
   </div>
   <div class="feedback__pts" id="fbPts">+100</div>
 </div>
+
 <script src="arcade.js"></script>
 <script src="rankings.js"></script>
 <script src="../auth.js"></script>
 <script>
 'use strict';
-const GAME_ID = 'geometria-plana';
+const GAME_ID = 'geo-espacial';
 const N_QUEST = 10;
 
 let diff='facil', playerName='', playerEmail='';
-let questions=[], qIdx=0, score=0, selected=null, streak=0, maxStreak=0, acertos=0;
+let questions=[], qIdx=0, score=0, streak=0, maxStreak=0, acertos=0, selected=null;
 let timerInterval=null, timerStarted, answering=false, _advanceTimer=null, _advanced=false;
+let girando=false, planificado=false;
 
 const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const _pk=a=>a[Math.floor(Math.random()*a.length)];
-function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 
 try{
   const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
@@ -232,78 +243,88 @@ try{
 }catch(e){}
 
 function setDiff(el){ document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); diff=el.dataset.diff; }
-function getTimerSec(){ if(diff==='treino')return 9999; return diff==='dificil'?48:diff==='facil'?75:58; }
+function getTimerSec(){ if(diff==='treino')return 9999; return diff==='dificil'?48:diff==='facil'?68:58; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
 
+/* ── SVGs isométricos dos sólidos ── */
+function svgCubo(a){return '<svg viewBox="0 0 150 150" class="solid" id="theSolid">'+
+  '<polygon points="48,52 100,52 122,34 70,34" fill="#7dd3fc" fill-opacity=".4" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<polygon points="48,52 100,52 100,112 48,112" fill="#0ea5e9" fill-opacity=".18" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<polygon points="100,52 122,34 122,94 100,112" fill="#0ea5e9" fill-opacity=".3" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<text x="74" y="132" text-anchor="middle" fill="#cbd5e1" font-size="13" font-family="Montserrat">a = '+a+' cm</text></svg>';}
+function svgBloco(a,b,c){return '<svg viewBox="0 0 165 150" class="solid" id="theSolid">'+
+  '<polygon points="40,58 110,58 135,38 65,38" fill="#7dd3fc" fill-opacity=".4" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<polygon points="40,58 110,58 110,108 40,108" fill="#0ea5e9" fill-opacity=".18" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<polygon points="110,58 135,38 135,88 110,108" fill="#0ea5e9" fill-opacity=".3" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<text x="75" y="124" text-anchor="middle" fill="#cbd5e1" font-size="11" font-family="Montserrat">'+a+'</text>'+
+  '<text x="14" y="86" fill="#cbd5e1" font-size="11" font-family="Montserrat">'+c+'</text>'+
+  '<text x="126" y="60" fill="#cbd5e1" font-size="11" font-family="Montserrat">'+b+'</text></svg>';}
+function svgCilindro(r,h){return '<svg viewBox="0 0 150 160" class="solid" id="theSolid">'+
+  '<ellipse cx="75" cy="40" rx="38" ry="13" fill="#7dd3fc" fill-opacity=".4" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<path d="M37,40 L37,118 A38,13,0,0,0,113,118 L113,40" fill="#0ea5e9" fill-opacity=".18" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<line x1="75" y1="40" x2="113" y2="40" stroke="#fcd34d" stroke-width="1.6"/>'+
+  '<text x="92" y="34" fill="#cbd5e1" font-size="11" font-family="Montserrat">r='+r+'</text>'+
+  '<text x="118" y="84" fill="#cbd5e1" font-size="11" font-family="Montserrat">h='+h+'</text></svg>';}
+function svgCone(r,h){return '<svg viewBox="0 0 150 165" class="solid" id="theSolid">'+
+  '<polygon points="75,22 40,128 110,128" fill="#0ea5e9" fill-opacity=".22" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<ellipse cx="75" cy="128" rx="35" ry="12" fill="#7dd3fc" fill-opacity=".4" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<line x1="75" y1="128" x2="75" y2="22" stroke="#fcd34d" stroke-dasharray="3,3" stroke-width="1.4"/>'+
+  '<line x1="75" y1="128" x2="110" y2="128" stroke="#fcd34d" stroke-width="1.6"/>'+
+  '<text x="90" y="124" fill="#cbd5e1" font-size="11" font-family="Montserrat">r='+r+'</text>'+
+  '<text x="80" y="78" fill="#cbd5e1" font-size="11" font-family="Montserrat">h='+h+'</text></svg>';}
+function svgEsfera(r){return '<svg viewBox="0 0 150 150" class="solid" id="theSolid">'+
+  '<circle cx="75" cy="72" r="46" fill="#0ea5e9" fill-opacity=".2" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<ellipse cx="75" cy="72" rx="46" ry="15" fill="none" stroke="#7dd3fc" stroke-width="1.4" stroke-dasharray="3,3" opacity=".7"/>'+
+  '<line x1="75" y1="72" x2="121" y2="72" stroke="#fcd34d" stroke-width="1.6"/>'+
+  '<text x="92" y="66" fill="#cbd5e1" font-size="11" font-family="Montserrat">r='+r+'</text></svg>';}
+function svgPiramide(a,h){return '<svg viewBox="0 0 160 160" class="solid" id="theSolid">'+
+  '<polygon points="80,118 130,98 80,82 30,98" fill="#7dd3fc" fill-opacity=".35" stroke="#0ea5e9" stroke-width="2"/>'+
+  '<polygon points="80,26 30,98 80,118" fill="#0ea5e9" fill-opacity=".18" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<polygon points="80,26 130,98 80,118" fill="#0ea5e9" fill-opacity=".3" stroke="#0ea5e9" stroke-width="2.2"/>'+
+  '<line x1="80" y1="100" x2="80" y2="26" stroke="#fcd34d" stroke-dasharray="3,3" stroke-width="1.4"/>'+
+  '<text x="80" y="138" text-anchor="middle" fill="#cbd5e1" font-size="11" font-family="Montserrat">base '+a+'×'+a+'</text>'+
+  '<text x="86" y="70" fill="#cbd5e1" font-size="11" font-family="Montserrat">h='+h+'</text></svg>';}
+
+/* ── Planificações (net) ── */
+function netCubo(a){const s=42,x=54,y=20;let r='<svg viewBox="0 0 240 230" class="planif">';
+  const cels=[[1,0],[0,1],[1,1],[2,1],[1,2],[1,3]];
+  cels.forEach(c=>{r+='<rect x="'+(x+c[0]*s)+'" y="'+(y+c[1]*s)+'" width="'+s+'" height="'+s+'" fill="#0ea5e9" fill-opacity=".18" stroke="#0ea5e9" stroke-width="2"/>';});
+  r+='<text x="120" y="222" text-anchor="middle" fill="#cbd5e1" font-size="12" font-family="Montserrat">6 quadrados de lado '+a+' cm</text></svg>';return r;}
+function netCilindro(r,h){return '<svg viewBox="0 0 240 200" class="planif">'+
+  '<ellipse cx="45" cy="40" rx="26" ry="20" fill="#7dd3fc" fill-opacity=".35" stroke="#0ea5e9" stroke-width="2"/>'+
+  '<rect x="80" y="20" width="120" height="120" fill="#0ea5e9" fill-opacity=".18" stroke="#0ea5e9" stroke-width="2"/>'+
+  '<ellipse cx="45" cy="115" rx="26" ry="20" fill="#7dd3fc" fill-opacity=".35" stroke="#0ea5e9" stroke-width="2"/>'+
+  '<text x="140" y="160" text-anchor="middle" fill="#cbd5e1" font-size="11" font-family="Montserrat">retângulo 2πr × h</text>'+
+  '<text x="140" y="178" text-anchor="middle" fill="#cbd5e1" font-size="11" font-family="Montserrat">+ 2 círculos (r='+r+')</text></svg>';}
+
+/* ── Geradores de questão ── */
 function _mkOps(correto, gerarErrado, suf){
   const c=String(correto)+suf; const set=new Set([c]); let g=0;
-  while(set.size<4 && g++<80){ const e=gerarErrado(); if(e>0 && String(e)+suf!==c) set.add(String(e)+suf); }
+  while(set.size<4 && g++<60){ const e=gerarErrado(); if(e>0 && String(e)+suf!==c) set.add(String(e)+suf); }
   const ops=shuffle([...set]); return {ops, g:ops.indexOf(c)};
 }
-
-/* ════════ SVGs animados (lbl = medidas; "?" pulsa; alturas/diagonais se desenham) ════════ */
-function txt(x,y,t,cls){ return '<text x="'+x+'" y="'+y+'" text-anchor="middle" fill="#94a3b8" font-size="12.5" font-family="Open Sans"'+(cls?' class="'+cls+'"':'')+'>'+t+'</text>'; }
-function qm(x,y,t){ return '<text x="'+x+'" y="'+y+'" text-anchor="middle" fill="#fdba74" font-size="15" font-family="Montserrat" font-weight="900" class="qmark">'+t+'</text>'; }
-function svgQuadrado(l,m){ return '<svg viewBox="0 0 200 165"><rect x="55" y="22" width="90" height="90" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+txt(100,130,l+' cm')+txt(38,72,l+' cm')+qm(100,75,m)+'</svg>'; }
-function svgRetangulo(b,h,m){ return '<svg viewBox="0 0 210 160"><rect x="35" y="38" width="140" height="78" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+txt(105,134,b+' cm')+txt(20,80,h+' cm')+qm(105,82,m)+'</svg>'; }
-function svgTriangulo(b,h,m){ return '<svg viewBox="0 0 210 170"><polygon points="30,135 180,135 30,30" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<line x1="30" y1="135" x2="30" y2="30" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,3" class="measure"/>'+txt(105,153,'base = '+b+' cm')+'<text x="14" y="86" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans">h='+h+'</text>'+qm(80,100,m)+'</svg>'; }
-function svgPitagoras(a,b,m){ return '<svg viewBox="0 0 210 170"><polygon points="40,135 175,135 40,40" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<rect x="40" y="121" width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="1.3"/>'+
-  '<line x1="175" y1="135" x2="40" y2="40" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3" class="measure"/>'+
-  txt(108,153,a+' cm')+'<text x="22" y="92" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans">'+b+' cm</text>'+qm(118,82,m)+'</svg>'; }
-function svgParalelogramo(b,h,m){ return '<svg viewBox="0 0 220 160"><polygon points="40,120 170,120 185,40 55,40" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<line x1="170" y1="120" x2="170" y2="40" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,3" class="measure"/>'+
-  txt(110,140,'base = '+b+' cm')+'<text x="182" y="84" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Open Sans">h='+h+'</text>'+qm(95,86,m)+'</svg>'; }
-function svgLosango(D,d,m){ return '<svg viewBox="0 0 200 180"><polygon points="100,18 168,90 100,162 32,90" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<line x1="100" y1="18" x2="100" y2="162" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,3" class="measure"/>'+
-  '<line x1="32" y1="90" x2="168" y2="90" stroke="#fdba74" stroke-width="1.6" stroke-dasharray="4,3" class="measure"/>'+
-  '<text x="112" y="56" fill="#94a3b8" font-size="11.5" font-family="Open Sans">D='+D+'</text>'+
-  '<text x="120" y="103" fill="#94a3b8" font-size="11.5" font-family="Open Sans">d='+d+'</text>'+qm(70,86,m)+'</svg>'; }
-function svgTrapezio(B,b,h,m){ return '<svg viewBox="0 0 220 165"><polygon points="30,125 190,125 155,40 65,40" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<line x1="65" y1="125" x2="65" y2="40" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,3" class="measure"/>'+
-  txt(110,143,'B = '+B+' cm')+txt(110,33,'b = '+b+' cm')+'<text x="50" y="88" text-anchor="middle" fill="#94a3b8" font-size="11.5" font-family="Open Sans">h='+h+'</text>'+qm(120,90,m)+'</svg>'; }
-function svgCirculo(r,m){ return '<svg viewBox="0 0 200 175"><circle cx="100" cy="88" r="62" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<line x1="100" y1="88" x2="162" y2="88" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3" class="measure"/>'+
-  '<circle cx="100" cy="88" r="3" fill="#f59e0b"/>'+'<text x="128" y="80" text-anchor="middle" fill="#94a3b8" font-size="12.5" font-family="Open Sans">r = '+r+'</text>'+qm(100,118,m)+'</svg>'; }
-function svgHexagono(l,m){ return '<svg viewBox="0 0 200 180"><polygon points="100,18 162,54 162,126 100,162 38,126 38,54" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width="2.5"/>'+
-  '<text x="135" y="38" fill="#94a3b8" font-size="12" font-family="Open Sans">l='+l+'</text>'+qm(100,96,m)+'</svg>'; }
-
-/* ════════ Geradores por figura ════════ */
-function gQuadArea(){ const l=_ri(3,12), V=l*l; const o=_mkOps(V,()=>_pk([4*l,2*l*l,V+l,V-l,l*2]),' cm²');
-  return {tipo:'Área do Quadrado',svg:svgQuadrado(l,'?'),formula:'A = lado²',texto:'Calcule a Área:',ops:o.ops,g:o.g,expl:'Área do quadrado = lado² = '+l+'×'+l+' = '+V+' cm². (Perímetro seria 4×'+l+'='+(4*l)+' cm — não confunda!)'}; }
-function gQuadPerim(){ const l=_ri(3,14), V=4*l; const o=_mkOps(V,()=>_pk([l*l,2*l,V+l,V-2]),' cm');
-  return {tipo:'Perímetro do Quadrado',svg:svgQuadrado(l,'P=?'),formula:'P = 4 × lado',texto:'Calcule o Perímetro:',ops:o.ops,g:o.g,expl:'Perímetro = soma dos lados = 4 × '+l+' = '+V+' cm. (Área seria '+l+'²='+(l*l)+' cm².)'}; }
-function gRetArea(){ const b=_ri(5,14),h=_ri(3,9), V=b*h; const o=_mkOps(V,()=>_pk([2*(b+h),V+b,V-h,b+h]),' cm²');
-  return {tipo:'Área do Retângulo',svg:svgRetangulo(b,h,'?'),formula:'A = base × altura',texto:'Calcule a Área:',ops:o.ops,g:o.g,expl:'Área = base × altura = '+b+' × '+h+' = '+V+' cm².'}; }
-function gRetPerim(){ const b=_ri(5,14),h=_ri(3,9), V=2*(b+h); const o=_mkOps(V,()=>_pk([b*h,b+h,V+2,2*b+h]),' cm');
-  return {tipo:'Perímetro do Retângulo',svg:svgRetangulo(b,h,'P=?'),formula:'P = 2 × (base + altura)',texto:'Calcule o Perímetro:',ops:o.ops,g:o.g,expl:'Perímetro = 2×(base+altura) = 2×('+b+'+'+h+') = 2×'+(b+h)+' = '+V+' cm.'}; }
-function gTriArea(){ let b=_ri(4,14),h=_ri(3,10); if((b*h)%2)h++; const V=b*h/2; const o=_mkOps(V,()=>_pk([b*h,V+b,V-h,V+2]),' cm²');
-  return {tipo:'Área do Triângulo',svg:svgTriangulo(b,h,'?'),formula:'A = (base × altura) / 2',texto:'Calcule a Área:',ops:o.ops,g:o.g,expl:'Área do triângulo = (base × altura) ÷ 2 = ('+b+' × '+h+') ÷ 2 = '+(b*h)+' ÷ 2 = '+V+' cm². (É metade do retângulo de mesma base e altura.)'}; }
-function gPitagoras(){ const t=_pk([[3,4,5],[6,8,10],[5,12,13],[9,12,15],[8,15,17],[7,24,25]]); const o=_mkOps(t[2],()=>_pk([t[2]-1,t[2]+1,t[0]+t[1],t[2]+2]),' cm');
-  return {tipo:'Teorema de Pitágoras',svg:svgPitagoras(t[0],t[1],'?'),formula:'h² = cateto² + cateto²',texto:'Calcule a hipotenusa:',ops:o.ops,g:o.g,expl:'Pitágoras: h² = '+t[0]+'² + '+t[1]+'² = '+(t[0]*t[0])+' + '+(t[1]*t[1])+' = '+(t[0]*t[0]+t[1]*t[1])+'. Logo h = √'+(t[0]*t[0]+t[1]*t[1])+' = '+t[2]+' cm.'}; }
-function gParalelogramo(){ const b=_ri(5,13),h=_ri(3,9), V=b*h; const o=_mkOps(V,()=>_pk([2*(b+h),b+h,V+b,V-h]),' cm²');
-  return {tipo:'Área do Paralelogramo',svg:svgParalelogramo(b,h,'?'),formula:'A = base × altura',texto:'Calcule a Área:',ops:o.ops,g:o.g,expl:'Área do paralelogramo = base × altura = '+b+' × '+h+' = '+V+' cm². Use a altura (perpendicular), não o lado inclinado!'}; }
-function gLosango(){ let D=_ri(6,16),d=_ri(4,D-1); if((D*d)%2)d++; if(d>=D)d=D-2; const V=D*d/2; const o=_mkOps(V,()=>_pk([D*d,V+D,V-d,D+d]),' cm²');
-  return {tipo:'Área do Losango',svg:svgLosango(D,d,'?'),formula:'A = (D × d) / 2',texto:'D e d são as diagonais:',ops:o.ops,g:o.g,expl:'Área do losango = (diagonal maior × diagonal menor) ÷ 2 = ('+D+' × '+d+') ÷ 2 = '+(D*d)+' ÷ 2 = '+V+' cm².'}; }
-function gTrapezio(){ let B=_ri(8,16),b=_ri(3,B-2),h=_ri(3,9); if(((B+b)*h)%2)h++; const V=(B+b)*h/2; const o=_mkOps(V,()=>_pk([B*b,V+h,V-b,(B+b)*h]),' cm²');
-  return {tipo:'Área do Trapézio',svg:svgTrapezio(B,b,h,'?'),formula:'A = (B + b) × h / 2',texto:'B e b são as bases:',ops:o.ops,g:o.g,expl:'Área do trapézio = (base maior + base menor) × altura ÷ 2 = ('+B+' + '+b+') × '+h+' ÷ 2 = '+(B+b)+' × '+h+' ÷ 2 = '+V+' cm².'}; }
-function gCircArea(){ const r=_ri(2,9), V=r*r; const o=_mkOps(V,()=>_pk([2*r,4*r,V*2,V+r,r,3*r,V+2,V-1]),'π cm²');
-  return {tipo:'Área do Círculo',svg:svgCirculo(r,'A=?'),formula:'A = π × r²',texto:'Área (em função de π):',ops:o.ops,g:o.g,expl:'Área do círculo = π × r² = π × '+r+'² = '+V+'π cm². (Cuidado: 2πr é o comprimento, não a área.)'}; }
-function gCircCirc(){ const r=_ri(2,12), V=2*r; const o=_mkOps(V,()=>_pk([r*r,r,V+2,V*2,V-2,3*r,2*r+1]),'π cm');
-  return {tipo:'Comprimento da Circunferência',svg:svgCirculo(r,'C=?'),formula:'C = 2 × π × r',texto:'Comprimento (em função de π):',ops:o.ops,g:o.g,expl:'Comprimento da circunferência = 2 × π × r = 2 × π × '+r+' = '+V+'π cm. (A área seria '+(r*r)+'π cm².)'}; }
-function gHexagono(){ const l=_ri(3,11), V=6*l; const o=_mkOps(V,()=>_pk([4*l,5*l,V+l,l*l]),' cm');
-  return {tipo:'Perímetro do Hexágono',svg:svgHexagono(l,'P=?'),formula:'P = 6 × lado',texto:'Hexágono regular — perímetro:',ops:o.ops,g:o.g,expl:'O hexágono regular tem 6 lados iguais. Perímetro = 6 × '+l+' = '+V+' cm.'}; }
-
-const GENS={gQuadArea,gQuadPerim,gRetArea,gRetPerim,gTriArea,gPitagoras,gParalelogramo,gLosango,gTrapezio,gCircArea,gCircCirc,gHexagono};
 function gerarQuestao(){
-  const listas={
-    facil:  ['gQuadArea','gQuadPerim','gRetArea','gRetPerim','gTriArea','gTriArea'],
-    normal: ['gTriArea','gParalelogramo','gTrapezio','gLosango','gCircArea','gCircCirc','gRetArea','gQuadPerim'],
-    dificil:['gPitagoras','gTrapezio','gLosango','gCircArea','gCircCirc','gHexagono','gParalelogramo','gTriArea']
-  };
-  const lista = listas[diff==='treino'?'normal':diff];
-  return GENS[_pk(lista)]();
+  const tipos = diff==='facil'?['cubo','bloco'] : diff==='dificil'?['cubo','bloco','cilindro','piramide','cone','esfera'] : ['cubo','bloco','cilindro','piramide'];
+  const t=_pk(tipos);
+  if(t==='cubo'){ const a=_ri(2,9), V=a*a*a;
+    const o=_mkOps(V, ()=>_pk([a*a, 6*a*a, a*a*a+a, 3*a, a*a*a-a*a]), ' cm³');
+    return {tipo:'Volume do Cubo', svg:svgCubo(a), planif:netCubo(a), formula:'V = a³', texto:'Calcule o volume:', ops:o.ops, g:o.g, expl:'Volume do cubo = a³ = '+a+'×'+a+'×'+a+' = '+V+' cm³.'}; }
+  if(t==='bloco'){ const a=_ri(3,9),b=_ri(2,7),c=_ri(2,6), V=a*b*c;
+    const o=_mkOps(V, ()=>_pk([a*b, a+b+c, 2*(a*b+b*c+a*c), a*b*c+a, V-b]), ' cm³');
+    return {tipo:'Volume do Paralelepípedo', svg:svgBloco(a,b,c), planif:null, formula:'V = a × b × c', texto:'Calcule o volume:', ops:o.ops, g:o.g, expl:'Volume do bloco = comprimento × largura × altura = '+a+'×'+b+'×'+c+' = '+V+' cm³.'}; }
+  if(t==='cilindro'){ const r=_ri(2,6),h=_ri(2,8), V=r*r*h;
+    const o=_mkOps(V, ()=>_pk([2*r*h, r*h, V+r, 2*r*r, V-h]), 'π cm³');
+    return {tipo:'Volume do Cilindro', svg:svgCilindro(r,h), planif:netCilindro(r,h), formula:'V = π r² h', texto:'Volume (em função de π):', ops:o.ops, g:o.g, expl:'Volume do cilindro = π·r²·h = π·'+r+'²·'+h+' = '+V+'π cm³.'}; }
+  if(t==='piramide'){ const a=_ri(3,9), h=_pk([3,6,9]), V=a*a*h/3;
+    const o=_mkOps(V, ()=>_pk([a*a*h, a*a, a*a*h/3+a, 2*a*h, V+a*a]), ' cm³');
+    return {tipo:'Volume da Pirâmide', svg:svgPiramide(a,h), planif:null, formula:'V = (área da base × h) / 3', texto:'Base quadrada — calcule o volume:', ops:o.ops, g:o.g, expl:'Volume = (base × altura)/3 = ('+a+'²·'+h+')/3 = '+(a*a*h)+'/3 = '+V+' cm³.'}; }
+  if(t==='cone'){ const r=_ri(2,6), h=_pk([3,6,9]), V=r*r*h/3;
+    const o=_mkOps(V, ()=>_pk([r*r*h, 2*r*h, V+r, r*r, V+h]), 'π cm³');
+    return {tipo:'Volume do Cone', svg:svgCone(r,h), planif:null, formula:'V = π r² h / 3', texto:'Volume (em função de π):', ops:o.ops, g:o.g, expl:'Volume do cone = π·r²·h/3 = π·'+r+'²·'+h+'/3 = '+V+'π cm³. (É 1/3 do cilindro de mesma base.)'}; }
+  // esfera
+  const r=_pk([3,6]), V=4*r*r*r/3;
+  const o=_mkOps(V, ()=>_pk([4*r*r, r*r*r, V+r, 2*r*r*r, V-r]), 'π cm³');
+  return {tipo:'Volume da Esfera', svg:svgEsfera(r), planif:null, formula:'V = (4/3) π r³', texto:'Volume (em função de π):', ops:o.ops, g:o.g, expl:'Volume da esfera = (4/3)·π·r³ = (4/3)·π·'+r+'³ = '+V+'π cm³.'};
 }
 
 function startGame(){
@@ -315,19 +336,39 @@ function startGame(){
   show('screenGame'); document.getElementById('hudScore').textContent='0'; document.getElementById('hudStreak').classList.remove('show');
   renderQuestion();
 }
+
 function renderQuestion(){
   if(qIdx>=questions.length){ endGame(); return; }
-  const q=questions[qIdx]; answering=false; selected=null;
+  const q=questions[qIdx]; answering=false; selected=null; planificado=false; girando=false;
   document.getElementById('hudQ').textContent=qIdx+1;
   document.getElementById('qTipo').textContent=q.tipo;
-  document.getElementById('qSvg').innerHTML=q.svg;
-  document.getElementById('qFormula').textContent=q.formula||'';
-  document.getElementById('qText').innerHTML=q.texto;
-  document.getElementById('optGrid').innerHTML=q.ops.map((op,i)=>'<button class="opt-btn" data-idx="'+i+'" onclick="selectOpt(this,'+i+')">'+op+'</button>').join('');
+  document.getElementById('stage').innerHTML=q.svg;
+  document.getElementById('qFormula').textContent=q.formula;
+  document.getElementById('qText').textContent=q.texto;
+  const bg=document.getElementById('btnGirar'); bg.classList.remove('off'); bg.textContent='🔄 Girar';
+  const bp=document.getElementById('btnPlanif'); bp.style.display=q.planif?'inline-block':'none'; bp.classList.add('off'); bp.textContent='📦 Planificar';
+  const grid=document.getElementById('optGrid');
+  grid.innerHTML=q.ops.map((op,i)=>'<button class="opt-btn" data-idx="'+i+'" onclick="selectOpt(this,'+i+')">'+op+'</button>').join('');
   document.getElementById('btnAnswer').disabled=true;
   startTimer();
 }
+
+function toggleGirar(){
+  const s=document.getElementById('theSolid'); if(!s)return;
+  girando=!girando; s.classList.toggle('spin', girando);
+  document.getElementById('btnGirar').classList.toggle('off', !girando);
+  document.getElementById('btnGirar').textContent = girando?'⏸ Parar':'🔄 Girar';
+}
+function togglePlanif(){
+  const q=questions[qIdx]; if(!q.planif)return;
+  planificado=!planificado;
+  document.getElementById('stage').innerHTML = planificado ? q.planif : q.svg;
+  const bp=document.getElementById('btnPlanif'); bp.classList.toggle('off', !planificado); bp.textContent=planificado?'🧊 Montar':'📦 Planificar';
+  const bg=document.getElementById('btnGirar'); bg.style.display=planificado?'none':'inline-block'; girando=false;
+}
+
 function selectOpt(el,idx){ if(answering)return; document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); selected=idx; document.getElementById('btnAnswer').disabled=false; }
+
 function startTimer(){
   clearInterval(timerInterval); timerStarted=Date.now();
   const sec=getTimerSec(); const bar=document.getElementById('timerBar');
@@ -339,6 +380,7 @@ function startTimer(){
     if(elapsed>=sec){ clearInterval(timerInterval); submitAnswer(true); }
   },200);
 }
+
 function submitAnswer(timeout=false){
   if(answering)return; answering=true; clearInterval(timerInterval);
   document.getElementById('btnAnswer').disabled=true;
@@ -351,9 +393,11 @@ function submitAnswer(timeout=false){
   document.querySelectorAll('.opt-btn').forEach((b,i)=>{ b.disabled=true; if(i===q.g)b.classList.add('reveal-ok'); else if(i===selected&&!ok)b.classList.add('reveal-err'); });
   try{ if(window.Arcade){ if(ok){Arcade.correct(streak);Arcade.confetti(streak>=3?70:30);if(streak>=2)Arcade.combo(streak);} else if(timeout){Arcade.timeUp();} else {Arcade.wrong();} } }catch(e){}
   showFeedback(ok,pts,timeout,q);
-  _advanced=false; _advanceTimer=setTimeout(nextQuestion, ok?3400:5400);
+  _advanced=false; _advanceTimer=setTimeout(nextQuestion, ok?3200:5200);
 }
+
 function nextQuestion(){ if(_advanced)return; _advanced=true; clearTimeout(_advanceTimer); hideFeedback(); qIdx++; renderQuestion(); }
+
 function showFeedback(ok,pts,timeout,q){
   const fb=document.getElementById('fbToast');
   fb.className='feedback '+(ok?'perfect':'wrong')+' show';
@@ -368,6 +412,7 @@ function updateHUD(){
   const sk=document.getElementById('hudStreak');
   if(streak>=2){ document.getElementById('streakNum').textContent=streak; sk.classList.add('show'); } else sk.classList.remove('show');
 }
+
 function endGame(){
   clearInterval(timerInterval); hideFeedback();
   const ws=PL_Rankings.calcWeighted(score,diff);
@@ -376,7 +421,7 @@ function endGame(){
   const acc=questions.length?Math.round(acertos/questions.length*100):0;
   const icon=ws>=1200?'🏆':ws>=800?'🎯':ws>=400?'⚡':'📚';
   document.getElementById('resIcon').textContent=icon;
-  document.getElementById('resTitle').textContent=ws>=1200?'Mestre das Formas!':ws>=800?'Muito Bem!':ws>=400?'Bom Jogo!':'Continue Praticando!';
+  document.getElementById('resTitle').textContent=ws>=1200?'Mestre dos Sólidos!':ws>=800?'Muito Bem!':ws>=400?'Bom Jogo!':'Continue Praticando!';
   animScore(ws);
   document.getElementById('resRaw').textContent='Score bruto: '+score.toLocaleString('pt-BR')+' × '+getMultiplier().toFixed(1)+' = '+ws.toLocaleString('pt-BR');
   document.getElementById('resSub').textContent='pontos no ranking · '+PL_Rankings.DIFF_LABEL[diff];
