@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Matrizes & Determinantes – Professor Leão</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0A1628;--navy-2:#0F1E38;--navy-3:#152545;--navy-4:#1B2E6B;
+  --accent:#14b8a6;--al:#5eead4;
+  --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;--white:#fff;--sil:#8892B4;
+  --fh:'Montserrat',sans-serif;--fb:'Open Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--navy)}
+body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,184,166,.18);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar__left{display:flex;align-items:center;gap:10px}
+.topbar__logo{font-family:var(--fh);font-size:14px;font-weight:800;letter-spacing:1px}
+.topbar__logo span{color:var(--al)}
+.topbar__tag{background:rgba(20,184,166,.15);border:1px solid rgba(20,184,166,.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--al)}
+.btn-back{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center}
+.btn-back:hover{color:var(--white)}
+.wrap{width:100%;max-width:680px;padding:24px 16px 60px;flex:1}
+.lobby{background:var(--navy-2);border:1px solid rgba(20,184,166,.15);border-radius:20px;padding:40px 32px;text-align:center}
+.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(20,184,166,.45))}
+.lobby__title{font-family:var(--fh);font-size:28px;font-weight:900;margin-bottom:8px}
+.lobby__sub{color:var(--sil);font-size:15px;margin-bottom:28px;line-height:1.55}
+.lobby__rules{background:var(--navy-3);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
+.lobby__rules h3{font-family:var(--fh);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--al);margin-bottom:10px}
+.rule-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--sil);margin-bottom:6px;line-height:1.4}
+.lobby__input{width:100%;max-width:320px;padding:13px 16px;border-radius:10px;background:var(--navy-3);border:1px solid rgba(20,184,166,.2);color:var(--white);font-size:15px;outline:none;text-align:center;margin-bottom:8px;transition:.2s;display:block;margin-left:auto;margin-right:auto}
+.lobby__input:focus{border-color:var(--accent)}
+.lobby__input::placeholder{color:rgba(255,255,255,.2)}
+.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.diff-btn{padding:10px 18px;border-radius:8px;font-family:var(--fh);font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:var(--navy-3);color:var(--sil);cursor:pointer;transition:.2s;line-height:1.3;text-align:center}
+.diff-btn.active{border-color:var(--accent);background:rgba(20,184,166,.2);color:var(--white)}
+.diff-mult{font-size:10px;opacity:.7;display:block;margin-top:2px}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,#0f766e,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(20,184,166,.35);margin-top:16px}
+.btn-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.hud__progress{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--sil)}
+.hud__progress strong{color:var(--white)}
+.hud__right{display:flex;align-items:center;gap:10px}
+.hud__score{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--al)}
+.hud__streak{display:flex;align-items:center;gap:4px;font-family:var(--fh);font-size:12px;font-weight:800;color:var(--warn);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:4px 10px;opacity:0;transition:.3s}
+.hud__streak.show{opacity:1}
+.timer-wrap{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:4px}
+.timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width .25s linear,background .3s}
+.timer-text{text-align:right;font-family:var(--fh);font-size:11px;color:var(--sil);margin-bottom:16px}
+.timer-text strong{color:var(--white)}
+.q-card{background:var(--navy-2);border:1px solid rgba(20,184,166,.2);border-radius:20px;padding:26px 18px;margin-bottom:14px;text-align:center}
+.q-tag{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:16px}
+.prob{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:16px;color:#fff}
+.q-ask{font-size:14.5px;color:var(--sil);margin-top:16px}
+.q-ask b{color:#fff}
+/* Matriz */
+.mtx{display:inline-flex;flex-direction:column;gap:5px;position:relative;padding:7px 13px;margin:3px 5px;vertical-align:middle}
+.mtx::before,.mtx::after{content:'';position:absolute;top:2px;bottom:2px;width:7px;border:2.5px solid var(--al)}
+.mtx::before{left:0;border-right:none;border-radius:5px 0 0 5px}
+.mtx::after{right:0;border-left:none;border-radius:0 5px 5px 0}
+.mrow{display:flex;gap:13px;justify-content:center}
+.mcell{font-family:var(--fh);font-weight:800;font-size:16px;min-width:20px;text-align:center}
+.opt-card .mtx{padding:6px 11px}.opt-card .mcell{font-size:14px;min-width:16px}.opt-card .mrow{gap:9px}
+.opt-num{font-family:var(--fh);font-weight:900;font-size:22px;color:#fff}
+/* Opções */
+.opt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.opt-card{position:relative;background:var(--navy-2);border:2px solid rgba(20,184,166,.22);border-radius:14px;padding:14px 8px 8px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:6px;user-select:none;min-height:64px;justify-content:center}
+.opt-card:hover:not(.disabled){border-color:var(--accent);transform:translateY(-2px);background:var(--navy-3)}
+.opt-card.disabled{cursor:default}
+.opt-letter{font-family:var(--fh);font-size:11px;font-weight:800;color:var(--sil)}
+.opt-card.reveal-ok{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok)}
+.opt-card.reveal-err{border-color:var(--err);opacity:.6}
+@media(max-width:480px){.opt-grid{grid-template-columns:repeat(2,1fr)}}
+.feedback{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(160px);width:calc(100% - 32px);max-width:520px;z-index:100;background:var(--navy-3);border:1px solid rgba(20,184,166,.2);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 16px 48px rgba(0,0,0,.6);transition:.35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+.feedback.show{transform:translateX(-50%) translateY(0)}
+.feedback.perfect{border-color:var(--ok);background:rgba(22,101,52,.4)}
+.feedback.wrong{border-color:var(--err);background:rgba(120,20,20,.3)}
+.feedback__icon{font-size:32px;flex-shrink:0}
+.feedback__text{flex:1}
+.feedback__title{font-family:var(--fh);font-size:14px;font-weight:800}
+.feedback__sub{font-size:12.5px;color:rgba(255,255,255,.72);margin-top:3px;line-height:1.5}
+.feedback__pts{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al);flex-shrink:0}
+.feedback.perfect .feedback__pts{color:#4ade80}
+.feedback.wrong .feedback__pts{color:#f87171}
+.result{background:var(--navy-2);border:1px solid rgba(20,184,166,.15);border-radius:20px;padding:36px 28px;text-align:center}
+.result__icon{font-size:72px;margin-bottom:12px;display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.result__title{font-family:var(--fh);font-size:26px;font-weight:900;margin-bottom:6px}
+.result__score{font-family:var(--fh);font-size:52px;font-weight:900;color:var(--al);line-height:1;margin:12px 0 2px}
+.result__raw{font-size:12px;color:var(--sil);margin-bottom:4px}
+.result__sub{font-size:14px;color:var(--sil);margin-bottom:24px}
+.result__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.result__stat{background:var(--navy-3);border-radius:10px;padding:14px}
+.result__stat-val{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al)}
+.result__stat-lbl{font-size:11px;color:var(--sil);margin-top:3px}
+.result__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.btn-replay{padding:13px 28px;border-radius:10px;font-family:var(--fh);font-weight:800;font-size:14px;background:linear-gradient(135deg,#0f766e,var(--accent));color:var(--white);border:none;cursor:pointer;transition:.2s}
+.btn-hub{padding:13px 24px;border-radius:10px;font-family:var(--fh);font-weight:700;font-size:14px;background:rgba(255,255,255,.07);color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s}
+.btn-hub:hover{color:var(--white)}
+.mini-rank{background:var(--navy-3);border-radius:14px;overflow:hidden}
+.mini-rank-head{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center}
+.mini-rank-head h3{font-family:var(--fh);font-size:13px;font-weight:800}
+.period-tabs{display:flex;gap:4px}
+.period-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--sil);border:1px solid transparent;transition:.2s}
+.period-tab.active{background:rgba(20,184,166,.2);border-color:rgba(20,184,166,.35);color:var(--al)}
+.rank-rows{padding:4px 0}
+.rrow{display:grid;grid-template-columns:30px 28px 1fr auto;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;transition:.2s}
+.rrow:hover{background:rgba(255,255,255,.04)}
+.rrow--self{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.2)}
+.rpos{font-family:var(--fh);font-size:12px;font-weight:800;text-align:center;color:var(--sil)}
+.rpos-1{color:#f59e0b}.rpos-2{color:#94a3b8}.rpos-3{color:#b87333}
+.rav{width:28px;height:28px;border-radius:50%;background:var(--navy-4);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:11px;font-weight:800;color:var(--al);flex-shrink:0}
+.rname{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rscore{font-family:var(--fh);font-size:14px;font-weight:900;color:var(--al);text-align:right}
+.rscore-1{color:#f59e0b}.rscore-2{color:#94a3b8}.rscore-3{color:#b87333}
+.rdiff{font-size:9px;opacity:.55;margin-top:1px}
+@media(max-width:480px){.result__grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
+    <div class="topbar__tag">🔢 Matrizes</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
+    <a href="../jogos.html" class="btn-back">← Arena</a>
+  </div>
+</header>
+<div class="wrap">
+  <div id="screenLobby">
+    <div class="lobby">
+      <span class="lobby__icon">🔢</span>
+      <div class="lobby__title">Matrizes &amp; Determinantes</div>
+      <div class="lobby__sub">Domine o tema clássico do CFO!<br/>Elemento a<sub>ij</sub>, traço, soma, multiplicação por escalar, transposta e determinante (2×2 e 3×3 por Sarrus).</div>
+      <div class="lobby__rules">
+        <h3>🔢 Como jogar (contra o tempo)</h3>
+        <div class="rule-item">🧮 <span>Resolva a operação com matrizes e escolha a resposta certa</span></div>
+        <div class="rule-item">✅ <span>Acerto = <strong>+100 pts</strong> + bônus de sequência (combo)</span></div>
+        <div class="rule-item">❌ <span>Errou? Mostro a <strong>regra/cálculo</strong> e zero o combo</span></div>
+        <div class="rule-item">⌨️ <span>No PC: teclas <strong>1, 2, 3, 4</strong> escolhem as opções</span></div>
+      </div>
+      <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
+      <div class="diff-row">
+        <button class="diff-btn active" data-diff="facil"   onclick="setDiff(this)">😊 Fácil<span class="diff-mult">90s · ×0.7</span></button>
+        <button class="diff-btn"        data-diff="normal"  onclick="setDiff(this)">⚡ Normal<span class="diff-mult">70s · ×1.0</span></button>
+        <button class="diff-btn"        data-diff="dificil" onclick="setDiff(this)">🔥 Difícil<span class="diff-mult">55s · ×1.5</span></button>
+        <button class="diff-btn"        data-diff="treino"  onclick="setDiff(this)">🎓 Treino<span class="diff-mult">12 itens · ×0.5</span></button>
+      </div>
+      <button class="btn-start" onclick="startGame()">▶ Iniciar</button>
+    </div>
+  </div>
+
+  <div id="screenGame" style="display:none">
+    <div class="hud">
+      <div class="hud__progress">Item <strong id="hudQ">1</strong></div>
+      <div class="hud__right">
+        <div class="hud__streak" id="hudStreak">🔥 ×<span id="streakNum">0</span></div>
+        <div class="hud__score" id="hudScore">0</div>
+      </div>
+    </div>
+    <div class="timer-wrap"><div class="timer-bar" id="timerBar" style="width:100%"></div></div>
+    <div class="timer-text">⏱ <strong id="timerNum">70</strong>s</div>
+    <div class="q-card">
+      <div class="q-tag" id="qTag">🔢 Matrizes</div>
+      <div class="prob" id="probArea"></div>
+      <div class="q-ask" id="qAsk"></div>
+    </div>
+    <div class="opt-grid" id="optGrid"></div>
+  </div>
+
+  <div id="screenResult" style="display:none">
+    <div class="result">
+      <span class="result__icon" id="resIcon">🏆</span>
+      <div class="result__title" id="resTitle">Tempo!</div>
+      <div class="result__score" id="resScore">0</div>
+      <div class="result__raw" id="resRaw"></div>
+      <div class="result__sub" id="resSub"></div>
+      <div class="result__grid">
+        <div class="result__stat"><div class="result__stat-val" id="rsAcertos">0</div><div class="result__stat-lbl">Acertos</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsAcc">0%</div><div class="result__stat-lbl">Precisão</div></div>
+        <div class="result__stat"><div class="result__stat-val" id="rsStreak">0</div><div class="result__stat-lbl">Combo máx</div></div>
+      </div>
+      <div class="result__actions">
+        <button class="btn-replay" onclick="startGame()">↺ Jogar Novamente</button>
+        <button class="btn-hub" onclick="location.href='../jogos.html'">← Arena</button>
+      </div>
+      <div class="mini-rank">
+        <div class="mini-rank-head"><h3>🏆 Ranking</h3>
+          <div class="period-tabs">
+            <div class="period-tab active" onclick="setResPeriod(this,'daily')">Hoje</div>
+            <div class="period-tab" onclick="setResPeriod(this,'weekly')">Semana</div>
+            <div class="period-tab" onclick="setResPeriod(this,'all')">Geral</div>
+          </div>
+        </div>
+        <div class="rank-rows" id="rankRows"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="feedback" id="fbToast" onclick="nextItem()">
+  <div class="feedback__icon" id="fbIcon">✅</div>
+  <div class="feedback__text">
+    <div class="feedback__title" id="fbTitle">Correto!</div>
+    <div class="feedback__sub" id="fbSub"></div>
+  </div>
+  <div class="feedback__pts" id="fbPts">+100</div>
+</div>
+
+<script src="arcade.js"></script>
+<script src="rankings.js"></script>
+<script src="../auth.js"></script>
+<script>
+'use strict';
+const GAME_ID = 'matrizes';
+
+/* ════════ Helpers de matriz ════════ */
+const _pk=a=>a[Math.floor(Math.random()*a.length)];
+const ri=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function randM(n,lo,hi){ const M=[]; for(let i=0;i<n;i++){ const r=[]; for(let j=0;j<n;j++) r.push(ri(lo,hi)); M.push(r); } return M; }
+function det2(M){ return M[0][0]*M[1][1]-M[0][1]*M[1][0]; }
+function det3(M){ const[a,b,c]=M[0],[d,e,f]=M[1],[g,h,i]=M[2]; return a*(e*i-f*h)-b*(d*i-f*g)+c*(d*h-e*g); }
+function transpose(M){ return M[0].map((_,j)=>M.map(r=>r[j])); }
+function rot180(M){ return M.map(r=>r.slice()).reverse().map(r=>r.reverse()); }
+function neg(M){ return M.map(r=>r.map(v=>-v)); }
+function mtxHTML(M){ return '<div class="mtx">'+M.map(r=>'<div class="mrow">'+r.map(x=>'<span class="mcell">'+x+'</span>').join('')+'</div>').join('')+'</div>'; }
+function renderOpt(kind,v){ return kind==='mtx'? mtxHTML(v) : '<span class="opt-num">'+v+'</span>'; }
+function optsNum(correct,dpool){
+  const seen=new Set([correct]); const d=[];
+  (dpool||[]).forEach(x=>{ if(!seen.has(x)){ seen.add(x); d.push(x); } });
+  let k=1; while(d.length<3){ [correct+k,correct-k,correct+2*k,correct-2*k].forEach(c=>{ if(d.length<3&&!seen.has(c)){ seen.add(c); d.push(c); } }); k++; if(k>60)break; }
+  const arr=shuffle([correct,...d.slice(0,3)]);
+  return { raw:arr, ci:arr.indexOf(correct) };
+}
+function optsMtx(correctM,dpool){
+  const key=m=>JSON.stringify(m); const ck=key(correctM); const seen=new Set([ck]); const d=[];
+  (dpool||[]).forEach(m=>{ const k=key(m); if(!seen.has(k)){ seen.add(k); d.push(m); } });
+  if(d.length<3) return null;
+  const arr=shuffle([correctM,...d.slice(0,3)]);
+  return { raw:arr, ci:arr.findIndex(m=>key(m)===ck) };
+}
+
+/* ════════ Geradores ════════ */
+function genElem(n){
+  const M=randM(n,-3,9), i=ri(1,n), j=ri(1,n), correct=M[i-1][j-1];
+  const dpool=[M[j-1][i-1]]; M.forEach(r=>r.forEach(v=>dpool.push(v)));
+  const o=optsNum(correct,dpool);
+  return {tag:'🔢 Elemento', kind:'num', qHTML:mtxHTML(M), qAsk:'Qual é o elemento <b>a<sub>'+i+j+'</sub></b> (linha '+i+', coluna '+j+')?', opts:o.raw, ci:o.ci, rule:'a<sub>'+i+j+'</sub> é o elemento da linha '+i+', coluna '+j+' = '+correct+'.'};
+}
+function genTraco(n){
+  const M=randM(n,-3,9); let tr=0,anti=0,all=0;
+  for(let i=0;i<n;i++){ tr+=M[i][i]; anti+=M[i][n-1-i]; } M.forEach(r=>r.forEach(v=>all+=v));
+  const o=optsNum(tr,[anti,all,tr+ri(1,3),tr-ri(1,3)]);
+  return {tag:'➕ Traço', kind:'num', qHTML:mtxHTML(M), qAsk:'Qual é o <b>traço</b> (soma da diagonal principal)?', opts:o.raw, ci:o.ci, rule:'O traço é a soma da diagonal principal = '+tr+'.'};
+}
+function genDet2(neg_){
+  const lo=neg_?-5:0; const M=randM(2,lo,9); const d=det2(M);
+  const o=optsNum(d,[M[0][0]*M[1][1]+M[0][1]*M[1][0], M[0][0]*M[1][1], -d, M[0][1]*M[1][0]]);
+  return {tag:'🧮 Determinante 2×2', kind:'num', qHTML:mtxHTML(M), qAsk:'Qual é o <b>determinante</b> desta matriz?', opts:o.raw, ci:o.ci, rule:'det = (a·d) − (b·c) = ('+M[0][0]+'·'+M[1][1]+') − ('+M[0][1]+'·'+M[1][0]+') = '+d+'.'};
+}
+function genDet3(){
+  const M=randM(3,-2,5); const d=det3(M);
+  const o=optsNum(d,[-d, d+ri(1,6), d-ri(1,6), d+ri(7,12)]);
+  return {tag:'🧮 Determinante 3×3', kind:'num', qHTML:mtxHTML(M), qAsk:'Calcule o <b>determinante</b> (Regra de Sarrus):', opts:o.raw, ci:o.ci, rule:'Pela Regra de Sarrus, o determinante vale '+d+'.'};
+}
+function genSoma(){
+  const A=randM(2,-2,7), B=randM(2,-2,7);
+  const S=A.map((r,i)=>r.map((v,j)=>v+B[i][j]));
+  const D=A.map((r,i)=>r.map((v,j)=>v-B[i][j]));
+  const W=S.map(r=>r.slice()); W[0][0]+=ri(1,3); W[1][1]-=ri(1,3);
+  const o=optsMtx(S,[D,B,W,A]); if(!o)return null;
+  return {tag:'➕ Soma de matrizes', kind:'mtx', qHTML:'A = '+mtxHTML(A)+' &nbsp;·&nbsp; B = '+mtxHTML(B), qAsk:'Qual é <b>A + B</b>?', opts:o.raw, ci:o.ci, rule:'Soma elemento a elemento: cada posição é a<sub>ij</sub> + b<sub>ij</sub>.'};
+}
+function genEscalar(){
+  const k=ri(2,4), A=randM(2,-2,6);
+  const K=A.map(r=>r.map(v=>v*k));
+  const add=A.map(r=>r.map(v=>v+k));
+  const km1=A.map(r=>r.map(v=>v*(k+1)));
+  const o=optsMtx(K,[add,A,km1]); if(!o)return null;
+  return {tag:'✖️ Escalar', kind:'mtx', qHTML:'k = '+k+' &nbsp;·&nbsp; A = '+mtxHTML(A), qAsk:'Qual é <b>'+k+' · A</b>?', opts:o.raw, ci:o.ci, rule:'Multiplica-se cada elemento da matriz por '+k+'.'};
+}
+function genTransposta(n){
+  let A, T, guard=0;
+  do{ A=randM(n,-2,8); T=transpose(A); guard++; }while(JSON.stringify(A)===JSON.stringify(T) && guard<12);
+  const o=optsMtx(T,[A, rot180(A), neg(T), rot180(T)]); if(!o)return null;
+  return {tag:'🔄 Transposta', kind:'mtx', qHTML:'A = '+mtxHTML(A), qAsk:'Qual é a <b>transposta A<sup>t</sup></b>?', opts:o.raw, ci:o.ci, rule:'Na transposta, as linhas viram colunas (a<sub>ij</sub> → a<sub>ji</sub>).'};
+}
+function genLei(){
+  const rules=[ {f:(i,j)=>i+j,txt:'i + j'}, {f:(i,j)=>2*i-j,txt:'2·i − j'}, {f:(i,j)=>i*j,txt:'i · j'}, {f:(i,j)=>3*i-2*j,txt:'3·i − 2·j'} ];
+  const R=_pk(rules), n=2, i=ri(1,n), j=ri(1,n), correct=R.f(i,j);
+  const o=optsNum(correct,[R.f(j,i), correct+1, correct-1, i+j, i*j]);
+  return {tag:'📐 Lei de formação', kind:'num', qHTML:'<div style="font-size:17px">Matriz de ordem '+n+' com <b>a<sub>ij</sub> = '+R.txt+'</b></div>', qAsk:'Qual é o elemento <b>a<sub>'+i+j+'</sub></b>?', opts:o.raw, ci:o.ci, rule:'Aplicando a<sub>ij</sub> = '+R.txt+' com i='+i+' e j='+j+', obtém-se '+correct+'.'};
+}
+
+function genQuestion(){
+  let q=null, guard=0;
+  while(!q && guard++<30){
+    if(diff==='facil') q=_pk([ ()=>genElem(2), ()=>genTraco(2), ()=>genDet2(false), ()=>genLei() ])();
+    else if(diff==='dificil') q=_pk([ ()=>genDet3(), ()=>genTransposta(3), ()=>genTraco(3), ()=>genDet2(true), ()=>genLei() ])();
+    else q=_pk([ ()=>genDet2(true), ()=>genSoma(), ()=>genEscalar(), ()=>genTransposta(2), ()=>genElem(3) ])();
+    if(q && q.qHTML+q.qAsk===_lastKey) q=null;
+  }
+  if(q) _lastKey=q.qHTML+q.qAsk;
+  return q || genDet2(false);
+}
+
+/* ════════ Estado / loop ════════ */
+let diff='normal', playerName='', playerEmail='';
+let score=0, streak=0, maxStreak=0, acertos=0, respondidas=0, itemNo=0;
+let cur=null, answering=false, _lastKey='';
+let remaining=70, timerInt=null, _t0=0, _advTimer=null, _advanced=false;
+const TREINO_N=12;
+
+try{
+  const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
+  if(sess){ document.getElementById('inputNome').value=PL_Rankings.getCodename()||sess.name||''; playerEmail=sess.email||''; }
+}catch(e){}
+
+function setDiff(el){ document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); diff=el.dataset.diff; }
+function getTotalTime(){ return diff==='dificil'?55:diff==='facil'?90:70; }
+function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
+
+function startGame(){
+  playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
+  score=0; streak=0; maxStreak=0; acertos=0; respondidas=0; itemNo=0;
+  answering=false; _lastKey=''; _advanced=false;
+  show('screenGame');
+  document.getElementById('hudScore').textContent='0';
+  document.getElementById('hudStreak').classList.remove('show');
+  remaining=getTotalTime(); renderItem();
+}
+
+function renderItem(){
+  if(diff==='treino' && itemNo>=TREINO_N){ endGame(); return; }
+  if(diff!=='treino' && remaining<=0){ endGame(); return; }
+  cur=genQuestion(); answering=false; _advanced=false; itemNo++;
+  document.getElementById('hudQ').textContent=itemNo;
+  document.getElementById('qTag').textContent=cur.tag;
+  document.getElementById('probArea').innerHTML=cur.qHTML;
+  document.getElementById('qAsk').innerHTML=cur.qAsk;
+  const L=['1','2','3','4'];
+  document.getElementById('optGrid').innerHTML=cur.opts.map((v,i)=>
+    '<div class="opt-card" id="opt'+i+'" onclick="answer('+i+')"><div>'+renderOpt(cur.kind,v)+'</div><div class="opt-letter">'+L[i]+'</div></div>'
+  ).join('');
+  if(diff!=='treino') startTimer(); else document.getElementById('timerNum').textContent='∞';
+}
+
+function startTimer(){
+  clearInterval(timerInt); _t0=Date.now();
+  const total=getTotalTime(); const bar=document.getElementById('timerBar'); bar.style.background='var(--accent)';
+  timerInt=setInterval(()=>{
+    const left=remaining-(Date.now()-_t0)/1000; const pct=Math.max(0,left/total);
+    bar.style.width=(pct*100)+'%'; document.getElementById('timerNum').textContent=Math.max(0,Math.ceil(left));
+    if(pct<0.25) bar.style.background='var(--err)'; else if(pct<0.5) bar.style.background='var(--warn)';
+    if(left<=0){ clearInterval(timerInt); remaining=0; if(!answering) endGame(); }
+  },200);
+}
+
+function answer(idx){
+  if(answering) return; answering=true;
+  if(diff!=='treino'){ clearInterval(timerInt); remaining=Math.max(0,remaining-(Date.now()-_t0)/1000); }
+  document.querySelectorAll('.opt-card').forEach(c=>c.classList.add('disabled'));
+  respondidas++;
+  const correct=(idx===cur.ci); let pts=0;
+  if(correct){ streak++; if(streak>maxStreak)maxStreak=streak; acertos++; pts=100+Math.min(streak,8)*15; document.getElementById('opt'+idx).classList.add('reveal-ok'); }
+  else { streak=0; document.getElementById('opt'+idx).classList.add('reveal-err'); document.getElementById('opt'+cur.ci).classList.add('reveal-ok'); }
+  score+=pts; updateHUD();
+  try{ if(window.Arcade){ if(correct){Arcade.correct(streak); if(streak>=3)Arcade.confetti(streak>=5?60:30); if(streak>=2)Arcade.combo(streak);} else {Arcade.wrong();} } }catch(e){}
+  showFeedback(correct,pts);
+  _advTimer=setTimeout(nextItem, correct?1150:3300);
+}
+
+function nextItem(){
+  if(_advanced)return; _advanced=true; clearTimeout(_advTimer);
+  hideFeedback();
+  if(diff!=='treino' && remaining<=0){ endGame(); return; }
+  renderItem();
+}
+
+function showFeedback(ok,pts){
+  const fb=document.getElementById('fbToast');
+  fb.className='feedback '+(ok?'perfect':'wrong')+' show';
+  document.getElementById('fbIcon').textContent=ok?'🎯':'❌';
+  document.getElementById('fbTitle').textContent=ok?('Correto! '+(streak>=2?'🔥 ×'+streak:'')):'Errado! A certa era a opção '+(cur.ci+1);
+  document.getElementById('fbSub').innerHTML='💡 '+cur.rule+' <span style="opacity:.55">· toque para continuar →</span>';
+  document.getElementById('fbPts').textContent=(pts>0?'+':'')+pts;
+}
+function hideFeedback(){ document.getElementById('fbToast').classList.remove('show'); }
+
+function updateHUD(){
+  document.getElementById('hudScore').textContent=score.toLocaleString('pt-BR');
+  const sk=document.getElementById('hudStreak');
+  if(streak>=2){ document.getElementById('streakNum').textContent=streak; sk.classList.add('show'); } else sk.classList.remove('show');
+}
+
+function endGame(){
+  clearInterval(timerInt); hideFeedback();
+  const ws=PL_Rankings.calcWeighted(score,diff);
+  PL_Rankings.save(GAME_ID,{name:playerName,email:playerEmail,score,difficulty:diff});
+  show('screenResult'); try{if(window.Arcade)Arcade.celebrate();}catch(e){}
+  const acc=respondidas?Math.round(acertos/respondidas*100):0;
+  const icon=ws>=1500?'🏆':ws>=900?'🎯':ws>=400?'⚡':'📚';
+  document.getElementById('resIcon').textContent=icon;
+  document.getElementById('resTitle').textContent=ws>=1500?'Mestre das Matrizes!':ws>=900?'Muito Bem!':ws>=400?'Bom Jogo!':'Continue Praticando!';
+  animScore(ws);
+  document.getElementById('resRaw').textContent='Score bruto: '+score.toLocaleString('pt-BR')+' × '+getMultiplier().toFixed(1)+' = '+ws.toLocaleString('pt-BR');
+  document.getElementById('resSub').textContent='pontos no ranking · '+PL_Rankings.DIFF_LABEL[diff];
+  document.getElementById('rsAcertos').textContent=acertos+'/'+respondidas;
+  document.getElementById('rsAcc').textContent=acc+'%';
+  document.getElementById('rsStreak').textContent=maxStreak;
+  renderResRank('daily');
+}
+function animScore(target){ const el=document.getElementById('resScore'); let c=0,step=Math.max(1,Math.ceil(target/40));
+  const iv=setInterval(()=>{ c=Math.min(c+step,target); el.textContent=c.toLocaleString('pt-BR'); if(c>=target)clearInterval(iv); },30); }
+function setResPeriod(el,period){ document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); renderResRank(period); }
+function renderResRank(period){
+  const board=PL_Rankings.getBoard(GAME_ID,period,10);
+  const rows=document.getElementById('rankRows'); const MEDALS=['🥇','🥈','🥉'];
+  if(!board.length){ rows.innerHTML='<div style="text-align:center;padding:20px;color:var(--sil);font-size:13px">Nenhuma partida ainda</div>'; return; }
+  rows.innerHTML=board.map((e,i)=>{
+    const isSelf=e.e&&playerEmail&&e.e===playerEmail;
+    const ws=(e.ws!==undefined?e.ws:e.s).toLocaleString('pt-BR');
+    return '<div class="rrow '+(isSelf?'rrow--self':'')+'">'
+      +'<div class="rpos '+(i<3?'rpos-'+(i+1):'')+'">'+(i<3?MEDALS[i]:'#'+(i+1))+'</div>'
+      +'<div class="rav">'+(e.n||'?').slice(0,2).toUpperCase()+'</div>'
+      +'<div class="rname">'+esc(e.n)+(isSelf?' <span style="font-size:10px;color:var(--al)">(você)</span>':'')+'</div>'
+      +'<div class="rscore '+(i<3?'rscore-'+(i+1):'')+'">'+ws+'<div class="rdiff">'+(PL_Rankings.DIFF_LABEL[e.d]||e.d)+'</div></div>'
+      +'</div>';
+  }).join('');
+}
+function show(id){ ['screenLobby','screenGame','screenResult'].forEach(s=>{ document.getElementById(s).style.display=s===id?'block':'none'; }); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('screenGame').style.display==='none')return;
+  const fbShown=document.getElementById('fbToast').classList.contains('show');
+  if(fbShown){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); nextItem(); } return; }
+  if(['1','2','3','4'].includes(e.key)){ e.preventDefault(); answer(parseInt(e.key,10)-1); }
+});
+</script>
+
+<!-- Conteudo exclusivo da Area do Aluno -->
+<script src="../auth.js"></script>
+<script>window.plAuth && window.plAuth.requireAuth();</script>
+<script src="../protecao.js" defer></script>
+</body>
+</html>

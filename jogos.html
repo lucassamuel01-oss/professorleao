@@ -254,7 +254,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>26 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico (verbal e figural) com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>27 jogos de matemática, álgebra, matrizes, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico (verbal e figural) com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -705,6 +705,31 @@
       </div>
     </div>
 
+    <!-- Matrizes & Determinantes -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
+        <div class="game-card__icon">🔢</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Álgebra</div>
+        <div class="game-card__name">Matrizes &amp; Determinantes</div>
+        <div class="game-card__desc">Tema clássico do CFO! Elemento a<sub>ij</sub>, traço, soma, multiplicação por escalar, transposta e determinante (2×2 e 3×3 por Sarrus). Errou? O cálculo aparece na hora.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🧮 Determinantes</span>
+          <span class="game-card__meta-item">⚡ 55–90s cronometrados</span>
+          <span class="game-card__meta-item">⌨️ Atalhos 1–4</span>
+        </div>
+        <div class="game-card__best" id="best-mtx">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/matrizes.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('matrizes','🔢 Matrizes & Determinantes')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ── Categoria: Geometria, Combinatória e Finanças ── -->
@@ -1030,7 +1055,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 26 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 27 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1059,6 +1084,7 @@
           <div class="rank-gtab" data-game="funcoes"                       onclick="setRankGame(this,'funcoes')">📐 Funções</div>
           <div class="rank-gtab" data-game="equacoes"                      onclick="setRankGame(this,'equacoes')">🟰 Equações</div>
           <div class="rank-gtab" data-game="sistemas"                      onclick="setRankGame(this,'sistemas')">🔗 Sistemas</div>
+          <div class="rank-gtab" data-game="matrizes"                      onclick="setRankGame(this,'matrizes')">🔢 Matrizes</div>
           <div class="rank-gtab" data-game="geometria-plana"               onclick="setRankGame(this,'geometria-plana')">🔺 Geometria</div>
           <div class="rank-gtab" data-game="combinatoria"                  onclick="setRankGame(this,'combinatoria')">🎲 Combinatória</div>
           <div class="rank-gtab" data-game="logica-vf"                     onclick="setRankGame(this,'logica-vf')">⚡ V ou F: Lógica</div>
@@ -1176,6 +1202,7 @@ const GAMES = [
   { id: 'funcoes',              name: '📐 Funções',                   bestId: 'best-func' },
   { id: 'equacoes',             name: '🟰 Equações',                  bestId: 'best-eq'   },
   { id: 'sistemas',             name: '🔗 Sistemas de Equações',      bestId: 'best-sis'  },
+  { id: 'matrizes',             name: '🔢 Matrizes & Determinantes',  bestId: 'best-mtx'  },
   { id: 'geometria-plana',      name: '🔺 Geometria Plana',           bestId: 'best-geo'  },
   { id: 'combinatoria',         name: '🎲 Combinatória',              bestId: 'best-comb' },
   { id: 'juros',                name: '💰 Juros Simples & Compostos', bestId: 'best-jur'  },
