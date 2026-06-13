@@ -841,7 +841,11 @@ app.post("/api/webhook/mercadopago", async (req, res) => {
     venda.status = pay.status; // approved | rejected | pending …
     venda.mpPaymentId = pid;
     venda.pagoEm = pay.status === "approved" ? new Date().toISOString() : venda.pagoEm;
-    if (pay.payer && pay.payer.email && !venda.email) venda.email = pay.payer.email;
+    /* o MP mascara o e-mail do pagador (Pix) — só usa se for válido e se
+       o checkout não tiver capturado um e-mail */
+    if (pay.payer && pay.payer.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(pay.payer.email) && !venda.email) {
+      venda.email = pay.payer.email;
+    }
 
     if (pay.status === "approved" && !venda.processada) {
       venda.processada = true;

@@ -415,6 +415,22 @@
     </div>
   </footer>
 
+  <!-- Modal: e-mail do comprador (necessário p/ enviar o acesso) -->
+  <div id="emailModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:20px">
+    <div style="background:var(--navy-2);border:1px solid rgba(74,108,247,.3);border-radius:16px;padding:28px 24px;max-width:420px;width:100%;text-align:center">
+      <h3 style="font-family:var(--font-h);font-weight:900;font-size:18px;margin-bottom:6px">Quase lá! 📧</h3>
+      <p style="color:var(--silver);font-size:13.5px;margin-bottom:6px">Você está adquirindo <b id="emProd" style="color:#fff"></b>.</p>
+      <p style="color:var(--silver);font-size:13px;margin-bottom:16px">Informe seu e-mail — é nele que chega o <b style="color:#fff">acesso à plataforma</b> assim que o pagamento for aprovado.</p>
+      <input id="emailCompra" type="email" placeholder="seu@email.com" autocomplete="email"
+        onkeydown="if(event.key==='Enter')_finalizarCompra()"
+        style="width:100%;padding:13px 15px;border-radius:10px;border:1px solid rgba(74,108,247,.3);background:rgba(74,108,247,.06);color:#fff;font-size:15px;outline:none;text-align:center;margin-bottom:6px" />
+      <div id="emailErr" style="color:#fca5a5;font-size:12.5px;min-height:16px;margin-bottom:10px"></div>
+      <button id="emailGo" onclick="_finalizarCompra()" style="width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--navy-mid),var(--accent));color:#fff;font-family:var(--font-h);font-weight:800;font-size:15px">Continuar para o pagamento →</button>
+      <button onclick="document.getElementById('emailModal').style.display='none'" style="margin-top:10px;background:none;border:none;color:var(--silver);font-size:12.5px;cursor:pointer">Cancelar</button>
+      <p style="color:var(--silver);font-size:11px;margin-top:14px;opacity:.7">🔒 Pagamento processado pelo Mercado Pago. Não guardamos seu cartão.</p>
+    </div>
+  </div>
+
   <script>
     'use strict';
     const WHATS = '5577999229281';
@@ -435,19 +451,34 @@
 
     async function comprar(id) {
       if (!NOMES[id]) return;
-      /* checkout real (Mercado Pago) via servidor; se não houver
-         gateway configurado, cai no WhatsApp automaticamente */
+      /* coleta o e-mail do comprador ANTES do pagamento — o Mercado Pago
+         mascara o e-mail do pagador (sobretudo no Pix), então é aqui que
+         garantimos um e-mail válido para enviar o acesso. */
+      _pendingProduto = id;
+      document.getElementById('emProd').textContent = NOMES[id];
+      try { const s = JSON.parse(localStorage.getItem('pl_session') || 'null'); if (s && s.email) document.getElementById('emailCompra').value = s.email; } catch (e) {}
+      document.getElementById('emailErr').textContent = '';
+      document.getElementById('emailModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('emailCompra').focus(), 50);
+    }
+
+    let _pendingProduto = null;
+    async function _finalizarCompra() {
+      const email = (document.getElementById('emailCompra').value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { document.getElementById('emailErr').textContent = 'Digite um e-mail válido.'; return; }
+      const id = _pendingProduto;
+      const btn = document.getElementById('emailGo'); if (btn) { btn.disabled = true; btn.textContent = 'Aguarde…'; }
       try {
         const r = await fetch('/api/checkout', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ produto: id, cupom: cupomAtivo }),
+          body: JSON.stringify({ produto: id, cupom: cupomAtivo, email }),
         });
         const d = await r.json();
         if (d.success && d.url) { window.location.href = d.url; return; }
-        whatsFallback(id); /* sem gateway ou erro → WhatsApp */
+        document.getElementById('emailModal').style.display = 'none'; whatsFallback(id);
       } catch (e) {
-        whatsFallback(id); /* site estático (sem backend) → WhatsApp */
-      }
+        document.getElementById('emailModal').style.display = 'none'; whatsFallback(id);
+      } finally { if (btn) { btn.disabled = false; btn.textContent = 'Continuar para o pagamento →'; } }
     }
 
     /* ── Cupom ── */
