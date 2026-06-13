@@ -224,6 +224,9 @@
         background:linear-gradient(135deg,#4A6CF7,#6B89FF);border:none;cursor:pointer;font-size:26px;
         box-shadow:0 8px 28px rgba(74,108,247,.45);transition:.2s}
       #lw-fab:hover{transform:scale(1.08)}
+      /* quando coexiste com o botão flutuante do WhatsApp, sobe para não sobrepor */
+      body.lw-tem-whats #lw-fab{bottom:92px}
+      body.lw-tem-whats #lw-panel{bottom:158px}
       #lw-panel{position:fixed;right:18px;bottom:84px;z-index:9991;width:min(360px,calc(100vw - 36px));
         max-height:min(560px,calc(100vh - 110px));display:none;flex-direction:column;
         background:#0F1E38;border:1px solid rgba(74,108,247,.35);border-radius:16px;
@@ -257,6 +260,12 @@
     fab.title = 'Leão IA — seu treinador de estudos';
     fab.textContent = '🦁';
     document.body.appendChild(fab);
+
+    /* se a página tem o botão flutuante do WhatsApp (ex.: home),
+       sobe o widget para não sobrepor */
+    if (document.querySelector('.whatsapp-float')) {
+      document.body.classList.add('lw-tem-whats');
+    }
 
     const panel = document.createElement('div');
     panel.id = 'lw-panel';

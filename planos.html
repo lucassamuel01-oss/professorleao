@@ -235,8 +235,8 @@
     <div class="container">
       <div class="sec__head">
         <div class="kick">Foco em um concurso só</div>
-        <h2>Cursos por concurso (acesso vitalício)</h2>
-        <p>Prefere comprar de uma vez e ter acesso para sempre? Escolha o curso do seu concurso.</p>
+        <h2>Cursos por concurso (acesso de 12 meses)</h2>
+        <p>Comprou, estudou: acesso de 12 meses ao curso do seu concurso — tempo de sobra até a prova.</p>
       </div>
       <div class="cards">
 
@@ -245,7 +245,7 @@
           <div class="card__name">CFO PMBA — Completo</div>
           <div class="card__desc">Matemática completa para o Curso de Formação de Oficiais, no nível da banca UNEB.</div>
           <div class="card__price"><span class="now">R$ 197</span><span class="old">R$ 247</span></div>
-          <div class="card__parcela">ou 12x de R$ 19,70 · acesso vitalício</div>
+          <div class="card__parcela">ou 12x de R$ 19,70 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('cfo')">Comprar curso CFO</button>
         </div>
 
@@ -254,7 +254,7 @@
           <div class="card__name">SD PMBA — Completo</div>
           <div class="card__desc">Matemática para Soldado da PM/CBM da Bahia, do básico ao nível de prova.</div>
           <div class="card__price"><span class="now">R$ 147</span><span class="old">R$ 197</span></div>
-          <div class="card__parcela">ou 12x de R$ 14,70 · acesso vitalício</div>
+          <div class="card__parcela">ou 12x de R$ 14,70 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('sd')">Comprar curso SD</button>
         </div>
 
@@ -263,7 +263,7 @@
           <div class="card__name">Matemática Básica</div>
           <div class="card__desc">Do zero ao nível de concurso: a base que destrava todas as outras matérias.</div>
           <div class="card__price"><span class="now">R$ 67</span><span class="old">R$ 97</span></div>
-          <div class="card__parcela">ou 12x de R$ 6,70 · acesso vitalício</div>
+          <div class="card__parcela">ou 12x de R$ 6,70 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('basica')">Comprar Mat. Básica</button>
         </div>
 
@@ -272,7 +272,7 @@
           <div class="card__name">Correios</div>
           <div class="card__desc">Matemática e Raciocínio Lógico focados no edital dos Correios.</div>
           <div class="card__price"><span class="now">R$ 97</span><span class="old">R$ 127</span></div>
-          <div class="card__parcela">ou 12x de R$ 9,70 · acesso vitalício</div>
+          <div class="card__parcela">ou 12x de R$ 9,70 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('correios')">Comprar Correios</button>
         </div>
 
@@ -321,17 +321,23 @@
     </div>
   </section>
 
-  <!-- MENTORIA -->
-  <section class="sec" id="mentoria">
+  <!-- AULAS AO VIVO + MENTORIA -->
+  <section class="sec" id="aovivo">
     <div class="container">
       <div class="garantia" style="background:linear-gradient(135deg,#2a1d4d,#3a2470);border-color:rgba(167,139,250,.35)">
-        <div class="selo">🎯</div>
+        <div class="selo">🔴</div>
         <div style="flex:1;min-width:260px;text-align:left">
-          <h3 style="color:#c4b5fd">Mentoria Individual (Premium)</h3>
-          <p>Acompanhamento direto com o Professor Leão: correção dos seus erros, ajustes no plano de estudos e foco total no seu concurso. Vagas muito limitadas.</p>
-          <div style="margin-top:10px;font-family:var(--font-h);font-weight:900;font-size:26px">R$ 397<small style="font-size:14px;color:var(--silver);font-weight:700">/mês</small></div>
+          <span style="display:inline-block;font-family:var(--font-h);font-size:11px;font-weight:800;letter-spacing:.5px;color:#c4b5fd;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.35);border-radius:99px;padding:3px 11px;margin-bottom:8px">⭐ Produto principal · turma com início e fim</span>
+          <h3 style="color:#c4b5fd">Aulas ao Vivo e Mentoria — SD/PMBA</h3>
+          <p>Curso completo de matemática para Soldado da PMBA com <b>aulas ao vivo</b>, correção de exercícios em tempo real, tira-dúvidas e mentoria de grupo com o Professor Leão até o fim do cronograma. Inclui acesso a toda a plataforma durante o curso.</p>
+          <div style="margin-top:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <span style="font-size:15px;color:var(--silver);text-decoration:line-through">de R$ 697</span>
+            <span style="font-family:var(--font-h);font-weight:900;font-size:30px">R$ 497</span>
+            <span style="font-size:13px;color:var(--silver)">pelo curso completo</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--silver);margin-top:4px">ou 12x de R$ 41,42 · acesso até o fim das aulas · vagas limitadas por turma</div>
         </div>
-        <button class="card__cta" style="border-color:rgba(167,139,250,.5);background:rgba(167,139,250,.15);color:#c4b5fd;padding:13px 22px" onclick="comprar('mentoria')">Quero a mentoria</button>
+        <button class="card__cta" style="border-color:rgba(167,139,250,.5);background:rgba(167,139,250,.15);color:#c4b5fd;padding:13px 22px" onclick="comprar('aovivo')">Garantir minha vaga</button>
       </div>
     </div>
   </section>
@@ -389,7 +395,7 @@
       <details><summary>Como recebo o acesso depois de pagar?</summary><p>No cartão e no Pix o acesso é liberado na hora: você recebe os dados de login no e-mail informado na compra. No boleto, libera assim que o pagamento é compensado.</p></details>
       <details><summary>Posso parcelar?</summary><p>Sim. No cartão de crédito você parcela em até 12x. No Pix e no boleto o pagamento é à vista (com liberação mais rápida no Pix).</p></details>
       <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia incondicional. Se não for para você, é só pedir e devolvemos 100% do valor — sem burocracia.</p></details>
-      <details><summary>Qual a diferença entre assinatura e curso avulso?</summary><p>A <b>assinatura</b> dá acesso a TUDO (todos os cursos, materiais e ferramentas) enquanto estiver ativa. O <b>curso avulso</b> é um concurso específico, com acesso vitalício, pago uma única vez.</p></details>
+      <details><summary>Qual a diferença entre assinatura e curso avulso?</summary><p>A <b>assinatura</b> dá acesso a TUDO (todos os cursos, materiais e ferramentas) enquanto estiver ativa. O <b>curso avulso</b> é um concurso específico, com acesso de 12 meses, pago uma única vez.</p></details>
       <details><summary>O conteúdo serve para qual concurso?</summary><p>O foco é Matemática e Raciocínio Lógico para carreiras policiais e militares (CFO e SD da PM/CBM da Bahia), além de Matemática Básica e Correios. A base atende a maioria das bancas.</p></details>
       <details><summary>Posso estudar pelo celular?</summary><p>Sim. A plataforma funciona no computador, tablet e celular, e as apostilas em PDF podem ser baixadas para estudar offline.</p></details>
     </div>
@@ -426,7 +432,7 @@
       apostilaCfsd:   { nome: 'Apostila CFSD 2026 (R$ 47)',              checkout: '' },
       apostilaCfo:    { nome: 'Apostila CFO (R$ 57)',                    checkout: '' },
       comboApostilas: { nome: 'Combo Apostilas (R$ 87)',                 checkout: '' },
-      mentoria:       { nome: 'Mentoria Individual (R$ 397/mês)',        checkout: '' },
+      aovivo:         { nome: 'Aulas ao Vivo e Mentoria SD/PMBA (R$ 497)',  checkout: '' },
     };
 
     function comprar(id) {
