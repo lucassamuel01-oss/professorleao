@@ -254,7 +254,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>22 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>23 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -434,6 +434,31 @@
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/potenciacao.html">▶ Jogar Agora</a>
         <button class="btn-rank" onclick="openRankModal('potenciacao','💥 Potenciação & Raiz')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Expressões Numéricas -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#5b21b6,#7c3aed)">
+        <div class="game-card__icon">🧮</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Ordem das operações</div>
+        <div class="game-card__name">Expressões Numéricas</div>
+        <div class="game-card__desc">Quem vem primeiro? A ordem das operações — parênteses, potências, ×÷ e por fim +− — é o erro mais comum em prova. Cada questão mostra o passo a passo e o erro típico.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🔢 ( ) → potências → ×÷ → +−</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">💡 Passo a passo</span>
+        </div>
+        <div class="game-card__best" id="best-expr">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/expressoes.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('expressoes','🧮 Expressões Numéricas')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
@@ -930,7 +955,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 22 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 23 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -950,6 +975,7 @@
           <div class="rank-gtab" data-game="conjuntos-operacoes"          onclick="setRankGame(this,'conjuntos-operacoes')">⭕ Missão Conj.</div>
           <div class="rank-gtab" data-game="multiplos-divisores"          onclick="setRankGame(this,'multiplos-divisores')">🎯 Caça Número</div>
           <div class="rank-gtab" data-game="potenciacao"                   onclick="setRankGame(this,'potenciacao')">💥 Potenciação</div>
+          <div class="rank-gtab" data-game="expressoes"                    onclick="setRankGame(this,'expressoes')">🧮 Expressões</div>
           <div class="rank-gtab" data-game="regra-de-tres"                 onclick="setRankGame(this,'regra-de-tres')">⚖️ Regra de 3</div>
           <div class="rank-gtab" data-game="porcentagem"                   onclick="setRankGame(this,'porcentagem')">📈 Porcentagem</div>
           <div class="rank-gtab" data-game="pa-pg"                         onclick="setRankGame(this,'pa-pg')">📈 PA & PG</div>
@@ -1063,6 +1089,7 @@ const GAMES = [
   { id: 'conjuntos-operacoes',  name: '⭕ Missão Conjuntos',          bestId: 'best-co'   },
   { id: 'multiplos-divisores',  name: '🎯 Caça ao Número',            bestId: 'best-md'   },
   { id: 'potenciacao',          name: '💥 Potenciação & Raiz',        bestId: 'best-pot'  },
+  { id: 'expressoes',           name: '🧮 Expressões Numéricas',      bestId: 'best-expr' },
   { id: 'regra-de-tres',        name: '⚖️ Regra de Três',             bestId: 'best-rt'   },
   { id: 'porcentagem',          name: '📈 Porcentagem',               bestId: 'best-pct'  },
   { id: 'pa-pg',                name: '📈 Progressões PA & PG',       bestId: 'best-papg' },

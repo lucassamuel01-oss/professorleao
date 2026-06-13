@@ -52,6 +52,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
 /* Question card — grande para expresões matemáticas */
 .q-card{background:var(--navy-2);border:1px solid rgba(139,92,246,.15);border-radius:20px;padding:26px 28px 22px;margin-bottom:14px}
+.pot-vis{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:8px 0 2px;min-height:8px}
+.pot-vis .pf{font-family:var(--fh);font-weight:800;font-size:18px;background:rgba(139,92,246,.18);border:1.5px solid rgba(139,92,246,.45);border-radius:9px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:#c4b5fd;opacity:0;animation:pfIn .35s ease forwards}
+.pot-vis .px{color:#8892B4;font-weight:800;font-family:var(--fh)}
+@keyframes pfIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
 .q-card__tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:12px}
 .q-card__expr{font-family:var(--fh);font-size:36px;font-weight:900;color:var(--white);letter-spacing:1px;margin-bottom:10px;line-height:1.2}
 .q-card__texto{font-size:15px;color:rgba(255,255,255,.7);line-height:1.5}
@@ -161,6 +165,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="q-card">
       <div class="q-card__tipo" id="qTipo"></div>
       <div class="q-card__expr" id="qExpr"></div>
+      <div class="pot-vis" id="potVis"></div>
       <div class="q-card__texto" id="qTexto"></div>
     </div>
     <div class="opt-grid" id="optGrid"></div>
@@ -292,7 +297,7 @@ function startGame(){
       if(Math.random()<0.5){
         const a=_ri(2,5), b=_ri(2,3), v=Math.pow(a,b);
         const o=_mkOps(v,()=>_pk([a*b,v+a,v-a,Math.pow(a,b+1),v+1].filter(x=>x>0&&x!==v)));
-        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g,expl:a+_sup(b)+' = '+Array(b).fill(a).join(' × ')+' = '+v};
+        return {diff:d,tipo:'Potenciação',vis:{base:a,exp:b},expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g,expl:a+_sup(b)+' = '+Array(b).fill(a).join(' × ')+' = '+v};
       }
       const r=_ri(4,12), v=r;
       const o=_mkOps(v,()=>_pk([r-1,r+1,r+2,r-2,Math.round(r*r/2)].filter(x=>x>0&&x!==v)));
@@ -304,7 +309,7 @@ function startGame(){
         const a=_ri(2,7), b=_ri(2,4), v=Math.pow(a,b);
         if(v>2500) return gerarQuestao(d);
         const o=_mkOps(v,()=>_pk([a*b,v+a,v-a,v*2,Math.round(v/2)].filter(x=>x>0&&x!==v)));
-        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g,expl:a+_sup(b)+' = '+Array(b).fill(a).join(' × ')+' = '+v};
+        return {diff:d,tipo:'Potenciação',vis:{base:a,exp:b},expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g,expl:a+_sup(b)+' = '+Array(b).fill(a).join(' × ')+' = '+v};
       }
       if(m<0.7){
         const r=_ri(2,7), v=r;
@@ -344,12 +349,26 @@ function startGame(){
   renderQuestion();
 }
 
+/* potência = multiplicação repetida: os fatores (a × a × …) surgem animados */
+function renderPotVis(q){
+  const el=document.getElementById('potVis'); if(!el) return;
+  const v=q&&q.vis;
+  if(!v || !v.exp || v.exp>8){ el.innerHTML=''; return; }
+  let html='';
+  for(let i=0;i<v.exp;i++){
+    if(i>0) html+='<span class="px">×</span>';
+    html+='<span class="pf" style="animation-delay:'+(i*0.12).toFixed(2)+'s">'+v.base+'</span>';
+  }
+  el.innerHTML=html;
+}
+
 function renderQuestion(){
   if(qIdx>=questions.length){ endGame(); return; }
   const q=questions[qIdx]; answering=false; selected=null;
   document.getElementById('hudQ').textContent=qIdx+1;
   document.getElementById('qTipo').textContent=q.tipo;
   document.getElementById('qExpr').textContent=q.expr;
+  renderPotVis(q);
   document.getElementById('qTexto').textContent=q.texto||'';
   const grid=document.getElementById('optGrid');
   grid.innerHTML=q.ops.map((op,i)=>`<button class="opt-btn" data-idx="${i}" onclick="selectOpt(this,${i})">${op}</button>`).join('');

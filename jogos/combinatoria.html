@@ -50,6 +50,12 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .timer-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:18px}
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
 .q-card{background:var(--navy-2);border:1px solid rgba(168,85,247,.2);border-radius:20px;padding:28px 24px;margin-bottom:16px;text-align:center}
+.comb-vis{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 2px}
+.comb-vis .slot{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;animation:slotIn .4s ease forwards}
+@keyframes slotIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.comb-vis .slot-n{width:48px;height:48px;border-radius:11px;background:rgba(168,85,247,.18);border:2px solid rgba(168,85,247,.5);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:900;font-size:20px;color:#d8b4fe}
+.comb-vis .slot-lab{font-size:10px;color:#8892B4;max-width:74px;line-height:1.2}
+.comb-vis .slot-x{font-family:var(--fh);font-weight:900;color:#8892B4;font-size:18px;align-self:flex-start;margin-top:14px}
 .q-tipo{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:12px}
 .q-formula{background:var(--navy-3);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:12px 16px;font-family:var(--fh);font-size:13px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:12px;letter-spacing:.5px}
 .q-text{font-size:15px;color:rgba(255,255,255,.85);line-height:1.6}
@@ -155,6 +161,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
       <div class="q-tipo" id="qTipo"></div>
       <div class="q-formula" id="qFormula"></div>
       <div class="q-text" id="qText"></div>
+      <div class="comb-vis" id="combVis"></div>
     </div>
     <div class="opt-grid" id="optGrid"></div>
     <button class="btn-answer" id="btnAnswer" onclick="submitAnswer()">Confirmar Resposta</button>
@@ -285,7 +292,7 @@ function startGame(){
         const ctx=_pk([['sabores de sorvete','tipos de casquinha'],['camisas','calças'],['rotas de ida','rotas de volta'],['entradas','pratos principais']]);
         const n1=_ri(2,5), n2=_ri(2,6), v=n1*n2;
         const o=_mkOps(v,()=>_pk([n1+n2,v+1,v-1,v+n1,v+n2].filter(x=>x>0&&x!==v)));
-        return {diff:d,tipo:'Princípio Multiplicativo',formula:'Total = n₁ × n₂',texto:'Há '+n1+' '+ctx[0]+' e '+n2+' '+ctx[1]+'. Quantas combinações são possíveis?',ops:o.ops,g:o.g,expl:'Princípio multiplicativo: '+n1+' × '+n2+' = '+v};
+        return {diff:d,tipo:'Princípio Multiplicativo',vis:{slots:[n1,n2],labs:[ctx[0],ctx[1]]},formula:'Total = n₁ × n₂',texto:'Há '+n1+' '+ctx[0]+' e '+n2+' '+ctx[1]+'. Quantas combinações são possíveis?',ops:o.ops,g:o.g,expl:'Princípio multiplicativo: '+n1+' × '+n2+' = '+v};
       }
       const ev=_pk([['um número par',3],['um número maior que 4',2],['um múltiplo de 3',2],['o número 6',1]]);
       const correto=_frac(ev[1],6);
@@ -302,7 +309,7 @@ function startGame(){
       if(m<0.67){
         const n=_ri(4,8), v=n*(n-1);
         const o=_mkOps(v,()=>_pk([v/2,n*n,v+n,v-n,v+1].filter(x=>x>0&&x!==v&&x===Math.round(x))));
-        return {diff:d,tipo:'Arranjo',formula:'A(n,2) = n × (n−1)',texto:'De '+n+' policiais, de quantas formas escolhemos 1 comandante e 1 motorista (funções diferentes — a ordem importa)?',ops:o.ops,g:o.g,expl:'A ordem importa: '+n+' × '+(n-1)+' = '+v};
+        return {diff:d,tipo:'Arranjo',vis:{slots:[n,n-1],labs:['comandante','motorista']},formula:'A(n,2) = n × (n−1)',texto:'De '+n+' policiais, de quantas formas escolhemos 1 comandante e 1 motorista (funções diferentes — a ordem importa)?',ops:o.ops,g:o.g,expl:'A ordem importa: '+n+' × '+(n-1)+' = '+v};
       }
       const w=_pk([['AMOR',4],['LIVRO',5],['PRATO',5],['MUNDO',5],['FUZIL',5]]);
       const v=_fat(w[1]);
@@ -344,10 +351,25 @@ function renderQuestion(){
   document.getElementById('qTipo').textContent=q.tipo;
   document.getElementById('qFormula').textContent=q.formula;
   document.getElementById('qText').innerHTML=q.texto;
+  renderCombVis(q);
   const grid=document.getElementById('optGrid');
   grid.innerHTML=q.ops.map((op,i)=>`<button class="opt-btn" onclick="selectOpt(this,${i})">${op}</button>`).join('');
   document.getElementById('btnAnswer').disabled=true;
   startTimer();
+}
+
+/* "casas" do princípio multiplicativo / arranjo: cada posição × opções, animado */
+function renderCombVis(q){
+  const el=document.getElementById('combVis'); if(!el) return;
+  const v=q&&q.vis;
+  if(!v || !Array.isArray(v.slots)){ el.innerHTML=''; return; }
+  let html='';
+  v.slots.forEach((n,i)=>{
+    if(i>0) html+='<span class="slot-x">×</span>';
+    const lab=(v.labs&&v.labs[i])?v.labs[i]:'';
+    html+='<div class="slot" style="animation-delay:'+(i*0.18).toFixed(2)+'s"><div class="slot-n">'+n+'</div><div class="slot-lab">'+lab+'</div></div>';
+  });
+  el.innerHTML=html;
 }
 
 function selectOpt(el,idx){
