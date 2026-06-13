@@ -151,6 +151,8 @@ const MONGODB_URI = process.env.MONGODB_URI || null;
 let _mongoDb = null;
 let _usersCache = null;
 let _invitesCache = [];
+let _couponsCache = [];
+let _vendasCache = [];
 
 async function connectMongo() {
   if (!MONGODB_URI) return null;
@@ -177,7 +179,7 @@ async function loadDoc(id, field) {
       console.error(`[DB] Erro ao carregar ${id}:`, err.message);
     }
   }
-  const file = id === "users" ? USERS_JSON : INVITES_JSON;
+  const file = path.join(DATA_DIR, id + ".json");
   if (!fs.existsSync(file)) return [];
   try {
     const parsed = JSON.parse(fs.readFileSync(file, "utf8").trim() || "[]");
@@ -217,6 +219,20 @@ function readInvites() {
 function writeInvites(invites) {
   _invitesCache = invites;
   persistDoc("invites", "invites", invites);
+}
+function readCupons() {
+  return _couponsCache;
+}
+function writeCupons(cupons) {
+  _couponsCache = cupons;
+  persistDoc("coupons", "coupons", cupons);
+}
+function readVendas() {
+  return _vendasCache;
+}
+function writeVendas(vendas) {
+  _vendasCache = vendas;
+  persistDoc("vendas", "vendas", vendas);
 }
 
 /* ── Helpers ────────────────────────────────────────────────── */
@@ -553,6 +569,185 @@ app.post(
     res.json({ success: true, message: "Senha redefinida com sucesso. Você já pode entrar." });
   }
 );
+
+/* ════════════════════════════════════════════════════════════
+   LOJA — PRODUTOS, CUPONS E PAGAMENTO (Mercado Pago)
+   ════════════════════════════════════════════════════════════ */
+
+/* Catálogo oficial — o PREÇO é definido AQUI, no servidor (nunca
+   confiamos no valor enviado pelo cliente). */
+const PRODUTOS_LOJA = {
+  mensal:         { nome: "Assinatura Mensal",                    preco: 49.9 },
+  trimestral:     { nome: "Assinatura Trimestral",               preco: 119.9 },
+  anual:          { nome: "Assinatura Anual",                    preco: 297.0 },
+  cfo:            { nome: "Curso CFO PMBA — Completo",            preco: 197.0 },
+  sd:             { nome: "Curso SD PMBA — Completo",             preco: 147.0 },
+  basica:         { nome: "Curso Matemática Básica",             preco: 67.0 },
+  correios:       { nome: "Curso Correios",                      preco: 97.0 },
+  apostilaCfsd:   { nome: "Apostila CFSD 2026",                  preco: 47.0 },
+  apostilaCfo:    { nome: "Apostila CFO",                        preco: 57.0 },
+  comboApostilas: { nome: "Combo Apostilas",                     preco: 87.0 },
+  aovivo:         { nome: "Aulas ao Vivo e Mentoria — SD/PMBA",   preco: 497.0 },
+};
+
+/* ── Cupons ── */
+function cupomValido(codigo, produtoId) {
+  if (!codigo) return null;
+  const c = readCupons().find((x) => x.codigo.toUpperCase() === String(codigo).toUpperCase());
+  if (!c || c.ativo === false) return null;
+  if (c.validade && new Date(c.validade).getTime() < Date.now()) return null;
+  if (c.limiteUso && (c.usos || 0) >= c.limiteUso) return null;
+  if (Array.isArray(c.produtos) && c.produtos.length && !c.produtos.includes(produtoId)) return null;
+  return c;
+}
+function aplicarCupom(preco, cupom) {
+  if (!cupom) return preco;
+  let p = cupom.tipo === "fixo" ? preco - cupom.valor : preco * (1 - cupom.valor / 100);
+  return Math.max(0, Math.round(p * 100) / 100);
+}
+
+/* valida um cupom (usado pelo front para mostrar o desconto) */
+app.post("/api/validar-cupom", rateLimit({ janelaMs: 60000, max: 30, escopo: "cupom" }), (req, res) => {
+  const { codigo, produto } = req.body || {};
+  const prod = PRODUTOS_LOJA[produto];
+  if (!prod) return res.status(400).json({ valido: false, message: "Produto inválido." });
+  const c = cupomValido(codigo, produto);
+  if (!c) return res.json({ valido: false, message: "Cupom inválido ou expirado." });
+  const precoFinal = aplicarCupom(prod.preco, c);
+  res.json({
+    valido: true,
+    desconto: c.tipo === "fixo" ? `R$ ${c.valor.toFixed(2)}` : `${c.valor}%`,
+    precoOriginal: prod.preco,
+    precoFinal,
+  });
+});
+
+/* ── Checkout via Mercado Pago (Checkout Pro) ──
+   Cria uma preferência de pagamento e devolve a URL do checkout
+   HOSPEDADO pelo Mercado Pago (o cartão é digitado lá, nunca aqui).
+   Requer MP_ACCESS_TOKEN nas variáveis de ambiente. */
+app.post("/api/checkout", rateLimit({ janelaMs: 60000, max: 20, escopo: "checkout" }), async (req, res) => {
+  const { produto, cupom, nome, email } = req.body || {};
+  const prod = PRODUTOS_LOJA[produto];
+  if (!prod) return res.status(400).json({ success: false, message: "Produto inválido." });
+
+  if (!process.env.MP_ACCESS_TOKEN) {
+    return res.json({ success: false, semGateway: true, message: "Pagamento online ainda não configurado." });
+  }
+
+  const c = cupomValido(cupom, produto);
+  const preco = aplicarCupom(prod.preco, c);
+  const vendaId = "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const base = baseUrl(req);
+
+  try {
+    const r = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + process.env.MP_ACCESS_TOKEN,
+      },
+      body: JSON.stringify({
+        items: [{ title: prod.nome, quantity: 1, unit_price: preco, currency_id: "BRL" }],
+        payer: nome || email ? { name: nome || "", email: email || "" } : undefined,
+        external_reference: vendaId,
+        back_urls: {
+          success: base + "/compra-sucesso.html",
+          failure: base + "/planos.html",
+          pending: base + "/compra-sucesso.html",
+        },
+        auto_return: "approved",
+        notification_url: base + "/api/webhook/mercadopago",
+        statement_descriptor: "PROFESSORLEAO",
+      }),
+    });
+    const data = await r.json();
+    if (!data.init_point) {
+      console.error("[CHECKOUT] Resposta do MP sem init_point:", JSON.stringify(data).slice(0, 200));
+      return res.status(502).json({ success: false, message: "Não foi possível iniciar o pagamento." });
+    }
+    /* registra a venda como pendente */
+    const vendas = readVendas();
+    vendas.unshift({
+      id: vendaId, produto, produtoNome: prod.nome,
+      precoOriginal: prod.preco, precoFinal: preco,
+      cupom: c ? c.codigo : null, nome: nome || "", email: email || "",
+      status: "pendente", criadoEm: new Date().toISOString(), mpPreferenceId: data.id,
+    });
+    writeVendas(vendas.slice(0, 2000));
+    res.json({ success: true, url: data.init_point });
+  } catch (err) {
+    console.error("[CHECKOUT] Erro:", err.message);
+    res.status(502).json({ success: false, message: "Erro ao iniciar o pagamento." });
+  }
+});
+
+/* Webhook do Mercado Pago: confirma o pagamento e marca a venda.
+   Aprovado → conta o uso do cupom e, se houver SMTP, envia um convite
+   de cadastro automático ao comprador. */
+app.post("/api/webhook/mercadopago", async (req, res) => {
+  res.sendStatus(200); // responde rápido (o MP reenvia se demorar)
+  try {
+    const tipo = req.body && (req.body.type || req.body.topic);
+    const pid = req.body && req.body.data && req.body.data.id;
+    if (tipo !== "payment" || !pid || !process.env.MP_ACCESS_TOKEN) return;
+
+    const r = await fetch("https://api.mercadopago.com/v1/payments/" + pid, {
+      headers: { Authorization: "Bearer " + process.env.MP_ACCESS_TOKEN },
+    });
+    const pay = await r.json();
+    const vendaId = pay.external_reference;
+    const vendas = readVendas();
+    const venda = vendas.find((v) => v.id === vendaId);
+    if (!venda) return;
+
+    venda.status = pay.status; // approved | rejected | pending …
+    venda.mpPaymentId = pid;
+    venda.pagoEm = pay.status === "approved" ? new Date().toISOString() : venda.pagoEm;
+    if (pay.payer && pay.payer.email && !venda.email) venda.email = pay.payer.email;
+
+    if (pay.status === "approved" && !venda.processada) {
+      venda.processada = true;
+      /* contabiliza o uso do cupom */
+      if (venda.cupom) {
+        const cupons = readCupons();
+        const c = cupons.find((x) => x.codigo.toUpperCase() === venda.cupom.toUpperCase());
+        if (c) { c.usos = (c.usos || 0) + 1; writeCupons(cupons); }
+      }
+      /* gera um convite de cadastro e envia por e-mail (se SMTP) */
+      try {
+        const token = crypto.randomBytes(16).toString("hex");
+        const invites = readInvites();
+        invites.push({
+          id: "i" + Date.now().toString(36),
+          token, email: venda.email || "", curso: venda.produtoNome,
+          createdAt: new Date().toISOString(), usedAt: null, origem: "compra:" + venda.id,
+        });
+        writeInvites(invites);
+        venda.conviteToken = token;
+        const mailer = getMailer();
+        if (mailer && venda.email) {
+          const link = baseUrl(req) + "/cadastro.html?token=" + token;
+          await mailer.sendMail({
+            from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`,
+            to: venda.email,
+            subject: "Acesso liberado — Professor Leão",
+            html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">
+              <h2 style="color:#0A1628">Pagamento aprovado! 🎉</h2>
+              <p>Sua compra de <b>${String(venda.produtoNome).replace(/[<>]/g, "")}</b> foi confirmada. Crie seu acesso à plataforma:</p>
+              <p style="text-align:center;margin:24px 0"><a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar meu acesso</a></p>
+              <p style="font-size:12px;color:#8892a8">🦁 Professor Leão · www.professorleao.com</p>
+            </div>`,
+          }).catch((e) => console.error("[VENDA] e-mail:", e.message));
+        }
+        console.log(`[VENDA] Pagamento aprovado (${venda.produtoNome}) — convite ${token} para ${venda.email || "sem e-mail"}`);
+      } catch (e) { console.error("[VENDA] convite:", e.message); }
+    }
+    writeVendas(vendas);
+  } catch (err) {
+    console.error("[WEBHOOK] Erro:", err.message);
+  }
+});
 
 /* ── Cadastro via convite único ─────────────────────────────── */
 
@@ -975,6 +1170,53 @@ app.post("/api/admin/gerar-reset/:id", requireAuthApi, requireAdminApi, (req, re
   res.json({ success: true, link, email: user.email, validade: "1 hora" });
 });
 
+/* ── Admin: cupons de desconto ── */
+app.get("/api/admin/cupons", requireAuthApi, requireAdminApi, (req, res) => {
+  res.json(readCupons());
+});
+app.post("/api/admin/cupons", requireAuthApi, requireAdminApi, (req, res) => {
+  const { codigo, tipo, valor, validade, limiteUso, produtos } = req.body || {};
+  const cod = String(codigo || "").trim().toUpperCase().replace(/\s+/g, "");
+  const val = Number(valor);
+  if (!cod) return res.status(400).json({ success: false, message: "Informe o código do cupom." });
+  if (!["percent", "fixo"].includes(tipo)) return res.status(400).json({ success: false, message: "Tipo inválido." });
+  if (!(val > 0)) return res.status(400).json({ success: false, message: "Valor do desconto inválido." });
+  if (tipo === "percent" && val > 90) return res.status(400).json({ success: false, message: "Desconto percentual máximo: 90%." });
+
+  const cupons = readCupons();
+  if (cupons.some((c) => c.codigo.toUpperCase() === cod)) {
+    return res.status(409).json({ success: false, message: "Já existe um cupom com esse código." });
+  }
+  const novo = {
+    codigo: cod, tipo, valor: val,
+    validade: validade || null,
+    limiteUso: limiteUso ? Number(limiteUso) : null,
+    produtos: Array.isArray(produtos) ? produtos : [],
+    usos: 0, ativo: true, criadoEm: new Date().toISOString(),
+  };
+  cupons.unshift(novo);
+  writeCupons(cupons);
+  res.json({ success: true, cupom: novo });
+});
+app.patch("/api/admin/cupons/:codigo", requireAuthApi, requireAdminApi, (req, res) => {
+  const cupons = readCupons();
+  const c = cupons.find((x) => x.codigo.toUpperCase() === String(req.params.codigo).toUpperCase());
+  if (!c) return res.status(404).json({ success: false, message: "Cupom não encontrado." });
+  if (typeof req.body.ativo === "boolean") c.ativo = req.body.ativo;
+  writeCupons(cupons);
+  res.json({ success: true, cupom: c });
+});
+app.delete("/api/admin/cupons/:codigo", requireAuthApi, requireAdminApi, (req, res) => {
+  const cupons = readCupons().filter((c) => c.codigo.toUpperCase() !== String(req.params.codigo).toUpperCase());
+  writeCupons(cupons);
+  res.json({ success: true });
+});
+
+/* ── Admin: vendas ── */
+app.get("/api/admin/vendas", requireAuthApi, requireAdminApi, (req, res) => {
+  res.json(readVendas());
+});
+
 app.post("/api/admin/users", requireAuthApi, requireAdminApi, (req, res) => {
   const { name, email, telefone, password, expiresAt, role, curso } = req.body;
   if (!name || !email || !password) {
@@ -1071,6 +1313,8 @@ app.use((req, res) => {
   await connectMongo();
   _usersCache = await loadDoc("users", "users");
   _invitesCache = await loadDoc("invites", "invites");
+  _couponsCache = await loadDoc("coupons", "coupons");
+  _vendasCache = await loadDoc("vendas", "vendas");
   _blogStats = await loadBlogStats();
   seedAdminUser();
   app.listen(PORT, () => {

@@ -158,7 +158,9 @@
 
   /* inicializa quando o body existir */
   function iniciar() {
-    montarMarcaDagua();
+    /* marca d'água da TELA desativada (incomodava os alunos).
+       A rastreabilidade continua: os PDFs gerados saem licenciados
+       e identificados com o nome do aluno no rodapé. */
     bloquearCopia();
     vigiarDevTools();
   }

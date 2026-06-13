@@ -167,6 +167,19 @@
     </div>
   </section>
 
+  <!-- CUPOM -->
+  <section style="padding:8px 0 0">
+    <div class="container" style="max-width:520px">
+      <div style="background:var(--navy-2);border:1px dashed rgba(251,191,36,.4);border-radius:12px;padding:14px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center">
+        <span style="font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--gold)">🎟️ Tem um cupom?</span>
+        <input id="cupomInput" placeholder="DIGITE O CÓDIGO" autocomplete="off"
+          style="flex:1;min-width:150px;padding:10px 12px;border-radius:9px;border:1px solid rgba(74,108,247,.3);background:rgba(74,108,247,.06);color:#fff;font-family:var(--font-h);font-size:13px;text-transform:uppercase;letter-spacing:1px;outline:none" />
+        <button id="cupomAplicar" style="padding:10px 18px;border-radius:9px;border:none;cursor:pointer;background:var(--gold);color:#1a1109;font-family:var(--font-h);font-weight:800;font-size:13px">Aplicar</button>
+      </div>
+      <div id="cupomMsg" style="text-align:center"></div>
+    </div>
+  </section>
+
   <!-- ASSINATURA -->
   <section class="sec" id="assinatura">
     <div class="container">
@@ -413,36 +426,63 @@
 
   <script>
     'use strict';
-    /* ════════════════════════════════════════════════════════
-       CONFIGURAÇÃO DA LOJA
-       Cole aqui os links de checkout da sua plataforma de
-       pagamento (Hotmart, Kiwify, Eduzz, Mercado Pago…).
-       Enquanto o link estiver vazio (''), o botão leva o cliente
-       ao WhatsApp para a compra ser combinada manualmente (Pix).
-       ════════════════════════════════════════════════════════ */
     const WHATS = '5577999229281';
-    const PRODUTOS = {
-      mensal:         { nome: 'Assinatura Mensal (R$ 49,90/mês)',        checkout: '' },
-      trimestral:     { nome: 'Assinatura Trimestral (R$ 119,90)',       checkout: '' },
-      anual:          { nome: 'Assinatura Anual (R$ 297)',               checkout: '' },
-      cfo:            { nome: 'Curso CFO PMBA Completo (R$ 197)',         checkout: '' },
-      sd:             { nome: 'Curso SD PMBA Completo (R$ 147)',          checkout: '' },
-      basica:         { nome: 'Curso Matemática Básica (R$ 67)',         checkout: '' },
-      correios:       { nome: 'Curso Correios (R$ 97)',                  checkout: '' },
-      apostilaCfsd:   { nome: 'Apostila CFSD 2026 (R$ 47)',              checkout: '' },
-      apostilaCfo:    { nome: 'Apostila CFO (R$ 57)',                    checkout: '' },
-      comboApostilas: { nome: 'Combo Apostilas (R$ 87)',                 checkout: '' },
-      aovivo:         { nome: 'Aulas ao Vivo e Mentoria SD/PMBA (R$ 497)',  checkout: '' },
+    const NOMES = {
+      mensal:'Assinatura Mensal', trimestral:'Assinatura Trimestral', anual:'Assinatura Anual',
+      cfo:'Curso CFO PMBA', sd:'Curso SD PMBA', basica:'Matemática Básica', correios:'Curso Correios',
+      apostilaCfsd:'Apostila CFSD 2026', apostilaCfo:'Apostila CFO', comboApostilas:'Combo Apostilas',
+      aovivo:'Aulas ao Vivo e Mentoria SD/PMBA'
     };
+    let cupomAtivo = '';
 
-    function comprar(id) {
-      const p = PRODUTOS[id];
-      if (!p) return;
-      if (p.checkout) {
-        window.open(p.checkout, '_blank', 'noopener');
-      } else {
-        const msg = 'Olá, Professor Leão! Tenho interesse em adquirir: ' + p.nome + '. Pode me passar as formas de pagamento?';
-        window.open('https://wa.me/' + WHATS + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    function whatsFallback(id) {
+      const nome = NOMES[id] || 'um produto';
+      const cup = cupomAtivo ? ' (cupom ' + cupomAtivo + ')' : '';
+      const msg = 'Olá, Professor Leão! Tenho interesse em adquirir: ' + nome + cup + '. Pode me passar as formas de pagamento?';
+      window.open('https://wa.me/' + WHATS + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    }
+
+    async function comprar(id) {
+      if (!NOMES[id]) return;
+      /* checkout real (Mercado Pago) via servidor; se não houver
+         gateway configurado, cai no WhatsApp automaticamente */
+      try {
+        const r = await fetch('/api/checkout', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ produto: id, cupom: cupomAtivo }),
+        });
+        const d = await r.json();
+        if (d.success && d.url) { window.location.href = d.url; return; }
+        whatsFallback(id); /* sem gateway ou erro → WhatsApp */
+      } catch (e) {
+        whatsFallback(id); /* site estático (sem backend) → WhatsApp */
+      }
+    }
+
+    /* ── Cupom ── */
+    async function aplicarCupom() {
+      const inp = document.getElementById('cupomInput');
+      const msg = document.getElementById('cupomMsg');
+      const cod = (inp.value || '').trim().toUpperCase();
+      if (!cod) return;
+      try {
+        const r = await fetch('/api/validar-cupom', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codigo: cod, produto: 'anual' }),
+        });
+        const d = await r.json();
+        if (d.valido) {
+          cupomAtivo = cod;
+          msg.style.cssText = 'color:#86efac;font-size:13px;margin-top:8px';
+          msg.textContent = '✅ Cupom ' + cod + ' aplicado (' + d.desconto + ' de desconto). O valor com desconto aparece no checkout.';
+        } else {
+          cupomAtivo = '';
+          msg.style.cssText = 'color:#fca5a5;font-size:13px;margin-top:8px';
+          msg.textContent = '❌ ' + (d.message || 'Cupom inválido.');
+        }
+      } catch (e) {
+        msg.style.cssText = 'color:#fca5a5;font-size:13px;margin-top:8px';
+        msg.textContent = 'Não foi possível validar o cupom agora. Tente no checkout.';
       }
     }
 
@@ -450,6 +490,8 @@
       e.preventDefault();
       window.open('https://wa.me/' + WHATS + '?text=' + encodeURIComponent('Olá! Quero participar do programa de indicação do Professor Leão.'), '_blank', 'noopener');
     });
+    document.getElementById('cupomAplicar').addEventListener('click', aplicarCupom);
+    document.getElementById('cupomInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); aplicarCupom(); } });
   </script>
 </body>
 </html>

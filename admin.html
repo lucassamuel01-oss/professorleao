@@ -361,6 +361,7 @@
     <button class="tab-btn" data-tab="cursos">📚 Cursos &amp; Conteúdo</button>
     <button class="tab-btn" data-tab="questoes">📝 Questões</button>
     <button class="tab-btn" data-tab="avisos">📣 Avisos</button>
+    <button class="tab-btn" data-tab="loja">💳 Loja</button>
   </div>
 
   <main class="admin-wrap">
@@ -802,6 +803,68 @@
       </div>
     </div><!-- /tab-avisos -->
 
+    <!-- ══════ LOJA: CUPONS + VENDAS ══════ -->
+    <div id="tab-loja" class="tab-pane">
+      <div class="admin-header">
+        <p class="eyebrow">💳 Loja</p>
+        <h1>Cupons de desconto e vendas</h1>
+      </div>
+
+      <div class="card">
+        <h2>Criar cupom de desconto</h2>
+        <p style="color:var(--silver,#8892B4);font-size:13px;margin-bottom:18px;line-height:1.6">
+          O cupom é validado no checkout e aplica o desconto sobre o preço do produto.
+        </p>
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="field">
+            <label>Código *</label>
+            <input type="text" id="cupCodigo" maxlength="24" placeholder="Ex: LANCAMENTO20" style="text-transform:uppercase" />
+          </div>
+          <div class="field">
+            <label>Tipo *</label>
+            <select id="cupTipo">
+              <option value="percent">Percentual (%)</option>
+              <option value="fixo">Valor fixo (R$)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Valor do desconto *</label>
+            <input type="number" id="cupValor" min="1" step="0.01" placeholder="Ex: 20" />
+          </div>
+          <div class="field">
+            <label>Validade (opcional)</label>
+            <input type="date" id="cupValidade" />
+          </div>
+          <div class="field">
+            <label>Limite de usos (opcional)</label>
+            <input type="number" id="cupLimite" min="1" placeholder="Ex: 50" />
+          </div>
+        </div>
+        <button class="btn-primary" id="cupCriar">Criar cupom</button>
+        <div id="cupMsg" style="margin-top:10px;font-size:13px"></div>
+
+        <div class="table-wrap" style="margin-top:22px">
+          <table>
+            <thead><tr><th>Código</th><th>Desconto</th><th>Validade</th><th>Usos</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="cuponsTable"><tr><td class="empty-cell" colspan="6">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <h2>Vendas</h2>
+        <p style="color:var(--silver,#8892B4);font-size:13px;margin-bottom:14px;line-height:1.6">
+          Pagamentos iniciados pelo site. Quando aprovados, um convite de cadastro é gerado automaticamente (enviado por e-mail se o SMTP estiver configurado).
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Produto</th><th>Cliente</th><th>Valor</th><th>Cupom</th><th>Status</th><th>Data</th><th>Convite</th></tr></thead>
+            <tbody id="vendasTable"><tr><td class="empty-cell" colspan="7">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-loja -->
+
   </main>
 
   <!-- ══════ MODAIS ══════ -->
@@ -1024,8 +1087,101 @@
       if (btn.dataset.tab === 'cursos')   initCursosTab();
       if (btn.dataset.tab === 'questoes') initQuestoesTab();
       if (btn.dataset.tab === 'avisos')   loadAvisosTable();
+      if (btn.dataset.tab === 'loja')     initLojaTab();
     });
   });
+
+  /* ═══════════════════════════════════════════
+     LOJA — CUPONS + VENDAS
+  ═══════════════════════════════════════════ */
+  let _lojaInit = false;
+  function initLojaTab() { loadCupons(); loadVendas(); }
+
+  async function _jget(url) { const r = await fetch(url, { credentials: 'same-origin' }); return r.ok ? r.json() : []; }
+
+  async function loadCupons() {
+    const tb = document.getElementById('cuponsTable');
+    const cupons = await _jget('/api/admin/cupons');
+    if (!cupons.length) { tb.innerHTML = '<tr><td class="empty-cell" colspan="6">Nenhum cupom criado ainda.</td></tr>'; return; }
+    tb.innerHTML = cupons.map(c => {
+      const desc = c.tipo === 'fixo' ? ('R$ ' + Number(c.valor).toFixed(2)) : (c.valor + '%');
+      const val = c.validade ? new Date(c.validade).toLocaleDateString('pt-BR') : '—';
+      const usos = (c.usos || 0) + (c.limiteUso ? ' / ' + c.limiteUso : '');
+      const st = c.ativo === false
+        ? '<span style="color:#fca5a5">⏸ inativo</span>'
+        : '<span style="color:#86efac">● ativo</span>';
+      return `<tr>
+        <td><strong>${esc(c.codigo)}</strong></td>
+        <td>${desc}</td><td>${val}</td><td>${usos}</td><td>${st}</td>
+        <td>
+          <button class="action-btn" onclick="toggleCupom('${esc(c.codigo)}', ${c.ativo === false})">${c.ativo === false ? 'Ativar' : 'Pausar'}</button>
+          <button class="action-btn danger" onclick="excluirCupom('${esc(c.codigo)}')">Excluir</button>
+        </td></tr>`;
+    }).join('');
+  }
+
+  async function loadVendas() {
+    const tb = document.getElementById('vendasTable');
+    const vendas = await _jget('/api/admin/vendas');
+    if (!vendas.length) { tb.innerHTML = '<tr><td class="empty-cell" colspan="7">Nenhuma venda registrada ainda.</td></tr>'; return; }
+    const corStatus = { approved: '#86efac', pendente: '#fbbf24', pending: '#fbbf24', rejected: '#fca5a5' };
+    tb.innerHTML = vendas.map(v => {
+      const cor = corStatus[v.status] || '#8892B4';
+      const data = new Date(v.criadoEm).toLocaleDateString('pt-BR');
+      const conv = v.conviteToken
+        ? `<button class="action-btn" onclick="copiarConvite('${v.conviteToken}')">Copiar link</button>`
+        : '—';
+      return `<tr>
+        <td>${esc(v.produtoNome || v.produto)}</td>
+        <td style="color:var(--gray-mid)">${esc(v.nome || v.email || '—')}</td>
+        <td>R$ ${Number(v.precoFinal).toFixed(2)}</td>
+        <td>${v.cupom ? esc(v.cupom) : '—'}</td>
+        <td style="color:${cor};font-weight:700">${esc(v.status)}</td>
+        <td style="color:var(--gray-mid)">${data}</td>
+        <td>${conv}</td></tr>`;
+    }).join('');
+  }
+
+  document.getElementById('cupCriar').addEventListener('click', async () => {
+    const msg = document.getElementById('cupMsg');
+    const body = {
+      codigo: document.getElementById('cupCodigo').value,
+      tipo: document.getElementById('cupTipo').value,
+      valor: document.getElementById('cupValor').value,
+      validade: document.getElementById('cupValidade').value || null,
+      limiteUso: document.getElementById('cupLimite').value || null,
+    };
+    const r = await fetch('/api/admin/cupons', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (d.success) {
+      msg.style.color = '#86efac'; msg.textContent = '✅ Cupom criado.';
+      ['cupCodigo','cupValor','cupValidade','cupLimite'].forEach(id => document.getElementById(id).value = '');
+      loadCupons();
+    } else {
+      msg.style.color = '#fca5a5'; msg.textContent = '❌ ' + (d.message || 'Erro ao criar.');
+    }
+  });
+
+  async function toggleCupom(codigo, ativar) {
+    await fetch('/api/admin/cupons/' + encodeURIComponent(codigo), {
+      method: 'PATCH', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ativo: ativar }),
+    });
+    loadCupons();
+  }
+  async function excluirCupom(codigo) {
+    if (!confirm('Excluir o cupom ' + codigo + '?')) return;
+    await fetch('/api/admin/cupons/' + encodeURIComponent(codigo), { method: 'DELETE', credentials: 'same-origin' });
+    loadCupons();
+  }
+  function copiarConvite(token) {
+    const link = location.origin + '/cadastro.html?token=' + token;
+    navigator.clipboard.writeText(link).then(() => toast('Link de cadastro copiado!', 'ok'),
+      () => prompt('Copie o link de cadastro:', link));
+  }
 
   /* ═══════════════════════════════════════════
      ALUNOS TAB — (same as before)
