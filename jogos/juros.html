@@ -198,7 +198,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     </div>
   </div>
 </div>
-<div class="feedback" id="fbToast">
+<div class="feedback" id="fbToast" onclick="nextQuestion()" style="cursor:pointer">
   <div class="feedback__icon" id="fbIcon">✅</div>
   <div class="feedback__text">
     <div class="feedback__title" id="fbTitle">Correto!</div>
@@ -242,6 +242,7 @@ let diff='facil', playerName='', playerEmail='';
 let questions=[], qIdx=0, score=0, selected=null;
 let streak=0, maxStreak=0, acertos=0;
 let timerSec=25, timerInterval=null, timerStarted;
+let _advanceTimer=null,_advanced=false;
 let answering=false;
 
 function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 35 : diff === 'facil' ? 70 : 50; }
@@ -284,17 +285,17 @@ function startGame(){
     if(d==='facil'){
       const C=_pk([500,1000,1500,2000]), i=_ri(1,5), t=_ri(2,6), J=C*i/100*t;
       const o=_mkOps(_fmtR(J),()=>_fmtR(Math.max(10,J+_pk([-1,1])*_pk([10,20,C*i/100]))));
-      return {diff:d,tipo:'Juros Simples',formula:'J = C × i × t',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule os Juros:',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Juros Simples',formula:'J = C × i × t',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule os Juros:',ops:o.ops,g:o.g,expl:'J = C × i × t = '+_fmtR(C)+' × '+i+'/100 × '+t+' = '+_fmtR(J)};
     }
     if(d==='normal'){
       if(Math.random()<0.5){
         const C=_pk([800,1000,1200,2000]), i=_ri(2,5), t=_ri(3,8), M=C+C*i/100*t;
         const o=_mkOps(_fmtR(M),()=>_fmtR(Math.max(100,M+_pk([-1,1])*_pk([20,50,C*i/100]))));
-        return {diff:d,tipo:'Montante Simples',formula:'M = C + J = C(1 + i×t)',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante:',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Montante Simples',formula:'M = C + J = C(1 + i×t)',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante:',ops:o.ops,g:o.g,expl:'M = C × (1 + i×t) = '+_fmtR(C)+' × (1 + '+i+'/100×'+t+') = '+_fmtR(M)};
       }
       const i=_ri(2,4), t=_ri(4,8), C=_pk([500,1000,1500,2500]), J=C*i/100*t;
       const o=_mkOps(_fmtR(C),()=>_fmtR(Math.max(100,C+_pk([-1,1])*_pk([100,200,500]))));
-      return {diff:d,tipo:'Capital Inicial',formula:'C = J / (i × t)',dados:['J = '+_fmtR(J),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Qual foi o capital aplicado?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Capital Inicial',formula:'C = J / (i × t)',dados:['J = '+_fmtR(J),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Qual foi o capital aplicado?',ops:o.ops,g:o.g,expl:'C = J ÷ (i × t) = '+_fmtR(J)+' ÷ ('+i+'/100 × '+t+') = '+_fmtR(C)};
     }
     const C=_pk([1000,2000,5000]), i=_pk([10,20]), t=_pk([2,3]);
     const M=Math.round(C*Math.pow(1+i/100,t)*100)/100;
@@ -303,7 +304,7 @@ function startGame(){
       const errados=[Msimples,M+_pk([-1,1])*_pk([10,50,100]),C*Math.pow(1+i/100,t-1)];
       return _fmtR(Math.round(_pk(errados)*100)/100);
     });
-    return {diff:d,tipo:'Juros Compostos',formula:'M = C × (1 + i)ᵗ',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante (capitalização composta):',ops:o.ops,g:o.g};
+    return {diff:d,tipo:'Juros Compostos',formula:'M = C × (1 + i)ᵗ',dados:['C = '+_fmtR(C),'i = '+i+'% a.m.','t = '+t+' meses'],texto:'Calcule o Montante (capitalização composta):',ops:o.ops,g:o.g,expl:'M = C × (1+i)ᵗ = '+_fmtR(C)+' × (1+'+i+'/100)^'+t+' = '+_fmtR(M)};
   }
 
   const pool=montarPool(diff);
@@ -366,10 +367,11 @@ function submitAnswer(timeout=false){
   });
   /* efeitos de arcade */
   try{ if(window.Arcade){ if(isCorrect){Arcade.correct(streak);Arcade.confetti(streak>=3?70:30);if(streak>=2)Arcade.combo(streak);} else if(timeout){Arcade.timeUp();} else {Arcade.wrong();} } }catch(e){}
-  showFeedback(isCorrect,pts,timeout,q.ops[q.g]);
-  setTimeout(()=>{ hideFeedback(); qIdx++; renderQuestion(); },2400);
+  showFeedback(isCorrect,pts,timeout,q.ops[q.g]); if(q.expl){var _e=document.getElementById('fbSub');if(_e)_e.innerHTML='💡 '+esc(q.expl)+' <span style="opacity:.55">· toque para continuar →</span>';}
+  _advanced=false; _advanceTimer=setTimeout(nextQuestion, isCorrect?3400:6500);
 }
 
+function nextQuestion(){ if(_advanced)return; _advanced=true; clearTimeout(_advanceTimer); hideFeedback(); qIdx++; renderQuestion(); }
 function showFeedback(ok,pts,timeout,correto){
   const fb=document.getElementById('fbToast');
   fb.className='feedback '+(timeout?'wrong':ok?'perfect':'wrong');
