@@ -581,9 +581,9 @@ const PRODUTOS_LOJA = {
   trimestral:     { nome: "Assinatura Trimestral",               preco: 119.9 },
   anual:          { nome: "Assinatura Anual",                    preco: 297.0 },
   cfo:            { nome: "Curso CFO PMBA — Completo",            preco: 257.0 },
-  sd:             { nome: "Curso SD PMBA — Completo",             preco: 191.0 },
-  basica:         { nome: "Curso Matemática Básica",             preco: 87.0 },
-  correios:       { nome: "Curso Correios",                      preco: 127.0 },
+  sd:             { nome: "Curso SD PMBA — Completo",             preco: 210.0 },
+  basica:         { nome: "Curso Matemática Básica",             preco: 96.0 },
+  correios:       { nome: "Curso Correios",                      preco: 140.0 },
   apostilaCfsd:   { nome: "Apostila CFSD 2026",                  preco: 47.0 },
   apostilaCfo:    { nome: "Apostila CFO",                        preco: 57.0 },
   aovivo:         { nome: "Aulas ao Vivo e Mentoria — SD/PMBA",   preco: 497.0 },
@@ -603,6 +603,21 @@ function aplicarCupom(preco, cupom) {
   if (!cupom) return preco;
   let p = cupom.tipo === "fixo" ? preco - cupom.valor : preco * (1 - cupom.valor / 100);
   return Math.max(0, Math.round(p * 100) / 100);
+}
+
+/* Cupom permanente de indicação: 10% para quem indica E para quem é
+   indicado (ambos usam o mesmo código no checkout). Garantido no
+   startup para sobreviver a redeploys, igual à conta de admin. */
+function seedReferralCoupon() {
+  const cupons = readCupons();
+  if (cupons.some((c) => c.codigo.toUpperCase() === "INDICA10")) return;
+  cupons.push({
+    codigo: "INDICA10", tipo: "percent", valor: 10,
+    validade: null, limiteUso: null, produtos: [],
+    usos: 0, ativo: true, criadoEm: new Date().toISOString(),
+  });
+  writeCupons(cupons);
+  console.log("[CUPOM] Cupom de indicação garantido: INDICA10 (10%)");
 }
 
 /* valida um cupom (usado pelo front para mostrar o desconto) */
@@ -1316,6 +1331,7 @@ app.use((req, res) => {
   _vendasCache = await loadDoc("vendas", "vendas");
   _blogStats = await loadBlogStats();
   seedAdminUser();
+  seedReferralCoupon();
   app.listen(PORT, () => {
     console.log(`Professor Leão rodando em http://localhost:${PORT}`);
   });

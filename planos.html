@@ -266,8 +266,8 @@
           <div class="card__ico">👮</div>
           <div class="card__name">SD PMBA — Completo</div>
           <div class="card__desc">Matemática para Soldado da PM/CBM da Bahia, do básico ao nível de prova.</div>
-          <div class="card__price"><span class="now">R$ 191</span><span class="old">R$ 257</span></div>
-          <div class="card__parcela">ou 12x de R$ 19,10 · acesso de 12 meses</div>
+          <div class="card__price"><span class="now">R$ 210</span><span class="old">R$ 257</span></div>
+          <div class="card__parcela">ou 12x de R$ 21,00 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('sd')">Comprar curso SD</button>
         </div>
 
@@ -275,8 +275,8 @@
           <div class="card__ico">📐</div>
           <div class="card__name">Matemática Básica</div>
           <div class="card__desc">Do zero ao nível de concurso: a base que destrava todas as outras matérias.</div>
-          <div class="card__price"><span class="now">R$ 87</span><span class="old">R$ 127</span></div>
-          <div class="card__parcela">ou 12x de R$ 8,70 · acesso de 12 meses</div>
+          <div class="card__price"><span class="now">R$ 96</span><span class="old">R$ 127</span></div>
+          <div class="card__parcela">ou 12x de R$ 9,60 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('basica')">Comprar Mat. Básica</button>
         </div>
 
@@ -284,8 +284,8 @@
           <div class="card__ico">📦</div>
           <div class="card__name">Correios</div>
           <div class="card__desc">Matemática e Raciocínio Lógico focados no edital dos Correios.</div>
-          <div class="card__price"><span class="now">R$ 127</span><span class="old">R$ 165</span></div>
-          <div class="card__parcela">ou 12x de R$ 12,70 · acesso de 12 meses</div>
+          <div class="card__price"><span class="now">R$ 140</span><span class="old">R$ 165</span></div>
+          <div class="card__parcela">ou 12x de R$ 14,00 · acesso de 12 meses</div>
           <button class="card__cta" onclick="comprar('correios')">Comprar Correios</button>
         </div>
 
@@ -381,10 +381,10 @@
     <div class="container">
       <div class="indica">
         <div>
-          <h3>🤝 Indique e ganhe</h3>
-          <p>Gostou da plataforma? Indique para um amigo concurseiro: quando ele assinar, vocês dois ganham desconto na renovação. Fale com o professor para participar.</p>
+          <h3>🤝 Indique e ganhe 10%</h3>
+          <p>Indique um amigo concurseiro com o cupom <b style="color:#86efac">INDICA10</b>: ele ganha <b>10% de desconto</b> na compra — e <b>você também ganha 10%</b> na sua próxima renovação. É só usar o código <b style="color:#86efac">INDICA10</b> no checkout.</p>
         </div>
-        <a href="#" id="ctaIndica">Quero indicar →</a>
+        <a href="#" id="ctaIndica">Indicar e enviar cupom →</a>
       </div>
     </div>
   </section>
@@ -479,7 +479,8 @@
 
     document.getElementById('ctaIndica').addEventListener('click', function (e) {
       e.preventDefault();
-      window.open('https://wa.me/' + WHATS + '?text=' + encodeURIComponent('Olá! Quero participar do programa de indicação do Professor Leão.'), '_blank', 'noopener');
+      var msg = 'Tô estudando com o Professor Leão e indico demais! 🦁 Use o cupom INDICA10 e ganhe 10% de desconto na sua matrícula: https://www.professorleao.com/planos.html';
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
     });
     document.getElementById('cupomAplicar').addEventListener('click', aplicarCupom);
     document.getElementById('cupomInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); aplicarCupom(); } });
