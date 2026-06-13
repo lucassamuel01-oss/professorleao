@@ -126,6 +126,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
     <div class="topbar__tag">📐 Regra de Três</div>
   </div>
+  <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
   <a href="../jogos.html" class="btn-back">← Arena</a>
 </header>
 
@@ -215,6 +216,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
   <div class="feedback__pts" id="fbPts">+100</div>
 </div>
 
+<script src="arcade.js"></script>
 <script src="rankings.js"></script>
 <script src="../auth.js"></script>
 <script>
@@ -464,7 +466,7 @@ function endGame() {
   const weightedScore = PL_Rankings.calcWeighted(score, diff);
   PL_Rankings.save(GAME_ID, { name:playerName, email:playerEmail, score, difficulty:diff });
 
-  show('screenResult');
+  show('screenResult'); try{if(window.Arcade)Arcade.celebrate();}catch(e){}
   const acc  = questions.length ? Math.round(acertos/questions.length*100) : 0;
   const icon = weightedScore>=1200?'🏆': weightedScore>=800?'🎯': weightedScore>=400?'⚡':'📚';
   document.getElementById('resIcon').textContent  = icon;

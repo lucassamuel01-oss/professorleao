@@ -239,6 +239,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
   <div class="feedback__pts" id="fbPts">+100</div>
 </div>
 
+<script src="arcade.js"></script>
 <script src="rankings.js"></script>
 <script src="../auth.js"></script>
 <script>
@@ -509,7 +510,7 @@ function updateHUD() {
 
 function endGame() {
   hideFeedback();
-  show('screenResult');
+  show('screenResult'); try{if(window.Arcade)Arcade.celebrate();}catch(e){}
 
   // Save to rankings (score bruto; rankings.js calcula ws internamente)
   const weightedScore = PL_Rankings.calcWeighted(score, diff);

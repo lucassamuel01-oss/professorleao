@@ -117,7 +117,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="topbar__logo">PROFESSOR <span>LEÃO</span></div>
     <div class="topbar__tag">📊 Porcentagem</div>
   </div>
-  <a href="../jogos.html" class="btn-back">← Arena</a>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="sndBtn" class="btn-back" title="Som on/off" onclick="document.getElementById('sndBtn').textContent=Arcade.toggleSound()?'🔊':'🔇'">🔊</button>
+    <a href="../jogos.html" class="btn-back">← Arena</a>
+  </div>
 </header>
 
 <div class="wrap">
@@ -194,7 +197,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
   </div>
 </div>
 
-<div class="feedback" id="fbToast">
+<div class="feedback" id="fbToast" onclick="nextQuestion()" style="cursor:pointer">
   <div class="feedback__icon" id="fbIcon">✅</div>
   <div class="feedback__text">
     <div class="feedback__title" id="fbTitle">Correto!</div>
@@ -203,6 +206,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
   <div class="feedback__pts" id="fbPts">+100</div>
 </div>
 
+<script src="arcade.js"></script>
 <script src="rankings.js"></script>
 <script src="../auth.js"></script>
 <script>
@@ -242,6 +246,7 @@ let questions=[], qIdx=0, score=0, selected=null;
 let streak=0, maxStreak=0, acertos=0;
 let timerSec=30, timerInterval=null, timerStarted;
 let answering=false, resPeriod='daily';
+let _advanceTimer=null, _advanced=false;
 
 function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 25 : diff === 'facil' ? 55 : 40; }
 function getMultiplier(){ return PL_Rankings.DIFF_MULTIPLIER[diff]||1.0; }
@@ -250,6 +255,7 @@ try {
   const sess=JSON.parse(localStorage.getItem('pl_session')||'null');
   if(sess){ document.getElementById('inputNome').value=PL_Rankings.getCodename() || sess.name || ''; playerEmail=sess.email||''; }
 }catch(e){}
+try{ const sb=document.getElementById('sndBtn'); if(sb&&window.Arcade) sb.textContent=Arcade.soundIsOn()?'🔊':'🔇'; }catch(e){}
 
 function setDiff(el){
   document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
@@ -278,36 +284,43 @@ function startGame(){
   }
 
 
+  const _fmt=x=>Number(x).toLocaleString('pt-BR');
   function gerarQuestao(d){
     if(d==='facil'){
       const p=_pk([10,20,25,50]), N=_ri(2,20)*20, v=N*p/100;
       const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([5,10,Math.max(2,Math.round(v/5))])));
-      return {diff:d,tipo:'Cálculo direto',texto:'Quanto é '+p+'% de '+N+'?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Cálculo direto',texto:'Quanto é '+p+'% de '+N+'?',ops:o.ops,g:o.g,
+        expl:p+'% = '+p+'/100. Então '+p+'% de '+N+' = '+N+' × '+p+'/100 = '+_fmt(v)+'.'};
     }
     if(d==='normal'){
       if(Math.random()<0.5){
         const p=_pk([15,30,40,75]), N=_ri(2,15)*20, v=N*p/100;
         const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([2,5,10,Math.round(N/10)])));
-        return {diff:d,tipo:'Cálculo direto',texto:'Quanto é '+p+'% de '+N+'?',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Cálculo direto',texto:'Quanto é '+p+'% de '+N+'?',ops:o.ops,g:o.g,
+          expl:p+'% de '+N+' = '+N+' × '+p+'/100 = '+_fmt(v)+'.'};
       }
       const p=_pk([10,25,50]), N=_ri(2,10)*40, novo=Math.round(N*(1+p/100));
       const o=_mkOps('R$ '+novo,()=>'R$ '+Math.max(10,novo+_pk([-1,1])*_pk([10,20,Math.round(N*p/200)||10])));
-      return {diff:d,tipo:'Aumento percentual',texto:'Um produto custa R$ '+N+' e sofre aumento de '+p+'%. Qual o novo preço?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Aumento percentual',texto:'Um produto custa R$ '+N+' e sofre aumento de '+p+'%. Qual o novo preço?',ops:o.ops,g:o.g,
+        expl:'Aumentar '+p+'% = multiplicar por (1 + '+p+'/100). Então R$ '+N+' × '+(1+p/100).toFixed(2).replace('.',',')+' = R$ '+_fmt(novo)+'.'};
     }
     const r=Math.random();
     if(r<0.34){
       const p=_pk([10,20,30]); const v=p*p/100;
       const o=_mkOps('queda de '+v+'%',()=>_pk(['nenhuma variação','queda de '+p+'%','aumento de '+v+'%','queda de '+(v*2)+'%','queda de '+(v/2)+'%']));
-      return {diff:d,tipo:'Variação composta',texto:'Um valor sofre aumento de '+p+'% e, em seguida, desconto de '+p+'% sobre o novo valor. Em relação ao original, o resultado final é:',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Variação composta',texto:'Um valor sofre aumento de '+p+'% e, em seguida, desconto de '+p+'% sobre o novo valor. Em relação ao original, o resultado final é:',ops:o.ops,g:o.g,
+        expl:'Subir e descer '+p+'% NÃO se anula. Fator = (1+'+p+'/100)×(1−'+p+'/100) = 1 − ('+p+'/100)². Logo há queda de '+p+'²/100 = '+v+'%.'};
     }
     if(r<0.67){
       const p=_pk([20,25,50]), orig=_ri(2,12)*20, fim=Math.round(orig*(1+p/100));
       const o=_mkOps('R$ '+orig,()=>'R$ '+Math.max(10,orig+_pk([-1,1])*_pk([10,20,fim-orig])));
-      return {diff:d,tipo:'Valor original',texto:'Após um aumento de '+p+'%, um produto passou a custar R$ '+fim+'. Qual era o preço original?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Valor original',texto:'Após um aumento de '+p+'%, um produto passou a custar R$ '+fim+'. Qual era o preço original?',ops:o.ops,g:o.g,
+        expl:'O preço final é o original × (1 + '+p+'/100). Então original = '+fim+' ÷ '+(1+p/100).toFixed(2).replace('.',',')+' = R$ '+_fmt(orig)+'.'};
     }
     const p=_pk([10,20,25,50]), de=_ri(4,15)*20, para=Math.round(de*(1-p/100));
     const o=_mkOps(p+'%',()=>_pk([p/2,p*2,p+5,Math.max(1,p-5),100-p].filter(x=>x>0&&x!==p&&x===Math.round(x)))+'%');
-    return {diff:d,tipo:'Percentual de desconto',texto:'Um item caiu de R$ '+de+' para R$ '+para+'. O desconto foi de:',ops:o.ops,g:o.g};
+    return {diff:d,tipo:'Percentual de desconto',texto:'Um item caiu de R$ '+de+' para R$ '+para+'. O desconto foi de:',ops:o.ops,g:o.g,
+      expl:'Desconto % = (valor antigo − valor novo) ÷ valor antigo = ('+de+' − '+para+') ÷ '+de+' = '+p+'%.'};
   }
 
   const pool=montarPool(diff);
@@ -367,16 +380,21 @@ function submitAnswer(timeout=false){
     b.disabled=true;
     if(i===q.g)b.classList.add('reveal-ok'); else if(i===selected&&!isCorrect)b.classList.add('reveal-err');
   });
-  showFeedback(isCorrect,pts,timeout,q.ops[q.g]);
-  setTimeout(()=>{ hideFeedback(); qIdx++; renderQuestion(); },2400);
+  /* efeitos de arcade */
+  if(isCorrect){ Arcade.correct(streak); Arcade.confetti(streak>=3?70:30); if(streak>=2)Arcade.combo(streak); }
+  else if(timeout){ Arcade.timeUp(); } else { Arcade.wrong(); }
+  showFeedback(isCorrect,pts,timeout,q.ops[q.g],q.expl);
+  _advanced=false;
+  _advanceTimer=setTimeout(nextQuestion, isCorrect?3400:6500);
 }
+function nextQuestion(){ if(_advanced)return; _advanced=true; clearTimeout(_advanceTimer); hideFeedback(); qIdx++; renderQuestion(); }
 
-function showFeedback(ok,pts,timeout,correto){
+function showFeedback(ok,pts,timeout,correto,expl){
   const fb=document.getElementById('fbToast');
-  fb.className='feedback '+(timeout?'wrong':ok?'perfect':'wrong');
+  fb.className='feedback '+(ok?'perfect':'wrong');
   document.getElementById('fbIcon').textContent=timeout?'⏰':ok?'🎯':'❌';
-  document.getElementById('fbTitle').textContent=timeout?'Tempo esgotado!':ok?'Correto! 🔥':'Errado!';
-  document.getElementById('fbSub').textContent=ok?`+${pts} pts (streak ×${streak})`:`Resposta: ${correto}`;
+  document.getElementById('fbTitle').textContent=timeout?('Tempo! Resposta: '+correto):ok?('Correto! 🔥'+(streak>=2?'  streak ×'+streak:'')):('Quase! Resposta certa: '+correto);
+  document.getElementById('fbSub').innerHTML='💡 '+esc(expl||'')+' <span style="opacity:.55">· toque para continuar →</span>';
   document.getElementById('fbPts').textContent=(pts>=0?'+':'')+pts;
   requestAnimationFrame(()=>fb.classList.add('show'));
 }

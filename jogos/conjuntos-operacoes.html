@@ -279,6 +279,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
   <div class="feedback__pts" id="fbPts">+100</div>
 </div>
 
+<script src="arcade.js"></script>
 <script src="rankings.js"></script>
 <script src="../auth.js"></script>
 <script>
@@ -487,7 +488,7 @@ function updateHUD(){
 }
 
 function endGame(){
-  hideFeedback(); show('screenResult');
+  hideFeedback(); show('screenResult'); try{if(window.Arcade)Arcade.celebrate();}catch(e){}
   const weightedScore = PL_Rankings.calcWeighted(score, diff);
   PL_Rankings.save(GAME_ID,{name:playerName,email:playerEmail,score,difficulty:diff});
   const acc=totalPossible>0?Math.round((totalAcertos/totalPossible)*100):0;
