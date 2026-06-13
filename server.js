@@ -59,19 +59,23 @@ function getSessionSecret() {
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "4mb" }));
 app.use(bodyParser.json({ limit: "4mb" }));
+/* sessões no MongoDB (sobrevivem a deploys); se o store falhar por
+   qualquer motivo, NÃO derruba o app — cai no MemoryStore padrão */
+let _sessStore;
+try {
+  if (process.env.MONGODB_URI && MongoStore) {
+    _sessStore = MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      dbName: "professor-leao",
+      collectionName: "sessions",
+      ttl: 30 * 24 * 60 * 60,
+    });
+  }
+} catch (e) { console.error("[SESSION] store falhou, usando MemoryStore:", e && e.message); _sessStore = undefined; }
 app.use(
   session({
     secret: getSessionSecret(),
-    /* sessões no MongoDB (sobrevivem a deploys); sem banco, usa o
-       MemoryStore padrão (login cai a cada restart, mas não quebra) */
-    store: (process.env.MONGODB_URI && MongoStore)
-      ? MongoStore.create({
-          mongoUrl: process.env.MONGODB_URI,
-          dbName: "professor-leao",
-          collectionName: "sessions",
-          ttl: 30 * 24 * 60 * 60,
-        })
-      : undefined,
+    store: _sessStore,
     resave: false,
     saveUninitialized: false,
     cookie: { httpOnly: true, sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000 },
@@ -381,11 +385,14 @@ function requireAdminApi(req, res, next) {
 /* ── Rotas públicas de autenticação ─────────────────────────── */
 
 let _bancoCount = null, _bancoCountAt = 0;
-app.get("/health", async (req, res) => {
-  if (_mongoDb && Date.now() - _bancoCountAt > 30000) {
-    try { _bancoCount = await getBancoCol().countDocuments(); _bancoCountAt = Date.now(); } catch { /* ignora */ }
-  }
+app.get("/health", (req, res) => {
+  /* responde IMEDIATAMENTE — o healthcheck do Railway não pode depender
+     de uma consulta ao banco. A contagem é atualizada em segundo plano. */
   res.json({ ok: true, app: "professor-leao", db: !!_mongoDb, banco: _bancoCount });
+  if (_mongoDb && Date.now() - _bancoCountAt > 30000) {
+    _bancoCountAt = Date.now();
+    try { getBancoCol().countDocuments().then((n) => { _bancoCount = n; }).catch(() => {}); } catch (e) {}
+  }
 });
 
 /* ── Anti-brute-force: trava login após tentativas falhas ──
@@ -1439,17 +1446,27 @@ app.use((req, res) => {
 
 /* ── Startup ────────────────────────────────────────────────── */
 
+/* nunca derruba o processo por erro não tratado (mantém o site no ar) */
+process.on("unhandledRejection", (e) => console.error("[unhandledRejection]", e && e.message));
+process.on("uncaughtException", (e) => console.error("[uncaughtException]", e && e.message));
+
+/* sobe o servidor IMEDIATAMENTE — o healthcheck do Railway não pode
+   esperar o Mongo. A conexão e os seeds rodam em segundo plano. */
+app.listen(PORT, () => {
+  console.log(`Professor Leão rodando em http://localhost:${PORT}`);
+});
+
 (async () => {
-  ensureDataDir();
-  await connectMongo();
-  _usersCache = await loadDoc("users", "users");
-  _invitesCache = await loadDoc("invites", "invites");
-  _couponsCache = await loadDoc("coupons", "coupons");
-  _vendasCache = await loadDoc("vendas", "vendas");
-  _blogStats = await loadBlogStats();
-  seedAdminUser();
-  seedReferralCoupon();
-  app.listen(PORT, () => {
-    console.log(`Professor Leão rodando em http://localhost:${PORT}`);
-  });
+  try {
+    ensureDataDir();
+    await connectMongo();
+    _usersCache = await loadDoc("users", "users");
+    _invitesCache = await loadDoc("invites", "invites");
+    _couponsCache = await loadDoc("coupons", "coupons");
+    _vendasCache = await loadDoc("vendas", "vendas");
+    _blogStats = await loadBlogStats();
+    seedAdminUser();
+    seedReferralCoupon();
+    console.log("[STARTUP] inicialização completa");
+  } catch (e) { console.error("[STARTUP] erro:", e && e.message); }
 })();
