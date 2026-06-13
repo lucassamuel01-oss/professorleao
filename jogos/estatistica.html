@@ -54,6 +54,8 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 
 .q-card{background:var(--navy-2);border:1px solid rgba(99,102,241,.2);border-radius:20px;padding:22px 18px;margin-bottom:16px;text-align:center}
 .q-tag{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:14px}
+.data-chart{margin:2px auto 12px;max-width:330px}
+.data-chart svg{display:block;width:100%;height:auto}
 .data-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px}
 .chip{font-family:var(--fh);font-weight:800;font-size:17px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.32);border-radius:10px;padding:8px 13px;min-width:42px}
 .q-ask{font-size:16px;color:#fff;line-height:1.5}
@@ -161,6 +163,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div>
     <div class="q-card">
       <div class="q-tag" id="qTag"></div>
+      <div class="data-chart" id="dataChart"></div>
       <div class="data-chips" id="dataChips"></div>
       <div class="q-ask" id="qAsk"></div>
     </div>
@@ -292,11 +295,39 @@ function startGame(){
   renderQuestion();
 }
 
+/* gráfico de barras dos dados — destaca o que a pergunta pede */
+function renderChart(dados, q){
+  const el=document.getElementById('dataChart'); if(!el || !dados || !dados.length){ if(el)el.innerHTML=''; return; }
+  const n=dados.length, mx=Math.max(...dados,1);
+  const bw=Math.min(32,Math.max(12,Math.floor(290/n))), gap=Math.max(4,Math.round(bw*0.28));
+  const W=n*(bw+gap)+gap, H=108, base=86, maxBarH=64;
+  const tag=q&&q.tag||'';
+  const hi=new Set();
+  if(/Moda/.test(tag)){ const fr={}; dados.forEach(v=>fr[v]=(fr[v]||0)+1); const mxf=Math.max(...Object.values(fr)); dados.forEach((v,i)=>{ if(fr[v]===mxf&&mxf>1)hi.add(i); }); }
+  if(/Amplitude/.test(tag)){ const a=Math.max(...dados),b=Math.min(...dados); dados.forEach((v,i)=>{ if(v===a||v===b)hi.add(i); }); }
+  let bars='';
+  dados.forEach((v,i)=>{
+    const h=Math.max(3,(v/mx)*maxBarH), x=gap+i*(bw+gap), y=base-h;
+    const col=hi.has(i)?'#fbbf24':'#6366f1';
+    bars+='<rect x="'+x+'" y="'+y.toFixed(1)+'" width="'+bw+'" height="'+h.toFixed(1)+'" rx="3" fill="'+col+'"/>'
+      +'<text x="'+(x+bw/2)+'" y="'+(y-3).toFixed(1)+'" text-anchor="middle" fill="#a5b4fc" font-family="Montserrat" font-weight="800" font-size="10">'+v+'</text>';
+  });
+  let extra='';
+  if(/Média/.test(tag)){
+    const mean=dados.reduce((a,b)=>a+b,0)/n, my=base-(mean/mx)*maxBarH;
+    extra='<line x1="2" y1="'+my.toFixed(1)+'" x2="'+(W-2)+'" y2="'+my.toFixed(1)+'" stroke="#fbbf24" stroke-width="1.6" stroke-dasharray="5 4"/>'
+      +'<text x="'+(W-3)+'" y="'+(my-3).toFixed(1)+'" text-anchor="end" fill="#fbbf24" font-family="Montserrat" font-weight="800" font-size="9">média</text>';
+  }
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="max-width:'+Math.min(330,W)+'px">'
+    +'<line x1="0" y1="'+base+'" x2="'+W+'" y2="'+base+'" stroke="#3a4a6b" stroke-width="1"/>'+bars+extra+'</svg>';
+}
+
 function renderQuestion(){
   if(qIdx>=questions.length){ endGame(); return; }
   const q=questions[qIdx]; answering=false;
   document.getElementById('hudQ').textContent=qIdx+1;
   document.getElementById('qTag').textContent=q.tag;
+  renderChart(q.dados, q);
   document.getElementById('dataChips').innerHTML=q.dados.map(d=>`<span class="chip">${d}</span>`).join('');
   document.getElementById('qAsk').innerHTML=q.ask;
   const inp=document.getElementById('ansInput');
