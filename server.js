@@ -580,13 +580,12 @@ const PRODUTOS_LOJA = {
   mensal:         { nome: "Assinatura Mensal",                    preco: 49.9 },
   trimestral:     { nome: "Assinatura Trimestral",               preco: 119.9 },
   anual:          { nome: "Assinatura Anual",                    preco: 297.0 },
-  cfo:            { nome: "Curso CFO PMBA — Completo",            preco: 197.0 },
-  sd:             { nome: "Curso SD PMBA — Completo",             preco: 147.0 },
-  basica:         { nome: "Curso Matemática Básica",             preco: 67.0 },
-  correios:       { nome: "Curso Correios",                      preco: 97.0 },
+  cfo:            { nome: "Curso CFO PMBA — Completo",            preco: 257.0 },
+  sd:             { nome: "Curso SD PMBA — Completo",             preco: 191.0 },
+  basica:         { nome: "Curso Matemática Básica",             preco: 87.0 },
+  correios:       { nome: "Curso Correios",                      preco: 127.0 },
   apostilaCfsd:   { nome: "Apostila CFSD 2026",                  preco: 47.0 },
   apostilaCfo:    { nome: "Apostila CFO",                        preco: 57.0 },
-  comboApostilas: { nome: "Combo Apostilas",                     preco: 87.0 },
   aovivo:         { nome: "Aulas ao Vivo e Mentoria — SD/PMBA",   preco: 497.0 },
 };
 
