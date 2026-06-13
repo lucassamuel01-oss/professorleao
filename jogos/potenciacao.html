@@ -292,11 +292,11 @@ function startGame(){
       if(Math.random()<0.5){
         const a=_ri(2,5), b=_ri(2,3), v=Math.pow(a,b);
         const o=_mkOps(v,()=>_pk([a*b,v+a,v-a,Math.pow(a,b+1),v+1].filter(x=>x>0&&x!==v)));
-        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g,expl:a+_sup(b)+' = '+Array(b).fill(a).join(' × ')+' = '+v};
       }
       const r=_ri(4,12), v=r;
       const o=_mkOps(v,()=>_pk([r-1,r+1,r+2,r-2,Math.round(r*r/2)].filter(x=>x>0&&x!==v)));
-      return {diff:d,tipo:'Radiciação',expr:'√'+(r*r),texto:'Calcule a raiz quadrada:',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Radiciação',expr:'√'+(r*r),texto:'Calcule a raiz quadrada:',ops:o.ops,g:o.g,expl:'√'+(r*r)+' = '+r+', pois '+r+' × '+r+' = '+(r*r)};
     }
     if(d==='normal'){
       const m=Math.random();
@@ -304,32 +304,32 @@ function startGame(){
         const a=_ri(2,7), b=_ri(2,4), v=Math.pow(a,b);
         if(v>2500) return gerarQuestao(d);
         const o=_mkOps(v,()=>_pk([a*b,v+a,v-a,v*2,Math.round(v/2)].filter(x=>x>0&&x!==v)));
-        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Potenciação',expr:a+_sup(b),texto:'Calcule:',ops:o.ops,g:o.g,expl:a+_sup(b)+' = '+Array(b).fill(a).join(' × ')+' = '+v};
       }
       if(m<0.7){
         const r=_ri(2,7), v=r;
         const o=_mkOps(v,()=>_pk([r-1,r+1,r+2,r*r,r*3].filter(x=>x>0&&x!==v)));
-        return {diff:d,tipo:'Raiz Cúbica',expr:'∛'+(r*r*r),texto:'Calcule a raiz cúbica:',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Raiz Cúbica',expr:'∛'+(r*r*r),texto:'Calcule a raiz cúbica:',ops:o.ops,g:o.g,expl:'∛'+(r*r*r)+' = '+r+', pois '+r+'³ = '+(r*r*r)};
       }
       const a=_pk([2,3,5]), b=_ri(2,3), c=_ri(1,2), v=Math.pow(a,b+c);
       const o=_mkOps(v,()=>_pk([Math.pow(a,b*c),Math.pow(a,b),v*a,Math.round(v/a)].filter(x=>x>0&&x!==v)));
-      return {diff:d,tipo:'Propriedades',expr:a+_sup(b)+' × '+a+_sup(c),texto:'Calcule o produto de potências:',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Propriedades',expr:a+_sup(b)+' × '+a+_sup(c),texto:'Calcule o produto de potências:',ops:o.ops,g:o.g,expl:'Mesma base: soma os expoentes. '+a+_sup(b)+' × '+a+_sup(c)+' = '+a+_sup(b+c)+' = '+v};
     }
     const m=Math.random();
     if(m<0.4){
       const a=_pk([2,3]), b=_ri(2,3), c=2, v=Math.pow(a,b*c);
       const o=_mkOps(v,()=>_pk([Math.pow(a,b+c),v*a,Math.round(v/a),v+a].filter(x=>x>0&&x!==v)));
-      return {diff:d,tipo:'Potência de Potência',expr:'('+a+_sup(b)+')'+_sup(c),texto:'Calcule:',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Potência de Potência',expr:'('+a+_sup(b)+')'+_sup(c),texto:'Calcule:',ops:o.ops,g:o.g,expl:'Potência de potência: multiplica os expoentes. ('+a+_sup(b)+')'+_sup(c)+' = '+a+_sup(b*c)+' = '+v};
     }
     if(m<0.7){
       const a=_ri(2,9), s=_ri(5,12), v=1+s*s;
       const o=_mkOps(v,()=>_pk([v-1,v+1,s*s,v+a]).valueOf?_pk([v-1,v+1,s*s,v+a]):v+1);
-      return {diff:d,tipo:'Expressão Mista',expr:a+'⁰ + √'+(s*s)+' × √'+(s*s),texto:'Calcule (lembre: a⁰ = 1):',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Expressão Mista',expr:a+'⁰ + √'+(s*s)+' × √'+(s*s),texto:'Calcule (lembre: a⁰ = 1):',ops:o.ops,g:o.g,expl:a+'⁰ = 1 e √'+(s*s)+' = '+s+'. Então 1 + '+s+' × '+s+' = '+v};
     }
     const a=_pk([2,4,5,10]), v1=1/a;
     const correto=a===2?'1/2':a===4?'1/4':a===5?'1/5':'1/10';
     const o=_mkOps(correto,()=>_pk(['-'+a, String(a), '1/'+(a*a), '-1/'+a, '0'].filter(x=>x!==correto)));
-    return {diff:d,tipo:'Expoente Negativo',expr:a+'⁻¹',texto:'Calcule:',ops:o.ops,g:o.g};
+    return {diff:d,tipo:'Expoente Negativo',expr:a+'⁻¹',texto:'Calcule:',ops:o.ops,g:o.g,expl:'Expoente −1 inverte a base: '+a+'⁻¹ = 1/'+a+' = '+correto};
   }
 
   const pool=montarPool(diff);

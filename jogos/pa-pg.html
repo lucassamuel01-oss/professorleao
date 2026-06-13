@@ -285,26 +285,26 @@ function startGame(){
     if(d==='facil'){
       const a1=_ri(1,9), r=_ri(2,6), t=[a1,a1+r,a1+2*r,a1+3*r,null], v=a1+4*r;
       const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([1,r,2*r])));
-      return {diff:d,tipo:'Progressão Aritmética — PA',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Progressão Aritmética — PA',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g,expl:'PA de razão '+r+': soma '+r+' a cada termo. Próximo = '+(a1+3*r)+' + '+r+' = '+v};
     }
     if(d==='normal'){
       if(Math.random()<0.5){
         const a1=_ri(1,8), r=_ri(3,8), t=[a1,a1+r,null,a1+3*r,a1+4*r], v=a1+2*r;
         const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([1,2,r])));
-        return {diff:d,tipo:'Progressão Aritmética — PA',terms:t,ask:'Qual é o termo que falta?',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Progressão Aritmética — PA',terms:t,ask:'Qual é o termo que falta?',ops:o.ops,g:o.g,expl:'PA de razão '+r+': o termo que falta é '+(a1+r)+' + '+r+' = '+v};
       }
       const a1=_ri(1,4), q=_pk([2,3]), t=[a1,a1*q,a1*q*q,null], v=a1*q*q*q;
       const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([a1*q,q,v/2]).map?v:Math.round(v+_pk([-1,1])*_pk([a1*q,q,Math.round(v/2)]))));
-      return {diff:d,tipo:'Progressão Geométrica — PG',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Progressão Geométrica — PG',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g,expl:'PG de razão '+q+': multiplica por '+q+'. Próximo = '+(a1*q*q)+' × '+q+' = '+v};
     }
     if(Math.random()<0.5){
       const a1=_ri(20,60), r=-_ri(3,9), t=[a1,a1+r,a1+2*r,null], v=a1+3*r;
       const o=_mkOps(v,()=>v+_pk([-1,1])*_pk([1,2,Math.abs(r)]));
-      return {diff:d,tipo:'PA Decrescente',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'PA Decrescente',terms:t,ask:'Qual é o próximo termo?',ops:o.ops,g:o.g,expl:'PA de razão '+r+': próximo = '+(a1+2*r)+' + ('+r+') = '+v};
     }
     const q=_pk([2,3]), a4=_ri(2,4)*q*q*q, t=[null,a4/q/q,a4/q,a4], v=a4/q/q/q;
     const o=_mkOps(v,()=>Math.max(1,v+_pk([-1,1])*_pk([1,q,v*q-v])));
-    return {diff:d,tipo:'Progressão Geométrica — PG',terms:t,ask:'Qual é o primeiro termo?',ops:o.ops,g:o.g};
+    return {diff:d,tipo:'Progressão Geométrica — PG',terms:t,ask:'Qual é o primeiro termo?',ops:o.ops,g:o.g,expl:'PG de razão '+q+': voltando, divide por '+q+'. Primeiro = '+(a4/q/q)+' ÷ '+q+' = '+v};
   }
 
   const pool=montarPool(diff);

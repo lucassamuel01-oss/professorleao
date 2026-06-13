@@ -276,27 +276,27 @@ function startGame(){
     if(d==='facil'){
       const a=_ri(2,5), b=_ri(1,9), x0=_ri(2,6), v=a*x0+b;
       const o=_mkOps(v,()=>_pk([v-1,v+1,v-a,v+a,a*x0-b].filter(x=>x!==v)));
-      return {diff:d,tipo:'Função 1° Grau — Valor',func:_fmtLin(a,b),texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Função 1° Grau — Valor',func:_fmtLin(a,b),texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g,expl:'Substitua x por '+x0+': f('+x0+') = '+a+'×'+x0+(b>=0?' + '+b:' − '+(-b))+' = '+v};
     }
     if(d==='normal'){
       if(Math.random()<0.5){
         const a=_ri(2,6), k=_ri(2,8), c=a*k;
         const o=_mkOps('x = '+k,()=>'x = '+_pk([k-1,k+1,c,Math.round(c/2),a].filter(x=>x!==k)));
-        return {diff:d,tipo:'Zero da Função',func:'f(x) = '+a+'x − '+c,texto:'Encontre o zero da função:',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Zero da Função',func:'f(x) = '+a+'x − '+c,texto:'Encontre o zero da função:',ops:o.ops,g:o.g,expl:'Zero é onde f(x)=0: '+a+'x = '+c+', então x = '+c+'/'+a+' = '+k};
       }
       const r1=_ri(1,5), r2=_ri(r1+1,8), b=r1+r2, c=r1*r2, x0=_ri(0,3), v=x0*x0-b*x0+c;
       const o=_mkOps(v,()=>_pk([v-1,v+1,v+x0,v-b,c].filter(x=>x!==v)));
-      return {diff:d,tipo:'Função 2° Grau — Valor',func:'f(x) = x² − '+b+'x + '+c,texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Função 2° Grau — Valor',func:'f(x) = x² − '+b+'x + '+c,texto:'Calcule f('+x0+'):',ops:o.ops,g:o.g,expl:'f('+x0+') = '+x0+'² − '+b+'×'+x0+' + '+c+' = '+v};
     }
     if(Math.random()<0.5){
       const r1=_ri(1,5), r2=_ri(r1+1,9), b=r1+r2, c=r1*r2;
       const correto=r1+' e '+r2;
       const o=_mkOps(correto,()=>_pk([(r1-1)+' e '+(r2+1),(-r1)+' e '+(-r2),r1+' e '+(r2+1),(r1+1)+' e '+r2].filter(x=>x!==correto)));
-      return {diff:d,tipo:'Raízes da Função',func:'f(x) = x² − '+b+'x + '+c,texto:'Quais são as raízes?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Raízes da Função',func:'f(x) = x² − '+b+'x + '+c,texto:'Quais são as raízes?',ops:o.ops,g:o.g,expl:'Soma das raízes = '+b+' e produto = '+c+'. Logo as raízes são '+r1+' e '+r2};
     }
     const xv=_ri(1,6), b=2*xv, c=_ri(1,9), correto='x = '+xv;
     const o=_mkOps(correto,()=>'x = '+_pk([xv-1,xv+1,-xv,b,2*xv+1].filter(x=>x!==xv)));
-    return {diff:d,tipo:'Vértice da Parábola',func:'f(x) = x² − '+b+'x + '+c,texto:'Qual o x do vértice (xᵥ = −b/2a)?',ops:o.ops,g:o.g};
+    return {diff:d,tipo:'Vértice da Parábola',func:'f(x) = x² − '+b+'x + '+c,texto:'Qual o x do vértice (xᵥ = −b/2a)?',ops:o.ops,g:o.g,expl:'xᵥ = −b/2a = '+b+'/2 = '+xv};
   }
 
   const pool=montarPool(diff);
