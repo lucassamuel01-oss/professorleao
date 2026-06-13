@@ -399,6 +399,27 @@ app.get("/health", (req, res) => {
   }
 });
 
+/* ── Digital Asset Links (app Android / TWA) ─────────────────
+   Verifica o app instalado para que ele abra a plataforma em TELA
+   CHEIA, sem a barra do navegador. O fingerprint SHA-256 da chave de
+   ASSINATURA do app (no Play App Signing, é a chave do Google — veja
+   Play Console → Configuração → Assinatura do app) vai na variável de
+   ambiente TWA_SHA256_FINGERPRINTS (separe por vírgula se houver mais
+   de uma). O nome do pacote padrão é com.professorleao.app. */
+app.get("/.well-known/assetlinks.json", (req, res) => {
+  const pkg = process.env.TWA_PACKAGE_ID || "com.professorleao.app";
+  const fingerprints = String(process.env.TWA_SHA256_FINGERPRINTS || "")
+    .split(",").map((s) => s.trim()).filter(Boolean);
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.json([
+    {
+      relation: ["delegate_permission/common.handle_all_urls"],
+      target: { namespace: "android_app", package_name: pkg, sha256_cert_fingerprints: fingerprints },
+    },
+  ]);
+});
+
 /* ── Anti-brute-force: trava login após tentativas falhas ──
    Conta por (email + IP). 8 erros → bloqueio progressivo. */
 const _loginFails = new Map();

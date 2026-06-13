@@ -1,0 +1,40 @@
+{
+  "packageId": "com.professorleao.app",
+  "host": "www.professorleao.com",
+  "name": "Professor Leão",
+  "launcherName": "Prof. Leão",
+  "display": "standalone",
+  "orientation": "default",
+  "themeColor": "#0A1628",
+  "themeColorDark": "#0A1628",
+  "navigationColor": "#0A1628",
+  "navigationColorDark": "#0A1628",
+  "navigationDividerColor": "#0A1628",
+  "navigationDividerColorDark": "#0A1628",
+  "backgroundColor": "#0A1628",
+  "enableNotifications": true,
+  "startUrl": "/?source=twa",
+  "iconUrl": "https://www.professorleao.com/assets/img/logo-azul.png",
+  "maskableIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "professorleao"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shellVersion": "2.5.0",
+  "webManifestUrl": "https://www.professorleao.com/manifest.json",
+  "fallbackType": "customtabs",
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://www.professorleao.com/",
+  "minSdkVersion": 21,
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "shortcuts": [
+    { "name": "Área do Aluno", "shortName": "Minha Área", "url": "/minha-area.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" },
+    { "name": "Jogos", "shortName": "Jogos", "url": "/jogos.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" }
+  ]
+}
