@@ -254,7 +254,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>23 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>25 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -462,6 +462,31 @@
       </div>
     </div>
 
+    <!-- Cálculo Mental -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#a16207,#eab308)">
+        <div class="game-card__icon">⚡</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Cálculo rápido</div>
+        <div class="game-card__name">Cálculo Mental</div>
+        <div class="game-card__desc">Conta na cabeça, contra o relógio! As quatro operações em rajada, com resposta instantânea (sem botão de confirmar). Responda o máximo que conseguir antes do tempo acabar.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">⚡ Formato relâmpago</span>
+          <span class="game-card__meta-item">➕ + − × ÷</span>
+          <span class="game-card__meta-item">🔥 Combo de velocidade</span>
+        </div>
+        <div class="game-card__best" id="best-calc">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/calculo.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('calculo','⚡ Cálculo Mental')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ── Categoria: Matemática Prática ── -->
@@ -652,6 +677,31 @@
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/equacoes.html">▶ Jogar Agora</a>
         <button class="btn-rank" onclick="openRankModal('equacoes','🟰 Equações')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Sistemas de Equações -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#9d174d,#ec4899)">
+        <div class="game-card__icon">🔗</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Álgebra</div>
+        <div class="game-card__name">Sistemas de Equações</div>
+        <div class="game-card__desc">Duas equações, duas incógnitas! Encontre x e y que satisfazem as duas ao mesmo tempo — por soma, substituição ou eliminação. Digite x e y; o método de resolução aparece.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🟰 x e y juntos</span>
+          <span class="game-card__meta-item">📋 10 questões</span>
+          <span class="game-card__meta-item">💡 Método explicado</span>
+        </div>
+        <div class="game-card__best" id="best-sis">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/sistemas.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('sistemas','🔗 Sistemas de Equações')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
@@ -955,7 +1005,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 23 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 25 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -976,12 +1026,14 @@
           <div class="rank-gtab" data-game="multiplos-divisores"          onclick="setRankGame(this,'multiplos-divisores')">🎯 Caça Número</div>
           <div class="rank-gtab" data-game="potenciacao"                   onclick="setRankGame(this,'potenciacao')">💥 Potenciação</div>
           <div class="rank-gtab" data-game="expressoes"                    onclick="setRankGame(this,'expressoes')">🧮 Expressões</div>
+          <div class="rank-gtab" data-game="calculo"                       onclick="setRankGame(this,'calculo')">⚡ Cálculo Mental</div>
           <div class="rank-gtab" data-game="regra-de-tres"                 onclick="setRankGame(this,'regra-de-tres')">⚖️ Regra de 3</div>
           <div class="rank-gtab" data-game="porcentagem"                   onclick="setRankGame(this,'porcentagem')">📈 Porcentagem</div>
           <div class="rank-gtab" data-game="pa-pg"                         onclick="setRankGame(this,'pa-pg')">📈 PA & PG</div>
           <div class="rank-gtab" data-game="fracoes"                       onclick="setRankGame(this,'fracoes')">🍕 Frações</div>
           <div class="rank-gtab" data-game="funcoes"                       onclick="setRankGame(this,'funcoes')">📐 Funções</div>
           <div class="rank-gtab" data-game="equacoes"                      onclick="setRankGame(this,'equacoes')">🟰 Equações</div>
+          <div class="rank-gtab" data-game="sistemas"                      onclick="setRankGame(this,'sistemas')">🔗 Sistemas</div>
           <div class="rank-gtab" data-game="geometria-plana"               onclick="setRankGame(this,'geometria-plana')">🔺 Geometria</div>
           <div class="rank-gtab" data-game="combinatoria"                  onclick="setRankGame(this,'combinatoria')">🎲 Combinatória</div>
           <div class="rank-gtab" data-game="logica-vf"                     onclick="setRankGame(this,'logica-vf')">⚡ V ou F: Lógica</div>
@@ -1090,12 +1142,14 @@ const GAMES = [
   { id: 'multiplos-divisores',  name: '🎯 Caça ao Número',            bestId: 'best-md'   },
   { id: 'potenciacao',          name: '💥 Potenciação & Raiz',        bestId: 'best-pot'  },
   { id: 'expressoes',           name: '🧮 Expressões Numéricas',      bestId: 'best-expr' },
+  { id: 'calculo',              name: '⚡ Cálculo Mental',            bestId: 'best-calc' },
   { id: 'regra-de-tres',        name: '⚖️ Regra de Três',             bestId: 'best-rt'   },
   { id: 'porcentagem',          name: '📈 Porcentagem',               bestId: 'best-pct'  },
   { id: 'pa-pg',                name: '📈 Progressões PA & PG',       bestId: 'best-papg' },
   { id: 'fracoes',              name: '🍕 Frações',                   bestId: 'best-frac' },
   { id: 'funcoes',              name: '📐 Funções',                   bestId: 'best-func' },
   { id: 'equacoes',             name: '🟰 Equações',                  bestId: 'best-eq'   },
+  { id: 'sistemas',             name: '🔗 Sistemas de Equações',      bestId: 'best-sis'  },
   { id: 'geometria-plana',      name: '🔺 Geometria Plana',           bestId: 'best-geo'  },
   { id: 'combinatoria',         name: '🎲 Combinatória',              bestId: 'best-comb' },
   { id: 'juros',                name: '💰 Juros Simples & Compostos', bestId: 'best-jur'  },
