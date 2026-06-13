@@ -149,6 +149,9 @@ app.use("/api", rateLimit({ janelaMs: 60000, max: 240, escopo: "api" }));
    nas rotas de dados. Navegadores reais e buscadores passam. */
 const UA_BLOQUEADOS = /(curl|wget|python-requests|python-urllib|scrapy|httpclient|libwww|go-http|node-fetch|axios\/|okhttp|java\/|httpie|postman|insomnia|headlesschrome|phantomjs|puppeteer|playwright|selenium|aiohttp)/i;
 app.use("/api", (req, res, next) => {
+  /* webhooks são chamadas servidor-a-servidor (sem navegador): NÃO podem
+     ser barradas, senão o Mercado Pago não consegue avisar do pagamento */
+  if (/^\/api\/webhook\//.test(req.originalUrl)) return next();
   const ua = String(req.headers["user-agent"] || "");
   if (!ua || UA_BLOQUEADOS.test(ua)) {
     return res.status(403).json({ success: false, message: "Acesso automatizado não autorizado." });
@@ -1180,6 +1183,7 @@ app.post("/api/ia", requireAuthApi, async (req, res) => {
       "e responda em português do Brasil, de forma curta, prática e encorajadora, com recomendações concretas de estudo na plataforma " +
       "(aulas, Minissimulado — Revisão, jogos, caderno de erros, plano Pomodoro). Não invente dados que não estejam no JSON. " +
       "Se perguntarem algo fora de estudos/concursos, redirecione gentilmente para a preparação. " +
+      "FORMATAÇÃO: escreva em texto simples e legível. Use símbolos matemáticos Unicode (², ³, √, ×, ÷, ½, ≤, ≥, π, ≠) — NUNCA LaTeX (\\frac, $...$, \\sqrt) nem blocos de código. Frações como a/b. Pode usar **negrito** e listas com '-'. " +
       "Fatos dos editais que você pode citar: SD PMBA/CBMBA (FCC): 80 questões (50 gerais + 30 específicas), 1,25 ponto cada, corte 60, redação de 20 a 30 linhas. " +
       "CFO PM/BM (UNEB): 80 questões em 5h, zerar qualquer disciplina elimina, Matemática tem 10 questões na PM e 15 na BM; TAF é 2ª etapa com natação.";
 

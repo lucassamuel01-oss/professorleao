@@ -172,11 +172,44 @@
   let historico = [];
   let ocupado = false;
 
+  /* formatação rica: markdown-lite + matemática (frações, expoentes,
+     símbolos) → HTML legível. Compartilhada com as demais ferramentas
+     via window.PLFmt, pra fórmulas e textos não saírem crus em lugar nenhum. */
+  const _SUP = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻','+':'⁺','n':'ⁿ' };
+  const _SUB = { '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉' };
+  function fmtRich(texto) {
+    let t = esc(texto == null ? '' : String(texto));
+    /* matemática primeiro (antes do markdown mexer em * e _) */
+    t = t
+      .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, '($1)/($2)')
+      .replace(/\\sqrt\s*\{([^{}]+)\}/g, '√($1)')
+      .replace(/\bsqrt\s*\(([^)]+)\)/gi, '√($1)')
+      .replace(/\\times\b/gi, '×').replace(/\\div\b/gi, '÷').replace(/\\cdot\b/gi, '·')
+      .replace(/\\(?:leq|le)\b/gi, '≤').replace(/\\(?:geq|ge)\b/gi, '≥').replace(/\\neq\b/gi, '≠')
+      .replace(/\\pi\b/gi, 'π').replace(/\\infty\b/gi, '∞').replace(/\\Delta\b/g, 'Δ')
+      .replace(/\$\$?([^$]*)\$\$?/g, '$1')
+      .replace(/\^\{?(-?\d+)\}?/g, (m, d) => [...d].map((c) => _SUP[c] || ('^' + c)).join(''))
+      .replace(/\^\{([^{}]+)\}/g, '^($1)')
+      .replace(/_\{?(\d+)\}?/g, (m, d) => [...d].map((c) => _SUB[c] || ('_' + c)).join(''))
+      .replace(/\\[a-zA-Z]+\b/g, '');
+    /* markdown-lite */
+    t = t
+      .replace(/```([\s\S]*?)```/g, '<pre style="white-space:pre-wrap;margin:6px 0">$1</pre>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/^\s{0,3}#{1,6}\s*(.+)$/gm, '<strong>$1</strong>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/^\s*[-*•]\s+(.+)$/gm, '&nbsp;&nbsp;• $1')
+      .replace(/^\s*(\d+)\.\s+(.+)$/gm, '&nbsp;&nbsp;$1. $2')
+      .replace(/\n/g, '<br>');
+    return t;
+  }
+  if (typeof window !== 'undefined') window.PLFmt = fmtRich;
+
   function bolha(texto, who) {
     const chat = document.getElementById('lw-chat');
     const div = document.createElement('div');
     div.className = 'lw-bubble lw-bubble--' + who;
-    div.innerHTML = esc(texto).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    div.innerHTML = fmtRich(texto);
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
     return div;
