@@ -28,7 +28,7 @@ const { MongoClient, GridFSBucket } = require("mongodb");
 let nodemailer = null;
 try { nodemailer = require("nodemailer"); } catch (e) { /* opcional */ }
 let MongoStore = null;
-try { MongoStore = require("connect-mongo"); } catch (e) { /* opcional */ }
+try { const _cm = require("connect-mongo"); MongoStore = _cm.default || _cm.MongoStore || _cm; } catch (e) { /* opcional */ }
 
 const app = express();
 const PORT = process.env.PORT || 3000;
