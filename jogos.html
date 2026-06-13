@@ -260,7 +260,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>27 jogos de matemática, álgebra, matrizes, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico (verbal e figural) com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>29 jogos de matemática, álgebra, matrizes, trigonometria, logaritmos, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico (verbal e figural) com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -440,6 +440,31 @@
       <div class="game-card__foot">
         <a class="btn-play" href="jogos/potenciacao.html">▶ Jogar Agora</a>
         <button class="btn-rank" onclick="openRankModal('potenciacao','💥 Potenciação & Raiz')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
+    <!-- Logaritmos & Exponencial -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#6b21a8,#a855f7)">
+        <div class="game-card__icon">🔢</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Álgebra</div>
+        <div class="game-card__name">Logaritmos &amp; Exponencial</div>
+        <div class="game-card__desc">O logaritmo é um expoente — e o jogo mostra a equivalência na tela (log<sub>b</sub> N = x ⇔ bˣ = N). Definição, equações, propriedades e a decomposição com log 2 e log 3 que cai na prova.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">💡 Log ⇔ expoente</span>
+          <span class="game-card__meta-item">⚡ 55–90s cronometrados</span>
+          <span class="game-card__meta-item">⌨️ Atalhos 1–4</span>
+        </div>
+        <div class="game-card__best" id="best-log">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/logaritmos.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('logaritmos','🔢 Logaritmos & Exponencial')" title="Ver ranking">🏆</button>
       </div>
     </div>
 
@@ -770,6 +795,31 @@
       </div>
     </div>
 
+    <!-- Trigonometria -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#b45309,#fb923c)">
+        <div class="game-card__icon">📐</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Geometria</div>
+        <div class="game-card__name">Trigonometria</div>
+        <div class="game-card__desc">Seno, cosseno e tangente com o triângulo retângulo desenhado na tela. Razões trigonométricas, ângulos notáveis (30°, 45°, 60°), aplicação (rampa) e a relação fundamental.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🔺 Figura na tela</span>
+          <span class="game-card__meta-item">⚡ 55–90s cronometrados</span>
+          <span class="game-card__meta-item">⌨️ Atalhos 1–4</span>
+        </div>
+        <div class="game-card__best" id="best-trig">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/trigonometria.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('trigonometria','📐 Trigonometria')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
     <!-- Geometria: Correspondência de Áreas -->
     <div class="game-card">
       <div class="game-card__banner" style="background:linear-gradient(135deg,#92400e,#f59e0b)">
@@ -1061,7 +1111,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 27 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 29 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1081,6 +1131,7 @@
           <div class="rank-gtab" data-game="conjuntos-operacoes"          onclick="setRankGame(this,'conjuntos-operacoes')">⭕ Missão Conj.</div>
           <div class="rank-gtab" data-game="multiplos-divisores"          onclick="setRankGame(this,'multiplos-divisores')">🎯 Caça Número</div>
           <div class="rank-gtab" data-game="potenciacao"                   onclick="setRankGame(this,'potenciacao')">💥 Potenciação</div>
+          <div class="rank-gtab" data-game="logaritmos"                    onclick="setRankGame(this,'logaritmos')">🔢 Logaritmos</div>
           <div class="rank-gtab" data-game="expressoes"                    onclick="setRankGame(this,'expressoes')">🧮 Expressões</div>
           <div class="rank-gtab" data-game="calculo"                       onclick="setRankGame(this,'calculo')">⚡ Cálculo Mental</div>
           <div class="rank-gtab" data-game="regra-de-tres"                 onclick="setRankGame(this,'regra-de-tres')">⚖️ Regra de 3</div>
@@ -1092,6 +1143,7 @@
           <div class="rank-gtab" data-game="sistemas"                      onclick="setRankGame(this,'sistemas')">🔗 Sistemas</div>
           <div class="rank-gtab" data-game="matrizes"                      onclick="setRankGame(this,'matrizes')">🔢 Matrizes</div>
           <div class="rank-gtab" data-game="geometria-plana"               onclick="setRankGame(this,'geometria-plana')">🔺 Geometria</div>
+          <div class="rank-gtab" data-game="trigonometria"                 onclick="setRankGame(this,'trigonometria')">📐 Trigonometria</div>
           <div class="rank-gtab" data-game="combinatoria"                  onclick="setRankGame(this,'combinatoria')">🎲 Combinatória</div>
           <div class="rank-gtab" data-game="logica-vf"                     onclick="setRankGame(this,'logica-vf')">⚡ V ou F: Lógica</div>
           <div class="rank-gtab" data-game="figuras"                       onclick="setRankGame(this,'figuras')">🧩 Seq. Figuras</div>
@@ -1199,6 +1251,7 @@ const GAMES = [
   { id: 'conjuntos-operacoes',  name: '⭕ Missão Conjuntos',          bestId: 'best-co'   },
   { id: 'multiplos-divisores',  name: '🎯 Caça ao Número',            bestId: 'best-md'   },
   { id: 'potenciacao',          name: '💥 Potenciação & Raiz',        bestId: 'best-pot'  },
+  { id: 'logaritmos',           name: '🔢 Logaritmos & Exponencial',  bestId: 'best-log'  },
   { id: 'expressoes',           name: '🧮 Expressões Numéricas',      bestId: 'best-expr' },
   { id: 'calculo',              name: '⚡ Cálculo Mental',            bestId: 'best-calc' },
   { id: 'regra-de-tres',        name: '⚖️ Regra de Três',             bestId: 'best-rt'   },
@@ -1210,6 +1263,7 @@ const GAMES = [
   { id: 'sistemas',             name: '🔗 Sistemas de Equações',      bestId: 'best-sis'  },
   { id: 'matrizes',             name: '🔢 Matrizes & Determinantes',  bestId: 'best-mtx'  },
   { id: 'geometria-plana',      name: '🔺 Geometria Plana',           bestId: 'best-geo'  },
+  { id: 'trigonometria',        name: '📐 Trigonometria',             bestId: 'best-trig' },
   { id: 'combinatoria',         name: '🎲 Combinatória',              bestId: 'best-comb' },
   { id: 'juros',                name: '💰 Juros Simples & Compostos', bestId: 'best-jur'  },
   { id: 'logica-vf',            name: '⚡ V ou F: Lógica',            bestId: 'best-lvf'  },

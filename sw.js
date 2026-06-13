@@ -13,7 +13,7 @@
 
    Para forçar atualização do cache, suba o número da versão.
    ============================================================ */
-const VERSION = 'pl-v4';
+const VERSION = 'pl-v5';
 const CACHE = 'pl-cache-' + VERSION;
 const PRECACHE = ['/', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
 const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)$/i;
@@ -31,7 +31,8 @@ const GAME_URLS = GAME_DEPS.concat([
   '/jogos/multiplos-divisores.html', '/jogos/pa-pg.html', '/jogos/porcentagem.html',
   '/jogos/potenciacao.html', '/jogos/probabilidade.html', '/jogos/ranking-geral.html',
   '/jogos/razao.html', '/jogos/regra-de-tres.html', '/jogos/sequencias.html',
-  '/jogos/sistemas.html', '/jogos/unidades.html'
+  '/jogos/sistemas.html', '/jogos/unidades.html', '/jogos/trigonometria.html',
+  '/jogos/logaritmos.html'
 ]);
 function warmGames() {
   return caches.open(CACHE).then((c) =>

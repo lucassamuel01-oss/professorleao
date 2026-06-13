@@ -26,19 +26,39 @@ window.Arcade = (function () {
       o.start(); o.stop(c.currentTime + dur);
     } catch (e) {}
   }
+  /* vibração háptica (mobile) — segue o liga/desliga do som (= "efeitos") */
+  function haptic(pattern) {
+    if (!soundOn) return;
+    try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+  }
   function correct(streak) {
     const s = Math.min(streak || 0, 6);
     const base = 520 + s * 45;
     tone(base, 0.12, 'triangle', 0.18);
     setTimeout(() => tone(base * 1.26, 0.12, 'triangle', 0.16), 85);
     if (s >= 2) setTimeout(() => tone(base * 1.5, 0.16, 'triangle', 0.15), 170);
+    haptic(s >= 2 ? [9, 16, 12] : 11);
   }
-  function wrong() { tone(190, 0.16, 'sawtooth', 0.12); setTimeout(() => tone(120, 0.22, 'sawtooth', 0.12), 95); }
+  function wrong() { tone(190, 0.16, 'sawtooth', 0.12); setTimeout(() => tone(120, 0.22, 'sawtooth', 0.12), 95); haptic([34, 28, 34]); flash('err'); }
   function timeUp() { tone(330, 0.18, 'sine', 0.12); setTimeout(() => tone(247, 0.3, 'sine', 0.12), 150); }
   function tick() { tone(880, 0.04, 'square', 0.05); }
   function win() { [523, 659, 784, 1047, 1319].forEach((f, i) => setTimeout(() => tone(f, 0.28, 'triangle', 0.18), i * 110)); }
   function toggleSound() { soundOn = !soundOn; localStorage.setItem('pl_arcade_sound', soundOn ? 'on' : 'off'); if (soundOn) correct(1); return soundOn; }
   function soundIsOn() { return soundOn; }
+
+  /* ── Flash/pulso de tela (vinheta colorida, premium e discreto) ── */
+  function flash(kind) {
+    try {
+      const el = document.createElement('div');
+      const col = kind === 'err' ? 'rgba(239,68,68,.22)' : 'rgba(34,197,94,.22)';
+      el.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0;' +
+        'transition:opacity .12s ease;background:radial-gradient(circle at 50% 46%, transparent 55%, ' + col + ' 100%)';
+      document.body.appendChild(el);
+      requestAnimationFrame(() => { el.style.opacity = '1'; });
+      setTimeout(() => { el.style.opacity = '0'; }, 140);
+      setTimeout(() => el.remove(), 340);
+    } catch (e) {}
+  }
 
   /* ── Confete (canvas leve, sem libs) ── */
   let _cv = null, _cx = null, _parts = [], _raf = 0;
@@ -51,17 +71,18 @@ window.Arcade = (function () {
     resize(); addEventListener('resize', resize);
     _cx = _cv.getContext('2d');
   }
-  const _COLORS = ['#10b981', '#34d399', '#f59e0b', '#fbbf24', '#4A6CF7', '#f87171', '#a78bfa'];
+  const _COLORS = ['#10b981', '#34d399', '#f59e0b', '#fbbf24', '#4A6CF7', '#6B89FF', '#f87171', '#a78bfa', '#22d3ee', '#ec4899'];
   function confetti(n, originY) {
     _ensureCanvas();
     const count = n || 40, oy = (originY == null ? 0.35 : originY) * _cv.height;
     for (let i = 0; i < count; i++) {
       _parts.push({
-        x: _cv.width / 2 + (Math.random() - 0.5) * 120, y: oy,
-        vx: (Math.random() - 0.5) * 11, vy: Math.random() * -11 - 4,
-        g: 0.32 + Math.random() * 0.18, s: 4 + Math.random() * 5,
-        rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.3,
-        c: _COLORS[(Math.random() * _COLORS.length) | 0], life: 90 + Math.random() * 40,
+        x: _cv.width / 2 + (Math.random() - 0.5) * 170, y: oy,
+        vx: (Math.random() - 0.5) * 12, vy: Math.random() * -12 - 4,
+        g: 0.28 + Math.random() * 0.16, s: 4 + Math.random() * 6,
+        rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.32,
+        c: _COLORS[(Math.random() * _COLORS.length) | 0], life: 95 + Math.random() * 45,
+        shape: (Math.random() * 3) | 0, wob: Math.random() * 6.28, wobV: 0.07 + Math.random() * 0.12, drift: (Math.random() - 0.5) * 0.7,
       });
     }
     if (!_raf) _loop();
@@ -71,15 +92,20 @@ window.Arcade = (function () {
     _cx.clearRect(0, 0, _cv.width, _cv.height);
     for (let i = _parts.length - 1; i >= 0; i--) {
       const p = _parts[i];
-      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      p.vy += p.g; p.vx *= 0.99; p.wob += p.wobV;
+      p.x += p.vx + Math.sin(p.wob) * p.drift; p.y += p.vy; p.rot += p.vr; p.life--;
       if (p.life <= 0 || p.y > _cv.height + 20) { _parts.splice(i, 1); continue; }
       _cx.save(); _cx.translate(p.x, p.y); _cx.rotate(p.rot);
-      _cx.globalAlpha = Math.max(0, Math.min(1, p.life / 40));
-      _cx.fillStyle = p.c; _cx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6); _cx.restore();
+      _cx.globalAlpha = Math.max(0, Math.min(1, p.life / 45));
+      _cx.fillStyle = p.c;
+      if (p.shape === 1) { _cx.beginPath(); _cx.arc(0, 0, p.s * 0.55, 0, 6.283); _cx.fill(); }
+      else if (p.shape === 2) { _cx.fillRect(-p.s * 0.28, -p.s * 0.85, p.s * 0.56, p.s * 1.7); }
+      else { _cx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.62); }
+      _cx.restore();
     }
     if (!_parts.length) { cancelAnimationFrame(_raf); _raf = 0; _cx.clearRect(0, 0, _cv.width, _cv.height); }
   }
-  function celebrate() { confetti(120, 0.25); win(); }
+  function celebrate() { confetti(130, 0.25); win(); flash('ok'); }
 
   /* ── Combo flutuante ("DUPLO!", "EM CHAMAS!") ── */
   const _COMBOS = { 2: 'DUPLO!', 3: 'TRIPLO!', 4: 'QUÁDRUPLO!', 5: '🔥 EM CHAMAS!', 7: '⚡ IMPARÁVEL!', 10: '👑 LENDÁRIO!' };
@@ -97,6 +123,8 @@ window.Arcade = (function () {
     requestAnimationFrame(() => { el.style.transform = 'translate(-50%,-50%) scale(1)'; el.style.opacity = '1'; });
     setTimeout(() => { el.style.transform = 'translate(-50%,-90%) scale(1)'; el.style.opacity = '0'; }, 650);
     setTimeout(() => el.remove(), 1200);
+    haptic(streak >= 5 ? [12, 22, 14, 22, 16] : [10, 18, 12]);
+    if (streak >= 3) flash('ok');
   }
 
   /* ── Botão de som pronto pra topbar ── */
@@ -111,5 +139,5 @@ window.Arcade = (function () {
     return b;
   }
 
-  return { tone, correct, wrong, timeUp, tick, win, celebrate, confetti, combo, toggleSound, soundIsOn, soundButton };
+  return { tone, correct, wrong, timeUp, tick, win, celebrate, confetti, combo, flash, haptic, toggleSound, soundIsOn, soundButton };
 })();
