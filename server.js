@@ -497,8 +497,47 @@ function getMailer() {
     port: Number(process.env.SMTP_PORT || 465),
     secure: Number(process.env.SMTP_PORT || 465) === 465,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    // timeouts curtos: se a porta SMTP estiver bloqueada (comum no Railway),
+    // falha em ~12s em vez de pendurar por 2 minutos.
+    connectionTimeout: 12000, greetingTimeout: 8000, socketTimeout: 12000,
   });
   return _mailer;
+}
+
+/* Remetente (apenas o e-mail, sem o nome) para a API do Brevo */
+function _fromEmail() {
+  const raw = process.env.SMTP_FROM || process.env.SMTP_USER || "";
+  const m = raw.match(/<([^>]+)>/);
+  return (m ? m[1] : raw).trim();
+}
+
+/* Envio unificado de e-mail. Prioriza a API HTTP do Brevo (porta 443 —
+   não é bloqueada pelo Railway, ao contrário das portas SMTP). Sem
+   BREVO_API_KEY, cai para SMTP (nodemailer). Retorna {ok, error}. */
+async function enviarEmail(to, subject, html) {
+  if (process.env.BREVO_API_KEY) {
+    try {
+      const r = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": process.env.BREVO_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          sender: { email: _fromEmail() || "no-reply@professorleao.com", name: "Professor Leão" },
+          to: [{ email: to }],
+          subject,
+          htmlContent: html,
+        }),
+      });
+      if (r.ok) return { ok: true, via: "brevo-api" };
+      const t = await r.text().catch(() => "");
+      return { ok: false, error: "Brevo API " + r.status + ": " + t.slice(0, 180) };
+    } catch (e) { return { ok: false, error: "Brevo API: " + e.message }; }
+  }
+  const mailer = getMailer();
+  if (!mailer) return { ok: false, error: "sem-smtp" };
+  try {
+    await mailer.sendMail({ from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`, to, subject, html });
+    return { ok: true, via: "smtp" };
+  } catch (e) { return { ok: false, error: e.message }; }
 }
 
 function baseUrl(req) {
@@ -533,32 +572,20 @@ app.post(
     writeUsers(users);
 
     const link = baseUrl(req) + "/redefinir-senha.html?token=" + token;
-    const mailer = getMailer();
-    let enviado = false;
-    if (mailer) {
-      try {
-        await mailer.sendMail({
-          from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`,
-          to: user.email,
-          subject: "Redefinição de senha — Professor Leão",
-          html:
-            `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">
-              <h2 style="color:#0A1628">Redefinição de senha</h2>
-              <p>Olá, ${String(user.name || "aluno").replace(/[<>]/g, "")}! Recebemos um pedido para redefinir a sua senha na plataforma Professor Leão.</p>
-              <p style="text-align:center;margin:26px 0">
-                <a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar nova senha</a>
-              </p>
-              <p style="font-size:13px;color:#56607a">O link vale por 1 hora. Se você não pediu isso, ignore este e-mail — sua senha continua a mesma.</p>
-              <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p>
-            </div>`,
-        });
-        enviado = true;
-      } catch (err) {
-        console.error("[RESET] Falha ao enviar e-mail:", err.message);
-      }
-    }
-    if (!enviado) {
-      /* sem SMTP (ou falha): registra para o admin enviar o link via WhatsApp */
+    const html =
+      `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">
+        <h2 style="color:#0A1628">Redefinição de senha</h2>
+        <p>Olá, ${String(user.name || "aluno").replace(/[<>]/g, "")}! Recebemos um pedido para redefinir a sua senha na plataforma Professor Leão.</p>
+        <p style="text-align:center;margin:26px 0">
+          <a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar nova senha</a>
+        </p>
+        <p style="font-size:13px;color:#56607a">O link vale por 1 hora. Se você não pediu isso, ignore este e-mail — sua senha continua a mesma.</p>
+        <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p>
+      </div>`;
+    const r = await enviarEmail(user.email, "Redefinição de senha — Professor Leão", html);
+    if (!r.ok) {
+      /* sem e-mail (ou falha): registra para o admin enviar o link via WhatsApp */
+      console.error("[RESET] Falha ao enviar e-mail:", r.error);
       console.log(`[RESET] Link de redefinição para ${user.email}: ${link}`);
     }
     res.json(generica);
@@ -667,8 +694,7 @@ function fmtDataBR(iso) {
 /* Envia o e-mail de acesso (novo cadastro OU renovação). Best-effort:
    só envia se houver SMTP e e-mail do comprador. Retorna true/false. */
 async function enviarEmailAcesso(venda, req) {
-  const mailer = getMailer();
-  if (!mailer) { venda.emailStatus = "sem-smtp"; console.error("[VENDA] e-mail NÃO enviado: SMTP não configurado (defina SMTP_HOST/SMTP_USER/SMTP_PASS no Railway)."); return false; }
+  if (!process.env.BREVO_API_KEY && !getMailer()) { venda.emailStatus = "sem-config"; console.error("[VENDA] e-mail NÃO enviado: sem BREVO_API_KEY nem SMTP configurados no Railway."); return false; }
   if (!venda.email) { venda.emailStatus = "sem-email"; console.error("[VENDA] e-mail NÃO enviado: comprador sem e-mail capturado."); return false; }
   const base = baseUrl(req);
   const nomeProd = String(venda.produtoNome || "seu produto").replace(/[<>]/g, "");
@@ -687,22 +713,17 @@ async function enviarEmailAcesso(venda, req) {
       <p style="text-align:center;margin:24px 0"><a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar meu acesso</a></p>
       <p style="font-size:12px;color:#8892a8">Se o botão não funcionar, copie e cole no navegador:<br>${link}</p>`;
   }
-  try {
-    await mailer.sendMail({
-      from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`,
-      to: venda.email,
-      subject: assunto,
-      html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">${corpo}
-        <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p></div>`,
-    });
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">${corpo}
+        <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p></div>`;
+  const r = await enviarEmail(venda.email, assunto, html);
+  if (r.ok) {
     venda.emailStatus = "enviado"; venda.emailErro = null;
-    console.log(`[VENDA] e-mail de acesso enviado para ${venda.email} (${venda.tipoAcesso})`);
+    console.log(`[VENDA] e-mail de acesso enviado para ${venda.email} via ${r.via} (${venda.tipoAcesso})`);
     return true;
-  } catch (e) {
-    venda.emailStatus = "falha"; venda.emailErro = e.message;
-    console.error("[VENDA] FALHA ao enviar e-mail para " + venda.email + ":", e.message);
-    return false;
   }
+  venda.emailStatus = "falha"; venda.emailErro = r.error;
+  console.error("[VENDA] FALHA ao enviar e-mail para " + venda.email + ": " + r.error);
+  return false;
 }
 
 /* Processa uma venda APROVADA (idempotente). Conta o cupom e, conforme
