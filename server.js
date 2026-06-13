@@ -24,7 +24,7 @@ const fs = require("fs");
 const crypto = require("crypto");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
-const { MongoClient } = require("mongodb");
+const { MongoClient, GridFSBucket } = require("mongodb");
 let nodemailer = null;
 try { nodemailer = require("nodemailer"); } catch (e) { /* opcional */ }
 let MongoStore = null;
@@ -705,12 +705,20 @@ app.get("/api/banco/assuntos", requireAuthApi, async (req, res) => {
 app.post("/api/banco/simulado", requireAuthApi, rateLimit({ janelaMs: 60000, max: 40, escopo: "banco" }), async (req, res) => {
   const col = getBancoCol();
   if (!col) return res.json({ disponivel: false, questoes: [] });
-  let { assuntos, bancaPref, n } = req.body || {};
+  let { assuntos, termos, bancaPref, n, semImagem } = req.body || {};
   n = Math.min(Math.max(parseInt(n, 10) || 10, 1), 30);
   if (!Array.isArray(assuntos)) assuntos = assuntos ? [assuntos] : [];
   assuntos = assuntos.map(String).slice(0, 40);
-  const match = { img: false };
-  if (assuntos.length) match.assunto = { $in: assuntos };
+  const match = {};
+  if (semImagem) match.img = false; // ex.: geração de PDF
+  if (Array.isArray(termos) && termos.length) {
+    /* match flexível por palavra do assunto (ex.: "Porcentagem" casa o assunto do banco) */
+    match.$or = termos.slice(0, 40).map((t) => ({
+      assunto: { $regex: String(t).slice(0, 60).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" },
+    }));
+  } else if (assuntos.length) {
+    match.assunto = { $in: assuntos };
+  }
   try {
     const pipeline = [{ $match: match }, { $sample: { size: n * 5 } }];
     let docs = await col.aggregate(pipeline).toArray();
@@ -723,10 +731,25 @@ app.post("/api/banco/simulado", requireAuthApi, rateLimit({ janelaMs: 60000, max
       opcoes: q.opcoes,
       gabarito: q.gabarito,
       fonte: [q.banca, q.ano].filter(Boolean).join(" · "),
+      imagens: q.imagens || [],
       _assunto: q.assunto,
     }));
     res.json({ disponivel: true, total: escolhidas.length, questoes: escolhidas });
   } catch (e) { res.status(500).json({ disponivel: false, message: e.message }); }
+});
+
+/* imagem de questão (GridFS) — só aluno logado. id = nome do arquivo. */
+app.get("/api/banco/imagem/:id", requireAuthApi, (req, res) => {
+  if (!_mongoDb) return res.sendStatus(404);
+  const id = String(req.params.id || "").replace(/[^a-zA-Z0-9_.-]/g, "");
+  if (!id) return res.sendStatus(404);
+  _mongoDb.collection("banco_imagens.files").findOne({ filename: id }).then((f) => {
+    if (!f) return res.sendStatus(404);
+    res.setHeader("Content-Type", (f.metadata && f.metadata.contentType) || "application/octet-stream");
+    res.setHeader("Cache-Control", "private, max-age=86400");
+    const bucket = new GridFSBucket(_mongoDb, { bucketName: "banco_imagens" });
+    bucket.openDownloadStreamByName(id).on("error", () => res.sendStatus(404)).pipe(res);
+  }).catch(() => res.sendStatus(404));
 });
 
 /* ── Checkout via Mercado Pago (Checkout Pro) ──

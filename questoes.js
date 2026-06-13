@@ -537,13 +537,43 @@ const PlQuestoes = (() => {
     return full;
   }
 
+  /* Minissimulado com questões REAIS do banco do servidor (11 mil).
+     Cacheia por semana (estável + respostas persistem). Cai no seed
+     automaticamente se o banco estiver indisponível. */
+  async function bancoSimulado(seed, email) {
+    if (!seed) return null;
+    const key = 'pl_banco_sim_' + _wkKey() + '_' + _safeMail(email);
+    try { const c = JSON.parse(localStorage.getItem(key) || 'null'); if (c && c.questoes && c.questoes.length) return c; } catch {}
+    try {
+      const r = await fetch('/api/banco/simulado', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ termos: seed.assuntos || [], bancaPref: 'UNEB', n: Math.max(10, seed.total || 10) }),
+      });
+      const d = await r.json();
+      if (d && d.disponivel && Array.isArray(d.questoes) && d.questoes.length >= 5) {
+        const lista = {
+          ...seed, _banco: true,
+          fonte: 'Questões reais de banca — banco do Professor Leão',
+          questoes: d.questoes.map((q, i) => ({
+            num: i + 1, enunciado: q.enunciado, opcoes: q.opcoes, gabarito: q.gabarito,
+            fonte: q.fonte, imagens: q.imagens || [], _assunto: q._assunto,
+          })),
+          total: d.questoes.length,
+        };
+        try { localStorage.setItem(key, JSON.stringify(lista)); } catch {}
+        return lista;
+      }
+    } catch (e) { /* sem banco → usa o seed */ }
+    return null;
+  }
+
   /* API pública */
   return {
     getLists, getList, saveList, deleteList,
     getResp, saveResp, limparResp, calcScore, getHistory, historicoRegistrar,
     errosRegistrar, errosPendentes, errosParaRevisar, errosStats,
     errosPrecisaLembrete, errosMarcarLembrete,
-    estudoRegistrar, simuladoSemana,
+    estudoRegistrar, simuladoSemana, bancoSimulado,
     simuladoLembreteDia, simuladoPrecisaLembrete, simuladoLembreteDispensar,
     parsePDFText, extractTextFromPDF
   };

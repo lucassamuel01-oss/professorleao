@@ -407,7 +407,7 @@
   }
 
   /* ────── Load lista ────── */
-  function init() {
+  async function init() {
     const params = new URLSearchParams(location.search);
     const modoCaderno = params.get('caderno');
     const modoSimulado = params.get('simulado');
@@ -430,6 +430,8 @@
          assuntos que o aluno estudou (montagem automática semanal) */
       _lista = PlQuestoes.simuladoSemana(_session.email);
       if (!_lista) { showSimuladoVazio(); return; }
+      /* troca pelas questões REAIS do banco do servidor (cai no seed se indisponível) */
+      try { const real = await PlQuestoes.bancoSimulado(_lista, _session.email); if (real) _lista = real; } catch (e) {}
       const prev = PlQuestoes.getResp(_lista.id, _session.email);
       if (prev && prev.respostas && !prev.finalizadoEm) {
         _respostas = { ...prev.respostas };
@@ -548,13 +550,25 @@
     document.getElementById('progressLabel').textContent = `${done} / ${total}`;
   }
 
+  /* enunciado com imagens do banco ([FIGURA n]) + quebras de linha */
+  function renderEnun(q) {
+    let h = linkify(escHtml((q && q.enunciado) || '')).replace(/\n/g, '<br>');
+    if (q && q.imagens && q.imagens.length) {
+      h = h.replace(/\[FIGURA (\d+)\]/g, (m, n) => {
+        const id = q.imagens[(+n) - 1];
+        return id ? `<img src="/api/banco/imagem/${encodeURIComponent(id)}" alt="Figura ${n}" loading="lazy" style="max-width:100%;display:block;margin:12px auto;border-radius:8px;background:#fff;padding:6px">` : m;
+      });
+    }
+    return h;
+  }
+
   /* ────── Render question ────── */
   function renderQuestion(idx) {
     const q = _lista.questoes[idx];
     if (!q) return;
 
     document.getElementById('qNum').textContent = `Questão ${q.num}`;
-    document.getElementById('qEnunciado').innerHTML = linkify(escHtml(q.enunciado));
+    document.getElementById('qEnunciado').innerHTML = renderEnun(q);
 
     const letters = ['A','B','C','D','E'];
     const opcBox  = document.getElementById('qOpcoes');
@@ -741,7 +755,7 @@
           <div class="review-item__badge review-item__badge--${ok ? 'ok' : 'err'}">${ok ? '✅' : '❌'}</div>
           <div class="review-item__text">
             <strong>Questão ${q.num}</strong>
-            <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:2px">${truncate(q.enunciado, 100)}</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:2px">${truncate((q.enunciado||'').replace(/\[FIGURA \d+\]/g,'🖼️'), 100)}</div>
             <div class="review-item__answers">
               Sua resposta: <span class="r-sua">${sua}</span>
               ${suaTxt ? `— ${suaTxt.slice(0,60)}${suaTxt.length > 60 ? '…' : ''}` : ''}

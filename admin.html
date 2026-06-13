@@ -362,6 +362,7 @@
     <button class="tab-btn" data-tab="questoes">📝 Questões</button>
     <button class="tab-btn" data-tab="avisos">📣 Avisos</button>
     <button class="tab-btn" data-tab="loja">💳 Loja</button>
+    <button class="tab-btn" data-tab="banco">🗂️ Banco</button>
   </div>
 
   <main class="admin-wrap">
@@ -865,6 +866,12 @@
       </div>
     </div><!-- /tab-loja -->
 
+    <div id="tab-banco" class="tab-pane" style="padding:18px 0">
+      <h2 style="font-family:var(--font-h,sans-serif);font-size:18px;font-weight:800;margin-bottom:4px">🗂️ Banco de Questões (servidor)</h2>
+      <p style="color:var(--silver,#8892B4);font-size:13px;margin-bottom:14px">Questões reais de banca no servidor (com gabarito e imagens), por área e assunto — alimentam os minissimulados dos alunos.</p>
+      <div id="bancoCat" style="font-size:14px">Carregando…</div>
+    </div>
+
   </main>
 
   <!-- ══════ MODAIS ══════ -->
@@ -1088,6 +1095,7 @@
       if (btn.dataset.tab === 'questoes') initQuestoesTab();
       if (btn.dataset.tab === 'avisos')   loadAvisosTable();
       if (btn.dataset.tab === 'loja')     initLojaTab();
+      if (btn.dataset.tab === 'banco')    initBancoTab();
     });
   });
 
@@ -1096,6 +1104,30 @@
   ═══════════════════════════════════════════ */
   let _lojaInit = false;
   function initLojaTab() { loadCupons(); loadVendas(); }
+
+  function initBancoTab() {
+    const el = document.getElementById('bancoCat');
+    if (el.dataset.loaded) return;
+    fetch('/api/banco/catalogo', { credentials: 'same-origin' })
+      .then(r => r.json())
+      .then(d => {
+        if (!d || !d.disponivel) { el.innerHTML = '<p style="color:var(--silver,#8892B4)">Banco ainda não carregado no servidor.</p>'; return; }
+        el.dataset.loaded = '1';
+        const porArea = {};
+        (d.porAssunto || []).forEach(a => { (porArea[a.area] = porArea[a.area] || []).push(a); });
+        let h = `<div style="margin-bottom:12px;font-weight:700;font-size:16px">Total: ${Number(d.total).toLocaleString('pt-BR')} questões</div>`;
+        h += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">' +
+          (d.porBanca || []).map(b => `<span style="background:rgba(74,108,247,.12);border:1px solid rgba(74,108,247,.3);border-radius:99px;padding:4px 12px;font-size:12px">${esc(b.banca || '—')}: ${b.n}</span>`).join('') + '</div>';
+        for (const area of Object.keys(porArea)) {
+          const tot = porArea[area].reduce((s, x) => s + x.n, 0);
+          h += `<details style="margin-bottom:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 14px"><summary style="cursor:pointer;font-weight:700">${esc(area || '—')} <span style="color:var(--silver,#8892B4);font-weight:400">(${tot})</span></summary>`;
+          h += '<div style="margin-top:10px;display:grid;gap:4px">' +
+            porArea[area].sort((a, b) => b.n - a.n).map(a => `<div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding:3px 0"><span>${esc(a.assunto || '—')}</span><span style="color:var(--silver,#8892B4);white-space:nowrap">${a.n}${a.usaveis < a.n ? ' · ' + (a.n - a.usaveis) + ' c/ imagem' : ''}</span></div>`).join('') + '</div></details>';
+        }
+        el.innerHTML = h;
+      })
+      .catch(() => { el.innerHTML = '<p style="color:var(--silver,#8892B4)">Erro ao carregar o catálogo.</p>'; });
+  }
 
   async function _jget(url) { const r = await fetch(url, { credentials: 'same-origin' }); return r.ok ? r.json() : []; }
 
