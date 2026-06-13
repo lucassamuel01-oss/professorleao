@@ -1,6 +1,13 @@
 # Materiais de fonte / arquivos locais de trabalho
 _fontes/
 
+# Banco de Questões — fonte PRIVADA (repo é público; NUNCA commitar)
+Banco de Questões/
+_banco_extraido.json
+_banco_*.json
+_parser_banco.js
+_ingest_*.js
+
 # Backend local (dados e dependências)
 node_modules/
 data/

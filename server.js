@@ -377,8 +377,12 @@ function requireAdminApi(req, res, next) {
 
 /* ── Rotas públicas de autenticação ─────────────────────────── */
 
-app.get("/health", (req, res) => {
-  res.json({ ok: true, app: "professor-leao", db: !!_mongoDb });
+let _bancoCount = null, _bancoCountAt = 0;
+app.get("/health", async (req, res) => {
+  if (_mongoDb && Date.now() - _bancoCountAt > 30000) {
+    try { _bancoCount = await getBancoCol().countDocuments(); _bancoCountAt = Date.now(); } catch { /* ignora */ }
+  }
+  res.json({ ok: true, app: "professor-leao", db: !!_mongoDb, banco: _bancoCount });
 });
 
 /* ── Anti-brute-force: trava login após tentativas falhas ──
@@ -646,6 +650,80 @@ app.post("/api/validar-cupom", rateLimit({ janelaMs: 60000, max: 30, escopo: "cu
     precoOriginal: prod.preco,
     precoFinal,
   });
+});
+
+/* ════════════════════════════════════════════════════════════
+   BANCO DE QUESTÕES (MongoDB · coleção banco_questoes)
+   Questões reais de banca, carregadas no Mongo (privado) pelo
+   script _ingest_banco.js. Servidas só a alunos logados. Sem
+   Mongo / coleção vazia → responde vazio (degrada sem quebrar).
+   ════════════════════════════════════════════════════════════ */
+function getBancoCol() {
+  return _mongoDb ? _mongoDb.collection("banco_questoes") : null;
+}
+
+/* catálogo completo (admin): contagem por área→assunto e por banca */
+app.get("/api/banco/catalogo", requireAuthApi, requireAdminApi, async (req, res) => {
+  const col = getBancoCol();
+  if (!col) return res.json({ disponivel: false, total: 0 });
+  try {
+    const [porAssunto, porBanca, total] = await Promise.all([
+      col.aggregate([
+        { $group: { _id: { area: "$area", assunto: "$assunto" }, n: { $sum: 1 }, usaveis: { $sum: { $cond: ["$img", 0, 1] } } } },
+        { $sort: { "_id.area": 1, n: -1 } },
+      ]).toArray(),
+      col.aggregate([{ $group: { _id: "$banca", n: { $sum: 1 } } }, { $sort: { n: -1 } }]).toArray(),
+      col.countDocuments(),
+    ]);
+    res.json({
+      disponivel: true, total,
+      porAssunto: porAssunto.map(a => ({ area: a._id.area, assunto: a._id.assunto, n: a.n, usaveis: a.usaveis })),
+      porBanca: porBanca.map(b => ({ banca: b._id, n: b.n })),
+    });
+  } catch (e) { res.status(500).json({ disponivel: false, message: e.message }); }
+});
+
+/* assuntos usáveis (qualquer aluno) — para montar simulados */
+app.get("/api/banco/assuntos", requireAuthApi, async (req, res) => {
+  const col = getBancoCol();
+  if (!col) return res.json({ disponivel: false, assuntos: [] });
+  try {
+    const ass = await col.aggregate([
+      { $match: { img: false } },
+      { $group: { _id: { area: "$area", assunto: "$assunto" }, n: { $sum: 1 } } },
+      { $sort: { "_id.area": 1, "_id.assunto": 1 } },
+    ]).toArray();
+    res.json({ disponivel: true, assuntos: ass.map(a => ({ area: a._id.area, assunto: a._id.assunto, n: a.n })) });
+  } catch (e) { res.status(500).json({ disponivel: false, message: e.message }); }
+});
+
+/* gera N questões reais por assunto (minissimulado). Prioriza a banca
+   preferida (ex.: UNEB do PMBA) e completa com as demais. */
+app.post("/api/banco/simulado", requireAuthApi, rateLimit({ janelaMs: 60000, max: 40, escopo: "banco" }), async (req, res) => {
+  const col = getBancoCol();
+  if (!col) return res.json({ disponivel: false, questoes: [] });
+  let { assuntos, bancaPref, n } = req.body || {};
+  n = Math.min(Math.max(parseInt(n, 10) || 10, 1), 30);
+  if (!Array.isArray(assuntos)) assuntos = assuntos ? [assuntos] : [];
+  assuntos = assuntos.map(String).slice(0, 40);
+  const match = { img: false };
+  if (assuntos.length) match.assunto = { $in: assuntos };
+  try {
+    const pipeline = [{ $match: match }, { $sample: { size: n * 5 } }];
+    let docs = await col.aggregate(pipeline).toArray();
+    /* prioriza banca preferida sem excluir as demais */
+    if (bancaPref) docs.sort((a, b) => (a.banca === bancaPref ? 0 : 1) - (b.banca === bancaPref ? 0 : 1));
+    /* evita repetir o mesmo assunto em sequência */
+    const escolhidas = docs.slice(0, n).map((q, i) => ({
+      num: i + 1,
+      enunciado: q.enunciado,
+      opcoes: q.opcoes,
+      gabarito: q.gabarito,
+      fonte: [q.banca, q.ano].filter(Boolean).join(" · "),
+      _assunto: q.assunto,
+    }));
+    res.json({ disponivel: true, total: escolhidas.length, questoes: escolhidas });
+  } catch (e) { res.status(500).json({ disponivel: false, message: e.message }); }
 });
 
 /* ── Checkout via Mercado Pago (Checkout Pro) ──
