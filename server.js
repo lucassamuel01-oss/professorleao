@@ -25,6 +25,8 @@ const crypto = require("crypto");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const { MongoClient } = require("mongodb");
+let nodemailer = null;
+try { nodemailer = require("nodemailer"); } catch (e) { /* opcional */ }
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -250,14 +252,46 @@ function touchLastAccess(user) {
   }
 }
 
+/* Credenciais do admin.
+   - E-mail: variável ADMIN_EMAIL (padrão: o e-mail do professor).
+   - Senha:  variável ADMIN_PASSWORD; sem ela, usa o hash abaixo
+             (hash bcrypt = irreversível, seguro para versionar).
+   Para trocar a senha sem mexer no código, defina ADMIN_PASSWORD
+   no Railway. */
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "lucas.samuel01@gmail.com").toLowerCase();
+const ADMIN_NAME = process.env.ADMIN_NAME || "Lucas Leão";
+const ADMIN_PASS_HASH = process.env.ADMIN_PASSWORD
+  ? bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10)
+  : "$2b$10$HUAT6Qj/ED6D26I71wr1SOcKXjJvF5qaLycc.XmBvBM1hUIbfBJsW";
+
 function seedAdminUser() {
-  const users = readUsers();
-  if (users.some((u) => u.role === "admin")) return;
+  let users = readUsers();
+  /* migração: remove credenciais antigas de admin (e-mail/senha
+     que já estiveram no código público) e recria com as atuais */
+  const antigos = users.filter((u) => u.role === "admin" && u.email.toLowerCase() !== ADMIN_EMAIL);
+  if (antigos.length) {
+    users = users.filter((u) => !(u.role === "admin" && u.email.toLowerCase() !== ADMIN_EMAIL));
+    console.log(`[ADMIN] ${antigos.length} admin(s) antigo(s) removido(s) na migração.`);
+  }
+
+  const atual = users.find((u) => u.email.toLowerCase() === ADMIN_EMAIL);
+  if (atual) {
+    /* garante papel de admin + senha atual em quem já existe */
+    atual.role = "admin";
+    atual.name = atual.name || ADMIN_NAME;
+    atual.password = ADMIN_PASS_HASH;
+    atual.active = true;
+    atual.expiresAt = null;
+    writeUsers(users);
+    console.log(`[ADMIN] Conta de administrador garantida: ${ADMIN_EMAIL}`);
+    return;
+  }
+
   users.push({
     id: "admin-001",
-    name: "Lucas Leão",
-    email: "samuel@professorleao.com",
-    password: bcrypt.hashSync("leao2024", 10),
+    name: ADMIN_NAME,
+    email: ADMIN_EMAIL,
+    password: ADMIN_PASS_HASH,
     role: "admin",
     curso: "Todos",
     active: true,
@@ -269,7 +303,7 @@ function seedAdminUser() {
     lastVisited: null,
   });
   writeUsers(users);
-  console.log("Admin padrão criado — email: samuel@professorleao.com  senha: leao2024");
+  console.log(`[ADMIN] Administrador criado: ${ADMIN_EMAIL}`);
 }
 
 /* ── Auth middleware (somente APIs e páginas protegidas) ───── */
@@ -385,6 +419,124 @@ app.get("/api/me", (req, res) => {
   touchLastAccess(user);
   res.json({ success: true, user: safeUser(user) });
 });
+
+/* ════════════════════════════════════════════════════════════
+   RECUPERAÇÃO DE SENHA (por e-mail)
+   ════════════════════════════════════════════════════════════ */
+
+/* transporte de e-mail — configurado por variáveis de ambiente.
+   Com Gmail: SMTP_HOST=smtp.gmail.com, SMTP_PORT=465,
+   SMTP_USER=seu@gmail.com, SMTP_PASS=<senha de app de 16 dígitos>. */
+let _mailer = null;
+function getMailer() {
+  if (_mailer !== null) return _mailer;
+  if (!nodemailer || !process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    _mailer = false; // sem e-mail automático → fluxo de fallback (admin envia o link)
+    return _mailer;
+  }
+  _mailer = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: Number(process.env.SMTP_PORT || 465) === 465,
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+  });
+  return _mailer;
+}
+
+function baseUrl(req) {
+  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/+$/, "");
+  const proto = req.headers["x-forwarded-proto"] || (req.secure ? "https" : "http");
+  return proto + "://" + req.headers.host;
+}
+
+/* solicita recuperação: gera token (1h), envia e-mail (ou deixa
+   o link para o admin). Resposta SEMPRE genérica — não revela se o
+   e-mail existe (proteção contra enumeração de contas). */
+app.post(
+  "/api/recuperar-senha",
+  rateLimit({ janelaMs: 60000, max: 6, escopo: "recuperar" }),
+  async (req, res) => {
+    const email = String(req.body.email || "").trim().toLowerCase();
+    const generica = {
+      success: true,
+      message: "Se este e-mail estiver cadastrado, enviamos as instruções de redefinição.",
+    };
+    if (!email) return res.json(generica);
+
+    const users = readUsers();
+    const user = users.find((u) => u.email.toLowerCase() === email);
+    if (!user) return res.json(generica); // não revela ausência
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetToken = crypto.createHash("sha256").update(token).digest("hex");
+    user.resetExpira = Date.now() + 60 * 60 * 1000; // 1 hora
+    user.resetSolicitadoEm = new Date().toISOString();
+    writeUsers(users);
+
+    const link = baseUrl(req) + "/redefinir-senha.html?token=" + token;
+    const mailer = getMailer();
+    let enviado = false;
+    if (mailer) {
+      try {
+        await mailer.sendMail({
+          from: process.env.SMTP_FROM || `"Professor Leão" <${process.env.SMTP_USER}>`,
+          to: user.email,
+          subject: "Redefinição de senha — Professor Leão",
+          html:
+            `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;color:#1c2438">
+              <h2 style="color:#0A1628">Redefinição de senha</h2>
+              <p>Olá, ${String(user.name || "aluno").replace(/[<>]/g, "")}! Recebemos um pedido para redefinir a sua senha na plataforma Professor Leão.</p>
+              <p style="text-align:center;margin:26px 0">
+                <a href="${link}" style="background:#4A6CF7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold">Criar nova senha</a>
+              </p>
+              <p style="font-size:13px;color:#56607a">O link vale por 1 hora. Se você não pediu isso, ignore este e-mail — sua senha continua a mesma.</p>
+              <p style="font-size:12px;color:#8892a8;border-top:1px solid #e2e6f0;padding-top:12px;margin-top:18px">🦁 Professor Leão · www.professorleao.com</p>
+            </div>`,
+        });
+        enviado = true;
+      } catch (err) {
+        console.error("[RESET] Falha ao enviar e-mail:", err.message);
+      }
+    }
+    if (!enviado) {
+      /* sem SMTP (ou falha): registra para o admin enviar o link via WhatsApp */
+      console.log(`[RESET] Link de redefinição para ${user.email}: ${link}`);
+    }
+    res.json(generica);
+  }
+);
+
+/* valida o token (a página confere antes de mostrar o formulário) */
+app.get("/api/redefinir-senha/:token", (req, res) => {
+  const hash = crypto.createHash("sha256").update(String(req.params.token)).digest("hex");
+  const user = readUsers().find((u) => u.resetToken === hash && u.resetExpira > Date.now());
+  res.json({ valido: !!user });
+});
+
+/* efetiva a nova senha */
+app.post(
+  "/api/redefinir-senha",
+  rateLimit({ janelaMs: 60000, max: 10, escopo: "redefinir" }),
+  (req, res) => {
+    const token = String(req.body.token || "");
+    const novaSenha = String(req.body.senha || "");
+    if (novaSenha.length < 6) {
+      return res.status(400).json({ success: false, message: "A senha precisa de pelo menos 6 caracteres." });
+    }
+    const hash = crypto.createHash("sha256").update(token).digest("hex");
+    const users = readUsers();
+    const user = users.find((u) => u.resetToken === hash && u.resetExpira > Date.now());
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Link inválido ou expirado. Solicite um novo." });
+    }
+    user.password = bcrypt.hashSync(novaSenha, 10);
+    delete user.resetToken;
+    delete user.resetExpira;
+    delete user.resetSolicitadoEm;
+    writeUsers(users);
+    res.json({ success: true, message: "Senha redefinida com sucesso. Você já pode entrar." });
+  }
+);
 
 /* ── Cadastro via convite único ─────────────────────────────── */
 
@@ -791,6 +943,20 @@ app.get("/api/admin/alunos", requireAuthApi, requireAdminApi, (req, res) => {
     ipsRecentes: new Set((u.acessos || []).map((a) => a.ip)).size,
   }));
   res.json(alunos);
+});
+
+/* admin gera um link de redefinição para um aluno (fallback do
+   WhatsApp quando o e-mail automático não está configurado) */
+app.post("/api/admin/gerar-reset/:id", requireAuthApi, requireAdminApi, (req, res) => {
+  const users = readUsers();
+  const user = users.find((u) => u.id === req.params.id);
+  if (!user) return res.status(404).json({ success: false, message: "Aluno não encontrado." });
+  const token = crypto.randomBytes(32).toString("hex");
+  user.resetToken = crypto.createHash("sha256").update(token).digest("hex");
+  user.resetExpira = Date.now() + 60 * 60 * 1000;
+  writeUsers(users);
+  const link = baseUrl(req) + "/redefinir-senha.html?token=" + token;
+  res.json({ success: true, link, email: user.email, validade: "1 hora" });
 });
 
 app.post("/api/admin/users", requireAuthApi, requireAdminApi, (req, res) => {

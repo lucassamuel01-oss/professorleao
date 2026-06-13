@@ -375,7 +375,26 @@
         </button>
       </form>
 
-      <div class="login-note">
+      <div style="text-align:center;margin-top:14px">
+        <a href="#" id="linkEsqueci" style="color:var(--silver);font-size:13px;font-weight:600">Esqueci minha senha</a>
+      </div>
+
+      <!-- Fluxo de recuperação de senha (oculto por padrão) -->
+      <form id="recoverForm" style="display:none;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07)">
+        <h2 style="font-size:16px;margin-bottom:6px">Recuperar acesso</h2>
+        <p style="font-size:13px;color:var(--silver);margin-bottom:16px;line-height:1.5">Informe o e-mail da sua conta. Enviaremos um link para criar uma nova senha.</p>
+        <div class="error-msg" id="recoverMsg" style="display:none"></div>
+        <div class="field">
+          <label for="recoverEmail">E-mail</label>
+          <input type="email" id="recoverEmail" required autocomplete="email" placeholder="seu@email.com" />
+        </div>
+        <button type="submit" class="login-btn" id="recoverBtn">Enviar link de recuperação</button>
+        <div style="text-align:center;margin-top:14px">
+          <a href="#" id="linkVoltarLogin" style="color:var(--silver);font-size:13px;font-weight:600">← Voltar ao login</a>
+        </div>
+      </form>
+
+      <div class="login-note" id="loginNote">
         Ainda não tem acesso?<br />
         <a href="https://wa.me/5577999229281?text=Olá!%20Quero%20acesso%20à%20Área%20do%20Aluno." target="_blank" rel="noopener">
           Fale com o Professor Leão no WhatsApp →
@@ -432,6 +451,48 @@
           btn.textContent = 'Entrar na plataforma';
         }
       });
+    });
+
+    // ── Recuperação de senha ──
+    const loginForm   = document.getElementById('loginForm');
+    const recoverForm = document.getElementById('recoverForm');
+    const recoverMsg  = document.getElementById('recoverMsg');
+
+    function alternar(mostrarRecover) {
+      loginForm.style.display   = mostrarRecover ? 'none' : '';
+      document.getElementById('linkEsqueci').parentElement.style.display = mostrarRecover ? 'none' : '';
+      document.getElementById('loginNote').style.display = mostrarRecover ? 'none' : '';
+      errorMsg.style.display = 'none';
+      recoverForm.style.display = mostrarRecover ? 'block' : 'none';
+      recoverMsg.style.display = 'none';
+    }
+    document.getElementById('linkEsqueci').addEventListener('click', (e) => { e.preventDefault(); alternar(true); });
+    document.getElementById('linkVoltarLogin').addEventListener('click', (e) => { e.preventDefault(); alternar(false); });
+
+    recoverForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('recoverEmail').value.trim();
+      const rbtn  = document.getElementById('recoverBtn');
+      rbtn.disabled = true; rbtn.textContent = 'Enviando…';
+      recoverMsg.style.display = 'none';
+      try {
+        const r = await fetch('/api/recuperar-senha', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ email }),
+        });
+        const d = await r.json();
+        recoverMsg.className = 'error-msg';
+        recoverMsg.style.cssText = 'display:block;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);color:#86efac';
+        recoverMsg.innerHTML = (d.message || 'Se este e-mail estiver cadastrado, enviamos as instruções.') +
+          '<br><span style="opacity:.85">Não recebeu? Verifique o spam ou fale com o professor no WhatsApp (77) 99922-9281.</span>';
+      } catch (err) {
+        recoverMsg.className = 'error-msg';
+        recoverMsg.style.display = 'block';
+        recoverMsg.innerHTML = 'A recuperação automática está disponível apenas na plataforma oficial. Fale com o Professor Leão no WhatsApp: <a href="https://wa.me/5577999229281" target="_blank" style="color:#fca5a5;font-weight:700">(77) 99922-9281</a>.';
+      } finally {
+        rbtn.disabled = false; rbtn.textContent = 'Enviar link de recuperação';
+      }
     });
   </script>
 </body>
