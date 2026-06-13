@@ -207,7 +207,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
   </div>
 </div>
 
-<div class="feedback" id="fbToast">
+<div class="feedback" id="fbToast" onclick="nextQuestion()" style="cursor:pointer">
   <div class="feedback__icon" id="fbIcon">✅</div>
   <div class="feedback__text">
     <div class="feedback__title" id="fbTitle">Correto!</div>
@@ -298,6 +298,7 @@ let questions = [], qIdx = 0, score = 0, selected = null;
 let streak = 0, maxStreak = 0, acertos = 0;
 let timerSec = 35, timerInterval = null, timerStarted;
 let answering = false, resPeriod = 'daily';
+let _advanceTimer=null,_advanced=false;
 
 function getTimerSec() { if (diff === 'treino') return 9999; return diff === 'dificil' ? 30 : diff === 'facil' ? 60 : 45; }
 function getMultiplier() { return PL_Rankings.DIFF_MULTIPLIER[diff] || 1.0; }
@@ -342,23 +343,23 @@ function startGame() {
       if(Math.random()<0.5){
         const u=_ri(2,6), k1=_ri(2,5), k2=k1+_ri(1,5);
         const o=_mkOps('R$ '+(k2*u)+',00',()=>'R$ '+Math.max(2,k2*u+_pk([-1,1])*_pk([u,2*u,k2]))+',00');
-        return {diff:d,tipo:'Proporção Direta',texto:'Se '+k1+' kg de um produto custam R$ '+(k1*u)+',00, quanto custam '+k2+' kg?',ops:o.ops,g:o.g};
+        return {diff:d,tipo:'Proporção Direta',texto:'Se '+k1+' kg de um produto custam R$ '+(k1*u)+',00, quanto custam '+k2+' kg?',ops:o.ops,g:o.g,expl:'1 kg custa R$ '+u+' ('+(k1*u)+'÷'+k1+'). Então '+k2+' kg = '+k2+' × '+u+' = R$ '+(k2*u)};
       }
       const v=_pk([40,50,60,70,80,90]), t=_ri(2,5);
       const o=_mkOps((v*t)+' km',()=>Math.max(10,v*t+_pk([-1,1])*_pk([v/2,v,10*t]))+' km');
-      return {diff:d,tipo:'Proporção Direta',texto:'Um carro percorre '+v+' km em 1 hora. Quantos km percorre em '+t+' horas, na mesma velocidade?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Proporção Direta',texto:'Um carro percorre '+v+' km em 1 hora. Quantos km percorre em '+t+' horas, na mesma velocidade?',ops:o.ops,g:o.g,expl:'Direta: '+v+' km em 1 h → em '+t+' h são '+v+' × '+t+' = '+(v*t)+' km'};
     }
     if(d==='normal'){
       const n2=_pk([2,3,4,6]), f=_ri(2,4), n1=n2*f===n2?n2*2:n2, dias2=_ri(2,6)*f, dias1=dias2/f;
       // n1 operários fazem em dias1; n2 (menos) fazem em dias2 = dias1*f, com n1=n2*f
       const N1=n2*f, D1=_ri(2,5), D2=D1*f;
       const o=_mkOps(D2+' dias',()=>Math.max(1,D2+_pk([-1,1])*_pk([D1,f,2]))+' dias');
-      return {diff:d,tipo:'Proporção Inversa',texto:N1+' operários constroem um muro em '+D1+' dias. Quantos dias levarão '+n2+' operários, no mesmo ritmo?',ops:o.ops,g:o.g};
+      return {diff:d,tipo:'Proporção Inversa',texto:N1+' operários constroem um muro em '+D1+' dias. Quantos dias levarão '+n2+' operários, no mesmo ritmo?',ops:o.ops,g:o.g,expl:'Inversa (menos operários → mais dias): '+N1+'×'+D1+' = '+n2+'×x → x = '+(N1*D1)+'÷'+n2+' = '+D2+' dias'};
     }
     const u=_ri(2,5), m1=_ri(2,5), d1=_ri(2,5), m2=_ri(2,5), d2=_ri(2,6);
     const p1=u*m1*d1, p2=u*m2*d2;
     const o=_mkOps(d2+' dias',()=>Math.max(1,d2+_pk([-1,1])*_pk([1,2,3]))+' dias');
-    return {diff:d,tipo:'Regra de Três Composta',texto:m1+' máquinas produzem '+p1+' peças em '+d1+' dias. Em quantos dias '+m2+' máquinas produzirão '+p2+' peças?',ops:o.ops,g:o.g};
+    return {diff:d,tipo:'Regra de Três Composta',texto:m1+' máquinas produzem '+p1+' peças em '+d1+' dias. Em quantos dias '+m2+' máquinas produzirão '+p2+' peças?',ops:o.ops,g:o.g,expl:'Composta: mais peças → mais dias; mais máquinas → menos dias. Resolvendo as proporções, a resposta é '+d2+' dias'};
   }
 
   const pool=montarPool(diff);
@@ -439,16 +440,18 @@ function submitAnswer(timeout=false) {
     else if(i===selected && !isCorrect) b.classList.add('reveal-err');
   });
 
-  showFeedback(isCorrect, pts, timeout, q.ops[q.g]);
-  setTimeout(()=>{ hideFeedback(); qIdx++; renderQuestion(); }, 2400);
+  try{ if(window.Arcade){ if(isCorrect){Arcade.correct(streak);Arcade.confetti(streak>=3?70:30);if(streak>=2)Arcade.combo(streak);} else if(timeout){Arcade.timeUp();} else {Arcade.wrong();} } }catch(e){}
+  showFeedback(isCorrect, pts, timeout, q.ops[q.g], q.expl);
+  _advanced=false; _advanceTimer=setTimeout(nextQuestion, isCorrect?3400:6500);
 }
+function nextQuestion(){ if(_advanced)return; _advanced=true; clearTimeout(_advanceTimer); hideFeedback(); qIdx++; renderQuestion(); }
 
-function showFeedback(ok, pts, timeout, correto) {
+function showFeedback(ok, pts, timeout, correto, expl) {
   const fb = document.getElementById('fbToast');
-  fb.className = 'feedback '+(timeout?'wrong': ok?'perfect':'wrong');
+  fb.className = 'feedback '+(ok?'perfect':'wrong');
   document.getElementById('fbIcon').textContent  = timeout?'⏰': ok?'🎯':'❌';
-  document.getElementById('fbTitle').textContent = timeout?'Tempo esgotado!': ok?'Correto! 🔥':'Errado!';
-  document.getElementById('fbSub').textContent   = ok?`+${pts} pts (streak ×${streak})`:`Resposta: ${correto}`;
+  document.getElementById('fbTitle').textContent = timeout?('Tempo! Resposta: '+correto): ok?('Correto! 🔥'+(streak>=2?'  streak ×'+streak:'')):('Quase! Resposta certa: '+correto);
+  document.getElementById('fbSub').innerHTML = (expl?('💡 '+esc(expl)):'Confira a resposta destacada acima')+' <span style="opacity:.55">· toque para continuar →</span>';
   document.getElementById('fbPts').textContent   = (pts>=0?'+':'')+pts;
   requestAnimationFrame(()=>fb.classList.add('show'));
 }
