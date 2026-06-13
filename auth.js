@@ -158,13 +158,21 @@ async function login(email, password) {
   return { success: true, role: user.role };
 }
 
+/* monta a URL de login preservando a página atual em ?next= — assim,
+   após entrar, o aluno volta para onde estava (ex.: app abre nos jogos) */
+function _loginUrl(qs) {
+  const here = window.location.pathname + window.location.search;
+  const pre = qs ? (qs + '&') : '';
+  return _getBase() + 'login.html?' + pre + 'next=' + encodeURIComponent(here);
+}
+
 function requireAuth(adminOnly = false) {
   const s = getSession();
   const base = _getBase();
-  if (!s) { window.location.href = base + 'login.html'; return null; }
+  if (!s) { window.location.href = _loginUrl(); return null; }
   if (s.expiresAt && new Date(s.expiresAt) < new Date()) {
     clearSession();
-    window.location.href = base + 'login.html?expired=1';
+    window.location.href = _loginUrl('expired=1');
     return null;
   }
 
@@ -173,7 +181,7 @@ function requireAuth(adminOnly = false) {
     _validateApiSession();
   } else {
     const user = getUsers().find(u => u.id === s.id);
-    if (!user || !user.active) { clearSession(); window.location.href = base + 'login.html'; return null; }
+    if (!user || !user.active) { clearSession(); window.location.href = _loginUrl(); return null; }
   }
 
   if (adminOnly && s.role !== 'admin') { window.location.href = base + 'minha-area.html'; return null; }
@@ -188,7 +196,7 @@ async function _validateApiSession() {
   if (!res) return;                 // backend fora do ar — segue com espelho local
   if (res.status === 401 || res.status === 403) {
     clearSession();
-    window.location.href = _getBase() + 'login.html?expired=1';
+    window.location.href = _loginUrl('expired=1');
     return;
   }
   pullSync();

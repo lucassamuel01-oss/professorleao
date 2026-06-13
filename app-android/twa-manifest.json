@@ -13,7 +13,7 @@
   "navigationDividerColorDark": "#0A1628",
   "backgroundColor": "#0A1628",
   "enableNotifications": true,
-  "startUrl": "/?source=twa",
+  "startUrl": "/jogos.html?source=app",
   "iconUrl": "https://www.professorleao.com/assets/img/logo-azul.png",
   "maskableIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png",
   "splashScreenFadeOutDuration": 300,
@@ -34,7 +34,7 @@
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "shortcuts": [
-    { "name": "Área do Aluno", "shortName": "Minha Área", "url": "/minha-area.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" },
-    { "name": "Jogos", "shortName": "Jogos", "url": "/jogos.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" }
+    { "name": "Jogos", "shortName": "Jogos", "url": "/jogos.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" },
+    { "name": "Área do Aluno", "shortName": "Minha Área", "url": "/minha-area.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" }
   ]
 }
