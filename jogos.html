@@ -254,7 +254,7 @@
     <div class="arena-hero__text">
       <div class="arena-hero__badge">⚔️ ARENA DE JOGOS</div>
       <h1>Aprenda jogando,<br/><span>vença competindo.</span></h1>
-      <p>25 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
+      <p>26 jogos de matemática, álgebra, estatística, probabilidade, geometria interativa (plana e espacial 3D) e raciocínio lógico (verbal e figural) com ranking competitivo. Escolha a dificuldade — quanto maior o desafio, maior o multiplicador de pontos no ranking!</p>
     </div>
     <div class="arena-hero__stats">
       <div class="hero-stat">
@@ -948,6 +948,31 @@
       </div>
     </div>
 
+    <!-- Sequência de Figuras -->
+    <div class="game-card">
+      <div class="game-card__banner" style="background:linear-gradient(135deg,#3730a3,#6366f1)">
+        <div class="game-card__icon">🧩</div>
+      </div>
+      <div class="game-card__body">
+        <div class="game-card__tag">Raciocínio Lógico</div>
+        <div class="game-card__name">Sequência de Figuras</div>
+        <div class="game-card__desc">Raciocínio lógico não-verbal — o que mais cai na prova! Descubra o padrão (rotação, lados, posição, quantidade ou combinações) e escolha a figura que completa a sequência. Errou? A regra aparece na hora.</div>
+        <div class="game-card__meta">
+          <span class="game-card__meta-item">🔎 Padrões figurais</span>
+          <span class="game-card__meta-item">⚡ 50–90s cronometrados</span>
+          <span class="game-card__meta-item">⌨️ Atalhos 1–4</span>
+        </div>
+        <div class="game-card__best" id="best-fig">
+          <span class="game-card__best-label">Seu melhor (ranking)</span>
+          <span class="game-card__best-score">—</span>
+        </div>
+      </div>
+      <div class="game-card__foot">
+        <a class="btn-play" href="jogos/figuras.html">▶ Jogar Agora</a>
+        <button class="btn-rank" onclick="openRankModal('figuras','🧩 Sequência de Figuras')" title="Ver ranking">🏆</button>
+      </div>
+    </div>
+
     <!-- Sequências Lógicas -->
     <div class="game-card">
       <div class="game-card__banner" style="background:linear-gradient(135deg,#9f1239,#f43f5e)">
@@ -1005,7 +1030,7 @@
     <a href="jogos/ranking-geral.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:linear-gradient(135deg,#1B2E6B,#4A6CF7);color:#fff;font-family:var(--font-h);font-weight:900;font-size:16px;border:1px solid rgba(74,108,247,0.4);box-shadow:0 8px 32px rgba(74,108,247,.35);text-decoration:none;transition:.2s">
       🏆 Ver Ranking Geral — todos os jogos
     </a>
-    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 25 jogos</div>
+    <div style="font-size:12px;color:var(--silver);margin-top:10px">Soma das melhores pontuações em todos os 26 jogos</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1037,6 +1062,7 @@
           <div class="rank-gtab" data-game="geometria-plana"               onclick="setRankGame(this,'geometria-plana')">🔺 Geometria</div>
           <div class="rank-gtab" data-game="combinatoria"                  onclick="setRankGame(this,'combinatoria')">🎲 Combinatória</div>
           <div class="rank-gtab" data-game="logica-vf"                     onclick="setRankGame(this,'logica-vf')">⚡ V ou F: Lógica</div>
+          <div class="rank-gtab" data-game="figuras"                       onclick="setRankGame(this,'figuras')">🧩 Seq. Figuras</div>
           <div class="rank-gtab" data-game="estatistica"                   onclick="setRankGame(this,'estatistica')">📊 Estatística</div>
           <div class="rank-gtab" data-game="graficos"                      onclick="setRankGame(this,'graficos')">📊 Gráficos</div>
           <div class="rank-gtab" data-game="probabilidade"                 onclick="setRankGame(this,'probabilidade')">🎲 Probabilidade</div>
@@ -1154,6 +1180,7 @@ const GAMES = [
   { id: 'combinatoria',         name: '🎲 Combinatória',              bestId: 'best-comb' },
   { id: 'juros',                name: '💰 Juros Simples & Compostos', bestId: 'best-jur'  },
   { id: 'logica-vf',            name: '⚡ V ou F: Lógica',            bestId: 'best-lvf'  },
+  { id: 'figuras',              name: '🧩 Sequência de Figuras',      bestId: 'best-fig'  },
   { id: 'estatistica',          name: '📊 Estatística Relâmpago',     bestId: 'best-est'  },
   { id: 'graficos',             name: '📊 Análise de Gráficos',       bestId: 'best-graf' },
   { id: 'probabilidade',        name: '🎲 Probabilidade',             bestId: 'best-prob' },
