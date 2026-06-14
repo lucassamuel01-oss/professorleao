@@ -50,6 +50,10 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .timer-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:18px}
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width 1s linear,background .3s}
 .q-card{background:var(--navy-2);border:1px solid rgba(168,85,247,.2);border-radius:20px;padding:26px 18px;margin-bottom:16px;text-align:center}
+.balanca{margin:10px auto 2px;max-width:300px}
+.balanca svg{display:block;width:100%;height:auto}
+.balanca-cap{font-size:11px;color:var(--sil);text-align:center;margin-top:6px;line-height:1.45}
+.balanca-cap b{color:#fff}
 .q-tag{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--al);margin-bottom:14px}
 .q-eq{font-family:var(--fh);font-weight:900;font-size:30px;letter-spacing:1px;color:#fff;animation:eqIn .45s cubic-bezier(.34,1.56,.64,1)}
 @keyframes eqIn{0%{opacity:0;transform:translateY(8px) scale(.92)}100%{opacity:1;transform:none}}
@@ -155,6 +159,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="q-card">
       <div class="q-tag" id="qTag"></div>
       <div class="q-eq" id="qEq"></div>
+      <div class="balanca" id="qBalanca"></div>
       <div class="q-ask" id="qAsk"></div>
     </div>
     <div class="answer-row">
@@ -284,12 +289,34 @@ function startGame(){
   show('screenGame'); document.getElementById('hudScore').textContent='0'; document.getElementById('hudStreak').classList.remove('show');
   renderQuestion();
 }
+/* balança: representa a equação do 1º grau como dois pratos em equilíbrio */
+function renderBalanca(q){
+  const el=document.getElementById('qBalanca'); if(!el) return;
+  if(!q || q.tipo!=='1grau' || !q.eq || q.eq.indexOf('=')<0){ el.innerHTML=''; return; }
+  const p=q.eq.split('='); const L=(p[0]||'').trim(), R=(p[1]||'').trim();
+  const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  el.innerHTML='<svg viewBox="0 0 300 122" preserveAspectRatio="xMidYMid meet">'
+    +'<line x1="40" y1="42" x2="260" y2="42" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>'
+    +'<circle cx="150" cy="42" r="5" fill="var(--al)"/>'
+    +'<polygon points="150,46 131,102 169,102" fill="rgba(255,255,255,.06)" stroke="var(--al)" stroke-width="2" stroke-linejoin="round"/>'
+    +'<line x1="106" y1="102" x2="194" y2="102" stroke="var(--al)" stroke-width="3" stroke-linecap="round"/>'
+    +'<line x1="70" y1="42" x2="70" y2="58" stroke="var(--al)" stroke-width="1.4"/>'
+    +'<line x1="230" y1="42" x2="230" y2="58" stroke="var(--al)" stroke-width="1.4"/>'
+    +'<rect x="16" y="58" width="108" height="32" rx="9" fill="rgba(255,255,255,.06)" stroke="var(--al)" stroke-width="1.5"/>'
+    +'<text x="70" y="79" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="800" font-size="15">'+esc(L)+'</text>'
+    +'<rect x="176" y="58" width="108" height="32" rx="9" fill="rgba(255,255,255,.06)" stroke="var(--al)" stroke-width="1.5"/>'
+    +'<text x="230" y="79" text-anchor="middle" fill="#fff" font-family="Montserrat,sans-serif" font-weight="800" font-size="15">'+esc(R)+'</text>'
+    +'</svg>'
+    +'<div class="balanca-cap">A equação é uma <b>balança</b> em equilíbrio — faça a <b>mesma operação dos dois lados</b> para isolar o x.</div>';
+}
+
 function renderQuestion(){
   if(qIdx>=questions.length){ endGame(); return; }
   const q=questions[qIdx]; answering=false;
   document.getElementById('hudQ').textContent=qIdx+1;
   document.getElementById('qTag').textContent=q.tag;
   document.getElementById('qEq').textContent=q.eq;
+  renderBalanca(q);
   document.getElementById('qAsk').innerHTML=q.ask;
   const inp=document.getElementById('ansInput'); inp.value=''; inp.disabled=false; inp.placeholder=q.ph;
   document.getElementById('btnAnswer').disabled=false;
