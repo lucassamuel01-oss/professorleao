@@ -56,14 +56,10 @@
     a { text-decoration: none; color: inherit; }
     img { max-width: 100%; display: block; }
 
-    /* ── Shell ── */
+    /* ── Shell (cartão central de login) ── */
     .login-shell {
       position: relative; z-index: 1;
-      width: min(1100px, 100%);
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 420px;
-      gap: 20px;
-      align-items: stretch;
+      width: min(430px, 100%);
     }
 
     /* ── Product panel (left) ── */
@@ -256,10 +252,13 @@
       .pp-features { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 540px) {
-      .pp-features { grid-template-columns: 1fr; }
-      .product-panel { padding: 28px 22px; }
       .login-box { padding: 30px 22px; }
-      .back-link { position: static; margin-bottom: 16px; width: fit-content; }
+      .back-link { position: static; margin: 0 auto 16px; width: fit-content; }
+    }
+    /* No app instalado: sem "voltar ao site" e respeitando o notch */
+    @media (display-mode: standalone) {
+      .back-link { display: none !important; }
+      body { padding-top: calc(28px + env(safe-area-inset-top, 0px)); }
     }
   </style>
 </head>
@@ -271,79 +270,6 @@
   </a>
 
   <main class="login-shell">
-
-    <!-- ── Painel esquerdo: produto ── -->
-    <section class="product-panel">
-      <div class="pp-top">
-        <div class="pp-brand">
-          <img src="assets/img/logo-branca.png" alt="Professor Leão" />
-          <span>
-            <strong>PROFESSOR LEÃO</strong>
-            <small>Área exclusiva do aluno</small>
-          </span>
-        </div>
-
-        <div class="pp-kicker">🏆 Plataforma Premium de Preparação</div>
-
-        <h1>Acesse sua área e acelere sua <span>aprovação</span></h1>
-
-        <p class="pp-copy">
-          Aulas gravadas, apostilas em PDF, plano de estudos personalizado, jogos
-          interativos e muito mais — tudo em um único lugar, focado no seu concurso.
-        </p>
-
-        <div class="pp-features">
-          <div class="pp-feature">
-            <span class="pp-feature-icon">🎥</span>
-            <div>
-              <b>Aulas Gravadas</b>
-              <span>Videoaulas organizadas por módulo e concurso</span>
-            </div>
-          </div>
-          <div class="pp-feature">
-            <span class="pp-feature-icon">📄</span>
-            <div>
-              <b>Apostilas Premium</b>
-              <span>PDFs exclusivos com exercícios comentados</span>
-            </div>
-          </div>
-          <div class="pp-feature">
-            <span class="pp-feature-icon">🎯</span>
-            <div>
-              <b>Plano Pomodoro</b>
-              <span>Cronograma personalizado por edital</span>
-            </div>
-          </div>
-          <div class="pp-feature">
-            <span class="pp-feature-icon">🎮</span>
-            <div>
-              <b>Jogos Interativos</b>
-              <span>Aprenda Matemática de forma divertida</span>
-            </div>
-          </div>
-        </div>
-
-        <a href="planos.html" style="display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:13px 22px;border-radius:10px;background:linear-gradient(135deg,var(--navy-mid),var(--accent));color:#fff;font-family:var(--font-h);font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(74,108,247,.3);width:fit-content">🚀 Ainda não é aluno? Ver planos e preços →</a>
-      </div>
-
-      <div class="pp-bottom">
-        <div class="pp-bottom-row">
-          <div>
-            <p style="font-size:10px;color:var(--gray-mid);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Concursos cobertos</p>
-            <div class="pp-tags">
-              <span class="pp-tag">CFO PMBA</span>
-              <span class="pp-tag">SD PMBA</span>
-              <span class="pp-tag">PM</span>
-              <span class="pp-tag">Correios</span>
-            </div>
-          </div>
-          <div class="pp-note">
-            <strong>Banca UNEB · FCC · CESPE</strong>
-            Estratégia focada nos padrões<br>reais de cobrança da banca
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- ── Formulário de login ── -->
     <div class="login-box">

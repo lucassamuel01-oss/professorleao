@@ -128,11 +128,52 @@
     <p id="invalidMsg">Este link de cadastro não é válido. Fale com o Professor Leão para receber o seu link exclusivo.</p>
     <a href="https://wa.me/5577999229281" target="_blank" rel="noopener">💬 Falar com o Professor Leão</a>
   </div>
+
+  <!-- Conta criada: oferecer instalar o app (celular) -->
+  <div id="installAppBox" style="display:none;text-align:center">
+    <div style="font-size:46px;margin-bottom:8px">🎉</div>
+    <h1>Conta criada!</h1>
+    <p class="sub">Seu acesso já está ativo. <b>Instale o app</b> do Professor Leão para estudar em tela cheia, com jogos offline e lembretes — ele fica na sua tela inicial como qualquer aplicativo.</p>
+    <button class="btn" id="btnInstalarApp">📲 Instalar o app</button>
+    <div id="iosHint" style="display:none;font-size:13px;color:var(--silver);line-height:1.7;margin-top:14px;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:12px 14px">
+      📱 No <b>iPhone</b>: toque em <b>Compartilhar</b> (⬆️) na barra do Safari e depois em <b>“Adicionar à Tela de Início”</b>.<br>
+      🤖 No <b>Android</b>: toque no menu <b>⋮</b> e em <b>“Instalar aplicativo”</b>.
+    </div>
+    <div class="footer-link" style="margin-top:16px">
+      <a href="#" id="continuarNav">Continuar no navegador →</a>
+    </div>
+  </div>
 </div>
 
+<script src="/pwa.js" defer></script>
 <script>
   const params = new URLSearchParams(location.search);
   const token  = params.get('convite') || params.get('token') || '';
+
+  /* ── Oferecer o app após o cadastro (celular) ── */
+  function _ehCelular() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      ((navigator.maxTouchPoints || 0) > 1 && window.matchMedia('(pointer:coarse)').matches);
+  }
+  function _ehApp() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true;
+  }
+  function mostrarInstalar() {
+    document.getElementById('formBox').style.display = 'none';
+    document.getElementById('installAppBox').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('btnInstalarApp').addEventListener('click', function () {
+      var ok = (typeof window.plInstall === 'function') && window.plInstall();
+      if (!ok) document.getElementById('iosHint').style.display = 'block';
+    });
+    document.getElementById('continuarNav').addEventListener('click', function (e) {
+      e.preventDefault(); window.location.href = 'minha-area.html';
+    });
+    window.addEventListener('appinstalled', function () {
+      setTimeout(function () { window.location.href = 'minha-area.html'; }, 900);
+    });
+  }
 
   function showInvalid(title, msg) {
     document.getElementById('formBox').style.display = 'none';
@@ -217,8 +258,13 @@
           expiresAt: data.user.expiresAt || null, curso: data.user.curso || '',
           via: 'api', loginAt: new Date().toISOString(),
         }));
-        btn.textContent = '✅ Conta criada! Entrando...';
-        setTimeout(() => { window.location.href = 'minha-area.html'; }, 600);
+        if (_ehCelular() && !_ehApp()) {
+          btn.textContent = '✅ Conta criada!';
+          mostrarInstalar();
+        } else {
+          btn.textContent = '✅ Conta criada! Entrando...';
+          setTimeout(() => { window.location.href = 'minha-area.html'; }, 600);
+        }
       } else {
         showError(data.message || 'Não foi possível criar a conta. Tente novamente.');
         btn.disabled = false;

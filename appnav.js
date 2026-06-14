@@ -76,6 +76,14 @@
     document.head.appendChild(st);
     document.body.appendChild(nav);
     document.body.classList.add('pl-has-appnav');
+    /* No app não existe "página inicial"/site: esconde os links de
+       "voltar ao site" e faz a logo apontar para a área do app. */
+    try {
+      document.querySelectorAll('a[href="index.html"], a[href="/index.html"], a[href="./index.html"]').forEach(function (a) {
+        if (a.classList.contains('topbar__logo')) { a.setAttribute('href', '/minha-area.html'); }
+        else if (/site/i.test(a.textContent || '')) { a.style.display = 'none'; }
+      });
+    } catch (e) { /* */ }
   }
   if (document.body) mount();
   else document.addEventListener('DOMContentLoaded', mount);

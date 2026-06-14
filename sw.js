@@ -13,9 +13,9 @@
 
    Para forçar atualização do cache, suba o número da versão.
    ============================================================ */
-const VERSION = 'pl-v13';
+const VERSION = 'pl-v14';
 const CACHE = 'pl-cache-' + VERSION;
-const PRECACHE = ['/', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
+const PRECACHE = ['/', '/login.html', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
 const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)$/i;
 
 /* Jogos + dependências compartilhadas — aquecidos em SEGUNDO PLANO (sob

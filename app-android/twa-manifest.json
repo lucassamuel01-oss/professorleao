@@ -13,7 +13,7 @@
   "navigationDividerColorDark": "#0A1628",
   "backgroundColor": "#0A1628",
   "enableNotifications": true,
-  "startUrl": "/jogos.html?source=app",
+  "startUrl": "/login.html?source=app",
   "iconUrl": "https://www.professorleao.com/assets/img/icon-512.png",
   "maskableIconUrl": "https://www.professorleao.com/assets/img/icon-maskable.png",
   "splashScreenFadeOutDuration": 300,

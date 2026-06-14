@@ -213,4 +213,43 @@
   }
   window.addEventListener('appinstalled', function () { setTimeout(_maybePromptNotif, 1500); });
   window.addEventListener('load', function () { setTimeout(_maybePromptNotif, 3500); });
+
+  /* ── Abrir no app, se já instalado ───────────────────────────
+     No Android, links do professorleao.com já abrem direto no app
+     (Digital Asset Links / TWA). Este banner é um reforço: se o app
+     estiver instalado e a pessoa abrir no navegador, oferece abrir nele. */
+  var APP_PKG = 'com.professorleao.app';
+  function _openAppBanner() {
+    if (document.getElementById('pl-openapp')) return;
+    var b = document.createElement('div');
+    b.id = 'pl-openapp';
+    b.style.cssText = 'position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-160%);z-index:2147483300;display:flex;align-items:center;gap:12px;background:#0F1E38;color:#fff;border:1px solid rgba(74,108,247,.45);border-radius:12px;padding:10px 12px;width:min(420px,calc(100vw - 24px));box-shadow:0 14px 40px rgba(0,0,0,.5);font-family:Montserrat,Arial,sans-serif;transition:transform .4s cubic-bezier(.34,1.56,.64,1)';
+    b.innerHTML =
+      '<img src="/assets/img/icon-192.png" alt="" style="width:34px;height:34px;border-radius:8px;flex-shrink:0">' +
+      '<div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px">Você tem o app instalado</div>' +
+      '<div style="font-size:12px;color:#B7C0DC">Abra no app para a melhor experiência.</div></div>' +
+      '<button id="pl-openapp-go" style="padding:8px 14px;border-radius:8px;background:#4A6CF7;border:none;color:#fff;font-family:inherit;font-weight:800;font-size:12.5px;cursor:pointer;white-space:nowrap">Abrir</button>' +
+      '<button id="pl-openapp-x" aria-label="Fechar" style="background:none;border:none;color:#8892B4;font-size:18px;cursor:pointer;padding:0 2px">✕</button>';
+    document.body.appendChild(b);
+    requestAnimationFrame(function () { b.style.transform = 'translateX(-50%) translateY(0)'; });
+    function fechar() { try { sessionStorage.setItem('pl_openapp_dismiss', '1'); } catch (e) {} b.style.transform = 'translateX(-50%) translateY(-160%)'; setTimeout(function () { b.remove(); }, 420); }
+    document.getElementById('pl-openapp-x').addEventListener('click', fechar);
+    document.getElementById('pl-openapp-go').addEventListener('click', function () {
+      var url = 'intent://' + location.host + location.pathname + location.search +
+        '#Intent;scheme=https;package=' + APP_PKG + ';end';
+      try { location.href = url; } catch (e) {}
+      fechar();
+    });
+  }
+  function _maybeOpenInApp() {
+    try {
+      if (_isStandalone()) return;
+      if (sessionStorage.getItem('pl_openapp_dismiss')) return;
+      if (!navigator.getInstalledRelatedApps) return;
+      navigator.getInstalledRelatedApps().then(function (apps) {
+        if ((apps || []).some(function (a) { return a && (a.id === APP_PKG || a.platform === 'play'); })) _openAppBanner();
+      }).catch(function () { /* */ });
+    } catch (e) { /* */ }
+  }
+  window.addEventListener('load', function () { setTimeout(_maybeOpenInApp, 1200); });
 })();
