@@ -41,9 +41,12 @@
   ];
 
   var css =
-    '#pl-appnav{position:fixed;left:0;right:0;bottom:0;z-index:2147482000;display:flex;' +
-    'background:rgba(10,22,40,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);' +
-    'border-top:1px solid rgba(74,108,247,.22);padding-bottom:env(safe-area-inset-bottom,0px);' +
+    /* fundo SÓLIDO (sem backdrop-filter) + camada própria: no Android/WebView
+       a barra fixa com blur piscava/sumia durante a rolagem. */
+    '#pl-appnav{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;display:flex;' +
+    'background:#0A1628;border-top:1px solid rgba(74,108,247,.30);' +
+    'padding-bottom:env(safe-area-inset-bottom,0px);' +
+    'transform:translateZ(0);-webkit-transform:translateZ(0);backface-visibility:hidden;' +
     "font-family:'Montserrat',Arial,sans-serif}" +
     '#pl-appnav a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;' +
     'padding:9px 2px 8px;text-decoration:none;color:#8892B4;font-size:10.5px;font-weight:700;transition:color .15s}' +
