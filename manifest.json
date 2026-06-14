@@ -18,7 +18,7 @@
     {
       "name": "Jogos",
       "short_name": "Jogos",
-      "description": "27 jogos de matemática e raciocínio lógico",
+      "description": "29 jogos de matemática e raciocínio lógico",
       "url": "/jogos.html?source=shortcut",
       "icons": [{ "src": "/assets/img/logo-azul.png", "sizes": "192x192", "type": "image/png" }]
     },
