@@ -157,4 +157,60 @@
       })
       .catch(function () { return false; });
   };
+
+  /* ── Pedir permissão de notificações ao instalar / abrir o app ──
+     Mostra UMA vez um convite (com gesto do usuário, como exigem os
+     navegadores). Só aparece no app instalado, com aluno logado e
+     quando o push está configurado no servidor (chaves VAPID). */
+  function _isStandalone() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true ||
+      /[?&]source=(app|twa|shortcut)/.test(location.search);
+  }
+  function _logado() {
+    try { var s = JSON.parse(localStorage.getItem('pl_session') || 'null'); return !!(s && s.id); } catch (e) { return false; }
+  }
+  function _notifBanner() {
+    if (document.getElementById('pl-notif-ask')) return;
+    var b = document.createElement('div');
+    b.id = 'pl-notif-ask';
+    b.style.cssText = 'position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(160%);z-index:2147483300;background:#0F1E38;color:#fff;border:1px solid rgba(74,108,247,.45);border-radius:14px;padding:14px 16px;width:min(380px,calc(100vw - 28px));box-shadow:0 16px 44px rgba(0,0,0,.55);font-family:Montserrat,Arial,sans-serif;transition:transform .4s cubic-bezier(.34,1.56,.64,1)';
+    b.innerHTML =
+      '<div style="display:flex;gap:11px;align-items:flex-start">' +
+        '<div style="font-size:26px;line-height:1">🔔</div>' +
+        '<div style="flex:1">' +
+          '<div style="font-weight:800;font-size:14px;margin-bottom:3px">Ativar lembretes?</div>' +
+          '<div style="font-size:12.5px;color:#B7C0DC;line-height:1.5">Receba avisos do minissimulado da semana e das aulas ao vivo — mesmo com o app fechado.</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;margin-top:12px">' +
+        '<button id="pl-notif-no" style="flex:1;padding:10px;border-radius:9px;background:transparent;border:1px solid rgba(255,255,255,.16);color:#B7C0DC;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">Agora não</button>' +
+        '<button id="pl-notif-yes" style="flex:1;padding:10px;border-radius:9px;background:#4A6CF7;border:none;color:#fff;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">🔔 Ativar</button>' +
+      '</div>';
+    document.body.appendChild(b);
+    requestAnimationFrame(function () { b.style.transform = 'translateX(-50%) translateY(0)'; });
+    function fechar() { b.style.transform = 'translateX(-50%) translateY(160%)'; setTimeout(function () { b.remove(); }, 420); }
+    function marcar() { try { localStorage.setItem('pl_push_prompted', '1'); } catch (e) {} }
+    document.getElementById('pl-notif-no').addEventListener('click', function () { marcar(); fechar(); });
+    document.getElementById('pl-notif-yes').addEventListener('click', function () {
+      marcar(); fechar();
+      if (typeof window.plEnablePush === 'function') window.plEnablePush();
+    });
+  }
+  function _maybePromptNotif() {
+    try {
+      if (localStorage.getItem('pl_push_prompted')) return;
+      if (!('Notification' in window) || Notification.permission !== 'default') return;
+      if (!(window.plPushSupported && window.plPushSupported())) return;
+      if (!_isStandalone() || !_logado()) return;
+      fetch('/api/push/public-key', { credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (cfg) {
+          if (cfg && cfg.enabled && cfg.publicKey && !localStorage.getItem('pl_push_prompted')) _notifBanner();
+        })
+        .catch(function () { /* */ });
+    } catch (e) { /* */ }
+  }
+  window.addEventListener('appinstalled', function () { setTimeout(_maybePromptNotif, 1500); });
+  window.addEventListener('load', function () { setTimeout(_maybePromptNotif, 3500); });
 })();
