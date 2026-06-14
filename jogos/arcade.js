@@ -139,5 +139,50 @@ window.Arcade = (function () {
     return b;
   }
 
-  return { tone, correct, wrong, timeUp, tick, win, celebrate, confetti, combo, flash, haptic, toggleSound, soundIsOn, soundButton };
+  /* ── Shake (elemento alvo ou a tela toda) ── */
+  function shake(el, px) {
+    const t = el || document.body, amp = px || 9;
+    try {
+      t.animate([
+        { transform: 'translateX(0)' }, { transform: 'translateX(' + (-amp) + 'px)' },
+        { transform: 'translateX(' + amp + 'px)' }, { transform: 'translateX(' + (-amp * 0.6) + 'px)' },
+        { transform: 'translateX(' + (amp * 0.6) + 'px)' }, { transform: 'translateX(0)' },
+      ], { duration: 300, easing: 'ease-in-out' });
+    } catch (e) {}
+    haptic([28, 22, 28]);
+  }
+
+  /* ── Burst de partículas num ponto (x,y em px de tela) ── */
+  function burst(x, y, opts) {
+    _ensureCanvas();
+    const o = opts || {}, count = o.count || 18, cols = o.colors || _COLORS;
+    for (let i = 0; i < count; i++) {
+      const ang = Math.random() * 6.283, sp = 2 + Math.random() * 6.5;
+      _parts.push({
+        x: x, y: y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 2,
+        g: 0.16 + Math.random() * 0.12, s: 3 + Math.random() * 4.5,
+        rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.45,
+        c: cols[(Math.random() * cols.length) | 0], life: 38 + Math.random() * 28,
+        shape: (Math.random() * 3) | 0, wob: 0, wobV: 0, drift: 0,
+      });
+    }
+    if (!_raf) _loop();
+  }
+
+  /* ── Texto flutuante (ex.: "+150") subindo a partir de (x,y) ── */
+  function popText(x, y, text, color) {
+    try {
+      const el = document.createElement('div');
+      el.textContent = text;
+      el.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;transform:translate(-50%,-50%) scale(.6);' +
+        'z-index:9999;font-family:Montserrat,sans-serif;font-weight:900;font-size:22px;pointer-events:none;white-space:nowrap;' +
+        'color:' + (color || '#fbbf24') + ';text-shadow:0 2px 10px rgba(0,0,0,.6);' +
+        'transition:transform .7s cubic-bezier(.2,.85,.3,1),opacity .7s ease';
+      document.body.appendChild(el);
+      requestAnimationFrame(() => { el.style.transform = 'translate(-50%,-160%) scale(1.05)'; el.style.opacity = '0'; });
+      setTimeout(() => el.remove(), 760);
+    } catch (e) {}
+  }
+
+  return { tone, correct, wrong, timeUp, tick, win, celebrate, confetti, combo, flash, haptic, shake, burst, popText, toggleSound, soundIsOn, soundButton };
 })();

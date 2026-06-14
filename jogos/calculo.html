@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>Cálculo Mental – Professor Leão</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -14,8 +14,15 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--navy)}
-body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.topbar{width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(234,179,8,.2);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+/* fundo animado discreto */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(ellipse 60% 50% at 50% -10%, rgba(234,179,8,.10), transparent 60%),
+   repeating-linear-gradient(0deg, transparent 0 38px, rgba(234,179,8,.025) 38px 39px),
+   repeating-linear-gradient(90deg, transparent 0 38px, rgba(234,179,8,.025) 38px 39px)}
+.topbar,.wrap{position:relative;z-index:1}
+.topbar{width:100%;background:rgba(10,22,40,.97);border-bottom:1px solid rgba(234,179,8,.2);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding-top:env(safe-area-inset-top,0)}
 .topbar__left{display:flex;align-items:center;gap:10px}
 .topbar__logo{font-family:var(--fh);font-size:14px;font-weight:800;letter-spacing:1px}
 .topbar__logo span{color:var(--al)}
@@ -23,8 +30,11 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .btn-back{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;background:transparent;color:var(--sil);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center}
 .btn-back:hover{color:var(--white)}
 .wrap{width:100%;max-width:640px;padding:24px 16px 60px;flex:1}
+
+/* ── Lobby ── */
 .lobby{background:var(--navy-2);border:1px solid rgba(234,179,8,.15);border-radius:20px;padding:40px 32px;text-align:center}
-.lobby__icon{font-size:72px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(234,179,8,.45))}
+.lobby__icon{font-size:72px;margin-bottom:16px;display:inline-block;filter:drop-shadow(0 0 20px rgba(234,179,8,.45));animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
 .lobby__title{font-family:var(--fh);font-size:28px;font-weight:900;margin-bottom:8px}
 .lobby__sub{color:var(--sil);font-size:15px;margin-bottom:28px;line-height:1.55}
 .lobby__rules{background:var(--navy-3);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
@@ -39,26 +49,60 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .diff-mult{font-size:10px;opacity:.7;display:block;margin-top:2px}
 .btn-start{display:inline-flex;align-items:center;gap:8px;padding:15px 36px;border-radius:12px;font-family:var(--fh);font-weight:900;font-size:16px;background:linear-gradient(135deg,#a16207,var(--accent));color:#3a2e05;border:none;cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(234,179,8,.35);margin-top:16px}
 .btn-start:hover{filter:brightness(1.12);transform:translateY(-2px)}
-.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+
+/* ── HUD ── */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .hud__progress{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--sil)}
 .hud__progress strong{color:var(--white)}
 .hud__right{display:flex;align-items:center;gap:10px}
-.hud__score{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--al)}
-.hud__streak{display:flex;align-items:center;gap:4px;font-family:var(--fh);font-size:12px;font-weight:800;color:var(--warn);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:4px 10px;opacity:0;transition:.3s}
-.hud__streak.show{opacity:1}
+.hud__score{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--al);transition:transform .15s}
+.hud__score.bump{transform:scale(1.25)}
+/* medidor de combo */
+.combo-meter{margin-bottom:14px}
+.combo-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--fh);font-size:11px;font-weight:800;color:var(--sil);margin-bottom:4px}
+.combo-top .lbl{transition:.2s}
+.combo-top.hot .lbl{color:var(--warn)}
+.combo-bar{height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.combo-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#f59e0b,#fde047);transition:width .3s ease;box-shadow:0 0 0 rgba(245,158,11,0)}
+.combo-fill.hot{box-shadow:0 0 14px rgba(245,158,11,.8);animation:pulseGlow 1s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+
+/* ── Timer ── */
 .timer-wrap{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:4px}
 .timer-bar{height:100%;border-radius:99px;background:var(--accent);transition:width .25s linear,background .3s}
 .timer-text{text-align:right;font-family:var(--fh);font-size:11px;color:var(--sil);margin-bottom:16px}
 .timer-text strong{color:var(--white)}
-.q-card{background:var(--navy-2);border:1px solid rgba(234,179,8,.2);border-radius:20px;padding:34px 18px;margin-bottom:16px;text-align:center}
-.q-conta{font-family:var(--fh);font-weight:900;font-size:40px;letter-spacing:1px;color:#fff;animation:contaIn .25s ease}
-@keyframes contaIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.opt-btn{padding:22px 12px;border-radius:14px;border:2px solid rgba(234,179,8,.2);background:var(--navy-3);color:var(--white);font-family:var(--fh);font-size:22px;font-weight:900;cursor:pointer;transition:.12s;text-align:center;user-select:none}
-.opt-btn:hover:not(:disabled){border-color:rgba(234,179,8,.55);background:rgba(234,179,8,.1)}
-.opt-btn.reveal-ok{border-color:var(--ok)!important;background:rgba(34,197,94,.25)!important;color:#4ade80!important}
-.opt-btn.reveal-err{border-color:var(--err)!important;background:rgba(239,68,68,.22)!important;color:#f87171!important}
+
+/* ── Carta 3D ── */
+.q-scene{perspective:900px;margin-bottom:16px}
+.q-card{position:relative;background:linear-gradient(160deg,var(--navy-3),var(--navy-2));border:1px solid rgba(234,179,8,.25);
+  border-radius:20px;padding:38px 18px 30px;text-align:center;transform-style:preserve-3d;
+  box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);will-change:transform}
+.q-card.flip{animation:cardFlip .42s cubic-bezier(.3,.8,.3,1)}
+@keyframes cardFlip{from{transform:rotateY(-82deg) translateZ(40px);opacity:0}to{transform:none;opacity:1}}
+.q-card.ok{border-color:var(--ok);box-shadow:0 18px 40px rgba(34,197,94,.25)}
+.q-card.err{border-color:var(--err)}
+.q-conta{font-family:var(--fh);font-weight:900;font-size:clamp(34px,9vw,48px);letter-spacing:1px;color:#fff;text-shadow:0 4px 16px rgba(0,0,0,.5)}
+.q-conta .opx{color:var(--al);margin:0 6px}
+.q-dica{margin-top:16px;min-height:20px;font-size:13.5px;line-height:1.5;color:var(--sil);opacity:0;transition:opacity .25s}
+.q-dica.show{opacity:1}
+.q-dica b{color:#4ade80}
+
+/* ── Opções 3D ── */
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;perspective:900px}
+.opt-btn{position:relative;padding:24px 12px;border-radius:14px;border:2px solid rgba(234,179,8,.22);
+  background:linear-gradient(180deg,var(--navy-3),#0e1c33);color:var(--white);font-family:var(--fh);font-size:24px;font-weight:900;
+  cursor:pointer;transition:transform .1s,border-color .15s,background .15s,box-shadow .15s;text-align:center;user-select:none;
+  box-shadow:0 6px 0 rgba(0,0,0,.35),0 8px 18px rgba(0,0,0,.3);transform-style:preserve-3d}
+.opt-btn .key{position:absolute;top:6px;left:9px;font-size:10px;font-weight:800;color:var(--sil);opacity:.6}
+.opt-btn:hover:not(:disabled){border-color:rgba(234,179,8,.6);background:rgba(234,179,8,.12);transform:translateY(-2px) rotateX(6deg)}
+.opt-btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.opt-btn.reveal-ok{border-color:var(--ok)!important;background:rgba(34,197,94,.25)!important;color:#86efac!important;box-shadow:0 0 22px rgba(34,197,94,.5)!important;transform:translateY(-2px) scale(1.04)}
+.opt-btn.reveal-err{border-color:var(--err)!important;background:rgba(239,68,68,.22)!important;color:#fca5a5!important}
+.opt-btn.dim{opacity:.4}
 .opt-btn:disabled{cursor:default}
+
+/* ── Resultado ── */
 .result{background:var(--navy-2);border:1px solid rgba(234,179,8,.15);border-radius:20px;padding:36px 28px;text-align:center}
 .result__icon{font-size:72px;margin-bottom:12px;display:block;animation:pop .4s ease}
 @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
@@ -92,6 +136,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
 .rscore-1{color:#f59e0b}.rscore-2{color:#94a3b8}.rscore-3{color:#b87333}
 .rdiff{font-size:9px;opacity:.55;margin-top:1px}
 @media(max-width:480px){.result__grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.lobby__icon,.combo-fill.hot{animation:none}.q-card.flip{animation:none}}
 </style>
 </head>
 <body>
@@ -116,7 +161,7 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
         <div class="rule-item">➕ <span>Soma, subtração, multiplicação e divisão</span></div>
         <div class="rule-item">⏱ <span>Tempo cronometrado — <strong>resposta instantânea</strong>, sem botão de confirmar</span></div>
         <div class="rule-item">✅ <span>Acerto = <strong>100 pts</strong> + bônus de sequência (combo)</span></div>
-        <div class="rule-item">🔥 <span>Quanto mais rápido e em sequência, mais pontos</span></div>
+        <div class="rule-item">🧠 <span>Errou? O Leão mostra <strong>como pensar a conta</strong> de cabeça</span></div>
       </div>
       <input class="lobby__input" id="inputNome" placeholder="Nome ou codinome (para o ranking)" autocomplete="name"/>
       <div class="diff-row">
@@ -133,13 +178,21 @@ body{font-family:var(--fb);background:var(--navy);color:var(--white);min-height:
     <div class="hud">
       <div class="hud__progress">Conta <strong id="hudQ">1</strong></div>
       <div class="hud__right">
-        <div class="hud__streak" id="hudStreak">🔥 ×<span id="streakNum">0</span></div>
         <div class="hud__score" id="hudScore">0</div>
       </div>
     </div>
+    <div class="combo-meter">
+      <div class="combo-top" id="comboTop"><span class="lbl" id="comboLbl">Combo</span><span id="comboNum">×0</span></div>
+      <div class="combo-bar"><div class="combo-fill" id="comboFill"></div></div>
+    </div>
     <div class="timer-wrap"><div class="timer-bar" id="timerBar" style="width:100%"></div></div>
     <div class="timer-text">⏱ <strong id="timerNum">60</strong>s</div>
-    <div class="q-card"><div class="q-conta" id="qConta"></div></div>
+    <div class="q-scene">
+      <div class="q-card" id="qCard">
+        <div class="q-conta" id="qConta"></div>
+        <div class="q-dica" id="qDica"></div>
+      </div>
+    </div>
     <div class="opt-grid" id="optGrid"></div>
   </div>
 
@@ -183,7 +236,7 @@ const TREINO_N = 20;
 
 let diff='facil', playerName='', playerEmail='';
 let score=0, streak=0, maxStreak=0, acertos=0, respondidas=0, cardNo=0;
-let cur=null, answering=false;
+let cur=null, answering=false, shownScore=0;
 let remaining=60, timerInt=null, _t0=0;
 
 const _ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
@@ -219,18 +272,40 @@ function gerarConta(){
     else if(op==='×'){ a=_ri(6,19); b=_ri(4,12); v=a*b; }
     else { b=_ri(3,12); v=_ri(4,15); a=b*v; }
   }
-  // opções: correta + distratores próximos
   const set=new Set([v]); let g=0;
   while(set.size<4 && g++<60){ const e=v+_pk([-1,1])*_pk([1,2,3,(op==='×'||op==='÷')?b:10]); if(e>=0) set.add(e); }
   while(set.size<4){ set.add(v+set.size+1); }
   const ops=shuffle([...set]).slice(0,4);
-  return { conta:a+' '+op+' '+b, v, ops, g:ops.indexOf(v) };
+  return { a,b,op,v, conta:a+' <span class="opx">'+op+'</span> '+b, ops, g:ops.indexOf(v) };
+}
+
+/* ── Dica didática: como pensar a conta de cabeça ── */
+function montarDica(c){
+  const {a,b,op,v}=c;
+  if(op==='+'){
+    const da=Math.floor(a/10)*10, db=Math.floor(b/10)*10, ua=a%10, ub=b%10;
+    if((da+db)>0 && (ua||ub)) return '🧠 Some dezenas e unidades: ('+da+'+'+db+') + ('+ua+'+'+ub+') = '+(da+db)+' + '+(ua+ub)+' = <b>'+v+'</b>';
+    return '🧠 '+a+' + '+b+' = <b>'+v+'</b>';
+  }
+  if(op==='−'){
+    const dz=Math.floor(b/10)*10, un=b%10;
+    if(dz>0 && un) return '🧠 Tire por partes: '+a+' − '+dz+' = '+(a-dz)+', depois −'+un+' = <b>'+v+'</b>';
+    return '🧠 '+a+' − '+b+' = <b>'+v+'</b>';
+  }
+  if(op==='×'){
+    if(a<=9 && b<=9) return '🧠 Tabuada do '+a+': '+a+'×'+b+' = <b>'+v+'</b>';
+    const dz=Math.floor(a/10)*10, un=a%10;
+    if(un) return '🧠 Distribua: ('+dz+'×'+b+') + ('+un+'×'+b+') = '+(dz*b)+' + '+(un*b)+' = <b>'+v+'</b>';
+    return '🧠 '+a+' × '+b+' = <b>'+v+'</b>';
+  }
+  return '🧠 Pense ao contrário: '+b+' × '+v+' = '+a+'. Logo '+a+' ÷ '+b+' = <b>'+v+'</b>';
 }
 
 function startGame(){
   playerName=document.getElementById('inputNome').value.trim()||'Anônimo';
-  score=0; streak=0; maxStreak=0; acertos=0; respondidas=0; cardNo=0; answering=false;
-  show('screenGame'); document.getElementById('hudScore').textContent='0'; document.getElementById('hudStreak').classList.remove('show');
+  score=0; streak=0; maxStreak=0; acertos=0; respondidas=0; cardNo=0; answering=false; shownScore=0;
+  show('screenGame'); document.getElementById('hudScore').textContent='0';
+  setCombo(0);
   remaining=getTotalTime();
   if(diff!=='treino') startTimer(); else document.getElementById('timerNum').textContent='∞';
   renderCard();
@@ -241,8 +316,11 @@ function renderCard(){
   if(diff!=='treino' && remaining<=0){ endGame(); return; }
   cur=gerarConta(); answering=false; cardNo++;
   document.getElementById('hudQ').textContent=cardNo;
-  document.getElementById('qConta').textContent=cur.conta;
-  document.getElementById('optGrid').innerHTML=cur.ops.map((op,i)=>'<button class="opt-btn" data-idx="'+i+'" onclick="answer('+i+')">'+op+'</button>').join('');
+  document.getElementById('qConta').innerHTML=cur.conta;
+  const card=document.getElementById('qCard'); card.className='q-card flip';
+  void card.offsetWidth; // reinicia animação
+  const dica=document.getElementById('qDica'); dica.className='q-dica'; dica.innerHTML='';
+  document.getElementById('optGrid').innerHTML=cur.ops.map((op,i)=>'<button class="opt-btn" data-idx="'+i+'" onclick="answer('+i+',event)"><span class="key">'+(i+1)+'</span>'+op+'</button>').join('');
 }
 
 function startTimer(){
@@ -256,23 +334,52 @@ function startTimer(){
   },200);
 }
 
-function answer(idx){
+function setCombo(s){
+  const fill=document.getElementById('comboFill'), top=document.getElementById('comboTop');
+  const lbl=document.getElementById('comboLbl'), num=document.getElementById('comboNum');
+  const pct=Math.min(s,8)/8*100; fill.style.width=pct+'%';
+  num.textContent='×'+s;
+  const hot=s>=3;
+  fill.classList.toggle('hot',hot); top.classList.toggle('hot',hot);
+  lbl.textContent = s>=7?'🔥 Imparável!' : s>=5?'🔥 Em chamas!' : s>=3?'Combo quente' : 'Combo';
+}
+
+function answer(idx,ev){
   if(answering)return; answering=true;
   respondidas++;
   const ok=(idx===cur.g);
-  const btns=document.querySelectorAll('.opt-btn'); btns.forEach(b=>b.disabled=true);
-  if(ok){ streak++; if(streak>maxStreak)maxStreak=streak; acertos++; score+=100+Math.min(streak,8)*15;
-    btns[idx].classList.add('reveal-ok'); }
-  else{ streak=0; if(btns[idx])btns[idx].classList.add('reveal-err'); if(btns[cur.g])btns[cur.g].classList.add('reveal-ok'); }
-  updateHUD();
-  try{ if(window.Arcade){ if(ok){Arcade.correct(streak); if(streak>=4)Arcade.confetti(streak>=7?50:24); if(streak>=2)Arcade.combo(streak);} else {Arcade.wrong();} } }catch(e){}
-  setTimeout(()=>{ if(diff!=='treino' && remaining-(Date.now()-_t0)/1000<=0){ endGame(); return; } renderCard(); }, ok?330:1050);
+  const btns=document.querySelectorAll('.opt-btn'); btns.forEach((b,i)=>{ b.disabled=true; if(!ok && i!==idx && i!==cur.g) b.classList.add('dim'); });
+  const card=document.getElementById('qCard');
+  if(ok){
+    streak++; if(streak>maxStreak)maxStreak=streak; acertos++;
+    const gain=100+Math.min(streak,8)*15; score+=gain;
+    btns[idx].classList.add('reveal-ok'); card.classList.add('ok');
+    // partículas + "+pts" no botão clicado
+    try{
+      const r=btns[idx].getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+      if(window.Arcade){ Arcade.burst(cx,cy,{count:streak>=3?26:16}); Arcade.popText(cx,cy-10,'+'+gain,'#fde047'); }
+    }catch(e){}
+    try{ if(window.Arcade){ Arcade.correct(streak); if(streak>=2)Arcade.combo(streak); if(streak>=5)Arcade.confetti(28,0.3); } }catch(e){}
+    if(diff==='treino'){ const d=document.getElementById('qDica'); d.innerHTML=montarDica(cur); d.classList.add('show'); }
+  } else {
+    streak=0;
+    if(btns[idx])btns[idx].classList.add('reveal-err');
+    if(btns[cur.g])btns[cur.g].classList.add('reveal-ok');
+    card.classList.add('err');
+    try{ if(window.Arcade){ Arcade.wrong(); Arcade.shake(card,10); } }catch(e){}
+    const d=document.getElementById('qDica'); d.innerHTML=montarDica(cur); d.classList.add('show'); // ensina como pensar
+  }
+  setCombo(streak);
+  bumpScore();
+  setTimeout(()=>{ if(diff!=='treino' && remaining-(Date.now()-_t0)/1000<=0){ endGame(); return; } renderCard(); }, ok?(diff==='treino'?900:360):1250);
 }
 
-function updateHUD(){
-  document.getElementById('hudScore').textContent=score.toLocaleString('pt-BR');
-  const sk=document.getElementById('hudStreak');
-  if(streak>=2){ document.getElementById('streakNum').textContent=streak; sk.classList.add('show'); } else sk.classList.remove('show');
+/* contagem suave do placar no HUD */
+function bumpScore(){
+  const el=document.getElementById('hudScore');
+  el.classList.add('bump'); setTimeout(()=>el.classList.remove('bump'),150);
+  const target=score; const step=Math.max(1,Math.ceil((target-shownScore)/8));
+  const iv=setInterval(()=>{ shownScore=Math.min(shownScore+step,target); el.textContent=shownScore.toLocaleString('pt-BR'); if(shownScore>=target)clearInterval(iv); },24);
 }
 
 function endGame(){
