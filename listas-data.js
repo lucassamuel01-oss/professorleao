@@ -144,7 +144,7 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 6,
-        enunciado: 'Se n(A) = 12, n(B) = 9 e n(A ∩ B) = 5, então n(A ∪ B) é igual a:',
+        enunciado: 'Em uma corporação, 12 policiais falam inglês, 9 falam espanhol e 5 falam os dois idiomas. O número de policiais que falam pelo menos um desses idiomas é:',
         opcoes: { A: '14', B: '15', C: '16', D: '21', E: '26' },
         gabarito: 'C',
         explicacao: 'Princípio da inclusão-exclusão: n(A ∪ B) = n(A) + n(B) − n(A ∩ B) = 12 + 9 − 5 = 16.'
@@ -198,7 +198,7 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 2,
-        enunciado: 'O produto 3/4 × 2/5 é igual a:',
+        enunciado: 'Numa guarnição, 3/4 dos policiais usam colete balístico e, desses, 2/5 também portam rádio. A fração do efetivo total que usa colete e porta rádio é:',
         opcoes: { A: '6/9', B: '3/10', C: '5/9', D: '6/10', E: '1/2' },
         gabarito: 'B',
         explicacao: 'Multiplica-se direto: (3×2)/(4×5) = 6/20. Simplificando por 2: 3/10.'
@@ -240,7 +240,7 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 8,
-        enunciado: 'O valor de 2/3 de 3/4 de 120 é:',
+        enunciado: 'Em uma blitz, 120 veículos foram abordados; 3/4 estavam com a documentação em dia e, desses, 2/3 eram do próprio município. O número de veículos do município com a documentação em dia foi:',
         opcoes: { A: '50', B: '60', C: '70', D: '80', E: '90' },
         gabarito: 'B',
         explicacao: '3/4 de 120 = 90; depois 2/3 de 90 = 60. Em frações, "de" significa multiplicação.'
@@ -362,7 +362,7 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 2,
-        enunciado: 'A soma dos 10 primeiros termos da PA (2, 4, 6, 8, …) é:',
+        enunciado: 'No treinamento físico, um recruta faz 2 flexões no 1º dia e aumenta 2 flexões a cada dia. Ao final de 10 dias, o total de flexões que ele terá feito é:',
         opcoes: { A: '100', B: '105', C: '108', D: '110', E: '120' },
         gabarito: 'D',
         explicacao: 'a₁₀ = 2 + 9 × 2 = 20. Soma: Sₙ = (a₁ + aₙ)·n/2 = (2 + 20) × 10 ÷ 2 = 110.'
@@ -465,14 +465,14 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 5,
-        enunciado: 'Um triângulo tem base 10 cm e altura 6 cm. Sua área é:',
+        enunciado: 'Uma placa de advertência em formato de triângulo tem base 10 cm e altura 6 cm. Sua área é:',
         opcoes: { A: '16 cm²', B: '30 cm²', C: '32 cm²', D: '60 cm²', E: '120 cm²' },
         gabarito: 'B',
         explicacao: 'Área do triângulo = (base × altura) ÷ 2 = (10 × 6) ÷ 2 = 30 cm².'
       },
       {
         num: 6,
-        enunciado: 'Se a área de um quadrado é 49 cm², seu perímetro é:',
+        enunciado: 'Uma placa quadrada de sinalização tem área de 49 cm². O comprimento de fita refletiva necessário para contornar toda a sua borda é:',
         opcoes: { A: '14 cm', B: '21 cm', C: '28 cm', D: '49 cm', E: '196 cm' },
         gabarito: 'C',
         explicacao: 'Lado = √49 = 7 cm. Perímetro = 4 × 7 = 28 cm.'
@@ -533,7 +533,7 @@ window.PL_SEED_LISTAS = [
       },
       {
         num: 3,
-        enunciado: 'De um grupo de 5 pessoas, quantas duplas diferentes podem ser formadas?',
+        enunciado: 'De um grupo de 5 policiais, quantas duplas diferentes de patrulha podem ser formadas?',
         opcoes: { A: '5', B: '10', C: '15', D: '20', E: '25' },
         gabarito: 'B',
         explicacao: 'A ordem não importa → combinação: C(5,2) = 5!/(2!·3!) = 10 duplas.'
