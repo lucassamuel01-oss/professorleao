@@ -631,14 +631,18 @@
     }
   }
 
-  /* Expõe a questão da tela para o Leão IA explicar/comentar */
-  window.plQuestaoAtual = function () {
-    if (!_lista || !Array.isArray(_lista.questoes)) return null;
-    const q = _lista.questoes[_current];
+  /* assunto/aula a revisar = título da lista sem o prefixo "Lista de Questões — " */
+  function _assuntoDaLista() {
+    const t = (_lista && _lista.titulo) || '';
+    const m = t.replace(/^[^—]*—\s*/, '').trim();
+    return m || (_lista && _lista.materia) || '';
+  }
+  function _questaoPayload(q) {
     if (!q) return null;
     return {
-      lista: _lista.titulo || '',
-      materia: _lista.materia || '',
+      lista: (_lista && _lista.titulo) || '',
+      materia: (_lista && _lista.materia) || '',
+      assunto: _assuntoDaLista(),
       num: q.num,
       enunciado: String(q.enunciado || '').replace(/\[FIGURA \d+\]/g, '[figura]').slice(0, 1400),
       opcoes: q.opcoes || {},
@@ -647,6 +651,23 @@
       respostaAluno: _respostas[q.num] || null,
       finalizado: !!_finalizado,
     };
+  }
+  /* Expõe a questão da tela para o Leão IA explicar/comentar */
+  window.plQuestaoAtual = function () {
+    if (!_lista || !Array.isArray(_lista.questoes)) return null;
+    return _questaoPayload(_lista.questoes[_current]);
+  };
+  /* Botão "Explicar no Leão" na revisão do resultado (questão por questão) */
+  window.explicarNoLeao = function (num) {
+    if (!_lista || !Array.isArray(_lista.questoes)) return;
+    const q = _lista.questoes.find(x => x.num === num);
+    if (!q) return;
+    const payload = _questaoPayload(q);
+    if (typeof window.plLeaoExplicarQuestao === 'function') {
+      window.plLeaoExplicarQuestao(payload);
+    } else if (typeof window.plToast === 'function') {
+      window.plToast('Abra o Leão IA (🦁) no canto da tela para a explicação.');
+    }
   };
 
   /* ────── Navigation ────── */
@@ -787,6 +808,7 @@
           <div class="q-enunciado" style="font-size:14px;margin-bottom:14px">${escHtml(q.enunciado)}</div>
           <div class="q-opcoes">${opcHtml}</div>
           ${explicacaoHtml}
+          <button onclick="explicarNoLeao(${q.num})" style="margin-top:12px;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:9px;background:linear-gradient(135deg,#4A6CF7,#6B89FF);border:none;color:#fff;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;cursor:pointer">🦁 Explicar no Leão</button>
         </div>
       </div>`;
     }).join('');

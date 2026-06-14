@@ -26,6 +26,9 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  /* questão forçada (botão "Explicar no Leão" no resultado) — uso único */
+  let _qForcada = null;
+
   /* ── contexto da página ─────────────────────────────────── */
   function contextoPagina() {
     const p = location.pathname.split('/').pop() || 'index.html';
@@ -55,7 +58,10 @@
     } else if (p === 'lista.html') {
       ctx.tipo = 'minissimulado';
       try {
-        if (typeof window.plQuestaoAtual === 'function') {
+        if (_qForcada) {                 // questão escolhida no resultado (one-shot)
+          ctx.questao = _qForcada;
+          _qForcada = null;
+        } else if (typeof window.plQuestaoAtual === 'function') {
           const qa = window.plQuestaoAtual();
           if (qa) ctx.questao = qa;
         }
@@ -361,22 +367,26 @@
       planoEl.innerHTML = 'Você ainda não tem um Plano de Estudos. <a href="' + BASE + 'minha-area.html">Criar agora →</a>';
     }
 
+    /* saudação inicial (só na primeira abertura, com o chat vazio) */
+    function _saudar() {
+      if (document.querySelector('#lw-chat .lw-bubble')) return;
+      const ctx = contextoPagina();
+      const oi = {
+        aula: 'Estou vendo que você está na aula' + (ctx.aulaTitulo ? ' "' + ctx.aulaTitulo + '"' : '') + '. Posso ajudar com o assunto ou com a sua estratégia!',
+        curso: 'Navegando pelo curso' + (ctx.cursoNome ? ' ' + ctx.cursoNome : '') + '? Te ajudo a decidir a próxima aula.',
+        jogo: 'Boa! Jogar é fixação de verdade. Quer uma dica para pontuar mais ou revisar o assunto?',
+        blog: 'Lendo o blog? Posso conectar o artigo com o seu plano de estudos.',
+        minissimulado: 'Questão na tela! 🔍 Toque em "Explicar esta questão" que eu resolvo passo a passo, aponto a pegadinha e comento as alternativas.',
+        material: 'Estudando' + (ctx.materialTitulo ? ' "' + ctx.materialTitulo + '"' : ' o material da aula') + '? Me pergunte qualquer parte que não ficou clara!',
+        geral: 'Pronto para estudar? Me pergunte qualquer coisa sobre sua preparação.',
+      }[ctx.tipo];
+      bolha('Olá, ' + (SESS.name || 'Aluno').split(' ')[0] + '! 🦁 ' + oi, 'leao');
+    }
+
     /* eventos */
     fab.addEventListener('click', () => {
       panel.classList.toggle('aberto');
-      if (panel.classList.contains('aberto') && !document.querySelector('#lw-chat .lw-bubble')) {
-        const ctx = contextoPagina();
-        const oi = {
-          aula: 'Estou vendo que você está na aula' + (ctx.aulaTitulo ? ' "' + ctx.aulaTitulo + '"' : '') + '. Posso ajudar com o assunto ou com a sua estratégia!',
-          curso: 'Navegando pelo curso' + (ctx.cursoNome ? ' ' + ctx.cursoNome : '') + '? Te ajudo a decidir a próxima aula.',
-          jogo: 'Boa! Jogar é fixação de verdade. Quer uma dica para pontuar mais ou revisar o assunto?',
-          blog: 'Lendo o blog? Posso conectar o artigo com o seu plano de estudos.',
-          minissimulado: 'Questão na tela! 🔍 Toque em "Explicar esta questão" que eu resolvo passo a passo, aponto a pegadinha e comento as alternativas.',
-          material: 'Estudando' + (ctx.materialTitulo ? ' "' + ctx.materialTitulo + '"' : ' o material da aula') + '? Me pergunte qualquer parte que não ficou clara!',
-          geral: 'Pronto para estudar? Me pergunte qualquer coisa sobre sua preparação.',
-        }[ctx.tipo];
-        bolha('Olá, ' + (SESS.name || 'Aluno').split(' ')[0] + '! 🦁 ' + oi, 'leao');
-      }
+      if (panel.classList.contains('aberto')) _saudar();
     });
     document.getElementById('lw-fechar').addEventListener('click', () => panel.classList.remove('aberto'));
     document.querySelectorAll('.lw-chip[data-q]').forEach(b =>
@@ -394,8 +404,22 @@
     window.LeaoWidget = {
       abrir(pergunta) {
         panel.classList.add('aberto');
+        _saudar();
         if (pergunta) perguntar(pergunta);
       }
+    };
+
+    /* Botão "Explicar no Leão" (resultado da lista): abre o chat e explica
+       AQUELA questão. Define _qForcada DEPOIS da saudação para não consumi-la. */
+    window.plLeaoExplicarQuestao = function (q, perguntaCustom) {
+      panel.classList.add('aberto');
+      _saudar();
+      _qForcada = q || null;
+      const num = (q && q.num) ? (' nº ' + q.num) : '';
+      perguntar(perguntaCustom ||
+        ('Explique e comente a questão' + num + ' desta lista: resolva passo a passo, ' +
+         'aponte a pegadinha, diga por que cada alternativa está certa ou errada e, ' +
+         'no fim, indique a aula/assunto que eu devo revisar.'));
     };
   }
 
