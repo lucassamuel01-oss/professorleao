@@ -15,10 +15,28 @@
   if (!standalone) return;
 
   var path = (location.pathname || '/').replace(/\/+$/, '') || '/';
+
+  /* "Aulas" leva direto à ÚLTIMA aula vista (continuar de onde parou);
+     se não houver, ao curso; por fim, à Minha Área (onde os cursos ficam). */
+  function aulasHref() {
+    try {
+      var s = JSON.parse(localStorage.getItem('pl_session') || 'null');
+      if (s && s.id) {
+        var lv = JSON.parse(localStorage.getItem('pl_lastvisited_' + s.id) || 'null');
+        if (lv && lv.cursoId && lv.aulaId) {
+          return '/aula.html?curso=' + encodeURIComponent(lv.cursoId) + '&aula=' + encodeURIComponent(lv.aulaId);
+        }
+        if (lv && lv.cursoId) return '/curso.html?curso=' + encodeURIComponent(lv.cursoId);
+      }
+    } catch (e) { /* */ }
+    return '/minha-area.html';
+  }
+
   var TABS = [
+    { href: aulasHref(), label: 'Aulas', icon: '📖', re: /\/(curso|aula|lista|material)\.html$/ },
     { href: '/jogos.html', label: 'Jogos', icon: '🎮', re: /\/jogos\.html$/ },
     { href: '/flashcards.html', label: 'Cards', icon: '🎴', re: /\/flashcards\.html$/ },
-    { href: '/minha-area.html', label: 'Minha Área', icon: '📚', re: /\/(minha-area|curso|aula|lista|material)\.html$/ },
+    { href: '/minha-area.html', label: 'Área', icon: '📚', re: /\/minha-area\.html$/ },
     { href: '/jogos/ranking-geral.html', label: 'Ranking', icon: '🏆', re: /ranking-geral\.html$/ }
   ];
 
@@ -27,9 +45,10 @@
     'background:rgba(10,22,40,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);' +
     'border-top:1px solid rgba(74,108,247,.22);padding-bottom:env(safe-area-inset-bottom,0px);' +
     "font-family:'Montserrat',Arial,sans-serif}" +
-    '#pl-appnav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;' +
-    'padding:9px 4px 8px;text-decoration:none;color:#8892B4;font-size:11px;font-weight:700;transition:color .15s}' +
+    '#pl-appnav a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;' +
+    'padding:9px 2px 8px;text-decoration:none;color:#8892B4;font-size:10.5px;font-weight:700;transition:color .15s}' +
     '#pl-appnav a .ic{font-size:20px;line-height:1}' +
+    '#pl-appnav a .lb{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
     '#pl-appnav a.on{color:#6B89FF}' +
     '#pl-appnav a:active{background:rgba(74,108,247,.10)}' +
     'body.pl-has-appnav{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))!important}' +

@@ -14,8 +14,8 @@
   "backgroundColor": "#0A1628",
   "enableNotifications": true,
   "startUrl": "/jogos.html?source=app",
-  "iconUrl": "https://www.professorleao.com/assets/img/logo-azul.png",
-  "maskableIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png",
+  "iconUrl": "https://www.professorleao.com/assets/img/icon-512.png",
+  "maskableIconUrl": "https://www.professorleao.com/assets/img/icon-maskable.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
@@ -34,7 +34,7 @@
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "shortcuts": [
-    { "name": "Jogos", "shortName": "Jogos", "url": "/jogos.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" },
-    { "name": "Área do Aluno", "shortName": "Minha Área", "url": "/minha-area.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/logo-azul.png" }
+    { "name": "Jogos", "shortName": "Jogos", "url": "/jogos.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/icon-192.png" },
+    { "name": "Área do Aluno", "shortName": "Minha Área", "url": "/minha-area.html?source=shortcut", "chosenIconUrl": "https://www.professorleao.com/assets/img/icon-192.png" }
   ]
 }
