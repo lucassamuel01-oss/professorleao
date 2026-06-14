@@ -721,6 +721,20 @@
     </div>
   </div>
 
+  <!-- 🔔 Lembretes por notificação (Web Push) -->
+  <div id="notifSec" style="margin-top:8px;display:none">
+    <div class="sec-header" style="margin-top:16px">
+      <h2>🔔 Lembretes no seu celular</h2>
+      <p>Receba um aviso quando sair o minissimulado da semana ou uma aula ao vivo — mesmo com o app fechado</p>
+    </div>
+    <div style="background:var(--navy-2);border:1px solid rgba(74,108,247,.22);border-radius:var(--radius);padding:20px 22px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <p style="font-size:13px;color:var(--silver);line-height:1.6;flex:1;min-width:200px" id="notifTexto">
+        Ative para não perder nada. Você pode desativar quando quiser.
+      </p>
+      <button id="notifBtn" onclick="plToggleNotif()" style="padding:12px 20px;border-radius:10px;border:1px solid rgba(74,108,247,.5);background:rgba(74,108,247,.14);color:var(--accent-light);font-family:var(--font-h);font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap">🔔 Ativar lembretes</button>
+    </div>
+  </div>
+
   <!-- 🔒 Privacidade e meus dados (LGPD) -->
   <div id="privacidadeSec" style="margin-top:8px">
     <div class="sec-header" style="margin-top:16px">
@@ -797,6 +811,41 @@
       + '\nE-mail: ' + (s.email || '-');
     window.open('https://wa.me/5577999229281?text=' + encodeURIComponent(msg), '_blank', 'noopener');
   };
+
+  /* ── Lembretes por notificação (depende do pwa.js) ── */
+  function _refreshNotif() {
+    var sec = document.getElementById('notifSec');
+    var btn = document.getElementById('notifBtn');
+    var txt = document.getElementById('notifTexto');
+    if (!sec || !btn || typeof window.plPushState !== 'function') return;
+    if (!window.plPushSupported || !window.plPushSupported()) { sec.style.display = 'none'; return; }
+    sec.style.display = '';
+    window.plPushState().then(function (st) {
+      btn.dataset.state = st;
+      if (st === 'subscribed') {
+        btn.textContent = '🔕 Desativar lembretes';
+        btn.style.borderColor = 'rgba(248,113,113,.4)';
+        btn.style.background = 'rgba(248,113,113,.08)';
+        btn.style.color = '#fca5a5';
+        txt.innerHTML = '✅ Lembretes <b style="color:#fff">ativados</b> neste aparelho. Você será avisado do minissimulado da semana e das aulas ao vivo.';
+      } else if (st === 'denied') {
+        btn.textContent = '🔔 Ativar lembretes';
+        btn.disabled = true; btn.style.opacity = '.55'; btn.style.cursor = 'not-allowed';
+        txt.innerHTML = 'As notificações estão <b style="color:#fca5a5">bloqueadas</b> nas configurações do navegador. Libere-as para este site e tente de novo.';
+      } else {
+        btn.textContent = '🔔 Ativar lembretes';
+        txt.textContent = 'Ative para não perder nada. Você pode desativar quando quiser.';
+      }
+    });
+  }
+  window.plToggleNotif = function () {
+    var btn = document.getElementById('notifBtn');
+    var st = btn && btn.dataset.state;
+    var act = (st === 'subscribed') ? window.plDisablePush : window.plEnablePush;
+    if (typeof act !== 'function') return;
+    Promise.resolve(act()).then(function () { setTimeout(_refreshNotif, 400); });
+  };
+  window.addEventListener('load', function () { setTimeout(_refreshNotif, 600); });
 })();
 </script>
 

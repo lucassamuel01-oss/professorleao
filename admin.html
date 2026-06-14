@@ -803,6 +803,33 @@
           </table>
         </div>
       </div>
+
+      <!-- ══════ NOTIFICAÇÃO PUSH ══════ -->
+      <div class="card">
+        <h2>🔔 Enviar notificação push</h2>
+        <p style="color:var(--silver,#8892B4);font-size:13px;margin-bottom:14px;line-height:1.6">
+          Envia uma notificação para o celular/computador de quem ativou os lembretes na Minha Área —
+          mesmo com o app fechado. Ótimo para avisar o <strong>minissimulado da semana</strong> ou uma aula ao vivo.
+          <span id="pushStatus" style="display:block;margin-top:8px;font-weight:700"></span>
+        </p>
+
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="field">
+            <label>Título *</label>
+            <input type="text" id="pushTitulo" maxlength="80" placeholder="Ex: Minissimulado da semana liberado! 🎯" />
+          </div>
+          <div class="field">
+            <label>Abrir ao tocar (link interno)</label>
+            <input type="text" id="pushUrl" placeholder="/jogos.html" value="/jogos.html" />
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:16px">
+          <label>Mensagem *</label>
+          <textarea id="pushCorpo" rows="2" maxlength="240" placeholder="Ex: 10 questões novas no nível da sua prova. Bora treinar?"></textarea>
+        </div>
+        <button class="btn-primary" onclick="enviarPush()">🔔 Enviar para os inscritos</button>
+        <span id="pushResultado" style="margin-left:12px;font-size:13px;font-weight:700"></span>
+      </div>
     </div><!-- /tab-avisos -->
 
     <!-- ══════ LOJA: CUPONS + VENDAS ══════ -->
@@ -2377,6 +2404,53 @@ const PL_CATALOG = {
         <td><button class="action-btn danger" onclick="excluirAviso('${a.id}','${esc(a.titulo).replace(/'/g, '&#039;')}')">Excluir</button></td>
       </tr>`;
     }).join('');
+    carregarPushStatus();
+  }
+
+  /* ── Notificações push ── */
+  function carregarPushStatus() {
+    const el = document.getElementById('pushStatus');
+    if (!el) return;
+    fetch('/api/admin/push/status', { credentials: 'same-origin' })
+      .then(r => r.json())
+      .then(d => {
+        if (!d || !d.success) { el.textContent = ''; return; }
+        if (!d.enabled) {
+          el.style.color = 'var(--warn,#f59e0b)';
+          el.textContent = '⚠️ Push ainda não configurado no servidor (faltam as chaves VAPID).';
+        } else {
+          el.style.color = 'var(--success,#22c55e)';
+          el.textContent = `✅ Push ativo — ${d.inscritos} dispositivo(s) inscrito(s).`;
+        }
+      })
+      .catch(() => { el.textContent = ''; });
+  }
+
+  function enviarPush() {
+    const titulo = document.getElementById('pushTitulo').value.trim();
+    const corpo  = document.getElementById('pushCorpo').value.trim();
+    const url    = document.getElementById('pushUrl').value.trim() || '/jogos.html';
+    const out    = document.getElementById('pushResultado');
+    if (!titulo || !corpo) { toast('Preencha título e mensagem.', 'err'); return; }
+    if (!/^\//.test(url)) { toast('O link deve ser interno (começar com /).', 'err'); return; }
+    if (!confirm(`Enviar notificação para todos os inscritos?\n\n"${titulo}"`)) return;
+    out.textContent = 'Enviando…'; out.style.color = 'var(--silver,#8892B4)';
+    fetch('/api/admin/push/enviar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ titulo, corpo, url }),
+    })
+      .then(r => r.json().then(d => ({ ok: r.ok, d })))
+      .then(({ ok, d }) => {
+        if (!ok || !d.success) { out.style.color = 'var(--danger,#ef4444)'; out.textContent = '❌ ' + (d.message || 'Falha no envio.'); return; }
+        out.style.color = 'var(--success,#22c55e)';
+        out.textContent = `✅ Enviadas: ${d.enviadas} · Falhas: ${d.falhas} (de ${d.inscritos}).`;
+        document.getElementById('pushTitulo').value = '';
+        document.getElementById('pushCorpo').value = '';
+        toast('🔔 Notificação enviada!');
+      })
+      .catch(() => { out.style.color = 'var(--danger,#ef4444)'; out.textContent = '❌ Erro de conexão.'; });
   }
 
   </script>

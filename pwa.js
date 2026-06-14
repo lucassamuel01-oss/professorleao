@@ -74,4 +74,87 @@
   }
   window.addEventListener('offline', function () { _toast('📴 Você está offline — o conteúdo já aberto continua disponível.', false); });
   window.addEventListener('online', function () { _toast('✅ Conexão restabelecida.', true); });
+  window.plToast = _toast;
+
+  /* ── Notificações push (Web Push) ──────────────────────────
+     Lembretes do minissimulado da semana e do caderno de erros.
+     A inscrição exige login (o endpoint é protegido) e só funciona
+     se o servidor tiver as chaves VAPID configuradas. */
+  function _pushSupported() {
+    return ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window);
+  }
+  function _b64ToUint8(base64) {
+    var pad = '='.repeat((4 - (base64.length % 4)) % 4);
+    var b64 = (base64 + pad).replace(/-/g, '+').replace(/_/g, '/');
+    var raw = atob(b64);
+    var out = new Uint8Array(raw.length);
+    for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+    return out;
+  }
+  window.plPushSupported = _pushSupported;
+
+  /* Estado atual: 'unsupported' | 'denied' | 'subscribed' | 'default' */
+  window.plPushState = function () {
+    if (!_pushSupported()) return Promise.resolve('unsupported');
+    if (Notification.permission === 'denied') return Promise.resolve('denied');
+    return navigator.serviceWorker.ready
+      .then(function (reg) { return reg.pushManager.getSubscription(); })
+      .then(function (sub) { return sub ? 'subscribed' : 'default'; })
+      .catch(function () { return 'default'; });
+  };
+
+  window.plEnablePush = function () {
+    if (!_pushSupported()) { _toast('🔕 Seu navegador não suporta notificações.', false); return Promise.resolve(false); }
+    return fetch('/api/push/public-key', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (cfg) {
+        if (!cfg || !cfg.enabled || !cfg.publicKey) {
+          _toast('🔔 As notificações ainda não estão disponíveis. Tente mais tarde.', false);
+          return false;
+        }
+        return Notification.requestPermission().then(function (perm) {
+          if (perm !== 'granted') { _toast('🔕 Permissão de notificações negada.', false); return false; }
+          return navigator.serviceWorker.ready.then(function (reg) {
+            return reg.pushManager.getSubscription().then(function (existing) {
+              return existing || reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: _b64ToUint8(cfg.publicKey)
+              });
+            });
+          }).then(function (sub) {
+            return fetch('/api/push/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({ subscription: sub })
+            }).then(function (r) {
+              if (r.status === 401) { _toast('🔔 Entre na sua conta para ativar os lembretes.', false); return false; }
+              if (!r.ok) { _toast('Não foi possível ativar agora.', false); return false; }
+              _toast('🔔 Lembretes ativados!', true);
+              return true;
+            });
+          });
+        });
+      })
+      .catch(function () { _toast('Não foi possível ativar agora.', false); return false; });
+  };
+
+  window.plDisablePush = function () {
+    if (!_pushSupported()) return Promise.resolve(false);
+    return navigator.serviceWorker.ready
+      .then(function (reg) { return reg.pushManager.getSubscription(); })
+      .then(function (sub) {
+        if (!sub) return false;
+        var ep = sub.endpoint;
+        return sub.unsubscribe().then(function () {
+          return fetch('/api/push/unsubscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ endpoint: ep })
+          }).then(function () { _toast('🔕 Lembretes desativados.', true); return true; });
+        });
+      })
+      .catch(function () { return false; });
+  };
 })();

@@ -13,7 +13,7 @@
 
    Para forçar atualização do cache, suba o número da versão.
    ============================================================ */
-const VERSION = 'pl-v7';
+const VERSION = 'pl-v8';
 const CACHE = 'pl-cache-' + VERSION;
 const PRECACHE = ['/', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
 const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)$/i;
@@ -61,6 +61,37 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('message', (e) => {
   if (e.data === 'skipWaiting') self.skipWaiting();
   if (e.data === 'warm-games') e.waitUntil(warmGames());
+});
+
+/* ── Notificações push ───────────────────────────────────────── */
+self.addEventListener('push', (e) => {
+  let data = {};
+  try { data = e.data ? e.data.json() : {}; }
+  catch (err) { data = { title: 'Professor Leão', body: (e.data && e.data.text && e.data.text()) || '' }; }
+  const title = data.title || 'Professor Leão';
+  const opts = {
+    body: data.body || '',
+    icon: '/assets/img/logo-azul.png',
+    badge: '/assets/img/logo-azul.png',
+    data: { url: data.url || '/jogos.html' },
+    vibrate: [80, 40, 80],
+    tag: data.tag || 'pl-notif',
+    renotify: true
+  };
+  e.waitUntil(self.registration.showNotification(title, opts));
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || '/jogos.html';
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const c of list) {
+        if ('focus' in c) { if (c.navigate) { try { c.navigate(url); } catch (_) {} } return c.focus(); }
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(url);
+    })
+  );
 });
 
 self.addEventListener('fetch', (e) => {

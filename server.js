@@ -29,6 +29,8 @@ let nodemailer = null;
 try { nodemailer = require("nodemailer"); } catch (e) { /* opcional */ }
 let MongoStore = null;
 try { const _cm = require("connect-mongo"); MongoStore = _cm.default || _cm.MongoStore || _cm; } catch (e) { /* opcional */ }
+let webpush = null;
+try { webpush = require("web-push"); } catch (e) { /* opcional — push desativado sem a lib */ }
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -256,6 +258,71 @@ function readVendas() {
 function writeVendas(vendas) {
   _vendasCache = vendas;
   persistDoc("vendas", "vendas", vendas);
+}
+
+/* ── Inscrições de notificações push (Web Push) ──────────────
+   Guardadas em app_data (Mongo) ou em data/push_subs.json (fallback). */
+let _pushSubsCache = [];
+function readPushSubs() {
+  return _pushSubsCache;
+}
+function writePushSubs(subs) {
+  _pushSubsCache = subs;
+  if (_mongoDb) {
+    _mongoDb
+      .collection("app_data")
+      .replaceOne({ _id: "push_subs" }, { _id: "push_subs", subs }, { upsert: true })
+      .catch((err) => console.error("[PUSH] Erro ao salvar inscrições:", err.message));
+  } else {
+    try {
+      ensureDataDir();
+      fs.writeFileSync(path.join(DATA_DIR, "push_subs.json"), JSON.stringify(subs, null, 2), "utf8");
+    } catch (err) {
+      console.error("[PUSH] Erro ao salvar inscrições em arquivo:", err.message);
+    }
+  }
+}
+async function loadPushSubs() {
+  if (_mongoDb) {
+    try {
+      const doc = await _mongoDb.collection("app_data").findOne({ _id: "push_subs" });
+      return doc && Array.isArray(doc.subs) ? doc.subs : [];
+    } catch (err) {
+      console.error("[PUSH] Erro ao carregar inscrições:", err.message);
+      return [];
+    }
+  }
+  const file = path.join(DATA_DIR, "push_subs.json");
+  if (!fs.existsSync(file)) return [];
+  try {
+    const parsed = JSON.parse(fs.readFileSync(file, "utf8").trim() || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+/* Chaves VAPID — geradas uma vez (npx web-push generate-vapid-keys) e
+   definidas no Railway. A privada NUNCA fica no código versionado. */
+const VAPID_PUBLIC = process.env.VAPID_PUBLIC_KEY || "";
+const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY || "";
+const VAPID_SUBJECT = process.env.VAPID_SUBJECT || "mailto:contato@professorleao.com";
+let _pushReady = false;
+function setupPush() {
+  if (webpush && VAPID_PUBLIC && VAPID_PRIVATE) {
+    try {
+      webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE);
+      _pushReady = true;
+      console.log("[PUSH] Web Push ativo ✓");
+    } catch (e) {
+      console.error("[PUSH] Chaves VAPID inválidas:", e.message);
+    }
+  } else {
+    console.log(
+      "[PUSH] Web Push inativo — defina VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY" +
+        (webpush ? "." : " e instale a dependência web-push.")
+    );
+  }
 }
 
 /* ── Helpers ────────────────────────────────────────────────── */
@@ -1645,6 +1712,82 @@ app.delete("/api/admin/users/:id", requireAuthApi, requireAdminApi, (req, res) =
   res.json({ success: true });
 });
 
+/* ── Notificações push (Web Push / VAPID) ───────────────────── */
+
+/* chave pública para o navegador se inscrever */
+app.get("/api/push/public-key", (req, res) => {
+  res.json({ success: true, enabled: _pushReady, publicKey: _pushReady ? VAPID_PUBLIC : "" });
+});
+
+/* aluno logado registra (ou atualiza) a inscrição do seu dispositivo */
+app.post("/api/push/subscribe", requireAuthApi, (req, res) => {
+  const sub = req.body && req.body.subscription;
+  if (!sub || !sub.endpoint || !sub.keys) {
+    return res.status(400).json({ success: false, message: "Inscrição inválida." });
+  }
+  const subs = readPushSubs().slice();
+  const rec = {
+    endpoint: String(sub.endpoint),
+    keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth },
+    userId: req.currentUser.id,
+    email: req.currentUser.email,
+    createdAt: new Date().toISOString(),
+  };
+  const i = subs.findIndex((s) => s.endpoint === rec.endpoint);
+  if (i >= 0) subs[i] = rec; else subs.push(rec);
+  writePushSubs(subs);
+  res.json({ success: true });
+});
+
+/* remove a inscrição do dispositivo */
+app.post("/api/push/unsubscribe", requireAuthApi, (req, res) => {
+  const ep = req.body && req.body.endpoint;
+  if (!ep) return res.status(400).json({ success: false, message: "Endpoint ausente." });
+  const subs = readPushSubs();
+  const filtered = subs.filter((s) => s.endpoint !== ep);
+  if (filtered.length !== subs.length) writePushSubs(filtered);
+  res.json({ success: true });
+});
+
+/* admin: status (ativo? quantos inscritos?) */
+app.get("/api/admin/push/status", requireAuthApi, requireAdminApi, (req, res) => {
+  res.json({ success: true, enabled: _pushReady, inscritos: readPushSubs().length });
+});
+
+/* admin: dispara uma notificação para todos os inscritos */
+app.post("/api/admin/push/enviar", requireAuthApi, requireAdminApi, async (req, res) => {
+  if (!_pushReady) {
+    return res.status(503).json({ success: false, message: "Push não configurado (defina as chaves VAPID)." });
+  }
+  const { titulo, corpo, url } = req.body || {};
+  if (!titulo || !corpo) {
+    return res.status(400).json({ success: false, message: "Informe título e mensagem." });
+  }
+  const payload = JSON.stringify({
+    title: String(titulo).slice(0, 80),
+    body: String(corpo).slice(0, 240),
+    url: (url && String(url).slice(0, 300)) || "/jogos.html",
+  });
+  const subs = readPushSubs();
+  let ok = 0, fail = 0;
+  const validas = [];
+  await Promise.all(
+    subs.map(async (s) => {
+      try {
+        await webpush.sendNotification({ endpoint: s.endpoint, keys: s.keys }, payload);
+        ok++; validas.push(s);
+      } catch (err) {
+        const code = err && err.statusCode;
+        fail++;
+        /* 404/410 = inscrição expirada → descarta; demais falhas mantêm */
+        if (code !== 404 && code !== 410) validas.push(s);
+      }
+    })
+  );
+  if (validas.length !== subs.length) writePushSubs(validas);
+  res.json({ success: true, enviadas: ok, falhas: fail, inscritos: subs.length });
+});
+
 /* ── Arquivos estáticos (o site inteiro) ────────────────────── */
 
 const BLOCKED_PATHS = [
@@ -1694,6 +1837,8 @@ app.listen(PORT, () => {
     _couponsCache = await loadDoc("coupons", "coupons");
     _vendasCache = await loadDoc("vendas", "vendas");
     _blogStats = await loadBlogStats();
+    _pushSubsCache = await loadPushSubs();
+    setupPush();
     seedAdminUser();
     seedReferralCoupon();
     console.log("[STARTUP] inicialização completa");
