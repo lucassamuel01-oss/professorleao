@@ -818,6 +818,11 @@
           <span id="pushStatus" style="display:block;margin-top:8px;font-weight:700"></span>
         </p>
 
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;color:var(--silver,#8892B4);margin-bottom:8px">⚡ Modelos rápidos (toque para preencher)</div>
+          <div id="pushModelos" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+        </div>
+
         <div class="form-grid" style="margin-bottom:14px">
           <div class="field">
             <label>Título *</label>
@@ -2429,6 +2434,32 @@ const PL_CATALOG = {
         }
       })
       .catch(() => { el.textContent = ''; });
+    renderPushModelos();
+  }
+
+  /* Modelos prontos de lembrete estratégico */
+  const PUSH_MODELOS = [
+    { rotulo: '🎯 Minissimulado da semana', titulo: 'Saiu o minissimulado da semana! 🎯', corpo: '10 questões novas no nível da sua prova. Bora treinar agora?', url: '/minha-area.html' },
+    { rotulo: '📕 Revisar caderno de erros', titulo: 'Hora de revisar o caderno de erros 📕', corpo: 'Refazer o que você errou é a revisão que mais pontua. 5 minutinhos agora?', url: '/minha-area.html' },
+    { rotulo: '🎴 Revisão com flashcards', titulo: 'Revisão rápida com flashcards 🎴', corpo: 'Fixe fórmulas e pegadinhas em poucos minutos. Vamos?', url: '/flashcards.html' },
+    { rotulo: '📚 Revisar a aula', titulo: 'Não perca o ritmo dos estudos 📚', corpo: 'Continue de onde parou na sua área e avance mais uma aula hoje.', url: '/minha-area.html' },
+    { rotulo: '🔴 Aula ao vivo', titulo: 'Aula ao vivo hoje! 🔴', corpo: 'Entra com a gente e tire suas dúvidas em tempo real.', url: '/minha-area.html' },
+    { rotulo: '🎮 Desafio nos jogos', titulo: 'Desafio do dia na Arena! 🎮', corpo: 'Bata seu recorde e suba no ranking. Topa?', url: '/jogos.html' },
+  ];
+  function renderPushModelos() {
+    const box = document.getElementById('pushModelos');
+    if (!box || box.dataset.pronto) return;
+    box.dataset.pronto = '1';
+    box.innerHTML = PUSH_MODELOS.map((m, i) =>
+      `<button type="button" class="tab-btn" style="border:1px solid rgba(74,108,247,.3);border-radius:999px;padding:7px 13px;font-size:12px;background:rgba(74,108,247,.08);color:var(--accent-light,#6B89FF)" onclick="preencherPush(${i})">${m.rotulo}</button>`
+    ).join('');
+  }
+  function preencherPush(i) {
+    const m = PUSH_MODELOS[i]; if (!m) return;
+    document.getElementById('pushTitulo').value = m.titulo;
+    document.getElementById('pushCorpo').value = m.corpo;
+    document.getElementById('pushUrl').value = m.url;
+    document.getElementById('pushTitulo').focus();
   }
 
   function enviarPush() {

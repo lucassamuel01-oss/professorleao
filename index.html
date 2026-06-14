@@ -62,6 +62,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Seção "A plataforma" (recursos / novidades) */
+    .plat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 34px; }
+    .plat-card { background: #0F1E38; border: 1px solid rgba(74,108,247,.18); border-radius: 16px; padding: 24px 22px; transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+    .plat-card:hover { transform: translateY(-4px); border-color: rgba(74,108,247,.5); box-shadow: 0 14px 40px rgba(0,0,0,.4); }
+    .plat-card__ic { font-size: 34px; line-height: 1; display: block; margin-bottom: 12px; }
+    .plat-card h3 { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .plat-card p { font-size: 13.5px; line-height: 1.6; color: #8892B4; }
+    .plat-card p strong { color: #cdd6f0; }
+  </style>
 </head>
 <body>
 
@@ -122,8 +132,8 @@
             e Carreiras Policiais
           </h1>
           <p class="hero__subtitle">
-            Matemática ensinada de forma simples, estratégica e<br class="hide-mobile" />
-            focada na sua aprovação — do zero até o dia da prova.
+            Aulas, questões reais, minissimulados, jogos, flashcards e o <strong>Leão IA</strong> —<br class="hide-mobile" />
+            tudo num app que te leva do zero até o dia da prova.
           </p>
           <div class="hero__actions">
             <a href="planos.html" class="btn btn--primary btn--lg">🚀 Ver planos e começar</a>
@@ -165,6 +175,56 @@
           <span class="target-pill">&#128170; SD PMBA</span>
           <span class="target-pill">&#128218; Matemática Básica</span>
           <span class="target-pill">&#128230; Correios</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         A PLATAFORMA / RECURSOS (novidades)
+    ══════════════════════════════════════════ -->
+    <section class="section" id="plataforma">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <span class="section__badge">A plataforma</span>
+          <h2 class="section__title">Tudo para sua aprovação — <span class="text-accent">no seu bolso</span></h2>
+          <p class="section__subtitle">Muito além das aulas: agora também é um aplicativo que você instala no celular, estuda offline e ainda recebe lembretes dos estudos.</p>
+        </div>
+
+        <div class="plat-grid" data-aos="fade-up">
+          <div class="plat-card">
+            <span class="plat-card__ic">🦁</span>
+            <h3>Leão IA</h3>
+            <p>Tira suas dúvidas e <strong>explica cada questão passo a passo</strong>, apontando a pegadinha e a aula para revisar.</p>
+          </div>
+          <div class="plat-card">
+            <span class="plat-card__ic">🎮</span>
+            <h3>29 jogos de Matemática</h3>
+            <p>Aprenda jogando — do cálculo mental à trigonometria — com ranking competitivo e modo treino.</p>
+          </div>
+          <div class="plat-card">
+            <span class="plat-card__ic">🎴</span>
+            <h3>Flashcards de revisão</h3>
+            <p>Fixe fórmulas e pegadinhas em minutos, com repetição espaçada por assunto.</p>
+          </div>
+          <div class="plat-card">
+            <span class="plat-card__ic">📝</span>
+            <h3>Questões reais + minissimulados</h3>
+            <p>Treine no estilo exato da sua banca (FCC · UNEB), com gabarito comentado e caderno de erros.</p>
+          </div>
+          <div class="plat-card">
+            <span class="plat-card__ic">📱</span>
+            <h3>App instalável e offline</h3>
+            <p>Coloque na tela inicial e estude em tela cheia. Os jogos funcionam até sem internet.</p>
+          </div>
+          <div class="plat-card">
+            <span class="plat-card__ic">🔔</span>
+            <h3>Lembretes inteligentes</h3>
+            <p>Avisos do minissimulado da semana e das revisões chegam direto no seu celular.</p>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:34px">
+          <a href="planos.html" class="btn btn--primary btn--lg">🚀 Quero estudar assim</a>
         </div>
       </div>
     </section>
