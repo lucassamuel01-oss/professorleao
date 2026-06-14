@@ -54,6 +54,12 @@
       ctx.artigo = location.hash.replace('#', '') || null;
     } else if (p === 'lista.html') {
       ctx.tipo = 'minissimulado';
+      try {
+        if (typeof window.plQuestaoAtual === 'function') {
+          const qa = window.plQuestaoAtual();
+          if (qa) ctx.questao = qa;
+        }
+      } catch (e) { /* */ }
     } else if (p === 'material.html') {
       ctx.tipo = 'material';
       try {
@@ -147,6 +153,20 @@
 
   /* ── resposta local (sem servidor) ──────────────────────── */
   function respostaLocal(pergunta, ctx, s) {
+    /* questão na tela + pedido de explicação → usa o gabarito/explicação oficiais */
+    if (ctx && ctx.questao && /explic|coment|resolv|por ?qu|gabarito|entend|d[uú]vida|quest|alternativ/i.test(pergunta || '')) {
+      const q = ctx.questao;
+      let r = '🦁 Vamos à questão' + (q.num ? ' ' + q.num : '') + '!';
+      if (q.gabarito) r += '\n\n✅ Gabarito oficial: ' + q.gabarito +
+        (q.opcoes && q.opcoes[q.gabarito] ? ' — ' + q.opcoes[q.gabarito] : '');
+      if (q.explicacao) r += '\n\n💡 ' + q.explicacao;
+      else r += '\n\nVolte à fórmula do assunto e teste cada alternativa: a correta tem que fechar a conta exatamente.';
+      if (q.respostaAluno && q.gabarito && q.respostaAluno !== q.gabarito) {
+        r += '\n\nVocê marcou ' + q.respostaAluno + ' — refaça com calma. Esse erro entra no caderno e volta na revisão. 💪';
+      }
+      r += '\n\n🔎 Para a resolução completa passo a passo, fale comigo pela plataforma (IA ativa).';
+      return r;
+    }
     const dicas = {
       aula: 'Siga a ordem do método: videoaula → material da aula → questões do assunto → jogo. O Minissimulado — Revisão fica para o FIM DE SEMANA, consolidando o que você estudou na semana.',
       curso: 'Vá pela ordem do curso, mas priorize os assuntos do seu plano de hoje. Aula sem o minissimulado depois é estudo pela metade.',
@@ -310,6 +330,7 @@
       <div class="lw-plano" id="lw-plano"></div>
       <div id="lw-chat"></div>
       <div class="lw-chips">
+        ${contextoPagina().tipo === 'minissimulado' ? '<button class="lw-chip" data-q="Explique e comente a questão que está na minha tela: resolva passo a passo, aponte a pegadinha e diga por que cada alternativa está certa ou errada.">🔍 Explicar esta questão</button>' : ''}
         <button class="lw-chip" data-q="O que devo fazer agora nesta página?">🎯 O que faço agora?</button>
         <button class="lw-chip" data-q="Como está meu desempenho geral?">📊 Meu desempenho</button>
         <button class="lw-chip" data-q="Estou no ritmo certo para a prova?">⏱️ Meu ritmo</button>
@@ -350,7 +371,7 @@
           curso: 'Navegando pelo curso' + (ctx.cursoNome ? ' ' + ctx.cursoNome : '') + '? Te ajudo a decidir a próxima aula.',
           jogo: 'Boa! Jogar é fixação de verdade. Quer uma dica para pontuar mais ou revisar o assunto?',
           blog: 'Lendo o blog? Posso conectar o artigo com o seu plano de estudos.',
-          minissimulado: 'Minissimulado na tela! Depois me pergunte o que fazer com os erros.',
+          minissimulado: 'Questão na tela! 🔍 Toque em "Explicar esta questão" que eu resolvo passo a passo, aponto a pegadinha e comento as alternativas.',
           material: 'Estudando' + (ctx.materialTitulo ? ' "' + ctx.materialTitulo + '"' : ' o material da aula') + '? Me pergunte qualquer parte que não ficou clara!',
           geral: 'Pronto para estudar? Me pergunte qualquer coisa sobre sua preparação.',
         }[ctx.tipo];

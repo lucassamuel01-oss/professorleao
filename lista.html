@@ -631,6 +631,24 @@
     }
   }
 
+  /* Expõe a questão da tela para o Leão IA explicar/comentar */
+  window.plQuestaoAtual = function () {
+    if (!_lista || !Array.isArray(_lista.questoes)) return null;
+    const q = _lista.questoes[_current];
+    if (!q) return null;
+    return {
+      lista: _lista.titulo || '',
+      materia: _lista.materia || '',
+      num: q.num,
+      enunciado: String(q.enunciado || '').replace(/\[FIGURA \d+\]/g, '[figura]').slice(0, 1400),
+      opcoes: q.opcoes || {},
+      gabarito: q.gabarito || '',
+      explicacao: String(q.explicacao || '').slice(0, 1200),
+      respostaAluno: _respostas[q.num] || null,
+      finalizado: !!_finalizado,
+    };
+  };
+
   /* ────── Navigation ────── */
   function goTo(idx) {
     _current = idx;
