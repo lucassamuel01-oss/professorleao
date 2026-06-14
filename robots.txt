@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Áreas privadas / transacionais (sem valor de busca)
+Disallow: /admin.html
+Disallow: /minha-area.html
+Disallow: /curso.html
+Disallow: /aula.html
+Disallow: /lista.html
+Disallow: /material.html
+Disallow: /login.html
+Disallow: /cadastro.html
+Disallow: /redefinir-senha.html
+Disallow: /compra-sucesso.html
+Disallow: /offline.html
+Disallow: /api/
+
+Sitemap: https://www.professorleao.com/sitemap.xml
