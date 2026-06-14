@@ -13,7 +13,7 @@
 
    Para forçar atualização do cache, suba o número da versão.
    ============================================================ */
-const VERSION = 'pl-v16';
+const VERSION = 'pl-v17';
 const CACHE = 'pl-cache-' + VERSION;
 const PRECACHE = ['/', '/login.html', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
 const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)$/i;

@@ -202,7 +202,7 @@
       if (localStorage.getItem('pl_push_prompted')) return;
       if (!('Notification' in window) || Notification.permission !== 'default') return;
       if (!(window.plPushSupported && window.plPushSupported())) return;
-      if (!_isStandalone() || !_logado()) return;
+      if (!_logado()) return;   // pede no computador E no celular (app ou navegador)
       fetch('/api/push/public-key', { credentials: 'same-origin' })
         .then(function (r) { return r.json(); })
         .then(function (cfg) {

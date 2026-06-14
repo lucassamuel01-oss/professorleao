@@ -302,14 +302,63 @@ async function loadPushSubs() {
   }
 }
 
-/* Chaves VAPID — geradas uma vez (npx web-push generate-vapid-keys) e
-   definidas no Railway. A privada NUNCA fica no código versionado. */
-const VAPID_PUBLIC = process.env.VAPID_PUBLIC_KEY || "";
-const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY || "";
+/* Chaves VAPID. Prioridade: variáveis de ambiente; senão, são GERADAS
+   automaticamente uma vez e PERSISTIDAS (no Mongo app_data ou em arquivo).
+   A chave privada fica só no servidor/banco — NUNCA no código versionado. */
+let VAPID_PUBLIC = process.env.VAPID_PUBLIC_KEY || "";
+let VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY || "";
 const VAPID_SUBJECT = process.env.VAPID_SUBJECT || "mailto:contato@professorleao.com";
 let _pushReady = false;
-function setupPush() {
-  if (webpush && VAPID_PUBLIC && VAPID_PRIVATE) {
+
+async function _loadVapidPersistido() {
+  try {
+    if (_mongoDb) {
+      const doc = await _mongoDb.collection("app_data").findOne({ _id: "vapid" });
+      return doc && doc.keys ? doc.keys : null;
+    }
+    const f = path.join(DATA_DIR, "vapid.json");
+    if (fs.existsSync(f)) return JSON.parse(fs.readFileSync(f, "utf8"));
+  } catch (e) { /* */ }
+  return null;
+}
+function _salvarVapid(keys) {
+  if (_mongoDb) {
+    _mongoDb.collection("app_data")
+      .replaceOne({ _id: "vapid" }, { _id: "vapid", keys }, { upsert: true })
+      .catch((e) => console.error("[PUSH] Erro ao salvar VAPID:", e.message));
+  } else {
+    try { ensureDataDir(); fs.writeFileSync(path.join(DATA_DIR, "vapid.json"), JSON.stringify(keys, null, 2), "utf8"); }
+    catch (e) { console.error("[PUSH] Erro ao salvar VAPID em arquivo:", e.message); }
+  }
+}
+
+async function setupPush() {
+  if (!webpush) {
+    console.log("[PUSH] inativo — dependência web-push ausente (instale com 'npm install').");
+    return;
+  }
+  /* 1) chaves por ambiente têm prioridade */
+  if (!VAPID_PUBLIC || !VAPID_PRIVATE) {
+    /* 2) reutiliza as chaves já geradas antes (mantém as inscrições válidas) */
+    const saved = await _loadVapidPersistido();
+    if (saved && saved.publicKey && saved.privateKey) {
+      VAPID_PUBLIC = saved.publicKey;
+      VAPID_PRIVATE = saved.privateKey;
+    }
+  }
+  /* 3) ainda sem chaves → gera automaticamente e persiste */
+  if (!VAPID_PUBLIC || !VAPID_PRIVATE) {
+    try {
+      const k = webpush.generateVAPIDKeys();
+      VAPID_PUBLIC = k.publicKey;
+      VAPID_PRIVATE = k.privateKey;
+      _salvarVapid(k);
+      console.log("[PUSH] Chaves VAPID geradas automaticamente e salvas.");
+    } catch (e) {
+      console.error("[PUSH] Falha ao gerar VAPID:", e.message);
+    }
+  }
+  if (VAPID_PUBLIC && VAPID_PRIVATE) {
     try {
       webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE);
       _pushReady = true;
@@ -317,11 +366,6 @@ function setupPush() {
     } catch (e) {
       console.error("[PUSH] Chaves VAPID inválidas:", e.message);
     }
-  } else {
-    console.log(
-      "[PUSH] Web Push inativo — defina VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY" +
-        (webpush ? "." : " e instale a dependência web-push.")
-    );
   }
 }
 
@@ -1842,7 +1886,7 @@ app.listen(PORT, () => {
     _vendasCache = await loadDoc("vendas", "vendas");
     _blogStats = await loadBlogStats();
     _pushSubsCache = await loadPushSubs();
-    setupPush();
+    await setupPush();
     seedAdminUser();
     seedReferralCoupon();
     console.log("[STARTUP] inicialização completa");
