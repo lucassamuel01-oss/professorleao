@@ -54,6 +54,9 @@
     'body.pl-has-appnav{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))!important}' +
     /* respeita o notch SUPERIOR (iPhone): a barra do topo cresce e o conteúdo desce */
     'body.pl-has-appnav .topbar{padding-top:env(safe-area-inset-top,0px);min-height:calc(60px + env(safe-area-inset-top,0px));height:auto}' +
+    /* no app a navegação fica na barra INFERIOR — o nav do topo é redundante */
+    'body.pl-has-appnav .topbar__nav{display:none!important}' +
+    'body.pl-has-appnav .topbar__breadcrumb{display:none!important}' +
     /* empurra o botão/painel do Leão IA para cima da barra */
     'body.pl-has-appnav #lw-fab{bottom:80px!important}' +
     'body.pl-has-appnav #lw-panel{bottom:146px!important}' +

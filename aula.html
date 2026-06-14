@@ -175,7 +175,12 @@
 
     /* Game card full-width */
     .act-card.game-card { grid-column: 1 / -1; }
-    @media (max-width: 600px) { .act-card.game-card { grid-column: 1; } }
+    @media (max-width: 600px) {
+      .act-card.game-card { grid-column: 1; }
+      .topbar { padding: 0 14px; gap: 8px; }
+      .topbar__breadcrumb { display: none; }
+      .topbar__exit { padding: 6px 10px; font-size: 11px; }
+    }
     .game-frame-wrap {
       border-radius: var(--radius-sm); overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
       display: none;
