@@ -13,7 +13,7 @@
 
    Para forçar atualização do cache, suba o número da versão.
    ============================================================ */
-const VERSION = 'pl-v8';
+const VERSION = 'pl-v9';
 const CACHE = 'pl-cache-' + VERSION;
 const PRECACHE = ['/', '/offline.html', '/styles.css', '/icon.svg', '/manifest.json'];
 const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)$/i;
@@ -21,7 +21,7 @@ const STATIC_RE = /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|otf)
 /* Jogos + dependências compartilhadas — aquecidos em SEGUNDO PLANO (sob
    demanda da página, respeitando Economia de Dados) para ficarem jogáveis
    OFFLINE sem o aluno precisar abrir cada um antes. */
-const GAME_DEPS = ['/jogos.html', '/jogos/arcade.js', '/jogos/rankings.js', '/auth.js', '/protecao.js', '/leao-widget.js', '/appnav.js'];
+const GAME_DEPS = ['/jogos.html', '/jogos/arcade.js', '/jogos/rankings.js', '/auth.js', '/protecao.js', '/leao-widget.js', '/appnav.js', '/flashcards.html', '/flashcards-data.js'];
 const GAME_URLS = GAME_DEPS.concat([
   '/jogos/calculo.html', '/jogos/combinatoria.html', '/jogos/conjuntos-numericos.html',
   '/jogos/conjuntos-operacoes.html', '/jogos/equacoes.html', '/jogos/estatistica.html',

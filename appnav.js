@@ -17,6 +17,7 @@
   var path = (location.pathname || '/').replace(/\/+$/, '') || '/';
   var TABS = [
     { href: '/jogos.html', label: 'Jogos', icon: '🎮', re: /\/jogos\.html$/ },
+    { href: '/flashcards.html', label: 'Cards', icon: '🎴', re: /\/flashcards\.html$/ },
     { href: '/minha-area.html', label: 'Minha Área', icon: '📚', re: /\/(minha-area|curso|aula|lista|material)\.html$/ },
     { href: '/jogos/ranking-geral.html', label: 'Ranking', icon: '🏆', re: /ranking-geral\.html$/ }
   ];
